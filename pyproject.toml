@@ -1,14 +1,17 @@
 [tool.poetry]
-name = "nac-py"
+name = "network_as_code"
 version = "0.1.0"
 description = ""
 authors = ["Pavel Garmuyev <pavel.garmuyev@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+requests = "^2.26.0"
+python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+black = {version = "^21.12b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
