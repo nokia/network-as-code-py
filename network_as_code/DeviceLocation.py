@@ -8,7 +8,7 @@ class DeviceLocation:
         self._refresh_info()
 
     def _refresh_info(self):
-        res = RequestHandler.instance().get_location(self.device)
+        res = RequestHandler.instance.get_location(self.device)
         if res.status_code == 200:
             self.latitude, self.longitude, self.altitude, self.timestamp = res.json()
 
