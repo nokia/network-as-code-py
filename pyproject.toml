@@ -10,7 +10,7 @@ requests = "^2.26.0"
 python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 black = {version = "^21.12b0", allow-prereleases = true}
 
 [build-system]
