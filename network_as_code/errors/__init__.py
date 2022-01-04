@@ -6,5 +6,5 @@ class NaCError(Exception):
     # E.g. https://docs.python-requests.org/en/master/_modules/requests/exceptions/
 
 
-class GatewayConnectionError(Exception):
+class GatewayConnectionError(NaCError):
     """Error for when a connection to the SDK gateway can't be established."""
