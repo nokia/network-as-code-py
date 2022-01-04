@@ -1,4 +1,6 @@
 import requests
+from .errors import GatewayConnectionError
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
@@ -23,10 +25,12 @@ class RequestHandler:
     def _make_request(self, method: str, path: str, params, raise_for_status=False):
         method = method.lower()
         path = path.lstrip("/")
-        res = getattr(requests, method)(f"{self.url}:{self.port}/api/{path}", params)
-        if raise_for_status:
-            # Raises an HTTPError if the status code is in [400..600)
-            res.raise_for_status()
+        url = f"{self.url}:{self.port}/api/{path}"
+        try:
+            res = getattr(requests, method)(url, params)
+            res.raise_for_status()  # Raises an Exception if the status code is in [400..600)
+        except:
+            raise GatewayConnectionError("Can't connect to the backend service")
 
         return res
 
