@@ -15,14 +15,20 @@ class NetworkSlice:
         self.index = index
         self.qos = qos
         self.bandwidth = bandwidth
+        self.default = default
         self.active = False
 
         self._setup()
 
     def _setup(self):
         res = RequestHandler.instance.create_network_slice(self)
+        body = res.json()
+        self.id = body["slice_id"]
+        self.active = True
+
+    def _update(self):
+        res = RequestHandler.instance.update_network_slice(self)
         if res.status_code == 200:
-            self.id = res.json()
             self.active = True
 
     def update(self, index: int, qos, bandwidth, default: bool):
@@ -33,13 +39,6 @@ class NetworkSlice:
 
         self._update()
 
-    def _update(self):
-        res = RequestHandler.instance.update_network_slice(self)
-        if res.status_code == 200:
-            self.id = res.json()
-            self.active = True
-
     def destroy(self):
-        res = RequestHandler.instance.delete_network_slice(self)
-        if res.status_code == 200:
-            self.active = False
+        RequestHandler.instance.delete_network_slice(self)
+        self.active = False

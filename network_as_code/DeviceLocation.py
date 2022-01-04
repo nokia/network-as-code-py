@@ -3,14 +3,18 @@ from .RequestHandler import RequestHandler
 
 
 class DeviceLocation:
-    def __init__(self, device: Device) -> None:
+    def __init__(self, device: Device):
         self.device = device
-        self._refresh_info()
+        self._get_location()
 
-    def _refresh_info(self):
+    def _get_location(self):
         res = RequestHandler.instance.get_location(self.device)
         if res.status_code == 200:
-            self.latitude, self.longitude, self.altitude, self.timestamp = res.json()
+            data = res.json()
+            self.latitude = data["latitude"]
+            self.longitude = data["longitude"]
+            self.altitude = data["altitude"]
+            self.timestamp = data["timestamp"]
 
     def refresh(self):
-        self._refresh_info()
+        self._get_location()
