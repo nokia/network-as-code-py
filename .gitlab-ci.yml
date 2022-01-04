@@ -1,0 +1,15 @@
+image: python:3.10
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -V
+  - pip install poetry
+  - poetry install
+
+test:
+  script:
+    - poetry run pytest
