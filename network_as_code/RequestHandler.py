@@ -20,32 +20,32 @@ class RequestHandler:
 
         return cls._instance
 
-    def _make_request(self, method: str, path: str, params, raise_for_status=False):
-        method = method.lower()
+    def _make_request(self, method: str, path: str, json: dict):
         path = path.lstrip("/")
-        res = getattr(requests, method)(f"{self.url}:{self.port}/api/{path}", params)
-        if raise_for_status:
-            # Raises an HTTPError if the status code is in [400..600)
-            res.raise_for_status()
-
+        url = f"{self.url}:{self.port}/api/{path}"
+        try:
+            res = requests.request(method, url, json=json)
+            res.raise_for_status()  # Raises an exception if status_code is in [400..600)
+        except:
+            raise Exception("Can't connect to the backend service")
         return res
 
     def get_location(self, device: "Device"):
-        params = {"sdk_token": device.sdk_token}
-        res = self._make_request("GET", device.imsi, params)
+        data = {"sdk_token": device.sdk_token}
+        res = self._make_request("GET", device.imsi, data)
         return res
 
     def create_network_slice(self, slice: "NetworkSlice"):
-        params = {"imsi": slice.device.imsi, "sdk_token": slice.device.sdk_token}
-        res = self._make_request("POST", "networkslices", params)
+        data = {"imsi": slice.device.imsi, "sdk_token": slice.device.sdk_token}
+        res = self._make_request("POST", "networkslices", data)
         return res
 
     def update_network_slice(self, slice: "NetworkSlice"):
-        params = {"some": "parameter", "sdk_token": slice.device.sdk_token}
-        res = self._make_request("PUT", f"networkslices/{slice.id}", params)
+        data = {"some": "parameter", "sdk_token": slice.device.sdk_token}
+        res = self._make_request("PUT", f"networkslices/{slice.id}", data)
         return res
 
     def delete_network_slice(self, slice: "NetworkSlice"):
-        params = {"slice_id": slice.id, "sdk_token": slice.device.sdk_token}
-        res = self._make_request("DELETE", f"networkslices/{slice.id}", params)
+        data = {"slice_id": slice.id, "sdk_token": slice.device.sdk_token}
+        res = self._make_request("DELETE", f"networkslices/{slice.id}", data)
         return res.status_code
