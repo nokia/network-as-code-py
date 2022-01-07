@@ -1,4 +1,6 @@
 import requests
+from .errors import GatewayConnectionError
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
@@ -27,7 +29,7 @@ class RequestHandler:
             res = requests.request(method, url, json=json)
             res.raise_for_status()  # Raises an exception if status_code is in [400..600)
         except:
-            raise Exception("Can't connect to the backend service")
+            raise GatewayConnectionError("Can't connect to the backend service")
         return res
 
     def get_location(self, device: "Device"):
