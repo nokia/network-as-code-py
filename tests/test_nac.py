@@ -1,7 +1,6 @@
-import time
-import random
 import pytest
-from network_as_code import NetworkSlice, Device, DeviceLocation, RequestHandler
+from hypothesis import given, settings, strategies as st, HealthCheck
+from network_as_code import NetworkSlice, Device, DeviceLocation
 
 API_PATH = "https://sdk-gateway.ext.dynamic.nsn-net.nokia.com:8000/api"
 
@@ -19,23 +18,26 @@ def test_device_init():
     assert test_device.sdk_token == test_sdk_token
 
 
-def test_get_location(requests_mock, device):
-    # Generate random data
-    lat = random.uniform(-90, 90)
-    lon = random.uniform(-180, 180)
-    alt = random.randint(0, 1000)
-    ts = time.time()
-
+@given(
+    latitude=st.floats(min_value=-90, max_value=90),
+    longitude=st.floats(min_value=-180, max_value=180),
+    altitude=st.floats(min_value=0, max_value=1000),
+    timestamp=st.floats(allow_nan=False),
+)
+@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
+def test_successful_device_location(
+    requests_mock, device, latitude, longitude, altitude, timestamp
+):
     # Register a mocked response
     requests_mock.get(
-        f"{API_PATH}/{device.imsi}",
+        f"{API_PATH}/location/{device.imsi}",
         json={
             "imsi": device.imsi,
             "location": {
-                "latitude": lat,
-                "longitude": lon,
-                "altitude": alt,
-                "timestamp": ts,
+                "latitude": latitude,
+                "longitude": longitude,
+                "altitude": altitude,
+                "timestamp": timestamp,
             },
         },
     )
@@ -44,7 +46,38 @@ def test_get_location(requests_mock, device):
     device_location = DeviceLocation(device)
 
     # Assert that the data is received and stored correctly
-    assert device_location.latitude == lat
-    assert device_location.longitude == lon
-    assert device_location.altitude == alt
-    assert device_location.timestamp == ts
+    assert device_location.latitude == latitude
+    assert device_location.longitude == longitude
+    assert device_location.altitude == altitude
+    assert device_location.timestamp == timestamp
+
+
+@given(
+    _id=st.integers(min_value=0),
+    index=st.integers(min_value=0, max_value=7),
+    qos=st.integers(min_value=0, max_value=4),
+    bandwidth=st.integers(min_value=0),
+    default=st.booleans(),
+)
+@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
+def test_successful_network_slice_creation(
+    requests_mock, device, _id, index, qos, bandwidth, default
+):
+    requests_mock.post(
+        f"{API_PATH}/networkslices",
+        json={
+            "_id": _id,
+            "index": index,
+            "qos": qos,
+            "bandwidth": bandwidth,
+            "default": default,
+        },
+    )
+    network_slice = NetworkSlice(device, index, qos, bandwidth, default)
+
+    assert network_slice.device == device
+    assert network_slice._id == _id
+    assert network_slice.index == index
+    assert network_slice.qos == qos
+    assert network_slice.bandwidth == bandwidth
+    assert network_slice.default == default
