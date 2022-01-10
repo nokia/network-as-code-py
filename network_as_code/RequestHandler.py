@@ -34,20 +34,19 @@ class RequestHandler:
 
     def get_location(self, device: "Device"):
         data = {"sdk_token": device.sdk_token}
-        res = self._make_request("GET", device.imsi, data)
-        return res
+        return self._make_request("GET", f"/location/{device.imsi}", data)
 
-    def create_network_slice(self, slice: "NetworkSlice"):
-        data = {"imsi": slice.device.imsi, "sdk_token": slice.device.sdk_token}
-        res = self._make_request("POST", "networkslices", data)
-        return res
+    def create_network_slice(self, device: "Device", **data: dict):
+        data["imsi"] = device.imsi
+        data["sdk_token"] = device.sdk_token
+        return self._make_request("POST", "networkslices", data)
 
-    def update_network_slice(self, slice: "NetworkSlice"):
-        data = {"some": "parameter", "sdk_token": slice.device.sdk_token}
-        res = self._make_request("PUT", f"networkslices/{slice.id}", data)
-        return res
+    def update_network_slice(self, device: "Device", **data: dict):
+        data["imsi"] = device.imsi
+        data["sdk_token"] = device.sdk_token
+        return self._make_request("PUT", f"/networkslices/{slice.id}", data)
 
     def delete_network_slice(self, slice: "NetworkSlice"):
-        data = {"slice_id": slice.id, "sdk_token": slice.device.sdk_token}
-        res = self._make_request("DELETE", f"networkslices/{slice.id}", data)
+        data = {"_id": slice.id, "sdk_token": slice.device.sdk_token}
+        res = self._make_request("DELETE", f"/networkslices/{slice.id}", data)
         return res.status_code

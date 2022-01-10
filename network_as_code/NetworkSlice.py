@@ -6,21 +6,21 @@ class NetworkSlice:
     def __init__(
         self, device: Device, index: int, qos: int, bandwidth: int, default: bool
     ):
-        # These will be run through the property setters below
         self._device = device
-        self.index = index
-        self.qos = qos
-        self.bandwidth = bandwidth
-        self.default = default
-
-        # Make a request to the gateway to create the actual network slice
-        res = RequestHandler.instance.create_network_slice(self)
+        res = RequestHandler.instance.create_network_slice(
+            device, index=index, qos=qos, bandwidth=bandwidth, default=default
+        )
         data = res.json()
-        self._id = data["slice_id"]  # Save the slice id for future requests
+        self.__id = data["_id"]
+        self._update_slice_attributes(data)
 
     @property
     def device(self) -> Device:
         return self._device
+
+    @property
+    def _id(self) -> int:
+        return self.__id
 
     @property
     def index(self) -> int:
@@ -30,39 +30,51 @@ class NetworkSlice:
     def index(self, value: int):
         if value < 0 or value > 7:  # This is a placeholder check
             raise ValueError("Network slice index must be between 0 and 7")
-        self._index = value
+        self.update(index=value)
 
     @property
     def qos(self) -> int:
         return self._qos
 
-    @index.setter
+    @qos.setter
     def qos(self, value: int):
         if value < 0 or value > 4:  # This is a placeholder check
             raise ValueError("Network slice QoS value must be between 0 and 4")
-        self._qos = value
+        self.update(qos=value)
 
     @property
     def bandwidth(self) -> int:
         return self._bandwidth
 
-    @index.setter
+    @bandwidth.setter
     def bandwidth(self, value: int):
         if value < 0:  # This is a placeholder check
             raise ValueError("Bandwidth below 0 is not possible")
-        self._bandwidth = value
+        self.update(bandwidth=value)
 
     @property
     def default(self) -> bool:
         return self._default
 
-    @index.setter
+    @default.setter
     def default(self, value: bool):
-        self._default = value
+        self.update(default=value)
 
-    def update(self, index: int, qos: int, bandwidth: int, default: bool):
+    def _update_slice_attributes(self, attributes: dict):
+        self._index = attributes["index"]
+        self._qos = attributes["qos"]
+        self._bandwidth = attributes["bandwidth"]
+        self._default = attributes["default"]
+
+    def update(
+        self,
+        index: int = None,
+        qos: int = None,
+        bandwidth: int = None,
+        default: bool = None,
+    ):
         """
-        Update all parameters of the network slice at once.
+        Update one or more parameters of the network slice at once.
 
         Arguments:
             index: New index of the slice
@@ -71,22 +83,15 @@ class NetworkSlice:
             default: Whether this is should default slice for this device
         """
         params = {
-            "_id": self._id,
-            "index": index,
-            "qos": qos,
-            "bandwidth": bandwidth,
-            "default": default,
+            "index": self.index if index is None else index,
+            "qos": self.qos if qos is None else qos,
+            "bandwidth": self.bandwidth if bandwidth is None else bandwidth,
+            "default": self.default if default is None else default,
         }
-        res = RequestHandler.instance.update_network_slice(params)
-
-        data = res.json()
-        self.index = data["index"]
-        self.qos = data["qos"]
-        self.bandwidth = data["bandwidth"]
-        self.default = data["default"]
+        res = RequestHandler.instance.update_network_slice(self.device, **params)
+        self._update_slice_attributes(res.json())
 
     def destroy(self):
-        """
-        Deletes the network slice from the network.
-        """
+        """Delete the network slice from the network."""
         RequestHandler.instance.delete_network_slice(self)
+        return True
