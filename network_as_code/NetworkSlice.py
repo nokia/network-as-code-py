@@ -4,15 +4,28 @@ from .RequestHandler import RequestHandler
 
 class NetworkSlice:
     def __init__(
-        self, device: Device, index: int, qos: int, bandwidth: int, default: bool
+        self,
+        device: Device,
+        index: int,
+        qos: int,
+        bandwidth: int,
+        default: bool,
     ):
         self._device = device
+        self.index = index
+        self.qos = qos
+        self.bandwidth = bandwidth
+        self.default = default
+
         res = RequestHandler.instance.create_network_slice(
-            device, index=index, qos=qos, bandwidth=bandwidth, default=default
+            device,
+            index=index,
+            qos=qos,
+            bandwidth=bandwidth,
+            default=default,
         )
         data = res.json()
         self.__id = data["_id"]
-        self._update_slice_attributes(data)
 
     @property
     def device(self) -> Device:
@@ -28,9 +41,9 @@ class NetworkSlice:
 
     @index.setter
     def index(self, value: int):
-        if value < 0 or value > 7:  # This is a placeholder check
+        if value < 0 or value > 7:
             raise ValueError("Network slice index must be between 0 and 7")
-        self.update(index=value)
+        self._index = value
 
     @property
     def qos(self) -> int:
@@ -38,9 +51,9 @@ class NetworkSlice:
 
     @qos.setter
     def qos(self, value: int):
-        if value < 0 or value > 4:  # This is a placeholder check
-            raise ValueError("Network slice QoS value must be between 0 and 4")
-        self.update(qos=value)
+        if value < 0 or value > 4:
+            raise ValueError("Network slice QoS must be between 0 and 4")
+        self._qos = value
 
     @property
     def bandwidth(self) -> int:
@@ -48,9 +61,9 @@ class NetworkSlice:
 
     @bandwidth.setter
     def bandwidth(self, value: int):
-        if value < 0:  # This is a placeholder check
+        if value < 0:
             raise ValueError("Bandwidth below 0 is not possible")
-        self.update(bandwidth=value)
+        self._bandwidth = value
 
     @property
     def default(self) -> bool:
@@ -58,13 +71,7 @@ class NetworkSlice:
 
     @default.setter
     def default(self, value: bool):
-        self.update(default=value)
-
-    def _update_slice_attributes(self, attributes: dict):
-        self._index = attributes["index"]
-        self._qos = attributes["qos"]
-        self._bandwidth = attributes["bandwidth"]
-        self._default = attributes["default"]
+        self._default = value
 
     def update(
         self,
@@ -74,22 +81,43 @@ class NetworkSlice:
         default: bool = None,
     ):
         """
-        Update one or more parameters of the network slice at once.
+        Update one or more parameters of the network slice.
 
         Arguments:
-            index: New index of the slice
-            qos: Quality of Service options
-            bandwidth: New Mbps value of the slice
-            default: Whether this is should default slice for this device
+            index (int): New index of the slice. Range: [0..7].
+            qos (int): Quality of Service options. One of: 'low-latency', ...
+            bandwidth (int): How much bandwidth should be reserved in Mbps.
+            default (bool): Whether this is the default slice for this device.
         """
+        # Initial values
         params = {
-            "index": self.index if index is None else index,
-            "qos": self.qos if qos is None else qos,
-            "bandwidth": self.bandwidth if bandwidth is None else bandwidth,
-            "default": self.default if default is None else default,
+            "index": self.index,
+            "qos": self.qos,
+            "bandwidth": self.bandwidth,
+            "default": self.default,
         }
+        # Perform value checks and
+        # replace values that are going to be updated
+        if index is not None:
+            self.index = index
+            params["index"] = index
+        if qos is not None:
+            self.qos = qos
+            params["qos"] = qos
+        if bandwidth is not None:
+            self.bandwidth = bandwidth
+            params["bandwidth"] = bandwidth
+        if default is not None:
+            self.default = default
+            params["default"] = default
+
         res = RequestHandler.instance.update_network_slice(self.device, **params)
-        self._update_slice_attributes(res.json())
+        data = res.json()
+
+        self.index = data["index"]
+        self.qos = data["qos"]
+        self.bandwidth = data["bandwidth"]
+        self.default = data["default"]
 
     def destroy(self):
         """Delete the network slice from the network."""
