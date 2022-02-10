@@ -2,7 +2,7 @@ import pytest
 from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import NetworkSlice, Device, DeviceLocation
 
-API_PATH = "https://sdk-gateway.ext.dynamic.nsn-net.nokia.com:8000/api"
+API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
 
 @pytest.fixture
@@ -17,6 +17,15 @@ def test_device_init():
     assert test_device.imsi == test_imsi
     assert test_device.sdk_token == test_sdk_token
 
+def test_mocked_api_connection(requests_mock, device):
+    requests_mock.get(
+        f"{API_PATH}/hello",
+        json={
+            "service": "up"
+        },
+    )
+
+    assert device.check_api_connection()
 
 @given(
     latitude=st.floats(min_value=-90, max_value=90),
