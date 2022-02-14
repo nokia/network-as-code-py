@@ -17,36 +17,41 @@ class RequestHandler:
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
             # Hardcoded for prototyping
-            cls._instance.url = "https://sdk-gateway.ext.dynamic.nsn-net.nokia.com"
-            cls._instance.port = 8000
+            cls._instance.url = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
         return cls._instance
 
-    def _make_request(self, method: str, path: str, json: dict):
+    def _make_request(self, method: str, path: str, headers: dict, json: dict):
         path = path.lstrip("/")
-        url = f"{self.url}:{self.port}/api/{path}"
+        url = f"{self.url}/{path}"
         try:
-            res = requests.request(method, url, json=json)
+            res = requests.request(method, url, headers=headers, json=json)
             res.raise_for_status()  # Raises an exception if status_code is in [400..600)
         except:
             raise GatewayConnectionError("Can't connect to the backend service")
         return res
 
     def get_location(self, device: "Device"):
-        data = {"sdk_token": device.sdk_token}
-        return self._make_request("GET", f"/location/{device.imsi}", data)
+        headers = {"x-apikey": device.sdk_token}
+        return self._make_request("GET", f"/location/{device.imsi}", headers, None)
 
     def create_network_slice(self, device: "Device", **data: dict):
+        headers = {"x-apikey": device.sdk_token}
         data["imsi"] = device.imsi
-        data["sdk_token"] = device.sdk_token
-        return self._make_request("POST", "networkslices", data)
+        return self._make_request("POST", "networkslices", headers, data)
 
     def update_network_slice(self, device: "Device", **data: dict):
+        headers = {"x-apikey": device.sdk_token}
         data["imsi"] = device.imsi
-        data["sdk_token"] = device.sdk_token
-        return self._make_request("PUT", f"/networkslices/{slice.id}", data)
+        return self._make_request("PUT", f"/networkslices/{slice.id}", headers, data)
 
     def delete_network_slice(self, slice: "NetworkSlice"):
-        data = {"_id": slice.id, "sdk_token": slice.device.sdk_token}
-        res = self._make_request("DELETE", f"/networkslices/{slice.id}", data)
+        headers = {"x-apikey": slice.device.sdk_token}
+        data = {"_id": slice.id, }
+        res = self._make_request("DELETE", f"/networkslices/{slice.id}", headers, data)
+        return res.status_code
+
+    def check_api_connection(self, device):
+        headers = {"x-apikey": device.sdk_token}
+        res = self._make_request("GET", f"/hello", headers, None)
         return res.status_code
