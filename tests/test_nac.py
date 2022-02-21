@@ -1,6 +1,6 @@
 import pytest
 from hypothesis import given, settings, strategies as st, HealthCheck
-from network_as_code import NetworkSlice, Device, DeviceLocation
+from network_as_code import NetworkSlice, Device, DeviceLocation, GeoZone
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
@@ -60,6 +60,13 @@ def test_successful_device_location(
     assert device_location.altitude == altitude
     assert device_location.timestamp == timestamp
 
+def test_geozone_notification(device):
+    geozone = GeoZone(device, area = "Some Area")
+
+    geozone_events = geozone.monitor()
+
+    for event in geozone_events:
+        assert event == "enter" or event == "leave"
 
 @given(
     _id=st.integers(min_value=0),
