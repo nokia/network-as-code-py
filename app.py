@@ -1,6 +1,10 @@
+import os
+
 import network_as_code as nac
 
-drone = nac.Device("imsi", "sdk_token")
+SDK_TOKEN = os.environ['NAC_TOKEN']
+
+drone = nac.Device("imsi", SDK_TOKEN)
 
 print("API connection established: ", drone.check_api_connection())
 
