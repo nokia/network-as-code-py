@@ -17,15 +17,19 @@ class RequestHandler:
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
             # Hardcoded for prototyping
-            cls._instance.url = "https://apigee-api-test.nokia-solution.com/network-as-code"
+            cls._instance.url = (
+                "https://apigee-api-test.nokia-solution.com/network-as-code"
+            )
 
         return cls._instance
 
-    def _make_request(self, method: str, path: str, headers: dict, json: dict):
+    def _make_request(
+        self, method: str, path: str, headers: dict, json: dict, **kwargs
+    ):
         path = path.lstrip("/")
         url = f"{self.url}/{path}"
         try:
-            res = requests.request(method, url, headers=headers, json=json)
+            res = requests.request(method, url, headers=headers, json=json, **kwargs)
             res.raise_for_status()  # Raises an exception if status_code is in [400..600)
         except:
             raise GatewayConnectionError("Can't connect to the backend service")
@@ -33,8 +37,8 @@ class RequestHandler:
 
     def get_location(self, device: "Device"):
         headers = {"x-apikey": device.sdk_token}
-        json = { "externalid": device.ext_id }
-        return self._make_request("GET", f"/subscriber/location", headers, json)
+        json = {"externalid": device.ext_id}
+        return self._make_request("POST", "/subscriber/location", headers, json)
 
     def set_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
