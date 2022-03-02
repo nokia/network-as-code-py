@@ -1,6 +1,6 @@
 import pytest
 from hypothesis import given, settings, strategies as st, HealthCheck
-from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
+from network_as_code import NetworkProfile, Device, GeoZone
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
@@ -17,60 +17,58 @@ def test_device_init():
     assert test_device.ext_id == test_id
     assert test_device.sdk_token == test_sdk_token
 
+
 def test_mocked_api_connection(requests_mock, device):
     requests_mock.get(
         f"{API_PATH}/hello",
-        json={
-            "service": "up"
-        },
+        json={"service": "up"},
     )
 
     assert device.check_api_connection()
 
+
 @given(
     latitude=st.floats(min_value=-90, max_value=90),
     longitude=st.floats(min_value=-180, max_value=180),
-    altitude=st.floats(min_value=0, max_value=1000),
-    timestamp=st.floats(allow_nan=False),
+    # altitude=st.floats(min_value=0, max_value=1000),
+    # timestamp=st.floats(allow_nan=False),
 )
 @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_successful_device_location(
-    requests_mock, device, latitude, longitude, altitude, timestamp
+    requests_mock,
+    device,
+    latitude,
+    longitude,  # altitude, timestamp
 ):
     # Register a mocked response
-    requests_mock.get(
+    requests_mock.post(
         f"{API_PATH}/subscriber/location",
         json={
-            "ext_id": device.ext_id,
-            "location": {
-                "latitude": latitude,
-                "longitude": longitude,
-                "altitude": altitude,
-                "timestamp": timestamp,
-            },
+            "latitude": latitude,
+            "longitude": longitude,
+            # "altitude": altitude,
+            # "timestamp": timestamp,
         },
     )
 
     # Get the device location
-    device_location = DeviceLocation(device)
+    device_location = device.location()
 
     # Assert that the data is received and stored correctly
-    assert device_location.latitude == latitude
-    assert device_location.longitude == longitude
-    assert device_location.altitude == altitude
-    assert device_location.timestamp == timestamp
+    assert device_location["latitude"] == latitude
+    assert device_location["longitude"] == longitude
+    # assert device_location.altitude == altitude
+    # assert device_location.timestamp == timestamp
+
 
 def test_geozone_notification(device):
-    geozone = GeoZone(device, area = "Some Area")
-
+    geozone = GeoZone(device, area="Some Area")
     geozone_events = geozone.monitor()
-
     for event in geozone_events:
         assert event == "enter" or event == "leave"
 
-def test_successful_network_profile_selection(
-    requests_mock, device
-):
+
+def test_successful_network_profile_selection(requests_mock, device):
     requests_mock.patch(
         f"{API_PATH}/subscriber/bandwidth",
         text="",
@@ -81,9 +79,7 @@ def test_successful_network_profile_selection(
     assert network_slice.bandwidth_profile == "gold"
 
 
-def test_network_profile_selection_produces_correct_json_body(
-    requests_mock
-):
+def test_network_profile_selection_produces_correct_json_body(requests_mock):
     device = Device(sdk_token="blah", ext_id="example@example.com")
 
     requests_mock.patch(
@@ -95,6 +91,7 @@ def test_network_profile_selection_produces_correct_json_body(
 
     assert network_slice.device == device
     assert network_slice.bandwidth_profile == "gold"
+
 
 def _json_body_callback(request, context):
     json_body = request.json()
