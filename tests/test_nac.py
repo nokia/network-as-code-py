@@ -76,10 +76,11 @@ def test_successful_network_profile_selection(
         f"{API_PATH}/subscriber/bandwidth",
         text="",
     )
-    network_slice = NetworkProfile(device, "gold")
+    network_profile = NetworkProfile("gold")
 
-    assert network_slice.device == device
-    assert network_slice.bandwidth_profile == "gold"
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "gold"
 
 def test_unsuccessful_network_profile_selection(
     requests_mock, device
@@ -90,7 +91,8 @@ def test_unsuccessful_network_profile_selection(
     )
 
     try:
-        network_slice = NetworkProfile(device, "gold")
+        network_profile = NetworkProfile("gold")
+        device.apply(network_profile)
         # Exception should have been thrown
         assert False
     except GatewayConnectionError:
@@ -99,13 +101,7 @@ def test_unsuccessful_network_profile_selection(
 def test_network_profile_selection_using_setter_updates_value(
     requests_mock, device
 ):
-
-    requests_mock.patch(
-        f"{API_PATH}/subscriber/bandwidth",
-        text="",
-    )
-
-    network_profile = NetworkProfile(device, "gold")
+    network_profile = NetworkProfile("gold")
 
     network_profile.bandwidth_profile = "bronze"
 
@@ -121,10 +117,11 @@ def test_network_profile_selection_produces_correct_json_body(
         text=_json_body_callback,
     )
 
-    network_slice = NetworkProfile(device, "gold")
+    network_profile = NetworkProfile("gold")
 
-    assert network_slice.device == device
-    assert network_slice.bandwidth_profile == "gold"
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "gold"
 
 def _json_body_callback(request, context):
     json_body = request.json()

@@ -1,6 +1,6 @@
 from .Device import Device
 from .DeviceLocation import DeviceLocation
-from .NetworkSlice import NetworkProfile
+from .NetworkProfile import NetworkProfile
 from .RequestHandler import RequestHandler
 from .GeoZone import GeoZone
 

@@ -9,3 +9,10 @@ class Device:
     def check_api_connection(self):
         res = RequestHandler.instance.check_api_connection(self)
         return res == 200
+
+    def apply(self, configuration):
+        """Apply a configuration change to this device.
+
+        Args:
+            configuration: An network configuration object, such as a NetworkProfile"""
+        configuration.apply(self)
