@@ -33,23 +33,13 @@ class RequestHandler:
 
     def get_location(self, device: "Device"):
         headers = {"x-apikey": device.sdk_token}
-        return self._make_request("GET", f"/location/{device.imsi}", headers, None)
+        json = { "externalid": device.ext_id }
+        return self._make_request("GET", f"/subscriber/location", headers, json)
 
-    def create_network_slice(self, device: "Device", **data: dict):
+    def set_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
-        data["imsi"] = device.imsi
-        return self._make_request("POST", "networkslices", headers, data)
-
-    def update_network_slice(self, device: "Device", **data: dict):
-        headers = {"x-apikey": device.sdk_token}
-        data["imsi"] = device.imsi
-        return self._make_request("PUT", f"/networkslices/{slice.id}", headers, data)
-
-    def delete_network_slice(self, slice: "NetworkSlice"):
-        headers = {"x-apikey": slice.device.sdk_token}
-        data = {"_id": slice.id, }
-        res = self._make_request("DELETE", f"/networkslices/{slice.id}", headers, data)
-        return res.status_code
+        json["externalid"] = device.ext_id
+        return self._make_request("PATCH", "/subscriber/bandwidth", headers, json)
 
     def check_api_connection(self, device):
         headers = {"x-apikey": device.sdk_token}

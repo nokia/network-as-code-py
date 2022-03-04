@@ -1,20 +1,21 @@
 import pytest
 from hypothesis import given, settings, strategies as st, HealthCheck
-from network_as_code import NetworkSlice, Device, DeviceLocation, GeoZone
+from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
+from network_as_code.errors import GatewayConnectionError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
 
 @pytest.fixture
 def device():
-    return Device("310170845466094", "random_api_token")
+    return Device("example@example.com", "random_api_token")
 
 
 def test_device_init():
-    test_imsi = "310170845466094"
+    test_id = "example@example.com"
     test_sdk_token = "random_api_token"
-    test_device = Device(test_imsi, test_sdk_token)
-    assert test_device.imsi == test_imsi
+    test_device = Device(test_id, test_sdk_token)
+    assert test_device.ext_id == test_id
     assert test_device.sdk_token == test_sdk_token
 
 def test_mocked_api_connection(requests_mock, device):
@@ -39,9 +40,9 @@ def test_successful_device_location(
 ):
     # Register a mocked response
     requests_mock.get(
-        f"{API_PATH}/location/{device.imsi}",
+        f"{API_PATH}/subscriber/location",
         json={
-            "imsi": device.imsi,
+            "ext_id": device.ext_id,
             "location": {
                 "latitude": latitude,
                 "longitude": longitude,
@@ -68,32 +69,65 @@ def test_geozone_notification(device):
     for event in geozone_events:
         assert event == "enter" or event == "leave"
 
-@given(
-    _id=st.integers(min_value=0),
-    index=st.integers(min_value=0, max_value=7),
-    qos=st.integers(min_value=0, max_value=4),
-    bandwidth=st.integers(min_value=0),
-    default=st.booleans(),
-)
-@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
-def test_successful_network_slice_creation(
-    requests_mock, device, _id, index, qos, bandwidth, default
+def test_successful_network_profile_selection(
+    requests_mock, device
 ):
-    requests_mock.post(
-        f"{API_PATH}/networkslices",
-        json={
-            "_id": _id,
-            "index": index,
-            "qos": qos,
-            "bandwidth": bandwidth,
-            "default": default,
-        },
+    requests_mock.patch(
+        f"{API_PATH}/subscriber/bandwidth",
+        text="",
     )
-    network_slice = NetworkSlice(device, index, qos, bandwidth, default)
+    network_profile = NetworkProfile("gold")
 
-    assert network_slice.device == device
-    assert network_slice._id == _id
-    assert network_slice.index == index
-    assert network_slice.qos == qos
-    assert network_slice.bandwidth == bandwidth
-    assert network_slice.default == default
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "gold"
+
+def test_unsuccessful_network_profile_selection(
+    requests_mock, device
+):
+    requests_mock.patch(
+        f"{API_PATH}/subscriber/bandwidth",
+        status_code=404,
+    )
+
+    try:
+        network_profile = NetworkProfile("gold")
+        device.apply(network_profile)
+        # Exception should have been thrown
+        assert False
+    except GatewayConnectionError:
+        assert True
+
+def test_network_profile_selection_using_setter_updates_value(
+    requests_mock, device
+):
+    network_profile = NetworkProfile("gold")
+
+    network_profile.bandwidth_profile = "bronze"
+
+    assert network_profile.bandwidth_profile == "bronze"
+
+def test_network_profile_selection_produces_correct_json_body(
+    requests_mock
+):
+    device = Device(sdk_token="blah", ext_id="example@example.com")
+
+    requests_mock.patch(
+        f"{API_PATH}/subscriber/bandwidth",
+        text=_json_body_callback,
+    )
+
+    network_profile = NetworkProfile("gold")
+
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "gold"
+
+def _json_body_callback(request, context):
+    json_body = request.json()
+
+    assert json_body["externalid"] == "example@example.com"
+    assert json_body["bandwidthID"] == "gold"
+
+    context.status_code = 200
+    return ""
