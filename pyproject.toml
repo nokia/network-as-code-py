@@ -8,11 +8,13 @@ authors = ["Pavel Garmuyev <pavel.garmuyev@gmail.com>"]
 python = "^3.10"
 requests = "^2.26.0"
 python-dotenv = "^0.19.2"
+pydoc-markdown = {extras = ["novella"], version = "^4.5.1"}
+novella = "^0.1.11"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
 pytest-cov = "^3.0.0"
-black = {version = "^21.12b0", allow-prereleases = true}
+black = "^22.1.0"
 requests-mock = "^1.9.3"
 hypothesis = "^6.34.2"
 

@@ -27,18 +27,16 @@ class Device:
         self.sdk_token = sdk_token
 
     def check_api_connection(self) -> bool:
-        """
-        Checks whether the configured Network as Code API is accessible and is able to process requests.
+        """Check whether the configured Network as Code API is accessible and is able to process requests.
 
         Returns:
             `True` when the Network as Code API is accessible and responds, otherwise returns `False`.
         """
-        status = RequestHandler.instance.check_api_connection(self)
-        return status == 200
+        res = RequestHandler.instance.check_api_connection(self)
+        return res == 200
 
     def location(self) -> dict:
-        """
-        Gets the location of the device from the Network as Code API.
+        """Get the location of the device from the Network as Code API.
 
         Returns:
             Dictionary containing keys: `latitude`, `longitude`, `altitude` of the device and `timestamp` of the request.
@@ -49,3 +47,11 @@ class Device:
             # return location["longitude"], location["latitude"]
             return res.json()
         return {}
+
+    def apply(self, configuration):
+        """Apply a configuration change to this device.
+
+        Args:
+            configuration: An network configuration object, such as a NetworkProfile.
+        """
+        configuration.apply(self)

@@ -1,5 +1,5 @@
 from .Device import Device
-from .NetworkSlice import NetworkProfile
+from .NetworkProfile import NetworkProfile
 from .RequestHandler import RequestHandler
 from .GeoZone import GeoZone
 

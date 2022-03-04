@@ -1,6 +1,7 @@
 import pytest
 from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import NetworkProfile, Device, GeoZone
+from network_as_code.errors import GatewayConnectionError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
 
@@ -73,11 +74,36 @@ def test_successful_network_profile_selection(requests_mock, device):
         f"{API_PATH}/subscriber/bandwidth",
         text="",
     )
-    network_slice = NetworkProfile(device, "gold")
+    network_profile = NetworkProfile("gold")
 
-    assert network_slice.device == device
-    assert network_slice.bandwidth_profile == "gold"
+    device.apply(network_profile)
 
+    assert network_profile.bandwidth_profile == "gold"
+
+def test_unsuccessful_network_profile_selection(
+    requests_mock, device
+):
+    requests_mock.patch(
+        f"{API_PATH}/subscriber/bandwidth",
+        status_code=404,
+    )
+
+    try:
+        network_profile = NetworkProfile("gold")
+        device.apply(network_profile)
+        # Exception should have been thrown
+        assert False
+    except GatewayConnectionError:
+        assert True
+
+def test_network_profile_selection_using_setter_updates_value(
+    requests_mock, device
+):
+    network_profile = NetworkProfile("gold")
+
+    network_profile.bandwidth_profile = "bronze"
+
+    assert network_profile.bandwidth_profile == "bronze"
 
 def test_network_profile_selection_produces_correct_json_body(requests_mock):
     device = Device(sdk_token="blah", ext_id="example@example.com")
@@ -87,10 +113,11 @@ def test_network_profile_selection_produces_correct_json_body(requests_mock):
         text=_json_body_callback,
     )
 
-    network_slice = NetworkProfile(device, "gold")
+    network_profile = NetworkProfile("gold")
 
-    assert network_slice.device == device
-    assert network_slice.bandwidth_profile == "gold"
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "gold"
 
 
 def _json_body_callback(request, context):
