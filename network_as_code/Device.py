@@ -1,3 +1,4 @@
+from dateutil.parser import parse
 from .RequestHandler import RequestHandler
 
 
@@ -10,45 +11,48 @@ class Device:
     #### Example usage:
     ```python
     device = Device(
-        ext_id="string@registered.domain",
+        id="string@registered.domain",
         sdk_token="eee0a4d0-2b54-4a7a-a61f-40ce753f44c6"
     )
     ```
     """
 
-    def __init__(self, ext_id: str, sdk_token: str) -> None:
+    def __init__(self, id: str, sdk_token: str) -> None:
         """Initializes a new Device.
 
         Args:
-            ext_id: External ID that identifies a mobile device. See https://cns-apigee-test-6559-nacpoc.apigee.io/docs/nac/1/types/ExternalId for more details.
+            id: ID that identifies a subscriber (device). See the [API docs](https://cns-apigee-test-6559-nacpoc.apigee.io/docs/nac/1/types/ExternalId) for more details.
             sdk_token: Authentication token for the Network as Code API.
         """
-        self.ext_id = ext_id
+        self.id = id
         self.sdk_token = sdk_token
 
     def check_api_connection(self) -> bool:
-        """Check whether the configured Network as Code API is accessible and is able to process requests.
+        """Check whether the backend API is accessible and is able to process requests.
 
         Returns:
-            `True` when the Network as Code API is accessible and responds, otherwise returns `False`.
+            `True`, if the backend API responds with status code 200, otherwise returns `False`.
         """
         res = RequestHandler.instance.check_api_connection(self)
         return res == 200
 
-    def location(self) -> dict:
-        """Get the location of the device from the Network as Code API.
+    def location(self):
+        """Get the location of the device.
 
         Returns:
-            Dictionary containing keys: `latitude`, `longitude`, `altitude` of the device and `timestamp` of the request.
+            Tuple of (`latitude`, `longitude`, `elevation`, `event_time`)
         """
         res = RequestHandler.instance.get_location(self)
-        if res.status_code == 200:
-            # location = res.json()
-            # return location["longitude"], location["latitude"]
-            return res.json()
-        return {}
+        info = res.json()
+        location_info = info["locationInfo"]
+        return (
+            float(location_info["lat"]),
+            float(location_info["long"]),
+            float(location_info["elev"]),
+            parse(info["eventTime"]),
+        )
 
-    def apply(self, configuration):
+    def apply(self, configuration) -> None:
         """Apply a configuration change to this device.
 
         Args:
