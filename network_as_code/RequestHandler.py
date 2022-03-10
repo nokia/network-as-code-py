@@ -17,7 +17,7 @@ class RequestHandler:
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
             # Hardcoded for prototyping
-            cls._instance.url = "https://apigee-api-test.nokia-solution.com/network-as-code"
+            cls._instance.url = "https://apigee-api-test.nokia-solution.com/nac"
 
         return cls._instance
 
@@ -36,9 +36,14 @@ class RequestHandler:
         json = { "externalid": device.ext_id }
         return self._make_request("GET", f"/subscriber/location", headers, json)
 
+    def get_network_profile(self, device: "Device", **json: dict):
+        headers = {"x-apikey": device.sdk_token}
+        json["id"] = device.ext_id
+        return self._make_request("POST", "/subscriber/bandwidth", headers, json)
+
     def set_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
-        json["externalid"] = device.ext_id
+        json["id"] = device.ext_id
         return self._make_request("PATCH", "/subscriber/bandwidth", headers, json)
 
     def check_api_connection(self, device):
