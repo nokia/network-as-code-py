@@ -8,7 +8,7 @@ class NetworkProfile:
 
     #### Example usage:
     ```python
-    device = Device(ext_id="string@registered.domain")
+    device = Device(id="string@registered.domain")
 
     profile = NetworkProfile("gold")
 
@@ -30,15 +30,10 @@ class NetworkProfile:
     def bandwidth_profile(self, value):
         self._bandwidth_profile = value
 
-    def apply(
-        self,
-        device
-    ):
-        """
-        Apply this Network Profile to a given device
+    def apply(self, device):
+        """Apply this Network Profile to the given device.
 
         Args:
             device: An instance of the Device class, to which the network profile is applied
         """
-
         res = RequestHandler.instance.set_network_profile(device, bandwidth=self.bandwidth_profile)

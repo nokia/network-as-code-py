@@ -10,6 +10,7 @@ requests = "^2.26.0"
 python-dotenv = "^0.19.2"
 pydoc-markdown = {extras = ["novella"], version = "^4.5.1"}
 novella = "^0.1.11"
+python-dateutil = "^2.8.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"

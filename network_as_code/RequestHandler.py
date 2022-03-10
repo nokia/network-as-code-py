@@ -21,11 +21,11 @@ class RequestHandler:
 
         return cls._instance
 
-    def _make_request(self, method: str, path: str, headers: dict, json: dict):
+    def _request(self, method: str, path: str, headers: dict, json: dict, **kwargs):
         path = path.lstrip("/")
         url = f"{self.url}/{path}"
         try:
-            res = requests.request(method, url, headers=headers, json=json)
+            res = requests.request(method, url, headers=headers, json=json, **kwargs)
             res.raise_for_status()  # Raises an exception if status_code is in [400..600)
         except:
             raise GatewayConnectionError("Can't connect to the backend service")
@@ -33,20 +33,20 @@ class RequestHandler:
 
     def get_location(self, device: "Device"):
         headers = {"x-apikey": device.sdk_token}
-        json = { "externalid": device.ext_id }
-        return self._make_request("GET", f"/subscriber/location", headers, json)
+        json = {"id": device.id}
+        return self._request("POST", "/subscriber/location", headers, json)
 
     def get_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
-        json["id"] = device.ext_id
-        return self._make_request("POST", "/subscriber/bandwidth", headers, json)
+        json["id"] = device.id
+        return self._request("POST", "/subscriber/bandwidth", headers, json)
 
     def set_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
-        json["id"] = device.ext_id
-        return self._make_request("PATCH", "/subscriber/bandwidth", headers, json)
+        json["id"] = device.id
+        return self._request("PATCH", "/subscriber/bandwidth", headers, json)
 
     def check_api_connection(self, device):
         headers = {"x-apikey": device.sdk_token}
-        res = self._make_request("GET", f"/hello", headers, None)
+        res = self._request("GET", "/hello", headers, None)
         return res.status_code
