@@ -4,9 +4,21 @@ import network_as_code as nac
 
 SDK_TOKEN = os.environ['NAC_TOKEN']
 
-drone = nac.Device("imsi", SDK_TOKEN)
+UE_ID = os.environ['UE_ID']
 
-print("API connection established: ", drone.check_api_connection())
+device = nac.Device(UE_ID, SDK_TOKEN)
+
+print("API connection established: ", device.check_api_connection())
+
+network_profile = device.get_network_profile()
+
+print("Network profile in use: " + network_profile.bandwidth_profile)
+
+# network_profile.bandwidth_profile = "bronze"
+
+# device.apply(network_profile)
+
+# print("Network profile in use: " + device.get_network_profile().bandwidth_profile)
 
 # drone_location = nac.DeviceLocation(drone)
 # drone_location.refresh()

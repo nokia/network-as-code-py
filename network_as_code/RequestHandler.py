@@ -36,6 +36,11 @@ class RequestHandler:
         json = {"id": device.id}
         return self._request("POST", "/subscriber/location", headers, json)
 
+    def get_network_profile(self, device: "Device", **json: dict):
+        headers = {"x-apikey": device.sdk_token}
+        json["id"] = device.ext_id
+        return self._make_request("POST", "/subscriber/bandwidth", headers, json)
+
     def set_network_profile(self, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token}
         json["id"] = device.id

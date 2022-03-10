@@ -1,6 +1,6 @@
 from dateutil.parser import parse
 from .RequestHandler import RequestHandler
-
+from .NetworkProfile import NetworkProfile
 
 class Device:
     """Representation of a mobile device uniquely identified by an external id.
@@ -51,6 +51,10 @@ class Device:
             float(location_info["elev"]),
             parse(info["eventTime"]),
         )
+
+    def get_network_profile(self):
+        json = RequestHandler.instance.get_network_profile(self).json()
+        return NetworkProfile(json["serviceTier"][0])
 
     def apply(self, configuration) -> None:
         """Apply a configuration change to this device.

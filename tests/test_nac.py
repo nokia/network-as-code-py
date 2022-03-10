@@ -73,6 +73,23 @@ def test_geozone_notification(device):
     for event in geozone_events:
         assert event == "enter" or event == "leave"
 
+def test_getting_current_network_profile(requests_mock, device):
+    requests_mock.post(
+        f"{API_PATH}/subscriber/bandwidth",
+        status_code=200,
+        json={"ueId": "example@example.com", "priority": ["premium"], "serviceTier": ["gold"]},
+    )
+
+    network_profile = device.get_network_profile()
+
+    assert network_profile.bandwidth_profile == "gold"
+
+def test_successful_network_profile_selection(requests_mock, device):
+    requests_mock.patch(
+        f"{API_PATH}/subscriber/bandwidth",
+        text="",
+    )
+    network_profile = NetworkProfile("gold")
 
 def test_successful_network_profile_selection(requests_mock, device):
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", text="")
@@ -109,6 +126,7 @@ def test_network_profile_selection_produces_correct_json_body(requests_mock):
 def _json_body_callback(request, context):
     json_body = request.json()
     assert json_body["id"] == "example@example.com"
-    assert json_body["bandwidthID"] == "gold"
+    assert json_body["bandwidth"] == "gold"
+    
     context.status_code = 200
     return ""

@@ -2,7 +2,7 @@
 name = "network_as_code"
 version = "0.1.0"
 description = ""
-authors = ["Pavel Garmuyev <pavel.garmuyev@gmail.com>"]
+authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lahtinen@nokia.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
