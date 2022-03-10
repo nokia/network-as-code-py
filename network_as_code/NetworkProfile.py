@@ -1,6 +1,4 @@
-from .Device import Device
 from .RequestHandler import RequestHandler
-
 
 class NetworkProfile:
     """Representation of a network configuration selected from a list of available network tiers.
@@ -43,4 +41,4 @@ class NetworkProfile:
             device: An instance of the Device class, to which the network profile is applied
         """
 
-        res = RequestHandler.instance.set_network_profile(device, bandwidthID=self.bandwidth_profile)
+        res = RequestHandler.instance.set_network_profile(device, bandwidth=self.bandwidth_profile)

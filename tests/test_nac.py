@@ -3,7 +3,7 @@ from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
 from network_as_code.errors import GatewayConnectionError
 
-API_PATH = "https://apigee-api-test.nokia-solution.com/network-as-code"
+API_PATH = "https://apigee-api-test.nokia-solution.com/nac"
 
 
 @pytest.fixture
@@ -69,6 +69,17 @@ def test_geozone_notification(device):
     for event in geozone_events:
         assert event == "enter" or event == "leave"
 
+def test_getting_current_network_profile(requests_mock, device):
+    requests_mock.post(
+        f"{API_PATH}/subscriber/bandwidth",
+        status_code=200,
+        json={"ueId": "example@example.com", "priority": ["premium"], "serviceTier": ["gold"]},
+    )
+
+    network_profile = device.get_network_profile()
+
+    assert network_profile.bandwidth_profile == "gold"
+
 def test_successful_network_profile_selection(
     requests_mock, device
 ):
@@ -126,8 +137,8 @@ def test_network_profile_selection_produces_correct_json_body(
 def _json_body_callback(request, context):
     json_body = request.json()
 
-    assert json_body["externalid"] == "example@example.com"
-    assert json_body["bandwidthID"] == "gold"
+    assert json_body["id"] == "example@example.com"
+    assert json_body["bandwidth"] == "gold"
 
     context.status_code = 200
     return ""
