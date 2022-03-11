@@ -37,26 +37,6 @@ class Device:
         res = RequestHandler.check_api_connection(self)
         return res == 200
 
-    def location(self):
-        """Get the location of the device.
-
-        Returns:
-            Tuple of (`latitude`, `longitude`, `elevation`, `event_time`)
-        """
-        res = RequestHandler.get_location(self)
-        info = res.json()
-        location_info = info["locationInfo"]
-        return (
-            float(location_info["lat"]),
-            float(location_info["long"]),
-            float(location_info["elev"]),
-            parse(info["eventTime"]),
-        )
-
-    def get_network_profile(self):
-        json = RequestHandler.get_network_profile(self).json()
-        return NetworkProfile(json["serviceTier"][0])
-
     def apply(self, configuration) -> None:
         """Apply a configuration change to this device.
 
@@ -64,3 +44,6 @@ class Device:
             configuration: An network configuration object, such as a NetworkProfile.
         """
         configuration.apply(self)
+
+    def get(self, cls):
+        return cls.get(self)
