@@ -38,8 +38,8 @@ class NetworkProfile:
         """
         RequestHandler.set_network_profile(device, bandwidth=self.bandwidth_profile)
 
-    @staticmethod
-    def get(device):
+    @classmethod
+    def get(cls, device):
         json = RequestHandler.get_network_profile(device).json()
 
         return NetworkProfile(json["serviceTier"][0])

@@ -32,8 +32,8 @@ class DeviceLocation:
     def timestamp(self) -> float:
         return self._timestamp
 
-    @staticmethod
-    def get(device):
+    @classmethod
+    def get(cls, device):
         res = RequestHandler.get_location(device)
         info = res.json()
         location_info = info["locationInfo"]
