@@ -42,4 +42,4 @@ class NetworkProfile:
     def get(cls, device):
         json = RequestHandler.get_network_profile(device).json()
 
-        return NetworkProfile(json["serviceTier"][0])
+        return cls(json["serviceTier"][0])

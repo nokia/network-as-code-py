@@ -38,4 +38,4 @@ class DeviceLocation:
         info = res.json()
         location_info = info["locationInfo"]
 
-        return DeviceLocation(float(location_info["lat"]), float(location_info["long"]), float(location_info["elev"]), parse(info["eventTime"]))
+        return cls(float(location_info["lat"]), float(location_info["long"]), float(location_info["elev"]), parse(info["eventTime"]))
