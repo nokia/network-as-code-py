@@ -1,6 +1,5 @@
 from .RequestHandler import RequestHandler
 
-
 class NetworkProfile:
     """Representation of a network configuration selected from a list of available network tiers.
 
@@ -38,3 +37,9 @@ class NetworkProfile:
             device: An instance of the Device class, to which the network profile is applied
         """
         RequestHandler.set_network_profile(device, bandwidth=self.bandwidth_profile)
+
+    @classmethod
+    def get(cls, device):
+        json = RequestHandler.get_network_profile(device).json()
+
+        return cls(json["serviceTier"][0])

@@ -1,7 +1,7 @@
 import pytest
 from dateutil.parser import parse
 from hypothesis import given, settings, strategies as st, HealthCheck
-from network_as_code import NetworkProfile, Device, GeoZone
+from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
 from network_as_code.errors import GatewayConnectionError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/nac"
@@ -58,13 +58,13 @@ def test_successful_device_location(
     )
 
     # Get the device location
-    lat, lon, elev, ts = device.location()
+    location = device.location()
 
     # Assert that the data is received and parsed correctly
-    assert lat == latitude
-    assert lon == longitude
-    assert elev == elevation
-    assert ts == parse(timestamp)
+    assert location.latitude == latitude
+    assert location.longitude == longitude
+    assert location.elevation == elevation
+    assert location.timestamp == parse(timestamp)
 
 
 def test_geozone_notification(device):
@@ -80,7 +80,7 @@ def test_getting_current_network_profile(requests_mock, device):
         json={"ueId": "example@example.com", "priority": ["premium"], "serviceTier": ["gold"]},
     )
 
-    network_profile = device.get_network_profile()
+    network_profile = device.network_profile()
 
     assert network_profile.bandwidth_profile == "gold"
 

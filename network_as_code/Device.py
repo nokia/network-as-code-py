@@ -1,6 +1,7 @@
 from dateutil.parser import parse
 from .RequestHandler import RequestHandler
 from .NetworkProfile import NetworkProfile
+from .DeviceLocation import DeviceLocation
 
 
 class Device:
@@ -38,24 +39,10 @@ class Device:
         return res == 200
 
     def location(self):
-        """Get the location of the device.
+        return DeviceLocation.get(self)
 
-        Returns:
-            Tuple of (`latitude`, `longitude`, `elevation`, `event_time`)
-        """
-        res = RequestHandler.get_location(self)
-        info = res.json()
-        location_info = info["locationInfo"]
-        return (
-            float(location_info["lat"]),
-            float(location_info["long"]),
-            float(location_info["elev"]),
-            parse(info["eventTime"]),
-        )
-
-    def get_network_profile(self):
-        json = RequestHandler.get_network_profile(self).json()
-        return NetworkProfile(json["serviceTier"][0])
+    def network_profile(self):
+        return NetworkProfile.get(self)
 
     def apply(self, configuration) -> None:
         """Apply a configuration change to this device.
