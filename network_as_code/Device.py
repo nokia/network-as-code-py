@@ -1,6 +1,7 @@
 from dateutil.parser import parse
 from .RequestHandler import RequestHandler
 from .NetworkProfile import NetworkProfile
+from .DeviceLocation import DeviceLocation
 
 
 class Device:
@@ -37,6 +38,12 @@ class Device:
         res = RequestHandler.check_api_connection(self)
         return res == 200
 
+    def location(self):
+        return DeviceLocation.get(self)
+
+    def network_profile(self):
+        return NetworkProfile.get(self)
+
     def apply(self, configuration) -> None:
         """Apply a configuration change to this device.
 
@@ -44,6 +51,3 @@ class Device:
             configuration: An network configuration object, such as a NetworkProfile.
         """
         configuration.apply(self)
-
-    def get(self, cls):
-        return cls.get(self)

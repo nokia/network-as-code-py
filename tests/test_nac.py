@@ -58,7 +58,7 @@ def test_successful_device_location(
     )
 
     # Get the device location
-    location = device.get(DeviceLocation)
+    location = device.location()
 
     # Assert that the data is received and parsed correctly
     assert location.latitude == latitude
@@ -80,7 +80,7 @@ def test_getting_current_network_profile(requests_mock, device):
         json={"ueId": "example@example.com", "priority": ["premium"], "serviceTier": ["gold"]},
     )
 
-    network_profile = device.get(NetworkProfile)
+    network_profile = device.network_profile()
 
     assert network_profile.bandwidth_profile == "gold"
 
