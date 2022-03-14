@@ -4,6 +4,24 @@ from dateutil.parser import parse
 from .RequestHandler import RequestHandler
 
 class DeviceLocation:
+    """Class for representing and storing information about a device's location.
+
+    Objects of this class are not intended to be initialized by third party developers
+    and are instead created by calls like Device.location(). The objects will have
+    knowledge of latitude and longitude and elevation. The objects should also be
+    considered immutable.
+
+    #### Example usage:
+    ```python
+    device = Devide(id="string@registered.domain", sdk_token="some_sdk_token")
+
+    location = device.location()
+
+    lon = location.longitude
+    lat = location.longitude
+    elev = location.elevation
+    ```
+    """
     def __init__(
         self,
         latitude: float,

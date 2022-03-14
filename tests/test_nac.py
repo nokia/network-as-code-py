@@ -85,13 +85,6 @@ def test_getting_current_network_profile(requests_mock, device):
     assert network_profile.bandwidth_profile == "gold"
 
 def test_successful_network_profile_selection(requests_mock, device):
-    requests_mock.patch(
-        f"{API_PATH}/subscriber/bandwidth",
-        text="",
-    )
-    network_profile = NetworkProfile("gold")
-
-def test_successful_network_profile_selection(requests_mock, device):
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", text="")
     network_profile = NetworkProfile("gold")
     device.apply(network_profile)

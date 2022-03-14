@@ -17,6 +17,8 @@ class Device:
         sdk_token="eee0a4d0-2b54-4a7a-a61f-40ce753f44c6"
     )
     ```
+
+    ###
     """
 
     def __init__(self, id: str, sdk_token: str) -> None:
@@ -39,9 +41,19 @@ class Device:
         return res == 200
 
     def location(self):
+        """Get the location information of this device.
+
+        Returns:
+            `DeviceLocation` object
+        """
         return DeviceLocation.get(self)
 
     def network_profile(self):
+        """Get the network profile of this device.
+
+        Returns:
+            `DeviceLocation` object
+        """
         return NetworkProfile.get(self)
 
     def apply(self, configuration) -> None:
