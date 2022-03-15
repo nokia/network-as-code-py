@@ -1,15 +1,33 @@
-image: python:3.10
-
-cache:
-  paths:
-    - .cache/pip
-    - venv/
-
-before_script:
-  - python -V
-  - pip install poetry
-  - poetry install
+stages:
+  - test
+  - publish
 
 test:
+  stage: test
+  image: python:3.8
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
+  before_script:
+    - python -V
+    - pip install poetry
+    - poetry install
   script:
     - poetry run pytest
+
+publish:
+  stage: publish
+  image: python:3.8
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
+  before_script:
+    - python -V
+    - pip install poetry
+    - poetry config repositories.devpi $PYPI_REPOSITORY
+  script:
+    - poetry publish --build -r devpi -u $PYPI_USERNAME -p $PYPI_PASSWORD
+  rules:
+    - if: $CI_COMMIT_TAG
