@@ -1,4 +1,3 @@
-from dateutil.parser import parse
 from .RequestHandler import RequestHandler
 from .NetworkProfile import NetworkProfile
 from .DeviceLocation import DeviceLocation
@@ -17,11 +16,9 @@ class Device:
         sdk_token="eee0a4d0-2b54-4a7a-a61f-40ce753f44c6"
     )
     ```
-
-    ###
     """
 
-    def __init__(self, id: str, sdk_token: str) -> None:
+    def __init__(self, id: str, sdk_token: str):
         """Initializes a new Device.
 
         Args:
@@ -31,7 +28,7 @@ class Device:
         self.id = id
         self.sdk_token = sdk_token
 
-    def check_api_connection(self) -> bool:
+    def check_api_connection(self):
         """Check whether the backend API is accessible and is able to process requests.
 
         Returns:
@@ -44,7 +41,7 @@ class Device:
         """Get the location information of this device.
 
         Returns:
-            `DeviceLocation` object
+            `DeviceLocation` object which stores all information about the device's location.
         """
         return DeviceLocation.get(self)
 
@@ -52,14 +49,18 @@ class Device:
         """Get the network profile of this device.
 
         Returns:
-            `DeviceLocation` object
+            `NetworkProfile` object which represents a network profile configuration.
         """
         return NetworkProfile.get(self)
 
-    def apply(self, configuration) -> None:
+    def apply(self, configuration):
         """Apply a configuration change to this device.
 
         Args:
-            configuration: An network configuration object, such as a NetworkProfile.
+            configuration: A configuration object, such as a `NetworkProfile`.
+
+        Returns:
+            `self`
         """
         configuration.apply(self)
+        return self

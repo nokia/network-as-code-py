@@ -1,7 +1,7 @@
-
 from dateutil.parser import parse
-
+from .Device import Device
 from .RequestHandler import RequestHandler
+
 
 class DeviceLocation:
     """Class for representing and storing information about a device's location.
@@ -22,13 +22,8 @@ class DeviceLocation:
     elev = location.elevation
     ```
     """
-    def __init__(
-        self,
-        latitude: float,
-        longitude: float,
-        elevation: float,
-        timestamp
-    ):
+
+    def __init__(self, latitude: float, longitude: float, elevation: float, timestamp):
         self._latitude = latitude
         self._longitude = longitude
         self._elevation = elevation
@@ -51,9 +46,14 @@ class DeviceLocation:
         return self._timestamp
 
     @classmethod
-    def get(cls, device):
+    def get(cls, device: Device):
         res = RequestHandler.get_location(device)
         info = res.json()
         location_info = info["locationInfo"]
 
-        return cls(float(location_info["lat"]), float(location_info["long"]), float(location_info["elev"]), parse(info["eventTime"]))
+        return cls(
+            float(location_info["lat"]),
+            float(location_info["long"]),
+            float(location_info["elev"]),
+            parse(info["eventTime"]),
+        )
