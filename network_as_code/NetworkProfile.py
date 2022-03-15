@@ -31,7 +31,7 @@ class NetworkProfile:
     def bandwidth_profile(self, value: str):
         self._bandwidth_profile = value
 
-    def apply(self, device: Device):
+    def apply(self, device: "Device"):
         """Apply this `NetworkProfile` to the given device.
 
         Args:
@@ -41,7 +41,7 @@ class NetworkProfile:
         RequestHandler.set_network_profile(device, bandwidth=self.bandwidth_profile)
 
     @classmethod
-    def get(cls, device: Device):
+    def get(cls, device: "Device"):
         """
         Get a `NetworkProfile` of a given device.
 

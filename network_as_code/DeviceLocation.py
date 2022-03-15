@@ -1,6 +1,9 @@
 from dateutil.parser import parse
-from .Device import Device
 from .RequestHandler import RequestHandler
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # Avoids cyclic imports for type hints
+    from .Device import Device
 
 
 class DeviceLocation:
@@ -46,7 +49,7 @@ class DeviceLocation:
         return self._timestamp
 
     @classmethod
-    def get(cls, device: Device):
+    def get(cls, device: "Device"):
         res = RequestHandler.get_location(device)
         info = res.json()
         location_info = info["locationInfo"]
