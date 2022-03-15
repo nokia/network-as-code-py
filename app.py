@@ -3,35 +3,29 @@ import os
 import network_as_code as nac
 
 SDK_TOKEN = os.environ['NAC_TOKEN']
-
 UE_ID = os.environ['UE_ID']
 
+# Give the device the UE identifier and SDK token
 device = nac.Device(UE_ID, SDK_TOKEN)
 
+# Checking for an API connection
 print("API connection established: ", device.check_api_connection())
 
-network_profile = device.get_network_profile()
+# Get the network profile for the device
+old_network_profile = device.network_profile()
+print("Network profile in use: " + old_network_profile.bandwidth_profile)
 
-print("Network profile in use: " + network_profile.bandwidth_profile)
+# Change the network profile
+device.apply(nac.NetworkProfile("bronze"))
 
-# network_profile.bandwidth_profile = "bronze"
+# Get the changed profile
+new_network_profile = device.network_profile()
+print("Network profile in use: " + new_network_profile.bandwidth_profile)
 
-# device.apply(network_profile)
+# Reset the device back to previous profile
+device.apply(old_network_profile)
+print("Reset the network profile")
 
-# print("Network profile in use: " + device.get_network_profile().bandwidth_profile)
-
-# drone_location = nac.DeviceLocation(drone)
-# drone_location.refresh()
-# drone_location.latitude
-# drone_location.longitude
-# drone_location.altitude
-
-# network_slice = nac.NetworkSlice(
-#     drone,
-#     index=0,
-#     qos="best-effort",
-#     bandwidth="300 Mbps",
-#     default=True,
-# )
-
-# network_slice.destroy()
+# Get the device location
+location = device.location()
+print("Device at location: ", location.longitude, location.latitude, location.elevation)
