@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-python -m pip install nac-py --extra-index-url https://pypi.dynamic.nsn-net.net/<group>
+python -m pip install network_as_code --extra-index-url https://pypi.dynamic.nsn-net.net/nac/nacpy
 ```
 
 ## Documentation
