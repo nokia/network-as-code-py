@@ -20,7 +20,7 @@ class NetworkProfile:
     ````
     """
 
-    def __init__(self, bandwidth_profile: str, priority: str | None = None):
+    def __init__(self, bandwidth_profile: str, priority: str = None):
         self.bandwidth_profile = bandwidth_profile
         self.priority = priority
 
