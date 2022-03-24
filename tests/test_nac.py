@@ -4,7 +4,7 @@ from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
 from network_as_code.errors import GatewayConnectionError
 
-API_PATH = "https://apigee-api-test.nokia-solution.com/nac"
+API_PATH = "https://apigee-api-test.nokia-solution.com/nac/v2"
 
 
 @pytest.fixture
@@ -78,11 +78,22 @@ def test_getting_current_network_profile(requests_mock, device):
     requests_mock.post(
         f"{API_PATH}/subscriber/bandwidth",
         status_code=200,
-        json={
-            "ueId": "example@example.com",
-            "priority": ["premium"],
-            "serviceTier": ["gold"],
-        },
+        json=[
+            {
+                "customData": {
+                    "entry": [
+                        {
+                            "key": "Priority",
+                            "value": {"type": "STRING", "value": "premium"},
+                        },
+                        {
+                            "key": "ServiceTier",
+                            "value": {"type": "STRING", "value": "gold"},
+                        },
+                    ]
+                }
+            }
+        ],
     )
     network_profile = device.network_profile()
     assert network_profile.bandwidth_profile == "gold"
