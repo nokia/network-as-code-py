@@ -20,8 +20,9 @@ class NetworkProfile:
     ````
     """
 
-    def __init__(self, bandwidth_profile: str):
+    def __init__(self, bandwidth_profile: str, priority: str | None = None):
         self.bandwidth_profile = bandwidth_profile
+        self.priority = priority
 
     @property
     def bandwidth_profile(self) -> str:
@@ -53,4 +54,8 @@ class NetworkProfile:
             the given device.
         """
         json = RequestHandler.get_network_profile(device).json()
-        return cls(json["serviceTier"][0])
+        attributes = [
+            attribute["value"]["value"]
+            for attribute in reversed(json[0]["customData"]["entry"])
+        ]
+        return cls(*attributes)
