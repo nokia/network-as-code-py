@@ -131,9 +131,9 @@ def _json_body_callback(request, context):
     return ""
 
 def test_conversion_of_bandwidth_units(requests_mock, device):
-    assert Unit.convert_from_to(Unit.KBIT, Unit.BIT, 50) == 50000
-    assert Unit.convert_from_to(Unit.MBIT, Unit.KBIT, 100) == 100000
-    assert Unit.convert_from_to(Unit.MBIT, Unit.BIT, 1) == 1000000
+    assert Unit.BIT.convert_from(Unit.KBIT, 50) == 50000
+    assert Unit.KBIT.convert_from(Unit.MBIT, 100) == 100000
+    assert Unit.BIT.convert_from(Unit.MBIT, 1) == 1000000
 
 def test_creation_of_custom_network_profile(requests_mock, device):
     network_profile = CustomNetworkProfile(download=50, upload=10, unit=Unit.MBIT)

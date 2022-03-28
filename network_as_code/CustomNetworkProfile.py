@@ -9,16 +9,16 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
     from .Device import Device
 
+
 class Unit(Enum):
     BIT = 1
     KBIT = 1000
     MBIT = 1000 * 1000
 
-    @staticmethod
-    def convert_from_to(previous_unit, new_unit, value):
-        value_in_bits = value * previous_unit.value
+    def convert_from(self, old_unit, value):
+        value_in_bits = value * old_unit.value
 
-        return value_in_bits / new_unit.value
+        return value_in_bits / self.value
 
 class CustomNetworkProfile(Configuration):
     """Representation of a network configuration with user-specified download and upload bandwidth.
@@ -42,8 +42,8 @@ class CustomNetworkProfile(Configuration):
             upload: A value representing the bits per second of maximum upload speed
         """
         self._bandwidth_profile = "custom"
-        self.download = Unit.convert_from_to(unit, Unit.BIT, download)
-        self.upload = Unit.convert_from_to(unit, Unit.BIT, upload)
+        self.download = Unit.BIT.convert_from(unit, download)
+        self.upload = Unit.BIT.convert_from(unit, upload)
 
     @property
     def bandwidth_profile(self) -> str:

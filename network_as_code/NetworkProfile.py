@@ -59,10 +59,9 @@ class NetworkProfile(Configuration):
             the given device.
         """
         data = RequestHandler.get_network_profile(device).json()
-        profile_object = cls(data["serviceTier"][0], data["priority"][0])
 
         # If the profile is set to custom, we should return a CustomNetworkProfile instead
-        if profile_object.bandwidth_profile == "custom":
+        if data["serviceTier"][0] == "custom":
             return CustomNetworkProfile.get(device)
 
-        return profile_object
+        return cls(data["serviceTier"][0], data["priority"][0])
