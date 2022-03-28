@@ -78,22 +78,11 @@ def test_getting_current_network_profile(requests_mock, device):
     requests_mock.post(
         f"{API_PATH}/subscriber/bandwidth",
         status_code=200,
-        json=[
-            {
-                "customData": {
-                    "entry": [
-                        {
-                            "key": "Priority",
-                            "value": {"type": "STRING", "value": "premium"},
-                        },
-                        {
-                            "key": "ServiceTier",
-                            "value": {"type": "STRING", "value": "gold"},
-                        },
-                    ]
-                }
-            }
-        ],
+        json={
+            "id": "todd.levi@nokia.com",
+            "priority": ["premium"],
+            "serviceTier": ["gold"],
+        },
     )
     network_profile = device.network_profile()
     assert network_profile.bandwidth_profile == "gold"
