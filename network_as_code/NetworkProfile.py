@@ -1,11 +1,16 @@
 from .RequestHandler import RequestHandler
+
+from .Configuration import Configuration
+
+from .CustomNetworkProfile import CustomNetworkProfile
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
     from .Device import Device
 
 
-class NetworkProfile:
+class NetworkProfile(Configuration):
     """Representation of a network configuration selected from a list of available
     network tiers.
 
@@ -54,4 +59,10 @@ class NetworkProfile:
             the given device.
         """
         data = RequestHandler.get_network_profile(device).json()
-        return cls(data["serviceTier"][0], data["priority"][0])
+        profile_object = cls(data["serviceTier"][0], data["priority"][0])
+
+        # If the profile is set to custom, we should return a CustomNetworkProfile instead
+        if profile_object.bandwidth_profile == "custom":
+            return CustomNetworkProfile.get(device)
+
+        return profile_object

@@ -1,5 +1,6 @@
 from .Device import Device
 from .NetworkProfile import NetworkProfile
+from .CustomNetworkProfile import CustomNetworkProfile, Unit
 from .RequestHandler import RequestHandler
 from .DeviceLocation import DeviceLocation
 from .GeoZone import GeoZone

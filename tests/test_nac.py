@@ -1,7 +1,10 @@
 import pytest
+
 from dateutil.parser import parse
+import json
+
 from hypothesis import given, settings, strategies as st, HealthCheck
-from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone
+from network_as_code import NetworkProfile, Device, DeviceLocation, GeoZone, CustomNetworkProfile, Unit
 from network_as_code.errors import GatewayConnectionError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/nac/v2"
@@ -126,3 +129,72 @@ def _json_body_callback(request, context):
     assert json_body["bandwidth"] == "gold"
     context.status_code = 200
     return ""
+
+def test_conversion_of_bandwidth_units(requests_mock, device):
+    assert Unit.convert_from_to(Unit.KBIT, Unit.BIT, 50) == 50000
+    assert Unit.convert_from_to(Unit.MBIT, Unit.KBIT, 100) == 100000
+    assert Unit.convert_from_to(Unit.MBIT, Unit.BIT, 1) == 1000000
+
+def test_creation_of_custom_network_profile(requests_mock, device):
+    network_profile = CustomNetworkProfile(download=50, upload=10, unit=Unit.MBIT)
+
+    assert network_profile.bandwidth_profile == "custom"
+
+def test_applying_custom_network_profile_sends_correct_body(requests_mock, device):
+    device = Device(sdk_token="blah", id="example@example.com")
+    requests_mock.patch(f"{API_PATH}/subscriber/bandwidth/custom", text=_json_body_callback_custom_network_profile)
+
+    network_profile = CustomNetworkProfile(download=50, upload=10, unit=Unit.BIT)
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "custom"
+
+
+def _json_body_callback_custom_network_profile(request, context):
+    json_body = request.json()
+    assert json_body["id"] == "example@example.com"
+    assert json_body["download"] == 50
+    assert json_body["upload"] == 10
+    context.status_code = 200
+    return ""
+
+
+def test_applying_custom_network_profile_unit_conversion_works(requests_mock, device):
+    device = Device(sdk_token="blah", id="example@example.com")
+    requests_mock.patch(f"{API_PATH}/subscriber/bandwidth/custom", text=_json_body_callback_test_unit_conversion)
+
+    network_profile = CustomNetworkProfile(download=50, upload=10, unit=Unit.MBIT)
+    device.apply(network_profile)
+
+    assert network_profile.bandwidth_profile == "custom"
+
+
+def _json_body_callback_test_unit_conversion(request, context):
+    json_body = request.json()
+    assert json_body["download"] == 50 * 1000 * 1000
+    assert json_body["upload"] == 10 * 1000 * 1000
+    context.status_code = 200
+    return ""
+
+def test_getting_custom_network_profile(requests_mock, device):
+    device = Device(sdk_token="blah", id="example@example.com")
+    requests_mock.post(f"{API_PATH}/subscriber/bandwidth/custom", text=_return_custom_network_profile)
+
+    network_profile = CustomNetworkProfile.get(device)
+
+    assert network_profile.bandwidth_profile == "custom"
+    assert network_profile.download == 50
+    assert network_profile.upload == 10
+
+def _return_custom_network_profile(request, context):
+    json_body = request.json()
+
+    assert json_body["id"] == "example@example.com"
+
+    context.status_code = 200
+
+    return json.dumps({
+        "id": "example@example.com",
+        "download": 50,
+        "upload": 10,
+    })
