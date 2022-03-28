@@ -53,9 +53,5 @@ class NetworkProfile:
             New instance of `NetworkProfile` that matches the current network profile of
             the given device.
         """
-        json = RequestHandler.get_network_profile(device).json()
-        attributes = [
-            attribute["value"]["value"]
-            for attribute in reversed(json[0]["customData"]["entry"])
-        ]
-        return cls(*attributes)
+        data = RequestHandler.get_network_profile(device).json()
+        return cls(data["serviceTier"][0], data["priority"][0])
