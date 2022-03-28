@@ -47,6 +47,18 @@ class RequestHandler:
         return cls._request("PATCH", "/subscriber/bandwidth", headers, json)
 
     @classmethod
+    def get_custom_network_profile(cls, device: "Device", **json: dict):
+        headers = {"x-apikey": device.sdk_token, "Accept": cls.accept_header}
+        json["id"] = device.id
+        return cls._request("POST", "/subscriber/bandwidth/custom", headers, json)
+
+    @classmethod
+    def set_custom_network_profile(cls, device: "Device", **json: dict):
+        headers = {"x-apikey": device.sdk_token, "Accept": cls.accept_header}
+        json["id"] = device.id
+        return cls._request("PATCH", "/subscriber/bandwidth/custom", headers, json)
+
+    @classmethod
     def check_api_connection(cls, device: "Device"):
         headers = {"x-apikey": device.sdk_token, "Accept": cls.accept_header}
         res = cls._request("GET", "/hello", headers, None)

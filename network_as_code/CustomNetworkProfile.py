@@ -1,0 +1,91 @@
+from .RequestHandler import RequestHandler
+
+from .Configuration import Configuration
+
+from enum import Enum
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # Avoids cyclic imports for type hints
+    from .Device import Device
+
+
+class Unit(Enum):
+    BIT = 1
+    KBIT = 1000
+    MBIT = 1000 * 1000
+
+    def convert_from(self, old_unit, value):
+        value_in_bits = value * old_unit.value
+
+        return value_in_bits / self.value
+
+class CustomNetworkProfile(Configuration):
+    """Representation of a network configuration with user-specified download and upload bandwidth.
+
+    This class allows the creation of a network profile instance, which can then be
+    applied to one or many Device instances.
+
+    #### Example usage:
+    ```python
+    device = Device(id="string@registered.domain")
+    profile = CustomNetworkProfile(download=1024000, upload=4096000)
+    device.apply(profile)
+    ````
+    """
+
+    def __init__(self, download: int, upload: int, unit: Unit = Unit.BIT):
+        """Constructor for initializing CustomNetworkProfile with desired values.
+
+        Args:
+            download: A value representing the bits per second of maximum download speed
+            upload: A value representing the bits per second of maximum upload speed
+        """
+        self._bandwidth_profile = "custom"
+        self.download = Unit.BIT.convert_from(unit, download)
+        self.upload = Unit.BIT.convert_from(unit, upload)
+
+    @property
+    def bandwidth_profile(self) -> str:
+        return self._bandwidth_profile
+
+    @property
+    def download(self) -> int:
+        return self._download
+
+    @download.setter
+    def download(self, value: int):
+        self._download = value
+
+    @property
+    def upload(self) -> int:
+        return self._upload
+
+    @upload.setter
+    def upload(self, value: int):
+        self._upload = value
+
+    def apply(self, device: "Device"):
+        """Apply this `CustomNetworkProfile` to the given device.
+
+        Args:
+            device: An instance of the `Device` class, to which the network profile
+            is applied.
+        """
+        RequestHandler.set_custom_network_profile(device, download=self.download, upload=self.upload)
+
+    @classmethod
+    def get(cls, device: "Device"):
+        """
+        Get a `CustomNetworkProfile` of a given device.
+
+        Args:
+            device: An instance of the `Device` class.
+
+        Returns:
+            New instance of `CustomNetworkProfile` that matches the current network profile of
+            the given device.
+        """
+        json = RequestHandler.get_custom_network_profile(device).json()
+
+        return cls(json["download"], json["upload"])
