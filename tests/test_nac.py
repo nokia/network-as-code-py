@@ -176,25 +176,25 @@ def _json_body_callback_test_unit_conversion(request, context):
     context.status_code = 200
     return ""
 
-def test_getting_custom_network_profile(requests_mock, device):
-    device = Device(sdk_token="blah", id="example@example.com")
-    requests_mock.post(f"{API_PATH}/subscriber/bandwidth/custom", text=_return_custom_network_profile)
+# def test_getting_custom_network_profile(requests_mock, device):
+#     device = Device(sdk_token="blah", id="example@example.com")
+#     requests_mock.post(f"{API_PATH}/subscriber/bandwidth/custom", text=_return_custom_network_profile)
 
-    network_profile = CustomNetworkProfile.get(device)
+#     network_profile = CustomNetworkProfile.get(device)
 
-    assert network_profile.bandwidth_profile == "custom"
-    assert network_profile.download == 50
-    assert network_profile.upload == 10
+#     assert network_profile.bandwidth_profile == "custom"
+#     assert network_profile.download == 50
+#     assert network_profile.upload == 10
 
-def _return_custom_network_profile(request, context):
-    json_body = request.json()
+# def _return_custom_network_profile(request, context):
+#     json_body = request.json()
 
-    assert json_body["id"] == "example@example.com"
+#     assert json_body["id"] == "example@example.com"
 
-    context.status_code = 200
+#     context.status_code = 200
 
-    return json.dumps({
-        "id": "example@example.com",
-        "download": 50,
-        "upload": 10,
-    })
+#     return json.dumps({
+#         "id": "example@example.com",
+#         "download": 50,
+#         "upload": 10,
+#     })
