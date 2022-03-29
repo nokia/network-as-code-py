@@ -22,6 +22,13 @@ device.apply(nac.NetworkProfile("bronze"))
 new_network_profile = device.network_profile()
 print("Network profile in use: " + new_network_profile.bandwidth_profile)
 
+# Change the network profile
+device.apply(nac.CustomNetworkProfile(20, 2, nac.Unit.MBIT))
+
+# Get the changed profile
+new_network_profile = device.network_profile()
+print("Network profile in use: " + new_network_profile.bandwidth_profile)
+
 # Reset the device back to previous profile
 device.apply(old_network_profile)
 print("Reset the network profile")
