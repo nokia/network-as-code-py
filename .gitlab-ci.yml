@@ -7,11 +7,11 @@ test:
   image: python:3.8
   cache:
     paths:
-      - .cache/pip
-      - venv/
+      - .venv/
   before_script:
     - python -V
     - pip install poetry
+    - poetry config virtualenvs.in-project true
     - poetry install
   script:
     - poetry run pytest
@@ -23,13 +23,14 @@ publish:
     - esisogr87
   cache:
     paths:
-      - .cache/pip
-      - venv/
+      - .venv/
   before_script:
     - python -V
     - pip install poetry
+    - poetry config virtualenvs.in-project true
     - poetry config repositories.devpi $PYPI_REPOSITORY
   script:
     - poetry publish --build -r devpi -u $PYPI_USERNAME -p $PYPI_PASSWORD
+    - ./generate_docs.sh
   rules:
     - if: $CI_COMMIT_TAG
