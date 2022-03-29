@@ -77,6 +77,8 @@ class CustomNetworkProfile(Configuration):
     @classmethod
     def get(cls, device: "Device"):
         """
+        NOT IMPLEMENTED, DO NOT USE
+
         Get a `CustomNetworkProfile` of a given device.
 
         Args:
