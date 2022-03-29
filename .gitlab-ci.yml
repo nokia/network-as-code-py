@@ -24,7 +24,7 @@ test:
     - python -V
     - pip install poetry
     - poetry config virtualenvs.in-project true
-    - poetry install
+    - poetry install --no-root
   script:
     - poetry run pytest
 
