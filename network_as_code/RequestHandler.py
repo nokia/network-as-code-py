@@ -56,7 +56,6 @@ class RequestHandler:
     def set_custom_network_profile(cls, device: "Device", **json: dict):
         headers = {"x-apikey": device.sdk_token, "Accept": cls.accept_header}
         json["id"] = device.id
-        print(json)
         return cls._request("PATCH", "/subscriber/bandwidth/custom", headers, json)
 
     @classmethod
