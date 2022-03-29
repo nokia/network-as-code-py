@@ -60,8 +60,4 @@ class NetworkProfile(Configuration):
         """
         data = RequestHandler.get_network_profile(device).json()
 
-        # If the profile is set to custom, we should return a CustomNetworkProfile instead
-        if data["serviceTier"][0] == "custom":
-            return CustomNetworkProfile.get(device)
-
         return cls(data["serviceTier"][0], data["priority"][0])

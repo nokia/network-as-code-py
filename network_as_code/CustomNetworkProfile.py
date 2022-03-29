@@ -42,8 +42,8 @@ class CustomNetworkProfile(Configuration):
             upload: A value representing the bits per second of maximum upload speed
         """
         self._bandwidth_profile = "custom"
-        self.download = Unit.BIT.convert_from(unit, download)
-        self.upload = Unit.BIT.convert_from(unit, upload)
+        self.download = int(Unit.BIT.convert_from(unit, download))
+        self.upload = int(Unit.BIT.convert_from(unit, upload))
 
     @property
     def bandwidth_profile(self) -> str:
@@ -86,6 +86,8 @@ class CustomNetworkProfile(Configuration):
             New instance of `CustomNetworkProfile` that matches the current network profile of
             the given device.
         """
-        json = RequestHandler.get_custom_network_profile(device).json()
+        # json = RequestHandler.get_custom_network_profile(device).json()
+        # print(json)
 
-        return cls(json["download"], json["upload"])
+        # return cls(json["download"][0], json["upload"][0])
+        raise NotImplementedError("Feature disabled temporarily due to upstream API incompatibility")
