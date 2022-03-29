@@ -8,6 +8,7 @@ test:
   cache:
     paths:
       - .venv/
+      - .cache/pip
   before_script:
     - python -V
     - pip install poetry
@@ -24,6 +25,7 @@ publish:
   cache:
     paths:
       - .venv/
+      - .cache/pip
   before_script:
     - python -V
     - pip install poetry
