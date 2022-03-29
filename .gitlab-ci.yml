@@ -13,7 +13,7 @@ cache:
     prefix: ${CI_JOB_NAME}
   paths:
     - .venv
-    .cache/pip
+    - .cache/pip
 
 test:
   stage: test
