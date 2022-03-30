@@ -50,7 +50,7 @@ print("API connection established: ", device.check_api_connection())
 
 If the program prints "API connection established: True" then you've successfully connected to the Network as Code API through the Python library.
 
-You can also see [app.py](https://gitlabe2.ext.net.nokia.com/atg/network-as-code/nac-py/-/blob/master/app.py) for a demonstrating of a wide range of Network as Code functionalities exposed by the Python library. You can also find documentation for individual classes and methods [on the wiki](https://gitlabe2.ext.net.nokia.com/atg/network-as-code/nac-py/-/wikis/home).
+You can also see [the examples folder](https://gitlabe2.ext.net.nokia.com/atg/network-as-code/nac-py/-/tree/master/examples) for a demonstration of a wide range of Network as Code functionalities exposed by the Python library. You can also find documentation for individual classes and methods [on our pdoc page](https://atg.gitlabe2-pages.ext.net.nokia.com/network-as-code/nac-py/network_as_code/index.html).
 
 ## Development
 
