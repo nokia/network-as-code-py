@@ -60,4 +60,4 @@ class NetworkProfile(Configuration):
         """
         data = RequestHandler.get_network_profile(device).json()
 
-        return cls(data["serviceTier"][0], data["priority"][0])
+        return cls(data["serviceTier"], data["priority"])

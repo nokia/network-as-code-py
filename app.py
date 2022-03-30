@@ -16,7 +16,7 @@ old_network_profile = device.network_profile()
 print("Network profile in use: " + old_network_profile.bandwidth_profile)
 
 # Change the network profile
-device.apply(nac.NetworkProfile("bronze"))
+device.apply(nac.NetworkProfile("uav_lowpowermode"))
 
 # Get the changed profile
 new_network_profile = device.network_profile()

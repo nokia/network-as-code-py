@@ -83,25 +83,25 @@ def test_getting_current_network_profile(requests_mock, device):
         status_code=200,
         json={
             "id": "todd.levi@nokia.com",
-            "priority": ["premium"],
-            "serviceTier": ["gold"],
+            "serviceTier": "uav_streaming",
+            "priority": "premium"
         },
     )
     network_profile = device.network_profile()
-    assert network_profile.bandwidth_profile == "gold"
+    assert network_profile.bandwidth_profile == "uav_streaming"
 
 
 def test_successful_network_profile_selection(requests_mock, device):
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", text="")
-    network_profile = NetworkProfile("gold")
+    network_profile = NetworkProfile("uav_streaming")
     device.apply(network_profile)
-    assert network_profile.bandwidth_profile == "gold"
+    assert network_profile.bandwidth_profile == "uav_streaming"
 
 
 def test_unsuccessful_network_profile_selection(requests_mock, device):
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", status_code=404)
     try:
-        network_profile = NetworkProfile("gold")
+        network_profile = NetworkProfile("uav_streaming")
         device.apply(network_profile)
         # Exception should have been thrown
         assert False
@@ -110,23 +110,23 @@ def test_unsuccessful_network_profile_selection(requests_mock, device):
 
 
 def test_network_profile_selection_using_setter_updates_value(requests_mock, device):
-    network_profile = NetworkProfile("gold")
-    network_profile.bandwidth_profile = "bronze"
-    assert network_profile.bandwidth_profile == "bronze"
+    network_profile = NetworkProfile("uav_streaming")
+    network_profile.bandwidth_profile = "uav_lowpowermode"
+    assert network_profile.bandwidth_profile == "uav_lowpowermode"
 
 
 def test_network_profile_selection_produces_correct_json_body(requests_mock):
     device = Device(sdk_token="blah", id="example@example.com")
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", text=_json_body_callback)
-    network_profile = NetworkProfile("gold")
+    network_profile = NetworkProfile("uav_streaming")
     device.apply(network_profile)
-    assert network_profile.bandwidth_profile == "gold"
+    assert network_profile.bandwidth_profile == "uav_streaming"
 
 
 def _json_body_callback(request, context):
     json_body = request.json()
     assert json_body["id"] == "example@example.com"
-    assert json_body["bandwidth"] == "gold"
+    assert json_body["bandwidth"] == "uav_streaming"
     context.status_code = 200
     return ""
 
