@@ -18,6 +18,10 @@ class RequestHandler:
     def _request(cls, method: str, path: str, headers: dict, json: dict, **kwargs):
         path = path.lstrip("/")
         url = f"{cls.api_url}/{path}"
+
+        if os.getenv("TESTMODE"):
+            headers["x-testmode"] = "true"
+
         try:
             res = requests.request(method, url, headers=headers, json=json, **kwargs)
             res.raise_for_status()  # Raises an exception if status_code is in [400..600)
