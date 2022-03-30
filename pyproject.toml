@@ -18,6 +18,7 @@ requests-mock = "^1.9.3"
 hypothesis = "^6.34.2"
 pydoc-markdown = {extras = ["novella"], version = "^4.5.1"}
 novella = "^0.1.11"
+pdoc3 = "^0.10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
