@@ -208,7 +208,7 @@ def test_object_repr_methods(
     )
     assert (
         repr(device_location)
-        == "DeviceLocation(latitude=1234.56, longitude=1234.56, elevation=1234.56, timestamp=datetime.datetime(2022, 3, 8, 17, 12, tzinfo=tzutc()))"
+        == "DeviceLocation(latitude=1234.56, longitude=1234.56, elevation=1234.56, timestamp=datetime.datetime(2022, 3, 8, 17, 12, tzinfo=tzlocal()))"
     )
     assert (
         repr(network_profile)
