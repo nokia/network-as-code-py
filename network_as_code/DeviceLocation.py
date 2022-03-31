@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
     from .Device import Device
+    from datetime import datetime
 
 
 class DeviceLocation:
@@ -17,7 +18,6 @@ class DeviceLocation:
     #### Example usage:
     ```python
     device = Devide(id="string@registered.domain", sdk_token="some_sdk_token")
-
     location = device.location()
 
     lon = location.longitude
@@ -26,11 +26,26 @@ class DeviceLocation:
     ```
     """
 
-    def __init__(self, latitude: float, longitude: float, elevation: float, timestamp):
+    def __init__(
+        self,
+        latitude: float,
+        longitude: float,
+        elevation: float,
+        timestamp: "datetime|str",
+    ):
         self._latitude = latitude
         self._longitude = longitude
         self._elevation = elevation
-        self._timestamp = timestamp
+        self._timestamp = parse(timestamp) if isinstance(timestamp, str) else timestamp
+
+    def __repr__(self) -> str:
+        return (
+            "DeviceLocation("
+            f"latitude={repr(self.latitude)}, "
+            f"longitude={repr(self.longitude)}, "
+            f"elevation={repr(self.elevation)}, "
+            f"timestamp={repr(self.timestamp)})"
+        )
 
     @property
     def latitude(self) -> float:
@@ -45,7 +60,7 @@ class DeviceLocation:
         return self._elevation
 
     @property
-    def timestamp(self) -> float:
+    def timestamp(self) -> "datetime":
         return self._timestamp
 
     @classmethod

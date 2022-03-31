@@ -28,6 +28,9 @@ class Device:
         self.id = id
         self.sdk_token = sdk_token
 
+    def __repr__(self) -> str:
+        return f"Device(id={repr(self.id)}, sdk_token={repr(self.sdk_token)})"
+
     def check_api_connection(self):
         """Check whether the backend API is accessible and is able to process requests.
 
