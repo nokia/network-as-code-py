@@ -40,9 +40,9 @@ class CustomNetworkProfile(Configuration):
             upload: A value representing the bits per second of maximum upload speed
         """
         self._bandwidth_profile = "custom"
-        self.download = int(Unit.BIT.convert_from(unit, download))
-        self.upload = int(Unit.BIT.convert_from(unit, upload))
         self.unit = unit
+        self.download = download
+        self.upload = upload
 
     def __repr__(self) -> str:
         return (
@@ -62,7 +62,7 @@ class CustomNetworkProfile(Configuration):
 
     @download.setter
     def download(self, value: int):
-        self._download = value
+        self._download = int(Unit.BIT.convert_from(self.unit, value))
 
     @property
     def upload(self) -> int:
@@ -70,7 +70,15 @@ class CustomNetworkProfile(Configuration):
 
     @upload.setter
     def upload(self, value: int):
-        self._upload = value
+        self._upload = int(Unit.BIT.convert_from(self.unit, value))
+
+    @property
+    def unit(self) -> Unit:
+        return self._unit
+
+    @unit.setter
+    def unit(self, value: Unit):
+        self._unit = value
 
     @classmethod
     def get(cls, device: "Device"):
