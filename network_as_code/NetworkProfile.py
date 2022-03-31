@@ -29,6 +29,13 @@ class NetworkProfile(Configuration):
         self.bandwidth_profile = bandwidth_profile
         self.priority = priority
 
+    def __repr__(self) -> str:
+        return (
+            f"NetworkProfile("
+            f"bandwidth_profile={repr(self.bandwidth_profile)}, "
+            f"priority={repr(self.priority)})"
+        )
+
     @property
     def bandwidth_profile(self) -> str:
         return self._bandwidth_profile

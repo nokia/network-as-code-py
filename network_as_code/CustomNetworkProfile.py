@@ -1,8 +1,6 @@
 from .RequestHandler import RequestHandler
-
 from .Configuration import Configuration
-
-from enum import Enum
+from enum import IntEnum
 
 from typing import TYPE_CHECKING
 
@@ -10,15 +8,15 @@ if TYPE_CHECKING:  # Avoids cyclic imports for type hints
     from .Device import Device
 
 
-class Unit(Enum):
+class Unit(IntEnum):
     BIT = 1
     KBIT = 1000
     MBIT = 1000 * 1000
 
-    def convert_from(self, old_unit, value):
+    def convert_from(self, old_unit: "Unit", value: int):
         value_in_bits = value * old_unit.value
-
         return value_in_bits / self.value
+
 
 class CustomNetworkProfile(Configuration):
     """Representation of a network configuration with user-specified download and upload bandwidth.
@@ -44,6 +42,15 @@ class CustomNetworkProfile(Configuration):
         self._bandwidth_profile = "custom"
         self.download = int(Unit.BIT.convert_from(unit, download))
         self.upload = int(Unit.BIT.convert_from(unit, upload))
+        self.unit = unit
+
+    def __repr__(self) -> str:
+        return (
+            "CustomNetworkProfile("
+            f"download={repr(self.download)}, "
+            f"upload={repr(self.upload)}, "
+            f"unit={repr(self.unit)})"
+        )
 
     @property
     def bandwidth_profile(self) -> str:
@@ -65,15 +72,6 @@ class CustomNetworkProfile(Configuration):
     def upload(self, value: int):
         self._upload = value
 
-    def apply(self, device: "Device"):
-        """Apply this `CustomNetworkProfile` to the given device.
-
-        Args:
-            device: An instance of the `Device` class, to which the network profile
-            is applied.
-        """
-        RequestHandler.set_custom_network_profile(device, download=self.download, upload=self.upload)
-
     @classmethod
     def get(cls, device: "Device"):
         """
@@ -92,4 +90,17 @@ class CustomNetworkProfile(Configuration):
         # print(json)
 
         # return cls(json["download"][0], json["upload"][0])
-        raise NotImplementedError("Feature disabled temporarily due to upstream API incompatibility")
+        raise NotImplementedError(
+            "Feature disabled temporarily due to upstream API incompatibility"
+        )
+
+    def apply(self, device: "Device"):
+        """Apply this `CustomNetworkProfile` to the given device.
+
+        Args:
+            device: An instance of the `Device` class, to which the network profile
+            is applied.
+        """
+        RequestHandler.set_custom_network_profile(
+            device, download=self.download, upload=self.upload
+        )
