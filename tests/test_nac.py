@@ -1,6 +1,7 @@
 import json
 import pytest
 from dateutil.parser import parse
+from dateutil.tz import tzlocal
 from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import (
     NetworkProfile,
@@ -36,7 +37,7 @@ def device_location():
         latitude=1234.56,
         longitude=1234.56,
         elevation=1234.56,
-        timestamp=parse("2022-03-08T17:12:00Z"),
+        timestamp=parse("2022-03-08T17:12:00Z", ignoretz=True),
     )
 
 
@@ -208,7 +209,7 @@ def test_object_repr_methods(
     )
     assert (
         repr(device_location)
-        == "DeviceLocation(latitude=1234.56, longitude=1234.56, elevation=1234.56, timestamp=datetime.datetime(2022, 3, 8, 17, 12, tzinfo=tzlocal()))"
+        == "DeviceLocation(latitude=1234.56, longitude=1234.56, elevation=1234.56, timestamp=datetime.datetime(2022, 3, 8, 17, 12))"
     )
     assert (
         repr(network_profile)
