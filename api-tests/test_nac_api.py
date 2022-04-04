@@ -88,7 +88,7 @@ def test_setting_network_profile(device):
     assert network_profile.bandwidth_profile == "uav_streaming"
 
 def test_setting_custom_network_profile(device):
-    device.apply(CustomNetworkProfile(20, 2, nac.Unit.MBIT))
+    device.apply(CustomNetworkProfile(20, 2, Unit.MBIT))
 
     network_profile = device.network_profile()
 
