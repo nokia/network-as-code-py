@@ -23,7 +23,7 @@ before_script:
 test:
   stage: test
   script:
-    - poetry install --no-root
+    - poetry install
     - poetry run pytest
   rules:
     - if: $CI_COMMIT_BRANCH
