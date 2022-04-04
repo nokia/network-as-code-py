@@ -5,7 +5,14 @@ import random
 
 import requests
 
-import network_as_code as nac
+from network_as_code import (
+    NetworkProfile,
+    Device,
+    DeviceLocation,
+    GeoZone,
+    CustomNetworkProfile,
+    Unit,
+)
 
 os.environ["TESTMODE"] = "1"
 
@@ -60,7 +67,7 @@ def device():
 
     create_nac_subscriber(subscriber, imsi, imsi) # Should IMSI and MISDN be different? Mayhaps
 
-    yield nac.Device(subscriber, SDK_TOKEN)
+    yield Device(subscriber, SDK_TOKEN)
 
     delete_nac_subscriber(subscriber)
 
@@ -74,14 +81,14 @@ def test_getting_network_profile(device):
     assert network_profile.bandwidth_profile == "uav_lowpowermode"
 
 def test_setting_network_profile(device):
-    device.apply(nac.NetworkProfile("uav_streaming"))
+    device.apply(NetworkProfile("uav_streaming"))
 
     network_profile = device.network_profile()
 
     assert network_profile.bandwidth_profile == "uav_streaming"
 
 def test_setting_custom_network_profile(device):
-    device.apply(nac.CustomNetworkProfile(20, 2, nac.Unit.MBIT))
+    device.apply(CustomNetworkProfile(20, 2, nac.Unit.MBIT))
 
     network_profile = device.network_profile()
 
