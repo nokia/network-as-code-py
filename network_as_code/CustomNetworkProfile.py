@@ -15,7 +15,7 @@ class Unit(IntEnum):
 
     def convert_from(self, old_unit: "Unit", value: int):
         value_in_bits = value * old_unit.value
-        return value_in_bits / self.value
+        return value_in_bits // self.value
 
 
 class CustomNetworkProfile(Configuration):
@@ -40,9 +40,9 @@ class CustomNetworkProfile(Configuration):
             upload: A value representing the bits per second of maximum upload speed
         """
         self._bandwidth_profile = "custom"
-        self.unit = unit
-        self.download = download
-        self.upload = upload
+        self._unit = unit
+        self._download = Unit.BIT.convert_from(unit, download)
+        self._upload = Unit.BIT.convert_from(unit, upload)
 
     def __repr__(self) -> str:
         return (
@@ -60,25 +60,13 @@ class CustomNetworkProfile(Configuration):
     def download(self) -> int:
         return self._download
 
-    @download.setter
-    def download(self, value: int):
-        self._download = int(Unit.BIT.convert_from(self.unit, value))
-
     @property
     def upload(self) -> int:
         return self._upload
 
-    @upload.setter
-    def upload(self, value: int):
-        self._upload = int(Unit.BIT.convert_from(self.unit, value))
-
     @property
     def unit(self) -> Unit:
         return self._unit
-
-    @unit.setter
-    def unit(self, value: Unit):
-        self._unit = value
 
     @classmethod
     def get(cls, device: "Device"):
