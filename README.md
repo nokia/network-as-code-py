@@ -1,5 +1,7 @@
 # NaC-py - Python SDK for controlling 5G network through code
 
+This repository contains the Python library for the Network as Code project. It allows Python-based applications to alter the network and query device information such as location data. The library will grow over time to include more functionality as well.
+
 ## Why Network as Code?
 
 So far mobile network configurations from customer's point of view have been fairly immutable. The customer purchases a network connection with a specified download and upload speed for their device and the network supplies a bandwidth as close to those specifications as possible, although congestion or distance to base stations may lead to high variance. The customer's applications are also generally not aware of the network conditions and their ability to react to poor network quality are limited. If the customer wants to modify their network configuration, they must contact the service provider and order a different network subscription. The new network connection will be available typically in a matter of days.
@@ -7,8 +9,6 @@ So far mobile network configurations from customer's point of view have been fai
 Network as Code is an initiative to create APIs, software libraries and developer portals that make mobile networks configurable by third-party software developers. The aim is to allow application software to be more aware of the mobile network and better leverage its dynamic properties. One of the central ideas is for developers to be able to adjust various network properties on the fly at a seconds' notice to react changing conditions in either the network or the application domain.
 
 You can read more about Network as Code on the [ATG Confluence page](https://confluence.ext.net.nokia.com/display/ATG/ATS+-+Network+as+Code).
-
-This repository contains the Python library for the Network as Code project. It allows Python-based applications to alter the network and query device information such as location data. The library will grow over time to include more functionality as well.
 
 ## Getting started
 
