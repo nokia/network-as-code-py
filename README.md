@@ -29,7 +29,8 @@ You can read more about Network as Code concept on the [ATG Confluence page](htt
 
 * [Sign up](https://cns-apigee-test-6559-nacpoc.apigee.io/) for a Network as Code account
 * Create a new [App registration](https://cns-apigee-test-6559-nacpoc.apigee.io/my-apps/new-app). **Enable** the Network as Code API.
-* Create a test device (fill in you API key, and come up with an email address, IMSI and MSISDN numbers):
+* Create a test device (fill in you API key, and come up with an email address, IMSI and MSISDN numbers):  
+  Remember the email address you give as it will be used as your device ID.
   ```bash
   curl --request PUT \
   'https://apigee-api-test.nokia-solution.com/nac/v2/subscriber/testuser' \
@@ -62,7 +63,10 @@ Assuming the installation was successful, you can import the Network as Code pac
 import network_as_code as nac
 ```
 
-Then, create an instance of **nac.Device**:
+Then, create an instance of **nac.Device**.
+
+The `DEVICE_ID` is the email address you gave during setup.
+Meanwhile, the `API_TOKEN` can be found on your [Apps page](https://cns-apigee-test-6559-nacpoc.apigee.io/my-apps) in the API portal.
 
 ```python
 device = nac.Device(DEVICE_ID, API_TOKEN)
