@@ -22,15 +22,17 @@ class RequestHandler:
         if os.getenv("TESTMODE"):
             headers["x-testmode"] = "true"
 
-        try:
-            res = requests.request(method, url, headers=headers, json=json, **kwargs)
-            res.raise_for_status()  # Raises an exception if status_code is in [400..600)
-            if os.getenv("DEBUG"):
-                print(f"{method} /{path} ({json})")
-                pprint.pprint(res.json(), width=88, compact=True, sort_dicts=False)
-            return res
-        except:
-            raise GatewayConnectionError("Can't connect to the backend service")
+        res = requests.request(
+            method, url, headers=headers, json=json, timeout=5, **kwargs
+        )
+        if os.getenv("DEBUG"):
+            print(f"{method} /{path} ({json})")
+            pprint.pprint(res.json(), width=88, compact=True)
+
+        if res.status_code == 404:
+            raise GatewayConnectionError(res.json()["error"])
+
+        return res
 
     @classmethod
     def get_location(cls, device: "Device"):
