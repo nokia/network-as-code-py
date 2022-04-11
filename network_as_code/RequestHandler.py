@@ -29,8 +29,14 @@ class RequestHandler:
             print(f"{method} /{path} ({json})")
             pprint.pprint(res.json(), width=88, compact=True)
 
-        if res.status_code == 404:
-            raise GatewayConnectionError(res.json()["error"])
+        if not res.ok:
+            res_data = res.json()
+            error_msg = (
+                res_data["error"]
+                if "error" in res_data
+                else "Received an uknown error from the API"
+            )
+            raise GatewayConnectionError(error_msg)
 
         return res
 
