@@ -1,7 +1,7 @@
 import os
 import pprint
 import requests
-from .errors import GatewayConnectionError
+from .errors import ApiError
 
 from typing import TYPE_CHECKING
 
@@ -36,7 +36,7 @@ class RequestHandler:
                 if "error" in res_data
                 else "Received an uknown error from the API"
             )
-            raise GatewayConnectionError(error_msg)
+            raise ApiError(error_msg)
 
         return res
 
