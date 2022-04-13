@@ -1,7 +1,7 @@
 import os
 import pprint
 import requests
-from .errors import ApiError
+from .errors import ApiError, GatewayConnectionError
 
 from typing import TYPE_CHECKING
 
@@ -22,23 +22,26 @@ class RequestHandler:
         if os.getenv("TESTMODE"):
             headers["x-testmode"] = "true"
 
-        res = requests.request(
-            method, url, headers=headers, json=json, timeout=5, **kwargs
-        )
-        if os.getenv("DEBUG"):
-            print(f"{method} /{path} ({json})")
-            pprint.pprint(res.json(), width=88, compact=True)
-
-        if not res.ok:
-            res_data = res.json()
-            error_msg = (
-                res_data["error"]
-                if "error" in res_data
-                else "Received an uknown error from the API"
+        try:
+            res = requests.request(
+                method, url, headers=headers, json=json, timeout=5, **kwargs
             )
-            raise ApiError(error_msg)
+            if os.getenv("DEBUG"):
+                print(f"{method} /{path} ({json})")
+                pprint.pprint(res.json(), width=88, compact=True)
 
-        return res
+            if not res.ok:
+                res_data = res.json()
+                error_msg = (
+                    res_data["error"]
+                    if "error" in res_data
+                    else "Received an uknown error from the API"
+                )
+                raise ApiError(error_msg)
+
+            return res
+        except requests.ConnectionError as e:
+            raise GatewayConnectionError(str(e))
 
     @classmethod
     def get_location(cls, device: "Device"):
