@@ -51,7 +51,7 @@ Install the Network as Code package:
 ```bash
 pip install --extra-index-url=https://pypi.dynamic.nsn-net.net/nac/nacpy/+simple/ network_as_code
 ```
-> **NOTE:** The SDK is currently hosted on Nokia's [pypi repository](https://pypi.dynamic.nsn-net.net/nac/nacpy)
+> **NOTE:** The SDK is currently hosted on Nokia's [pypi repository](https://pypi.dynamic.nsn-net.net/nac/nacpy) and requires **VPN** to be properly configured. 
 
 ## Examples
 
@@ -80,6 +80,17 @@ print("API connection established: ", device.check_api_connection())
 ```
 
 If the program prints `API connection established: True`, you've successfully connected to the Network as Code API through the Python library.
+
+In order to start executing other API calls for self-registered devices, you **must** enable test-mode, since self-registered devices
+are entirely virtual. You can do so by setting the `TESTMODE` environment variable separately or with the following Python code:
+
+``` python
+import os
+
+os.environ["TESTMODE"] = "1"
+```
+
+That will cause the SDK to issue requests with a test-mode header to inform the API that the device being queried or altered is a virtual device.
 
 ## Documentation
 
