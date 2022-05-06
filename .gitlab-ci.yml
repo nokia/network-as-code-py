@@ -25,6 +25,7 @@ test:
   script:
     - poetry install
     - poetry run pytest
+    - poetry run python api-tests/bouncer-check.py
   rules:
     - if: $CI_COMMIT_BRANCH
 

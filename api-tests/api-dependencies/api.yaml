@@ -1,0 +1,410 @@
+openapi: '3.0.3'
+
+info:
+  title: Network as Code
+  description: Manipulate network conditions via simplified REST calls
+  version: '2'
+  contact:
+    name: Nokia NaC Support Team
+    email: todd.levi@nokia.com
+
+servers:
+  - url: https://apigee-api-test.nokia-solution.com/nac/v2
+    description: Development/Test server for Network as Code
+
+components:
+  parameters:
+    TestMode:
+      name: x-testmode
+      in: header
+      description: Enables test mode when set to "true".  Assumes "false" if not present.
+      required: false
+      allowEmptyValue: false
+      schema:
+        type: string
+        enum:
+          - "true"
+          - "false"
+  schemas:
+    Id:
+      type: string
+      format: uuid
+      maxLength: 36
+    MSISDN:
+      type: string
+      pattern: /^[1-9][0-9]{10,14}$/
+    IMSI:
+      type: string
+      pattern: /^[1-9][0-9]{14,16}$/
+    ExternalId:
+      type: string
+      format: email
+      pattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      example: "test.user@domain.tld"
+      maxLength: 256
+    SubscriberId:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ExternalId'
+      required:
+        - id
+      example:
+        id: test.user@domain.tld
+    Bandwidth:
+      type: string
+      enum:
+        - uav_streaming
+        - uav_lowpowermode
+      example: "uav_lowpowermode"
+    BandwidthUpdate:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ExternalId'
+        bandwidth:
+          $ref: '#/components/schemas/Bandwidth'
+    HelloResponses:
+      type: object
+      properties:
+        service:
+          type: string
+          enum:
+            - up
+            - down
+      example:
+        service: up
+      additionalProperties: false
+    SubscriberDetails:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ExternalId'
+        imsi:
+          $ref: '#/components/schemas/IMSI'
+        msisdn:
+          $ref: '#/components/schemas/MSISDN'
+      example:
+        id: "foo.bar@domain.tld"
+        imsi: "123456789012345"
+        msisdn: "1234567890"
+      additionalProperties: false
+    BandwidthResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SubscriberId'
+        - $ref: '#/components/schemas/Bandwidth'
+      example:
+        id: "foo.bar@domain.tld"
+        bandwidth: uav_lowpowermode
+    LocationDetails:
+      type: object
+      properties:
+        ageOfLocationInfo:
+          type: string
+          pattern: /^[0-9]+$/
+        trackingAreaId:
+          type: string
+        plmnId:
+          type: string
+          pattern: /^[0-9]+$/
+        lat:
+          type: string
+        long:
+          type: string
+        elev:
+          type: string
+      example:
+        ageOfLocationInfo: "150"
+        trackingAreaId: "1234567890AB"
+        plmnId: "001001"
+        lat: "0.0"
+        long: "0.0"
+        elev: "123"
+    LocationResponse:
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/ExternalId'
+        locationInfo:
+          $ref: '#/components/schemas/LocationDetails'
+    CustomLimits:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ExternalId'
+        upload:
+          description: Upload limit in bits per second
+          type: integer
+        download:
+          description: Download limit in bits per second
+          type: integer
+      example:
+        id: "foo.bar@domain.tld"
+        upload: 1024000
+        download: 4096000
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          maxLength: 256
+      example:
+        error: invalid foo - check your bar
+  responses:
+    APIError:
+      description: API Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    BadBandwidth:
+      description: Bad bandwidth
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: invalid bandwidth specified
+
+  securitySchemes:
+    apigee_apikey:
+      description:  API Key for your Apigee App
+      type: apiKey
+      name: x-apikey
+      in: header
+
+security:
+  - apigee_apikey: []
+
+paths:
+  /hello:
+    summary: Admin API
+    description: Administrative API endpoints
+    get:
+      tags:
+      - admin
+      summary: Is API accessible
+      description: Used to determine if the API is currently accessible
+      operationId: getApiStatus
+      responses:
+        '200':
+          description: API is available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloResponses'
+        default:
+          $ref: '#/components/responses/APIError'
+
+  /subscriber:
+    summary: Get information for the given External ID
+    description: Get the SUPI/IMSI and MSISDN for the given External ID
+    parameters:
+      - $ref: '#/components/parameters/TestMode'
+    post:
+      operationId: getSubscriber
+      summary: Get the subscriber SUPI/IMSI and MSISDN
+      tags:
+        - subscriber
+      requestBody:
+        description: External ID of the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberId'
+      responses:
+        '200':
+          description: Subscriber information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberDetails'
+        default:
+          $ref: '#/components/responses/APIError'
+
+  /subscriber/bandwidth:
+    summary: Bandwidth for a subscriber identified by the given IMSI
+    description: Get/update the bandwidth for a subscriber identified by the given IMSI
+    parameters:
+      - $ref: '#/components/parameters/TestMode'
+    post:
+      operationId: getSubscriberBandwidth
+      summary: Get the current subscriber bandwidth
+      description: Get the bandwidth identifier for the subscriber identified by the given IMSI
+      tags:
+        - subscriber
+        - bandwidth
+      requestBody:
+        description: External ID of the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberId'
+      responses:
+        '200':
+          description: Current bandwidth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BandwidthResponse'
+        default:
+          $ref: '#/components/responses/APIError'
+    patch:
+      operationId: updateSubscriberBandwidth
+      summary: Update the bandwidth of the subscriber
+      description: Update the bandwidth identifier for the subscriber identified by the given IMSI
+      requestBody:
+        description: New bandwidth for subscriber
+        required: True
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BandwidthUpdate'
+      tags:
+        - subscriber
+        - bandwidth
+      responses:
+        '200':
+          description: Bandwidth updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BandwidthResponse'
+        '400':
+          $ref: '#/components/responses/BadBandwidth'
+        default:
+          $ref: '#/components/responses/APIError'
+
+  /subscriber/bandwidth/custom:
+    summary: Custom subscriber bandwidth limits
+    description: Retrieve/update the custom upload/download bandwidth limits for a subscriber
+    parameters:
+      - $ref: '#/components/parameters/TestMode'
+    post:
+      operationId: getCustomBandwidth
+      summary: Get upload/download limit
+      description: Get the current upload/download bandwidth limits for the subscriber identified by the given ID
+      tags:
+        - subscriber
+        - bandwidth
+      requestBody:
+        description: External ID of the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberId'
+      responses:
+        '200':
+          description: Subscriber custom limits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomLimits'
+        default:
+          $ref: '#/components/responses/APIError'
+    patch:
+      operationId: updateCustomBandwidth
+      summary: Set upload limit
+      description: Set the upload/download bandwidth limits for the subscriber identified by the given ID
+      tags:
+        - subscriber
+        - bandwidth
+      requestBody:
+        description: New upload/download limits for the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomLimits'
+      responses:
+        '200':
+          description: Updated custom limits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomLimits'
+        default:
+          $ref: '#/components/responses/APIError'
+
+  /subscriber/location:
+    summary: Last reported location
+    description: Retrieve the last reported location of the subscriber identified by the given ID
+    parameters:
+      - $ref: '#/components/parameters/TestMode'
+    post:
+      operationId: getSubscriberLocation
+      summary: Get last reported location
+      description: Get the last reported location of the subscriber identified by the given ID
+      tags:
+      - subscriber
+      - location
+      requestBody:
+        description: External ID of the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberId'
+      responses:
+        '200':
+          description: Subscriber location
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+        default:
+          $ref: '#/components/responses/APIError'
+
+  /subscriber/testuser:
+    summary: Test user management
+    description: Add or delete a test user
+    parameters:
+      - $ref: '#/components/parameters/TestMode'
+    put:
+      operationId: createTestUser
+      summary: Create a new test user
+      tags:
+      - subscriber
+      - admin
+      requestBody:
+        description: Add a new test user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberDetails'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberDetails'
+        default:
+          $ref: '#/components/responses/APIError'
+
+    delete:
+      operationId: deleteTestuser
+      summary: Delete an existing test user
+      tags:
+      - subscriber
+      - admin
+      requestBody:
+        description: External ID of the subscriber
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberId'
+      responses:
+        '204':
+          description: User deleted
+        default:
+          $ref: '#/components/responses/APIError'

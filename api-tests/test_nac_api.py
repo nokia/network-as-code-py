@@ -77,6 +77,8 @@ def test_creation_of_nac_subscriber(device):
     assert device.check_api_connection()
 
 def test_getting_network_profile(device):
+    device.apply(NetworkProfile("uav_lowpowermode"))
+
     network_profile = device.network_profile()
 
     assert network_profile.bandwidth_profile == "uav_lowpowermode"
