@@ -93,7 +93,7 @@ def test_setting_network_profile(device):
 def test_setting_custom_network_profile(device):
     device.apply(CustomNetworkProfile(20, 2, Unit.MBIT))
 
-    time.sleep(1)
+    time.sleep(2)
 
     network_profile = device.network_profile()
 
