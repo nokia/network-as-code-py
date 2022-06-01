@@ -4,12 +4,14 @@ from functools import partial
 def main(camera):
     # Initialize a Device object for 5G network management
     drone = nac.Device(
-        imsi="310012010000122",
+        id="drone123@dronecompany.site",
         sdk_token="KbyUmhTLMpYj7CD2di7JKP1P3qmLlkPt",
     )
 
     # Create a private network slice for this device
-    network_slice = nac.NetworkSlice(drone, tier="bronze", default=True)
+    network_profile = nac.NetworkProfile("uav_lowpowermode")
+
+    drone.apply(network_profile)
 
     # Setup functions that will be used to respond to movement and cleanup afterwards.
     setup = partial(anomaly_response, camera, drone, network_slice)
@@ -18,10 +20,10 @@ def main(camera):
 
 def anomaly_response(camera, drone, network_slice):
     """Changes that are required for responding to a detected anomaly."""
-    network_slice.update(tier="gold")
+    drone.apply(nac.NetworkProfile("uav_streaming"))
     drone.follow_target(target="human")
 
 def anomaly_response_teardown(camera, drone, network_slice):
     """Changes that need to be done after carrying out a response to an anomaly."""
-    network_slice.update(tier="bronze")
+    drone.apply(nac.NetworkProfile("uav_lowpowermode"))
     drone.return_to_normal()
