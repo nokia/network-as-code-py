@@ -22,6 +22,8 @@ before_script:
 # JOBS
 test:
   stage: test
+  tags:
+    - esisogr87 # This runner has connection to "outside"
   script:
     - poetry install
     - poetry run pytest
