@@ -1,7 +1,5 @@
-import json
 import pytest
 from dateutil.parser import parse
-from dateutil.tz import tzlocal
 from hypothesis import given, settings, strategies as st, HealthCheck
 from network_as_code import (
     NetworkProfile,
@@ -11,7 +9,7 @@ from network_as_code import (
     CustomNetworkProfile,
     Unit,
 )
-from network_as_code.errors import GatewayConnectionError
+from network_as_code.errors import ApiError, GatewayConnectionError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/nac/v2"
 
@@ -122,13 +120,13 @@ def test_successful_network_profile_selection(requests_mock, device, network_pro
     assert network_profile.bandwidth_profile == "uav_streaming"
 
 
-def test_unsuccessful_network_profile_selection(requests_mock, device, network_profile):
+def test_api_error(requests_mock, device, network_profile):
     requests_mock.patch(f"{API_PATH}/subscriber/bandwidth", status_code=404)
     try:
         device.apply(network_profile)
         # Exception should have been thrown
         assert False
-    except GatewayConnectionError:
+    except ApiError:
         assert True
 
 

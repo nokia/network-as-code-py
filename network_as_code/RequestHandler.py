@@ -1,7 +1,7 @@
 import os
 import pprint
 import requests
-from .errors import GatewayConnectionError
+from .errors import ApiError, GatewayConnectionError
 
 from typing import TYPE_CHECKING
 
@@ -23,14 +23,32 @@ class RequestHandler:
             headers["x-testmode"] = "true"
 
         try:
-            res = requests.request(method, url, headers=headers, json=json, **kwargs)
-            res.raise_for_status()  # Raises an exception if status_code is in [400..600)
+            res = requests.request(
+                method, url, headers=headers, json=json, timeout=5, **kwargs
+            )
             if os.getenv("DEBUG"):
                 print(f"{method} /{path} ({json})")
-                pprint.pprint(res.json(), width=88, compact=True, sort_dicts=False)
+                pprint.pprint(res.json(), width=88, compact=True)
+
+            if not res.ok:
+                try:
+                    res_data = res.json()
+                except:
+                    res_data = res.text
+
+                error_msg = "No further information provided by the API"
+                if res_data and isinstance(res_data, str):
+                    error_msg = res_data
+                elif isinstance(res_data, dict) and "error" in res_data:
+                    error_msg = res_data["error"]
+
+                # Pass through the error and status code reported by the API gateway
+                raise ApiError(f"({res.status_code}) {error_msg}")
+
             return res
-        except:
-            raise GatewayConnectionError("Can't connect to the backend service")
+
+        except requests.ConnectionError as e:
+            raise GatewayConnectionError(str(e))
 
     @classmethod
     def get_location(cls, device: "Device"):
