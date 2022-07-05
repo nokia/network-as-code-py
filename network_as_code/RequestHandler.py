@@ -31,15 +31,22 @@ class RequestHandler:
                 pprint.pprint(res.json(), width=88, compact=True)
 
             if not res.ok:
-                res_data = res.json()
-                error_msg = (
-                    res_data["error"]
-                    if "error" in res_data
-                    else "Received an uknown error from the API"
-                )
-                raise ApiError(error_msg)
+                try:
+                    res_data = res.json()
+                except:
+                    res_data = res.text
+
+                error_msg = "No further information provided by the API"
+                if res_data and isinstance(res_data, str):
+                    error_msg = res_data
+                elif isinstance(res_data, dict) and "error" in res_data:
+                    error_msg = res_data["error"]
+
+                # Pass through the error and status code reported by the API gateway
+                raise ApiError(f"({res.status_code}) {error_msg}")
 
             return res
+
         except requests.ConnectionError as e:
             raise GatewayConnectionError(str(e))
 
