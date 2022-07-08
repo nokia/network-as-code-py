@@ -94,4 +94,5 @@ That will cause the SDK to issue requests with a test-mode header to inform the 
 
 ## Documentation
 
-Find documentation for individual classes and methods [on our pdoc page](https://atg.gitlabe2-pages.ext.net.nokia.com/network-as-code/nac-py/network_as_code/index.html).
+- More in-depth getting-started guide available on the Wiki pages (left sidebar)
+- Reference documentation is available [here](https://atg.gitlabe2-pages.ext.net.nokia.com/network-as-code/nac-py/network_as_code/index.html).
