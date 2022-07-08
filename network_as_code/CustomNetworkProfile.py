@@ -82,13 +82,8 @@ class CustomNetworkProfile(Configuration):
             New instance of `CustomNetworkProfile` that matches the current network profile of
             the given device.
         """
-        # json = RequestHandler.get_custom_network_profile(device).json()
-        # print(json)
-
-        # return cls(json["download"][0], json["upload"][0])
-        raise NotImplementedError(
-            "Feature disabled temporarily due to upstream API incompatibility"
-        )
+        json = RequestHandler.get_custom_network_profile(device).json()
+        return cls(download=json["download"], upload=json["upload"], unit=Unit.BIT)
 
     def apply(self, device: "Device"):
         """Apply this `CustomNetworkProfile` to the given device.
@@ -98,5 +93,5 @@ class CustomNetworkProfile(Configuration):
             is applied.
         """
         RequestHandler.set_custom_network_profile(
-            device, download=self.download, upload=self.upload
+            device=device, download=self.download, upload=self.upload
         )
