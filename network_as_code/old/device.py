@@ -6,25 +6,25 @@ from .DeviceLocation import DeviceLocation
 class Device:
     """Representation of a mobile device uniquely identified by an external id.
 
-    This class is used to store information needed for making Network as Code API requests,
-    as well as provide basic functionalities, such as device location queries.
+    This class stores information associated with a mobile device,
+    as well as uses this information when performing network changes for it.
 
-    #### Example usage:
+    Example usage:
+
     ```python
-    device = Device(
+    import network_as_code as nac
+    device = nac.device(
         id="string@registered.domain",
         sdk_token="eee0a4d0-2b54-4a7a-a61f-40ce753f44c6"
     )
     ```
+
+    Args:
+        id (str): ID that identifies a subscriber (device). See the [API docs](https://cns-apigee-test-6559-nacpoc.apigee.io/docs/nac/1/types/ExternalId) for more details.
+        sdk_token (str): Authentication token for the Network as Code API.
     """
 
     def __init__(self, id: str, sdk_token: str):
-        """Initializes a new Device.
-
-        Args:
-            id: ID that identifies a subscriber (device). See the [API docs](https://cns-apigee-test-6559-nacpoc.apigee.io/docs/nac/1/types/ExternalId) for more details.
-            sdk_token: Authentication token for the Network as Code API.
-        """
         self.id = id
         self.sdk_token = sdk_token
 

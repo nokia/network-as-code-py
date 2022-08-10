@@ -1,12 +1,12 @@
 import os
 import pprint
 import requests
-from .errors import ApiError, GatewayConnectionError
+from .errors import APIError, GatewayConnectionError
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
-    from .Device import Device
+    from .device import Device
 
 
 class RequestHandler:
@@ -43,7 +43,7 @@ class RequestHandler:
                     error_msg = res_data["error"]
 
                 # Pass through the error and status code reported by the API gateway
-                raise ApiError(f"({res.status_code}) {error_msg}")
+                raise APIError(f"({res.status_code}) {error_msg}")
 
             return res
 

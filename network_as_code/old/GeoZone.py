@@ -1,5 +1,5 @@
 import random  # Temporarily using random to generate events in the absence of a proper source
-from .Device import Device
+from .device import Device
 from .RequestHandler import RequestHandler
 
 

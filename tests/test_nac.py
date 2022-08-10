@@ -10,7 +10,7 @@ from network_as_code import (
     CustomNetworkProfile,
     Unit,
 )
-from network_as_code.errors import ApiError
+from network_as_code.errors import APIError
 
 API_PATH = "https://apigee-api-test.nokia-solution.com/nac/v2"
 
@@ -127,7 +127,7 @@ def test_api_error(requests_mock, device, network_profile):
         device.apply(network_profile)
         # Exception should have been thrown
         assert False
-    except ApiError:
+    except APIError:
         assert True
 
 

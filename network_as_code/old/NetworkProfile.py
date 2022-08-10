@@ -7,7 +7,7 @@ from .CustomNetworkProfile import CustomNetworkProfile
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
-    from .Device import Device
+    from .device import Device
 
 
 class NetworkProfile(Configuration):
@@ -22,7 +22,7 @@ class NetworkProfile(Configuration):
     device = Device(id="string@registered.domain")
     profile = NetworkProfile("gold")
     device.apply(profile)
-    ````
+    ```
     """
 
     def __init__(self, bandwidth_profile: str, priority: str = None):

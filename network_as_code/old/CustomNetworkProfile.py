@@ -5,7 +5,7 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # Avoids cyclic imports for type hints
-    from .Device import Device
+    from .device import Device
 
 
 class Unit(IntEnum):
