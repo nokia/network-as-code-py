@@ -4,7 +4,12 @@ from network_as_code.client import NetworkAsCodeClient
 class Model:
     """A base class for representing a single object."""
 
-    def __init__(self, attrs=None, client=None, collection=None):
+    def __init__(
+        self,
+        attrs: dict = None,
+        client: NetworkAsCodeClient = None,
+        collection=None,
+    ):
         # The client that has access to this object.
         self.client = client
 
