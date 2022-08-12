@@ -17,6 +17,7 @@ class NetworkAsCodeClient:
         sdk_token (str): Authentication token for the Network as Code API.
         timeout (int): Default timeout for API calls, in seconds. By default 5s.
         base_url (str): Base URL for the Network as Code API. Note that a default base URL is already set.
+        testmode (bool): Whether to use simulated or real resources, such as devices. False by default.
     """
 
     def __init__(self, *args, **kwargs):

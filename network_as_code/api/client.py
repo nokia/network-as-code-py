@@ -1,6 +1,7 @@
 import requests
 from .info import InfoAPI
 from .subscription import SubscriptionAPI
+from ..errors import APIError
 
 
 class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
@@ -10,9 +11,16 @@ class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
         sdk_token (str): Authentication token for the Network as Code API.
         timeout (int): Default timeout for API calls, in seconds.
         base_url (str): Base URL for the Network as Code API.
+        testmode (bool): Whether to use simulated or real resources.
     """
 
-    def __init__(self, token: str, timeout: int = 5, base_url: str = None):
+    def __init__(
+        self,
+        token: str,
+        timeout: int = 5,
+        base_url: str = None,
+        testmode: bool = False,
+    ):
         super().__init__()
 
         self.timeout = timeout
@@ -26,6 +34,7 @@ class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
         self.headers.update(
             {
                 "x-apikey": token,
+                "x-testmode": "true" if testmode else "false",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             }
@@ -44,14 +53,20 @@ class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
         url = f"{self.base_url}/{path.lstrip('/')}"
         return self.put(url, timeout=self.timeout, **kwargs)
 
+    def _patch(self, path: str, **kwargs):
+        url = f"{self.base_url}/{path.lstrip('/')}"
+        return self.patch(url, timeout=self.timeout, **kwargs)
+
     def _delete(self, path: str, **kwargs):
         url = f"{self.base_url}/{path.lstrip('/')}"
         return self.delete(url, timeout=self.timeout, **kwargs)
 
-    def _result(self, response, json=False, raw=False):
-        assert not (json and raw)
-
-        # TODO: Add API error handling using response.raise_for_status()
+    def _result(self, response: requests.Response, json=False, raw=False):
+        assert not (json and raw)  # Can't have both output types selected
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as e:
+            raise APIError(e)
 
         if json:
             return response.json()
