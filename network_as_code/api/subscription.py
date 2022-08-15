@@ -43,3 +43,14 @@ class SubscriptionAPI:
             json={"id": id, "bandwidth": bandwidth},
         )
         return self._result(res, json=True)
+
+    def set_subscriber_custom_bandwidth(self, id: str, up: int, down: int) -> dict:
+        res: Response = self._patch(
+            "/subscriber/bandwidth/custom",
+            json={"id": id, "upload": up, "download": down},
+        )
+        return self._result(res, json=True)
+
+    def get_subscriber_custom_bandwidth(self, id: str) -> dict:
+        res: Response = self._patch("/subscriber/bandwidth/custom", json={"id": id})
+        return self._result(res, json=True)

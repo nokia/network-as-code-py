@@ -20,16 +20,56 @@ class Subscription(Model):
         return self.attrs.get("msisdn")
 
     def get_location(self) -> dict:
+        """Get the last reported location of the subscriber.
+
+        Returns:
+            A `dict` containing various information about the latest reported location.
+        """
         res = self.client.api.get_subscriber_location(self.id)
         return res.get("locationInfo")
 
     def get_bandwidth(self) -> str:
+        """Get the bandwidth identifier for the subscriber.
+
+        Returns:
+            Currently active bandwidth configuration name.
+        """
         res = self.client.api.get_subscriber_bandwidth(self.id)
         return res.get("bandwidth")
 
-    def set_bandwidth(self) -> str:
-        res = self.client.api.set_subscriber_bandwidth(self.id)
+    def set_bandwidth(self, name: str) -> str:
+        """Update the bandwidth identifier for the subscriber.
+
+        Args:
+            name (str): Desired bandwidth configuration name.
+
+        Returns:
+            Currently active bandwidth configuration name.
+        """
+        res = self.client.api.set_subscriber_bandwidth(self.id, name)
         return res.get("bandwidth")
+
+    def get_custom_bandwidth(self):
+        """Get the bandwidth (uplink and downlink) limits for the subscriber.
+
+        Returns:
+            A `tuple` of currently set custom upload and download limits.
+        """
+        res = self.client.api.get_subscriber_custom_bandwidth(self.id)
+        return res.get("upload"), res.get("download")
+
+    def set_custom_bandwidth(self, up: int, down: int):
+        """Update the bandwidth (uplink and downlink) of the subscriber.
+
+        Args:
+            up (int): The new upload (uplink) limit.
+            down (int): The new download (downlink) limit.
+
+        Returns:
+            A `tuple` of currently set custom upload and download limits.
+        """
+        res = self.client.api.set_subscriber_custom_bandwidth(self.id, up, down)
+        return res.get("upload"), res.get("download")
 
 
 class SubscriptionCollection(Collection):
