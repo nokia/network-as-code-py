@@ -1,10 +1,16 @@
 import requests
-from .info import InfoAPI
+from .admin import AdminAPI
+from .services import ServicesAPI
 from .subscription import SubscriptionAPI
 from ..errors import APIError
 
 
-class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
+class APIClient(
+    requests.Session,
+    AdminAPI,
+    ServicesAPI,
+    SubscriptionAPI,
+):
     """A client for communicating with Network as Code APIs.
 
     ### Args:
@@ -25,7 +31,7 @@ class APIClient(requests.Session, InfoAPI, SubscriptionAPI):
 
         self.timeout = timeout
         self.base_url = (
-            "https://apigee-api-test.nokia-solution.com/nac/v2"
+            "https://apigee-api-test.nokia-solution.com/nac/v4"
             if base_url is None
             else base_url
         )

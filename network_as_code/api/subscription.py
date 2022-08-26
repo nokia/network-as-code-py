@@ -14,7 +14,7 @@ class SubscriptionAPI:
         testmode: bool = True,
     ) -> dict:
         res: Response = self._put(
-            "/subscriber/testuser",
+            "/admin/testuser",
             json={"id": id, "imsi": imsi, "msisdn": msisdn},
             headers={"x-testmode": "true" if testmode else "false"},
         )
@@ -23,7 +23,7 @@ class SubscriptionAPI:
 
     def delete_subscription(self, id: str, testmode: bool = True) -> bool:
         res: Response = self._delete(
-            "/subscriber/testuser",
+            "/admin/testuser",
             json={"id": id},
             headers={"x-testmode": "true" if testmode else "false"},
         )
