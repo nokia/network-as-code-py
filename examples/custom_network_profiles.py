@@ -17,20 +17,17 @@ NaC-py allows these values to be specified as bit-per-second, kilobit-per-second
 or megabit-per-second using a Unit enum.
 """
 
+client = nac.NetworkAsCodeClient(
+    token=SDK_TOKEN,
+    base_url="http://localhost:5050/nwac/v4",
+    testmode=True
+)
+
 # Give the device the UE identifier and SDK token
-device = nac.Device(UE_ID, SDK_TOKEN)
+device = client.subscriptions.get(UE_ID)
 
 # Let's create a 20/5 megabit Custom Network Profile
-
-network_profile = nac.CustomNetworkProfile(download=20, upload=5, unit=nac.Unit.MBIT)
-
-# We then apply this configuration change similarly to a Network Profile using Device.apply()
-device.apply(network_profile)
+device.set_custom_bandwidth(5 * 1000 * 1000, 20 * 1000 * 1000)
 
 # If we now query the device's network profile, we will be told that we are using a custom profile
-
-assert device.network_profile().bandwidth_profile == "custom"
-
-# We can also use Kbps or bps as our units if we want to
-network_profile = nac.CustomNetworkProfile(download=20000, upload=5000, unit=nac.Unit.KBIT)
-network_profile = nac.CustomNetworkProfile(download=20000000, upload=5000000, unit=nac.Unit.BIT)
+assert device.get_custom_bandwidth() == (5 * 1000 * 1000, 20 * 1000 * 1000)

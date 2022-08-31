@@ -18,14 +18,25 @@ Currently two pre-made Network Profiles exist:
 A device will have one Network Profile active at a time, but can be easily switched between Network Profiles.
 """
 
-# Give the device the UE identifier and SDK token
-device = nac.Device(UE_ID, SDK_TOKEN)
+# We begin by creating a client for Network as Code
+client = nac.NetworkAsCodeClient(
+    token=SDK_TOKEN,
+    base_url="http://localhost:5050/nwac/v4",
+    testmode=True # We execute our API calls against a simulated network
+)
+
+# We get the device by querying subscriptions with the UE's external identifer
+device = client.subscriptions.get(UE_ID)
+
+print(device)
 
 # Fetch the network profile of a device
-network_profile = device.network_profile()
+network_profile = device.get_bandwidth()
+
+print(network_profile)
 
 # Determine the type of network profile in use
-if network_profile.bandwidth_profile == "uav_lowpowermode":
+if network_profile == "uav_lowpowermode":
     # We can switch to a new profile with Device.apply()
     # This function takes a configuration object (such as a NetworkProfile) as its parameter
-    device.apply(nac.NetworkProfile("uav_streaming"))
+    device.set_bandwidth("uav_streaming")

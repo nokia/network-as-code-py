@@ -42,7 +42,7 @@ class Subscription(Model):
             Currently active bandwidth configuration name.
         """
         res = self.client.api.get_subscriber_bandwidth(self.id)
-        return res.get("bandwidth")
+        return res.get("serviceTier")
 
     def set_bandwidth(self, name: str) -> str:
         """Update the bandwidth identifier for the subscriber.
@@ -54,7 +54,7 @@ class Subscription(Model):
             Currently active bandwidth configuration name.
         """
         res = self.client.api.set_subscriber_bandwidth(self.id, name)
-        return res.get("bandwidth")
+        return res.get("serviceTier")
 
     def get_custom_bandwidth(self):
         """Get the bandwidth (uplink and downlink) limits for the subscriber.
@@ -82,7 +82,7 @@ class Subscription(Model):
 class SubscriptionCollection(Collection):
     model = Subscription
 
-    def get(self, id):
+    def get(self, id) -> Subscription:
         """Get a subscription by its external ID.
 
         Args:
