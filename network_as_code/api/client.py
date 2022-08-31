@@ -1,3 +1,6 @@
+import sys
+import json as JSON
+from textwrap import indent
 import requests
 from .admin import AdminAPI
 from .services import ServicesAPI
@@ -48,31 +51,37 @@ class APIClient(
 
     # TODO: Don't Repeat Yourself...
     def _get(self, path: str, **kwargs):
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        return self.get(url, timeout=self.timeout, **kwargs)
+        return self._request("GET", path, **kwargs)
 
     def _post(self, path: str, **kwargs):
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        return self.post(url, timeout=self.timeout, **kwargs)
+        return self._request("POST", path, **kwargs)
 
     def _put(self, path: str, **kwargs):
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        return self.put(url, timeout=self.timeout, **kwargs)
+        return self._request("PUT", path, **kwargs)
 
     def _patch(self, path: str, **kwargs):
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        return self.patch(url, timeout=self.timeout, **kwargs)
+        return self._request("PATCH", path, **kwargs)
 
     def _delete(self, path: str, **kwargs):
+        return self._request("DELETE", path, **kwargs)
+
+    def _request(self, method: str, path: str, **kwargs):
         url = f"{self.base_url}/{path.lstrip('/')}"
-        return self.delete(url, timeout=self.timeout, **kwargs)
+        try:
+            return self.request(method, url, timeout=self.timeout, **kwargs)
+        except requests.exceptions.ReadTimeout as e:
+            print(f"ERROR: The API gateway did not respond in {self.timeout} seconds.")
+            sys.exit(1)  # TODO: Should this raise another error instead?
 
     def _result(self, response: requests.Response, json=False, raw=False):
         assert not (json and raw)  # Can't have both output types selected
         try:
             response.raise_for_status()
         except requests.HTTPError as e:
-            raise APIError(e)
+            # TODO: Parse errors instead of simply printing their body content
+            print("ERROR: The API gateway returned the following error:")
+            print(JSON.dumps(response.json(), indent=2))
+            sys.exit(1)  # TODO: Should this raise APIError instead?
 
         if json:
             return response.json()

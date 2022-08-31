@@ -1,4 +1,8 @@
-from network_as_code.client import NetworkAsCodeClient
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from ..client import NetworkAsCodeClient
 
 
 class Model:
@@ -7,7 +11,7 @@ class Model:
     def __init__(
         self,
         attrs: dict = None,
-        client: NetworkAsCodeClient = None,
+        client: "NetworkAsCodeClient" = None,
         collection=None,
     ):
         # The client that has access to this object.
@@ -41,7 +45,7 @@ class Collection:
     # The type of object this collection represents, set by subclasses.
     model = None
 
-    def __init__(self, client: NetworkAsCodeClient = None):
+    def __init__(self, client: "NetworkAsCodeClient" = None):
         # The client that has access to this object.
         self.client = client
 

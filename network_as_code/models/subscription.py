@@ -11,6 +11,13 @@ class Subscription(Model):
         id (str): External ID of the subscription. Follows email address conventions.
     """
 
+    def __repr__(self) -> str:
+        return (
+            f"Subscription(attrs={repr(self.attrs)}, "
+            f"client={repr(self.client)}, "
+            f"collection={repr(self.collection)})"
+        )
+
     @property
     def imsi(self):
         return self.attrs.get("imsi")
@@ -98,7 +105,13 @@ class SubscriptionCollection(Collection):
         # TODO: Implement me!
         raise NotImplementedError
 
-    def create(self, id: str, imsi: str, msisdn: str, testmode: bool = True):
+    def create(
+        self,
+        id: str,
+        imsi: str,
+        msisdn: str,
+        testmode: bool = True,
+    ) -> Subscription:
         """Create a new subscription. A subscription is typically tied to a device.
 
         #### Note! At the moment it's only possible to create testmode subscriptions.

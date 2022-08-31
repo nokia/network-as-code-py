@@ -15,10 +15,9 @@ class SubscriptionAPI:
     ) -> dict:
         res: Response = self._put(
             "/admin/testuser",
-            json={"id": id, "imsi": imsi, "msisdn": msisdn},
+            json={"sid": id, "imsi": imsi, "msisdn": msisdn},
             headers={"x-testmode": "true" if testmode else "false"},
         )
-        assert res.status_code == 201  # Check for correct status code
         return self._result(res, json=True)
 
     def delete_subscription(self, id: str, testmode: bool = True) -> bool:
