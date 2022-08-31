@@ -29,7 +29,7 @@ class Model:
     @property
     def id(self):
         """The ID of the object."""
-        return self.attrs.get("id")
+        return self.attrs.get("sid")
 
     def reload(self):
         """

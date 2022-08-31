@@ -11,12 +11,10 @@ class SubscriptionAPI:
         id: str,
         imsi: str,
         msisdn: str,
-        testmode: bool = True,
     ) -> dict:
         res: Response = self._put(
             "/admin/testuser",
             json={"sid": id, "imsi": imsi, "msisdn": msisdn},
-            headers={"x-testmode": "true" if testmode else "false"},
         )
         return self._result(res, json=True)
 
@@ -29,7 +27,7 @@ class SubscriptionAPI:
         return True if res.status_code == 204 else False
 
     def get_subscriber_location(self, id: str) -> dict:
-        res: Response = self._post("/subscriber/location", json={"id": id})
+        res: Response = self._post("/subscriber/location", json={"sid": id})
         return self._result(res, json=True)
 
     def get_subscriber_bandwidth(self, id: str) -> dict:

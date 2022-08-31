@@ -128,9 +128,9 @@ class SubscriptionCollection(Collection):
         Raises:
             :py:class:`network_as_code.errors.NotFound`
                 If the subscription does not exist.
-            :py:class:`network_as_code.errors.APIError`
+            :py:class:`network_/as_code.errors.APIError`
                 If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.create_subscription(id, imsi, msisdn, testmode)
+        res = self.client.api.create_subscription(id, imsi, msisdn)
         return self.prepare_model(res)

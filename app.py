@@ -1,38 +1,22 @@
-import os
-
 import network_as_code as nac
 
-SDK_TOKEN = os.environ['NAC_TOKEN']
-UE_ID = os.environ['UE_ID']
+client = nac.NetworkAsCodeClient(
+    token="testing",
+    base_url="http://localhost:5050/nwac/v4",
+    testmode=True
+)
 
-# Give the device the UE identifier and SDK token
-device = nac.Device(UE_ID, SDK_TOKEN)
+print("Client connected:", client.connected())
+print("Creating a test user")
 
-# Checking for an API connection
-print("API connection established: ", device.check_api_connection())
+device = client.subscriptions.create(
+    id="test.user@domain.tld",
+    imsi="123456789012345",
+    msisdn="1234567890",
+)
 
-# Get the network profile for the device
-old_network_profile = device.network_profile()
-print("Network profile in use: " + old_network_profile.bandwidth_profile)
+print("Created.")
 
-# Change the network profile
-device.apply(nac.NetworkProfile("uav_lowpowermode"))
+location = device.get_location()
 
-# Get the changed profile
-new_network_profile = device.network_profile()
-print("Network profile in use: " + new_network_profile.bandwidth_profile)
-
-# Change the network profile
-device.apply(nac.CustomNetworkProfile(20, 2, nac.Unit.MBIT))
-
-# Get the changed profile
-new_network_profile = device.network_profile()
-print("Network profile in use: " + new_network_profile.bandwidth_profile)
-
-# Reset the device back to previous profile
-device.apply(old_network_profile)
-print("Reset the network profile")
-
-# Get the device location
-location = device.location()
-print("Device at location: ", location.longitude, location.latitude, location.elevation)
+print(location)

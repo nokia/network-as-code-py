@@ -68,7 +68,8 @@ class APIClient(
     def _request(self, method: str, path: str, **kwargs):
         url = f"{self.base_url}/{path.lstrip('/')}"
         try:
-            return self.request(method, url, timeout=self.timeout, **kwargs)
+            res = self.request(method, url, timeout=self.timeout, **kwargs)
+            return res
         except requests.exceptions.ReadTimeout as e:
             print(f"ERROR: The API gateway did not respond in {self.timeout} seconds.")
             sys.exit(1)  # TODO: Should this raise another error instead?
