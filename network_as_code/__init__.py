@@ -1,8 +1,3 @@
-from .Device import Device
-from .NetworkProfile import NetworkProfile
-from .CustomNetworkProfile import CustomNetworkProfile, Unit
-from .RequestHandler import RequestHandler
-from .DeviceLocation import DeviceLocation
-from .GeoZone import GeoZone
+from .client import NetworkAsCodeClient
 
 __version__ = "0.3.0"
