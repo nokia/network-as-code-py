@@ -42,7 +42,7 @@ class Subscription(Model):
             Currently active bandwidth configuration name.
         """
         res = self.client.api.get_subscriber_bandwidth(self.id)
-        return res.get("bandwidth")
+        return res.get("serviceTier")
 
     def set_bandwidth(self, name: str) -> str:
         """Update the bandwidth identifier for the subscriber.
@@ -54,7 +54,7 @@ class Subscription(Model):
             Currently active bandwidth configuration name.
         """
         res = self.client.api.set_subscriber_bandwidth(self.id, name)
-        return res.get("bandwidth")
+        return res.get("serviceTier")
 
     def get_custom_bandwidth(self):
         """Get the bandwidth (uplink and downlink) limits for the subscriber.
@@ -82,7 +82,7 @@ class Subscription(Model):
 class SubscriptionCollection(Collection):
     model = Subscription
 
-    def get(self, id):
+    def get(self, id) -> Subscription:
         """Get a subscription by its external ID.
 
         Args:
@@ -134,3 +134,25 @@ class SubscriptionCollection(Collection):
         # TODO: Value checking here.
         res = self.client.api.create_subscription(id, imsi, msisdn)
         return self.prepare_model(res)
+
+    def delete(
+        self,
+        id: str,
+        testmode: bool = True,
+    ):
+        """Delete a subscription. A subscription is typically tied to a device.
+
+        #### Note! Only test-mode subscriptions can be deleted!
+
+        Args:
+            id (str): External ID of the subscription. Email-like.
+            testmode (bool): Whether to create a simulated or real subscription.
+
+        Raises:
+            :py:class:`network_as_code.errors.NotFound`
+                If the subscription does not exist.
+            :py:class:`network_/as_code.errors.APIError`
+                If the server returns an error.
+        """
+        # TODO: Value checking here.
+        res = self.client.api.delete_subscription(id)
