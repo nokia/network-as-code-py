@@ -27,18 +27,14 @@ class APIClient(
         self,
         token: str,
         timeout: int = 5,
-        base_url: str = None,
+        base_url: str = "https://apigee-api-test.nokia-solution.com/nac/v4",
         testmode: bool = False,
         **kwargs,
     ):
         super().__init__(**kwargs)
 
         self.timeout = timeout
-        self.base_url = (
-            "https://apigee-api-test.nokia-solution.com/nac/v4"
-            if base_url is None
-            else base_url
-        )
+        self.base_url = base_url
 
         # Set the default headers for all API requests
         self.headers = {
@@ -47,6 +43,8 @@ class APIClient(
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             }
+
+    # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
 
     def _result(self, response: httpx.Response, json=False, raw=False):
         assert not (json and raw)  # Can't have both output types selected
