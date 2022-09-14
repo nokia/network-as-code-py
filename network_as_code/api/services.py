@@ -3,7 +3,7 @@ from httpx import Response
 
 class ServicesAPI:
     def get_all_services(self) -> list:
-        res: Response = self.request("GET","/services")
+        res: Response = self.request("GET", "/services")
         return self._result(res, json=True)
 
     def get_service(self, service_id: str) -> dict:
@@ -52,6 +52,8 @@ class ServicesAPI:
         return self._result(res, json=True)
 
     def delete_slice(self, service_id, slice_id) -> bool:
-        res: Response = self.request("DELETE", f"/services/{service_id}/slices/{slice_id}")
+        res: Response = self.request(
+            "DELETE", f"/services/{service_id}/slices/{slice_id}"
+        )
         # TODO: Handle API errors with res.raise_for_status() since not using self._result()
         return res.status_code == 204

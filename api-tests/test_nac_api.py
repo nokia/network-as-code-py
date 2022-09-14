@@ -17,6 +17,7 @@ def create_random_imsi():
 
     return imsi
 
+
 def create_random_msisdn():
     imsi = "69"
     for i in range(8):
@@ -24,11 +25,11 @@ def create_random_msisdn():
 
     return imsi
 
+
 client = nac.NetworkAsCodeClient(
-    token="testing",
-    base_url="http://localhost:5050/nwac/v4",
-    testmode=True
+    token="testing", base_url="http://localhost:5050/nwac/v4", testmode=True
 )
+
 
 @pytest.fixture
 def device():
@@ -64,6 +65,6 @@ def test_setting_custom_network_profile(device: Subscription):
 
 def test_getting_device_location(device: Subscription):
     location = device.get_location()
-    assert float(location["long"]) == 90.
-    assert float(location["lat"]) == 90.
-    assert float(location["elev"]) == 123.
+    assert float(location["long"]) == 90.0
+    assert float(location["lat"]) == 90.0
+    assert float(location["elev"]) == 123.0

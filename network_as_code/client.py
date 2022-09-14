@@ -23,6 +23,7 @@ class NetworkAsCodeClient:
     def __init__(self, *args, **kwargs):
         self.api = APIClient(*args, **kwargs)
 
+
     # RESOURCES
     @property
     def subscriptions(self):

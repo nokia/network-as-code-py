@@ -38,11 +38,11 @@ class APIClient(
 
         # Set the default headers for all API requests
         self.headers = {
-                "x-apikey": token,
-                "x-testmode": "true" if testmode else "false",
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            }
+            "x-apikey": token,
+            "x-testmode": "true" if testmode else "false",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        }
 
     # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
 

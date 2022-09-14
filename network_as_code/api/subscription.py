@@ -3,7 +3,7 @@ from httpx import Response
 
 class SubscriptionAPI:
     def get_subscription(self, id: str) -> dict:
-        res: Response = self.request("POST","/subscriber", json={"sid": id})
+        res: Response = self.request("POST", "/subscriber", json={"sid": id})
         return self._result(res, json=True)
 
     def create_subscription(
@@ -28,11 +28,11 @@ class SubscriptionAPI:
         return True if res.status_code == 204 else False
 
     def get_subscriber_location(self, id: str) -> dict:
-        res: Response = self.request("POST","/subscriber/location", json={"sid": id})
+        res: Response = self.request("POST", "/subscriber/location", json={"sid": id})
         return self._result(res, json=True)
 
     def get_subscriber_bandwidth(self, id: str) -> dict:
-        res: Response = self.request("POST","/subscriber/bandwidth", json={"sid": id})
+        res: Response = self.request("POST", "/subscriber/bandwidth", json={"sid": id})
         return self._result(res, json=True)
 
     def set_subscriber_bandwidth(self, id: str, bandwidth: str) -> dict:
@@ -52,5 +52,7 @@ class SubscriptionAPI:
         return self._result(res, json=True)
 
     def get_subscriber_custom_bandwidth(self, id: str) -> dict:
-        res: Response = self.request("PATCH", "/subscriber/bandwidth/custom", json={"sid": id})
+        res: Response = self.request(
+            "PATCH", "/subscriber/bandwidth/custom", json={"sid": id}
+        )
         return self._result(res, json=True)
