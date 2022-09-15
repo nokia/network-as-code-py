@@ -1,11 +1,9 @@
 import sys
 import json as JSON
 import httpx
-from textwrap import indent
 from .admin import AdminAPI
 from .services import ServicesAPI
 from .subscription import SubscriptionAPI
-from ..errors import APIError
 
 
 class APIClient(
@@ -44,13 +42,19 @@ class APIClient(
             "Content-Type": "application/json",
         }
 
+    def __del__(self):
+        """
+        Makes sure that the connection will be closed properly before the object gets deleted.
+        """
+        self.close()
+
     # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
 
     def _result(self, response: httpx.Response, json=False, raw=False):
         assert not (json and raw)  # Can't have both output types selected
         try:
             response.raise_for_status()
-        except httpx.HTTPStatusError as e:
+        except httpx.HTTPStatusError:
             # TODO: Parse errors instead of simply printing their body content
             print("ERROR: The API gateway returned the following error:", end="")
             try:
