@@ -24,7 +24,7 @@ test:
   stage: test
   tags:
     - esisogr87 # This runner has connection to "outside"
-  environment:
+  variables:
     NAC_TOKEN: "asd1234" # Replace with a proper token if we test against the L1 API gateway
   script:
     - poetry install
