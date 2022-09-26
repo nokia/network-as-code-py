@@ -1,15 +1,13 @@
 import sys
 import json as JSON
-from textwrap import indent
-import requests
+import httpx
 from .admin import AdminAPI
 from .services import ServicesAPI
 from .subscription import SubscriptionAPI
-from ..errors import APIError
 
 
 class APIClient(
-    requests.Session,
+    httpx.Client,
     AdminAPI,
     ServicesAPI,
     SubscriptionAPI,
@@ -27,61 +25,42 @@ class APIClient(
         self,
         token: str,
         timeout: int = 5,
-        base_url: str = None,
+        base_url: str = "https://network-as-code-poc.p.rapidapi.com",
         testmode: bool = False,
+        **kwargs,
     ):
-        super().__init__()
+        super().__init__(**kwargs)
 
         self.timeout = timeout
-        self.base_url = (
-            "https://apigee-api-test.nokia-solution.com/nac/v4"
-            if base_url is None
-            else base_url
-        )
+        self.base_url = base_url
 
         # Set the default headers for all API requests
-        self.headers.update(
-            {
-                "x-apikey": token,
-                "x-testmode": "true" if testmode else "false",
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            }
-        )
+        self.headers = {
+            "x-apikey": token,
+            "x-testmode": "true" if testmode else "false",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        }
 
-    # TODO: Don't Repeat Yourself...
-    def _get(self, path: str, **kwargs):
-        return self._request("GET", path, **kwargs)
+    def __del__(self):
+        """
+        Makes sure that the connection will be closed properly before the object gets deleted.
+        """
+        self.close()
 
-    def _post(self, path: str, **kwargs):
-        return self._request("POST", path, **kwargs)
+    # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
 
-    def _put(self, path: str, **kwargs):
-        return self._request("PUT", path, **kwargs)
-
-    def _patch(self, path: str, **kwargs):
-        return self._request("PATCH", path, **kwargs)
-
-    def _delete(self, path: str, **kwargs):
-        return self._request("DELETE", path, **kwargs)
-
-    def _request(self, method: str, path: str, **kwargs):
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        try:
-            res = self.request(method, url, timeout=self.timeout, **kwargs)
-            return res
-        except requests.exceptions.ReadTimeout as e:
-            print(f"ERROR: The API gateway did not respond in {self.timeout} seconds.")
-            sys.exit(1)  # TODO: Should this raise another error instead?
-
-    def _result(self, response: requests.Response, json=False, raw=False):
+    def _result(self, response: httpx.Response, json=False, raw=False):
         assert not (json and raw)  # Can't have both output types selected
         try:
             response.raise_for_status()
-        except requests.HTTPError as e:
+        except httpx.HTTPStatusError:
             # TODO: Parse errors instead of simply printing their body content
-            print("ERROR: The API gateway returned the following error:")
-            print(JSON.dumps(response.json(), indent=2))
+            print("ERROR: The API gateway returned the following error:", end="")
+            try:
+                print(JSON.dumps(response.json(), indent=2))
+            except Exception:
+                print(response.text)
             sys.exit(1)  # TODO: Should this raise APIError instead?
 
         if json:
