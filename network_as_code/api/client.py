@@ -25,7 +25,7 @@ class APIClient(
         self,
         token: str,
         timeout: int = 5,
-        base_url: str = "https://apigee-api-test.nokia-solution.com/nac/v4",
+        base_url: str = "https://network-as-code-poc.p.rapidapi.com",
         testmode: bool = False,
         **kwargs,
     ):
