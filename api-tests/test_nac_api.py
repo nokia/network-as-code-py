@@ -27,7 +27,9 @@ def create_random_msisdn():
 
 
 client = nac.NetworkAsCodeClient(
-    token="testing", base_url="http://localhost:5050/nwac/v4", testmode=True
+    token="testing",
+    base_url="http://nwac.atg.dynamic.nsn-net.net/nwac/v4",
+    testmode=True
 )
 
 
