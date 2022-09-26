@@ -24,10 +24,12 @@ test:
   stage: test
   tags:
     - esisogr87 # This runner has connection to "outside"
+  variables:
+    NAC_TOKEN: "asd1234" # Replace with a proper token if we test against the L1 API gateway
   script:
     - poetry install
     - poetry run pytest
-    - poetry run python api-tests/bouncer-check.py
+    # - poetry run python api-tests/bouncer-check.py TODO: update Bouncer configs
   rules:
     - if: $CI_COMMIT_BRANCH
 
