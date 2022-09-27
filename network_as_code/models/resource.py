@@ -9,10 +9,7 @@ class Model:
     """A base class for representing a single object."""
 
     def __init__(
-        self,
-        attrs: dict = None,
-        client: "NetworkAsCodeClient" = None,
-        collection=None,
+        self, attrs: dict, client: "NetworkAsCodeClient", collection: "Collection"
     ):
         # The client that has access to this object.
         self.client = client
@@ -60,13 +57,20 @@ class Collection:
 
     def prepare_model(self, attrs: "Model|dict"):
         """Create a model from a set of attributes."""
+        if self.__class__ is Collection:
+            raise Exception("This method should not be called from the base class")
+
         if isinstance(attrs, Model):
             attrs.client = self.client
             attrs.collection = self
             return attrs
 
-        elif isinstance(attrs, dict):
+        if isinstance(attrs, dict) and isinstance(self.model, Model):
             return self.model(attrs=attrs, client=self.client, collection=self)
 
+        if isinstance(self.model, Model):
+            raise Exception(f"Can't create a {self.model.__name__} from {attrs}")
         else:
-            raise Exception(f"Can't create {self.model.__name__} from {attrs}")
+            raise Exception(
+                f"Subclass {self.__class__.__name__} did not specify the model attribute"
+            )
