@@ -1,6 +1,5 @@
 from .api import APIClient
-from .models import SubscriptionCollection, NetworkSliceCollection
-from .models.notification import NotificationCollection
+from .models import SubscriptionCollection, NetworkSliceCollection, NotificationCollection
 
 
 class NetworkAsCodeClient:

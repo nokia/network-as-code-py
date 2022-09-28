@@ -6,11 +6,10 @@ import json as JSON
 from .endpoints.admin import AdminAPI
 from .endpoints.services import ServicesAPI
 from .endpoints.subscriptions import SubscriptionsAPI
-from .notifications import NotificationsClient
+from .endpoints.notifications import NotificationsAPI
 
 class APIClient(
     httpx.Client,
-    NotificationsClient
 ):
     """A client for communicating with Network as Code APIs.
 
@@ -44,6 +43,7 @@ class APIClient(
         self.admin = AdminAPI(self)
         self.services = ServicesAPI(self)
         self.subscriptions = SubscriptionsAPI(self)
+        self.notifications = NotificationsAPI(self)
 
     def __del__(self):
         """

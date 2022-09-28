@@ -1,11 +1,9 @@
 
 import websockets
 
-# async def get_websocket_channel(uuid: str) -> websockets.connection:
-#     """Get a notification stream over a websocket"""
-#     return websockets.connect(uri, ping_timeout=None)
+from .endpoint import AsyncEndpoint
 
-class NotificationsClient:
+class NotificationsAPI(AsyncEndpoint):
     """A client for handling Notification API calls"""
 
     async def get_websocket_channel(self, uuid: str) -> websockets.WebSocketClientProtocol:
