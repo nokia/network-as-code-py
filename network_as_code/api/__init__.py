@@ -1,1 +1,1 @@
-from .client import APIClient
+from .client import APIClient, AsyncAPIClient

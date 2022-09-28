@@ -1,4 +1,4 @@
-from .endpoint import Endpoint, AsyncAPIClient
+from .endpoint import Endpoint, AsyncEndpoint
 
 
 class AdminAPI(Endpoint):
