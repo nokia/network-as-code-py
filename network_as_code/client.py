@@ -44,7 +44,7 @@ class NetworkAsCodeClient:
 
     @property
     def notifications(self):
-        return NotificationCollection(client=self)
+        return NotificationCollection(self._api)
 
     # TOP-LEVEL METHODS
     def connected(self):  # Just and example of a top-level method

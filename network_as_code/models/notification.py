@@ -2,15 +2,15 @@ from .resource import Model, Collection
 
 
 class Notification(Model):
-    def __init__(self, uuid, client=None):
+    def __init__(self, uuid, api=None):
         self.uuid = uuid
-        self.client = client
+        self.api = api
 
     async def get_websocket_channel(self):
-        return await self.client.api.notifications.get_websocket_channel(self.uuid)
+        return await self.api.notifications.get_websocket_channel(self.uuid)
 
     def poll(self):
-        return self.client.api.notifications.poll_channel(self.uuid)
+        return self.api.notifications.poll_channel(self.uuid)
 
 class NotificationCollection(Collection):
     model = Notification
@@ -22,11 +22,11 @@ class NotificationCollection(Collection):
         self,
     ) -> Notification:
 
-        res = self.client.api.notifications.create_notification_channel()
+        res = self.api.notifications.create_notification_channel()
 
         uuid = res["subscription_id"]
 
-        return Notification(uuid, client=self.client)
+        return Notification(uuid, api=self.api)
 
     def delete(
         self,
@@ -34,4 +34,4 @@ class NotificationCollection(Collection):
         #testmode: bool = True,
     ):
 
-        res = self.client.api.notifications.delete_notification_channel(id)
+        res = self.api.notifications.delete_notification_channel(id)
