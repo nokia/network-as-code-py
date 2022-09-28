@@ -7,10 +7,10 @@ class Notification(Model):
         self.client = client
 
     async def get_websocket_channel(self):
-        return await self.client.api.get_websocket_channel(self.uuid)
+        return await self.client.api.notifications.get_websocket_channel(self.uuid)
 
     def poll(self):
-        return self.client.api.poll_channel(self.uuid)
+        return self.client.api.notifications.poll_channel(self.uuid)
 
 class NotificationCollection(Collection):
     model = Notification
@@ -22,7 +22,7 @@ class NotificationCollection(Collection):
         self,
     ) -> Notification:
 
-        res = self.client.api.create_notification_channel()
+        res = self.client.api.notifications.create_notification_channel()
 
         uuid = res["subscription_id"]
 
@@ -34,4 +34,4 @@ class NotificationCollection(Collection):
         #testmode: bool = True,
     ):
 
-        res = self.client.api.delete_notification_channel(id)
+        res = self.client.api.notifications.delete_notification_channel(id)

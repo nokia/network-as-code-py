@@ -15,18 +15,18 @@ class NotificationsAPI(AsyncEndpoint):
 
     def poll_channel(self, uuid: str):
         """Poll a notification channel and return list of all notifications in the queue"""
-        res: Response = self.request("GET", f"/notifier/notifications/poll/{uuid}")
+        res: Response = self.client.request("GET", f"/notifier/notifications/poll/{uuid}")
 
-        return self._result(res, json=True)
+        return self.client._result(res, json=True)
 
     def create_notification_channel(self):
         """Poll a notification channel and return list of all notifications in the queue"""
-        res: Response = self.request("POST", f"/notifier/callback-setup")
+        res: Response = self.client.request("POST", f"/notifier/callback-setup")
 
-        return self._result(res, json=True)
+        return self.client._result(res, json=True)
 
     def delete_notification_channel(self, uuid: str):
         """Poll a notification channel and return list of all notifications in the queue"""
-        res: Response = self.request("DELETE", f"/notifier/callback-delete/{uuid}")
+        res: Response = self.client.request("DELETE", f"/notifier/callback-delete/{uuid}")
 
-        return self._result(res, json=True)
+        return self.client._result(res, json=True)
