@@ -1,5 +1,6 @@
 from .api import APIClient
 from .models import SubscriptionCollection, NetworkSliceCollection
+from .models.notification import NotificationCollection
 
 
 class NetworkAsCodeClient:
@@ -41,6 +42,10 @@ class NetworkAsCodeClient:
         TODO: Write some documentation about the slice namespace here.
         """
         return self._slicing
+
+    @property
+    def notifications(self):
+        return NotificationCollection(client=self)
 
     # TOP-LEVEL METHODS
     def connected(self):  # Just and example of a top-level method

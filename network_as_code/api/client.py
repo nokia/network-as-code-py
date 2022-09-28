@@ -1,12 +1,17 @@
 import sys
 import httpx
+
 import json as JSON
+
 from .endpoints.admin import AdminAPI
 from .endpoints.services import ServicesAPI
 from .endpoints.subscriptions import SubscriptionsAPI
+from .notifications import NotificationsClient
 
-
-class APIClient(httpx.Client):
+class APIClient(
+    httpx.Client,
+    NotificationsClient
+):
     """A client for communicating with Network as Code APIs.
 
     ### Args:
