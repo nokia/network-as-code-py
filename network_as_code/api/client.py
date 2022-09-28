@@ -1,21 +1,16 @@
 import sys
-import json as JSON
 import httpx
-from .admin import AdminAPI
-from .services import ServicesAPI
-from .subscription import SubscriptionAPI
+import json as JSON
+from .endpoints.admin import AdminAPI
+from .endpoints.services import ServicesAPI
+from .endpoints.subscriptions import SubscriptionsAPI
 
 
-class APIClient(
-    httpx.Client,
-    AdminAPI,
-    ServicesAPI,
-    SubscriptionAPI,
-):
+class APIClient(httpx.Client):
     """A client for communicating with Network as Code APIs.
 
     ### Args:
-        sdk_token (str): Authentication token for the Network as Code API.
+        token (str): Authentication token for the Network as Code API.
         timeout (int): Default timeout for API calls, in seconds.
         base_url (str): Base URL for the Network as Code API.
         testmode (bool): Whether to use simulated or real resources.
@@ -41,6 +36,9 @@ class APIClient(
             "Accept": "application/json",
             "Content-Type": "application/json",
         }
+        self.admin = AdminAPI(self)
+        self.services = ServicesAPI(self)
+        self.subscriptions = SubscriptionsAPI(self)
 
     def __del__(self):
         """
@@ -68,3 +66,7 @@ class APIClient(
         if raw:
             return response.content
         return response.text
+
+
+class AsyncAPIClient(httpx.AsyncClient):
+    pass
