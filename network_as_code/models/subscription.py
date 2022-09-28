@@ -14,7 +14,7 @@ class Subscription(Model):
     def __repr__(self) -> str:
         return (
             f"Subscription(attrs={repr(self.attrs)}, "
-            f"client={repr(self.client)}, "
+            f"api={repr(self.api)}, "
             f"collection={repr(self.collection)})"
         )
 
@@ -32,7 +32,7 @@ class Subscription(Model):
         Returns:
             A `dict` containing various information about the latest reported location.
         """
-        res = self.client.api.get_subscriber_location(self.id)
+        res = self.api.subscriptions.get_subscriber_location(self.id)
         return res.get("locationInfo")
 
     def get_bandwidth(self) -> str:
@@ -41,7 +41,7 @@ class Subscription(Model):
         Returns:
             Currently active bandwidth configuration name.
         """
-        res = self.client.api.get_subscriber_bandwidth(self.id)
+        res = self.api.subscriptions.get_subscriber_bandwidth(self.id)
         return res.get("serviceTier")
 
     def set_bandwidth(self, name: str) -> str:
@@ -53,7 +53,7 @@ class Subscription(Model):
         Returns:
             Currently active bandwidth configuration name.
         """
-        res = self.client.api.set_subscriber_bandwidth(self.id, name)
+        res = self.api.subscriptions.set_subscriber_bandwidth(self.id, name)
         return res.get("serviceTier")
 
     def get_custom_bandwidth(self):
@@ -62,7 +62,7 @@ class Subscription(Model):
         Returns:
             A `tuple` of currently set custom upload and download limits.
         """
-        res = self.client.api.get_subscriber_custom_bandwidth(self.id)
+        res = self.api.subscriptions.get_subscriber_custom_bandwidth(self.id)
         return res.get("upload"), res.get("download")
 
     def set_custom_bandwidth(self, up: int, down: int):
@@ -75,7 +75,7 @@ class Subscription(Model):
         Returns:
             A `tuple` of currently set custom upload and download limits.
         """
-        res = self.client.api.set_subscriber_custom_bandwidth(self.id, up, down)
+        res = self.api.subscriptions.set_subscriber_custom_bandwidth(self.id, up, down)
         return res.get("upload"), res.get("download")
 
 
@@ -98,20 +98,14 @@ class SubscriptionCollection(Collection):
                 If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.get_subscription(id)
+        res = self.api.subscriptions.get_subscription(id)
         return self.prepare_model(res)
 
     def list(self):
         # TODO: Implement me!
         raise NotImplementedError
 
-    def create(
-        self,
-        id: str,
-        imsi: str,
-        msisdn: str,
-        testmode: bool = True,
-    ) -> Subscription:
+    def create(self, id: str, imsi: str, msisdn: str, testmode: bool = True) -> Subscription:
         """Create a new subscription. A subscription is typically tied to a device.
 
         #### Note! At the moment it's only possible to create testmode subscriptions.
@@ -132,14 +126,10 @@ class SubscriptionCollection(Collection):
                 If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.create_subscription(id, imsi, msisdn)
+        res = self.api.subscriptions.create_subscription(id, imsi, msisdn)
         return self.prepare_model(res)
 
-    def delete(
-        self,
-        id: str,
-        testmode: bool = True,
-    ):
+    def delete(self, id: str, testmode: bool = True) -> bool:
         """Delete a subscription. A subscription is typically tied to a device.
 
         #### Note! Only test-mode subscriptions can be deleted!
@@ -155,4 +145,4 @@ class SubscriptionCollection(Collection):
                 If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.delete_subscription(id)
+        return self.api.subscriptions.delete_subscription(id)

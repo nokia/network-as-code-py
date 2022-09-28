@@ -21,18 +21,32 @@ class NetworkAsCodeClient:
     """
 
     def __init__(self, *args, **kwargs):
-        self.api = APIClient(*args, **kwargs)
+        self._api = APIClient(*args, **kwargs)
+        self._subscriptions = SubscriptionCollection(self._api)
+        self._slicing = NetworkSliceCollection(self._api)
 
-    # RESOURCES
+    # NAMESPACES
     @property
     def subscriptions(self):
-        """An object for managing mobile subscriptions.
+        """Namespace containing functionalities related to mobile subscriptions.
 
-        See the `<subscriptions>` documentation for full details.
+        TODO: Write some documentation about the subscription namespace here.
         """
-        return SubscriptionCollection(client=self)
+        return self._subscriptions
+
+    @property
+    def slicing(self):
+        """Namespace containing functionalities related to network slicing.
+
+        TODO: Write some documentation about the slice namespace here.
+        """
+        return self._slicing
 
     # TOP-LEVEL METHODS
     def connected(self):  # Just and example of a top-level method
         """Check whether this client can reach the Network as Code API gateway and backend."""
-        return True if self.api.check_api_connection() == "up" else False
+        return True if self._api.admin.check_api_connection() == "up" else False
+
+
+class NetworkAsCodeAsyncClient:
+    pass
