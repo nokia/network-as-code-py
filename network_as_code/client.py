@@ -1,27 +1,24 @@
-from .api import APIClient
+from .api import APIClient, AsyncAPIClient
 from .models import SubscriptionCollection, NetworkSliceCollection, NotificationCollection
 
 
 class NetworkAsCodeClient:
-    """
-    A client for communication with Network as Code.
+    """A client for working with Network as Code.
 
     ### Example:
     ```python
-    import network_as_code as nac
+    from network_as_code import NetworkAsCodeClient
 
-    client = nac.NetworkAsCodeClient(token="your_api_token")
+    client = NetworkAsCodeClient(token="your_api_token")
     ```
 
     ### Args:
         token (str): Authentication token for the Network as Code API.
-        timeout (int): Default timeout for API calls, in seconds. By default 5s.
-        base_url (str): Base URL for the Network as Code API. Note that a default base URL is already set.
-        testmode (bool): Whether to use simulated or real resources, such as devices. False by default.
+        Any additional keyword arguments will be directly passed to the underlying HTTPX client.
     """
 
-    def __init__(self, *args, **kwargs):
-        self._api = APIClient(*args, **kwargs)
+    def __init__(self, token: str, **kwargs):
+        self._api = APIClient(token=token, **kwargs)
         self._subscriptions = SubscriptionCollection(self._api)
         self._slicing = NetworkSliceCollection(self._api)
 
@@ -53,4 +50,20 @@ class NetworkAsCodeClient:
 
 
 class NetworkAsCodeAsyncClient:
-    pass
+    """A client for working with Network as Code in asynchronous code.
+
+    ### Example:
+    ```python
+    from network_as_code import NetworkAsCodeAsyncClient
+
+    client = NetworkAsCodeAsyncClient(token="your_api_token")
+    ```
+
+    ### Args:
+        token (str): Authentication token for the Network as Code API.
+        Any additional keyword arguments will be directly passed to the underlying HTTPX client.
+    """
+    def __init__(self, token: str, **kwargs):
+        self._api = AsyncAPIClient(token=token, **kwargs)
+        self._subscriptions = SubscriptionCollection(self._api)
+        self._slicing = NetworkSliceCollection(self._api)
