@@ -67,6 +67,7 @@ class APIClient(BaseClient, httpx.Client):
         self.admin = AdminAPI(self)
         self.services = ServicesAPI(self)
         self.subscriptions = SubscriptionsAPI(self)
+        self.notifications = NotificationsAPI(self)
 
     def __del__(self):
         """
@@ -94,6 +95,7 @@ class AsyncAPIClient(BaseClient, httpx.AsyncClient):
         # self.admin = AdminAPI(self)
         # self.services = ServicesAPI(self)
         # self.subscriptions = SubscriptionsAPI(self)
+        # self.notifications = NotificationsAPI(self)
 
 
     def __del__(self):
