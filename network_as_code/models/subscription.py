@@ -72,7 +72,9 @@ class Subscription(Model):
         Returns:
             A `tuple` of currently set custom upload and download limits.
         """
-        res = await self.api.subscriptions.set_subscriber_custom_bandwidth(self.id, up, down)
+        res = await self.api.subscriptions.set_subscriber_custom_bandwidth(
+            self.id, up, down
+        )
         return res.get("upload"), res.get("download")
 
 
@@ -96,7 +98,13 @@ class SubscriptionCollection(Collection):
         # TODO: Implement me!
         raise NotImplementedError
 
-    async def create(self, id: str, imsi: str, msisdn: str, testmode: bool = True) -> Subscription:
+    async def create(
+        self,
+        id: str,
+        imsi: str,
+        msisdn: str,
+        testmode: bool = True,
+    ) -> Subscription:
         """Create a new subscription. A subscription is typically tied to a device.
 
         #### Note! At the moment it's only possible to create testmode subscriptions.

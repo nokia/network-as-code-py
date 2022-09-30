@@ -13,6 +13,7 @@ os.environ["TESTMODE"] = "1"
 SDK_TOKEN = os.getenv("NAC_TOKEN", "test12345")
 BASE_URL = "http://nwac.atg.dynamic.nsn-net.net/nwac/v4"
 
+
 def create_random_imsi():
     imsi = "69"
     for _ in range(13):
@@ -78,19 +79,20 @@ async def test_getting_device_location(device: Subscription):
     assert float(location["lat"]) == 90.0
     assert float(location["elev"]) == 123.0
 
+
 @pytest.fixture
 async def channel(client: NetworkAsCodeClient):
     channel = await client.notifications.create()
     yield channel
     await client.notifications.delete(channel.uuid)
 
+
 def test_can_create_valid_channel(channel: Notification):
     assert channel.uuid is not None and channel.uuid != ""
 
 
 async def test_can_poll_messages_from_channel(
-    client: NetworkAsCodeClient,
-    channel: Notification
+    client: NetworkAsCodeClient, channel: Notification
 ):
     await client._api.post(
         f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",
@@ -99,9 +101,9 @@ async def test_can_poll_messages_from_channel(
     msgs = await channel.poll()
     assert len(msgs) == 1
 
+
 async def test_can_read_messages_via_websocket(
-    client:NetworkAsCodeClient,
-    channel: Notification
+    client: NetworkAsCodeClient, channel: Notification
 ):
     await client._api.post(
         f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",

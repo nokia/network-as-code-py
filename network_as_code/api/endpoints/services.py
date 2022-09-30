@@ -51,6 +51,6 @@ class ServicesAPI(Endpoint):
         return self.client._result(res, json=True)
 
     async def delete_slice(self, service_id, slice_id):
-        res = await self.client.request("DELETE", f"/services/{service_id}/slices/{slice_id}")
+        res = await self.client.delete(f"/services/{service_id}/slices/{slice_id}")
         # TODO: Handle API errors with res.raise_for_status() since not using self.client._result()
         return res.status_code == 204

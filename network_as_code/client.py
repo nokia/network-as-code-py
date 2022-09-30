@@ -1,5 +1,9 @@
 from .api import APIClient
-from .models import NetworkSliceCollection, SubscriptionCollection, NotificationCollection
+from .models import (
+    NetworkSliceCollection,
+    SubscriptionCollection,
+    NotificationCollection,
+)
 
 
 class NetworkAsCodeClient:
@@ -23,6 +27,12 @@ class NetworkAsCodeClient:
         self._subscriptions = SubscriptionCollection(self._api)
         self._notifications = NotificationCollection(self._api)
 
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        await self.close()
+
     async def close(self):
         """Closes the API client.
 
@@ -30,7 +40,7 @@ class NetworkAsCodeClient:
         """
         await self._api.aclose()
 
-    # NAMESPACES
+    #### NAMESPACES
     @property
     def slicing(self):
         """Namespace containing functionalities related to network slicing.
@@ -55,7 +65,10 @@ class NetworkAsCodeClient:
         """
         return self._notifications
 
-    # TOP-LEVEL METHODS
+    #### TOP-LEVEL METHODS
     async def connected(self):  # Just and example of a top-level method
-        """Check whether this client can reach the Network as Code API gateway and backend."""
-        return True if await self._api.admin.check_api_connection() == "up" else False
+        """
+        Check whether this client can reach the Network as Code API gateway and backend.
+        """
+        connection_status = await self._api.admin.check_api_connection()
+        return True if connection_status == "up" else False

@@ -1,6 +1,7 @@
 import websockets
 from .endpoint import Endpoint
 
+
 class NotificationsAPI(Endpoint):
     """A client for handling Notification API calls"""
 
