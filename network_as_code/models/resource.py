@@ -16,6 +16,7 @@ class Model:
         self.collection = collection
 
         # The raw representation of this object from the API.
+        # Is considered to be the 'local' source of truth about the object.
         self.attrs = {} if attrs is None else attrs
 
     # TODO: Add __repr__ method.
@@ -26,12 +27,10 @@ class Model:
         """The ID of the object."""
         return self.attrs.get("sid", "")
 
-    def reload(self):
-        """
-        Load this object from the API and update `attrs` with the new data.
-        """
-        _model = self.collection.get(self.id)
-        self.attrs = _model.attrs
+    async def reload(self):
+        """Fetch latest information about this object from the API."""
+        model = await self.collection.get(self.id)
+        self.attrs = model.attrs
 
 
 class Collection:
@@ -44,13 +43,13 @@ class Collection:
         # The API client that has access to this object.
         self.api = api
 
-    def list(self):
+    async def list(self):
         raise NotImplementedError  # Implemented by subclass
 
-    def get(self, id: str):
+    async def get(self, id: str):
         raise NotImplementedError  # Implemented by subclass
 
-    def create(self, attrs=None):
+    async def create(self, attrs=None):
         raise NotImplementedError  # Implemented by subclass
 
     def prepare_model(self, attrs: "Model|dict"):
