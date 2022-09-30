@@ -30,3 +30,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "-n auto"
+asyncio_mode = "auto"

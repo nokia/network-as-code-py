@@ -23,6 +23,13 @@ class NetworkAsCodeClient:
         self._subscriptions = SubscriptionCollection(self._api)
         self._notifications = NotificationCollection(self._api)
 
+    async def close(self):
+        """Closes the API client.
+
+        After this no more API requests can be made using this client.
+        """
+        await self._api.aclose()
+
     # NAMESPACES
     @property
     def slicing(self):
@@ -49,6 +56,6 @@ class NetworkAsCodeClient:
         return self._notifications
 
     # TOP-LEVEL METHODS
-    def connected(self):  # Just and example of a top-level method
+    async def connected(self):  # Just and example of a top-level method
         """Check whether this client can reach the Network as Code API gateway and backend."""
-        return True if self._api.admin.check_api_connection() == "up" else False
+        return True if await self._api.admin.check_api_connection() == "up" else False

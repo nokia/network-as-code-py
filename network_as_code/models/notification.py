@@ -4,13 +4,13 @@ from .resource import Model, Collection
 class Notification(Model):
     @property
     def uuid(self):
-        return self.attrs.get("uuid", "")
+        return self.attrs["uuid"]
 
     async def get_websocket_channel(self):
         return await self.api.notifications.get_websocket_channel(self.uuid)
 
-    def poll(self):
-        return self.api.notifications.poll_channel(self.uuid)
+    async def poll(self):
+        return await self.api.notifications.poll_channel(self.uuid)
 
 class NotificationCollection(Collection):
     model = Notification
@@ -22,7 +22,7 @@ class NotificationCollection(Collection):
         res = await self.api.notifications.create_notification_channel()
         uuid = res["subscription_id"]
 
-        return self.prepare_model({"sid": uuid})
+        return self.prepare_model({"uuid": uuid})
 
     async def delete(self, id: str): #testmode: bool = True
         return await self.api.notifications.delete_notification_channel(id)

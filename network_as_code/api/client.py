@@ -66,9 +66,3 @@ class APIClient(httpx.AsyncClient):
         if raw:
             return response.content
         return response.text
-
-    def __del__(self):
-        """
-        Makes sure that the connection will be closed properly before the object gets deleted.
-        """
-        self.close()
