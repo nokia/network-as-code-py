@@ -3,6 +3,10 @@ from .resource import Model, Collection
 
 class Notification(Model):
     @property
+    def id(self):
+        return self.attrs["uuid"]
+
+    @property
     def uuid(self):
         return self.attrs["uuid"]
 
