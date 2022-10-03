@@ -8,14 +8,17 @@ class Subscription(Model):
     Through this class many of the parameters of a
     subscription can be configured on the network.
     """
+    @property
+    def id(self) -> str:
+        return self.attrs["sid"]
 
     @property
-    def imsi(self):
-        return self.attrs.get("imsi")
+    def imsi(self) -> str:
+        return self.attrs["imsi"]
 
     @property
     def msisdn(self):
-        return self.attrs.get("msisdn")
+        return self.attrs["msisdn"]
 
     async def get_location(self) -> dict:
         """Get the last reported location of the subscriber.
