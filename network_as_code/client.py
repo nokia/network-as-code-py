@@ -1,42 +1,74 @@
-from .api.client import APIClient
-from .models.subscription import SubscriptionCollection
+from .api import APIClient
+from .models import (
+    NetworkSliceCollection,
+    SubscriptionCollection,
+    NotificationCollection,
+)
 
 
 class NetworkAsCodeClient:
-    """
-    A client for communication with Network as Code.
+    """A client for working with Network as Code.
 
     ### Example:
     ```python
-    import network_as_code as nac
+    from network_as_code import NetworkAsCodeClient
 
-    client = nac.NetworkAsCodeClient(token="your_api_token")
+    client = NetworkAsCodeClient(token="your_api_token")
     ```
 
     ### Args:
-        sdk_token (str): Authentication token for the Network as Code API.
-        timeout (int): Default timeout for API calls, in seconds. By default 5s.
-        base_url (str): Base URL for the Network as Code API. Note that a default base URL is already set.
-        testmode (bool): Whether to use simulated or real resources, such as devices. False by default.
+        token (str): Authentication token for the Network as Code API.
+        Any additional keyword arguments will be directly passed to the underlying HTTPX client.
     """
 
-    def __init__(self, *args, **kwargs):
-        self.api = APIClient(*args, **kwargs)
+    def __init__(self, token: str, **kwargs):
+        self._api = APIClient(token=token, **kwargs)
+        self._slicing = NetworkSliceCollection(self._api)
+        self._subscriptions = SubscriptionCollection(self._api)
+        self._notifications = NotificationCollection(self._api)
 
+    async def __aenter__(self):
+        return self
 
-    # RESOURCES
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        await self.close()
+
+    async def close(self):
+        """Closes the API client.
+
+        After this no more API requests can be made using this client.
+        """
+        await self._api.aclose()
+
+    #### NAMESPACES
+    @property
+    def slicing(self):
+        """Namespace containing functionalities related to network slicing.
+
+        TODO: Write some documentation about the slice namespace here.
+        """
+        return self._slicing
+
     @property
     def subscriptions(self):
-        """An object for managing mobile subscriptions.
+        """Namespace containing functionalities related to mobile subscriptions.
 
-        See the `<subscriptions>` documentation for full details.
+        TODO: Write some documentation about the subscription namespace here.
         """
+        return self._subscriptions
 
-        return SubscriptionCollection(client=self)
+    @property
+    def notifications(self):
+        """Namespace containing functionalities related to various notifications from Network as Code.
 
-    # TOP-LEVEL METHODS
-    def connected(self):  # Just and example of an top-level method
+        TODO: Write some documentation about the notifications namespace here.
         """
-        Check whether this client is connected to the Network as Code API gateway and backend.
+        return self._notifications
+
+    #### TOP-LEVEL METHODS
+    async def connected(self):  # Just and example of a top-level method
         """
-        return True if self.api.check_api_connection() == "up" else False
+        Check whether this client can reach the Network as Code API gateway and backend.
+        """
+        connection_status = await self._api.admin.check_api_connection()
+        return True if connection_status == "up" else False

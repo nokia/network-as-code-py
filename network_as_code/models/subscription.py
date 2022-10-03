@@ -6,15 +6,12 @@ class Subscription(Model):
 
     Through this class many of the parameters of a
     subscription can be configured on the network.
-
-    Args:
-        id (str): External ID of the subscription. Follows email address conventions.
     """
 
     def __repr__(self) -> str:
         return (
             f"Subscription(attrs={repr(self.attrs)}, "
-            f"client={repr(self.client)}, "
+            f"api={repr(self.api)}, "
             f"collection={repr(self.collection)})"
         )
 
@@ -26,25 +23,25 @@ class Subscription(Model):
     def msisdn(self):
         return self.attrs.get("msisdn")
 
-    def get_location(self) -> dict:
+    async def get_location(self) -> dict:
         """Get the last reported location of the subscriber.
 
         Returns:
             A `dict` containing various information about the latest reported location.
         """
-        res = self.client.api.get_subscriber_location(self.id)
+        res = await self.api.subscriptions.get_subscriber_location(self.id)
         return res.get("locationInfo")
 
-    def get_bandwidth(self) -> str:
+    async def get_bandwidth(self) -> str:
         """Get the bandwidth identifier for the subscriber.
 
         Returns:
             Currently active bandwidth configuration name.
         """
-        res = self.client.api.get_subscriber_bandwidth(self.id)
+        res = await self.api.subscriptions.get_subscriber_bandwidth(self.id)
         return res.get("serviceTier")
 
-    def set_bandwidth(self, name: str) -> str:
+    async def set_bandwidth(self, name: str) -> str:
         """Update the bandwidth identifier for the subscriber.
 
         Args:
@@ -53,19 +50,19 @@ class Subscription(Model):
         Returns:
             Currently active bandwidth configuration name.
         """
-        res = self.client.api.set_subscriber_bandwidth(self.id, name)
+        res = await self.api.subscriptions.set_subscriber_bandwidth(self.id, name)
         return res.get("serviceTier")
 
-    def get_custom_bandwidth(self):
+    async def get_custom_bandwidth(self):
         """Get the bandwidth (uplink and downlink) limits for the subscriber.
 
         Returns:
             A `tuple` of currently set custom upload and download limits.
         """
-        res = self.client.api.get_subscriber_custom_bandwidth(self.id)
+        res = await self.api.subscriptions.get_subscriber_custom_bandwidth(self.id)
         return res.get("upload"), res.get("download")
 
-    def set_custom_bandwidth(self, up: int, down: int):
+    async def set_custom_bandwidth(self, up: int, down: int):
         """Update the bandwidth (uplink and downlink) of the subscriber.
 
         Args:
@@ -75,14 +72,16 @@ class Subscription(Model):
         Returns:
             A `tuple` of currently set custom upload and download limits.
         """
-        res = self.client.api.set_subscriber_custom_bandwidth(self.id, up, down)
+        res = await self.api.subscriptions.set_subscriber_custom_bandwidth(
+            self.id, up, down
+        )
         return res.get("upload"), res.get("download")
 
 
 class SubscriptionCollection(Collection):
     model = Subscription
 
-    def get(self, id) -> Subscription:
+    async def get(self, id) -> Subscription:
         """Get a subscription by its external ID.
 
         Args:
@@ -90,22 +89,16 @@ class SubscriptionCollection(Collection):
 
         Returns:
             A :py:class:`Subscription` object.
-
-        Raises:
-            :py:class:`network_as_code.errors.NotFound`
-                If the subscription does not exist.
-            :py:class:`network_as_code.errors.APIError`
-                If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.get_subscription(id)
+        res = await self.api.subscriptions.get_subscription(id)
         return self.prepare_model(res)
 
-    def list(self):
+    async def list(self):
         # TODO: Implement me!
         raise NotImplementedError
 
-    def create(
+    async def create(
         self,
         id: str,
         imsi: str,
@@ -124,22 +117,12 @@ class SubscriptionCollection(Collection):
 
         Returns:
             A :py:class:`Subscription` object.
-
-        Raises:
-            :py:class:`network_as_code.errors.NotFound`
-                If the subscription does not exist.
-            :py:class:`network_/as_code.errors.APIError`
-                If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.create_subscription(id, imsi, msisdn)
+        res = await self.api.subscriptions.create_subscription(id, imsi, msisdn)
         return self.prepare_model(res)
 
-    def delete(
-        self,
-        id: str,
-        testmode: bool = True,
-    ):
+    async def delete(self, id: str, testmode: bool = True) -> bool:
         """Delete a subscription. A subscription is typically tied to a device.
 
         #### Note! Only test-mode subscriptions can be deleted!
@@ -147,12 +130,6 @@ class SubscriptionCollection(Collection):
         Args:
             id (str): External ID of the subscription. Email-like.
             testmode (bool): Whether to create a simulated or real subscription.
-
-        Raises:
-            :py:class:`network_as_code.errors.NotFound`
-                If the subscription does not exist.
-            :py:class:`network_/as_code.errors.APIError`
-                If the server returns an error.
         """
         # TODO: Value checking here.
-        res = self.client.api.delete_subscription(id)
+        return await self.api.subscriptions.delete_subscription(id)

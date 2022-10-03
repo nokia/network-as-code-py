@@ -1,22 +1,17 @@
 import sys
-import json as JSON
 import httpx
-from .admin import AdminAPI
-from .services import ServicesAPI
-from .subscription import SubscriptionAPI
+import json as JSON
+from .endpoints.admin import AdminAPI
+from .endpoints.services import ServicesAPI
+from .endpoints.subscriptions import SubscriptionsAPI
+from .endpoints.notifications import NotificationsAPI
 
 
-class APIClient(
-    httpx.Client,
-    AdminAPI,
-    ServicesAPI,
-    SubscriptionAPI,
-):
+class APIClient(httpx.AsyncClient):
     """A client for communicating with Network as Code APIs.
 
     ### Args:
-        sdk_token (str): Authentication token for the Network as Code API.
-        timeout (int): Default timeout for API calls, in seconds.
+        token (str): Authentication token for the Network as Code API.
         base_url (str): Base URL for the Network as Code API.
         testmode (bool): Whether to use simulated or real resources.
     """
@@ -24,33 +19,36 @@ class APIClient(
     def __init__(
         self,
         token: str,
-        timeout: int = 5,
-        base_url: str = "https://network-as-code-poc.p.rapidapi.com",
         testmode: bool = False,
+        base_url: str = "https://network-as-code-poc.p.rapidapi.com",
         **kwargs,
     ):
-        super().__init__(**kwargs)
-
-        self.timeout = timeout
-        self.base_url = base_url
-
-        # Set the default headers for all API requests
-        self.headers = {
+        headers = {
             "x-apikey": token,
             "x-testmode": "true" if testmode else "false",
             "Accept": "application/json",
             "Content-Type": "application/json",
         }
 
-    def __del__(self):
-        """
-        Makes sure that the connection will be closed properly before the object gets deleted.
-        """
-        self.close()
+        super().__init__(headers=headers, base_url=base_url, **kwargs)
 
-    # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
+        self.admin = AdminAPI(self)
+        self.services = ServicesAPI(self)
+        self.subscriptions = SubscriptionsAPI(self)
+        self.notifications = NotificationsAPI(self)
 
-    def _result(self, response: httpx.Response, json=False, raw=False):
+    @classmethod
+    def _result(cls, response: httpx.Response, json=False, raw=False):
+        """Helper function to extract and parse the result of an API response.
+
+        ### Args:
+            response (Response): A HTTPX Response object representing a response from the API
+            json (bool): Whether to parse the response body as JSON
+            raw (bool): Whether to return the response body as raw bytes
+
+        If neither `json` nor `raw` is set to `True` the response body will be returned as a `string`.
+        """
+        # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
         assert not (json and raw)  # Can't have both output types selected
         try:
             response.raise_for_status()
