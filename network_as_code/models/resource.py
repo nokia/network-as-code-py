@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 
@@ -5,7 +6,7 @@ if TYPE_CHECKING:
     from ..api import APIClient
 
 
-class Model:
+class Model(ABC):
     """A base class for representing a single resource instance."""
 
     def __init__(self, attrs: dict, api: "APIClient", collection: "Collection"):
@@ -23,17 +24,18 @@ class Model:
     # TODO: Add __eq__ method.
 
     @property
+    @abstractmethod
     def id(self) -> str:
         """The ID of the object."""
-        return self.attrs.get("sid", "")
+        pass  # Implemented by subclass
 
-    async def reload(self):
+    async def reload(self) -> None:
         """Fetch latest information about this object from the API."""
         model = await self.collection.get(self.id)
         self.attrs = model.attrs
 
 
-class Collection:
+class Collection(ABC):
     """A base class for representing all available resources of a particular type."""
 
     # The type of object this collection represents, set by subclasses.
@@ -43,14 +45,20 @@ class Collection:
         # The API client that has access to this object.
         self.api = api
 
-    async def list(self):
-        raise NotImplementedError  # Implemented by subclass
-
+    @abstractmethod
     async def get(self, id: str):
-        raise NotImplementedError  # Implemented by subclass
+        """Used to retrieve a single item from the collection."""
+        pass  # Implemented by subclass
 
+    @abstractmethod
+    async def list(self):
+        """Used to retrieve all the items in the collection."""
+        pass  # Implemented by subclass
+
+    @abstractmethod
     async def create(self, attrs=None):
-        raise NotImplementedError  # Implemented by subclass
+        """Used to create a single item into the collection."""
+        pass  # Implemented by subclass
 
     def prepare_model(self, attrs: "Model|dict"):
         """Create a model from a set of attributes."""

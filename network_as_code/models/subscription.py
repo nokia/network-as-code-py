@@ -1,3 +1,4 @@
+from typing import List
 from .resource import Model, Collection
 
 
@@ -7,13 +8,6 @@ class Subscription(Model):
     Through this class many of the parameters of a
     subscription can be configured on the network.
     """
-
-    def __repr__(self) -> str:
-        return (
-            f"Subscription(attrs={repr(self.attrs)}, "
-            f"api={repr(self.api)}, "
-            f"collection={repr(self.collection)})"
-        )
 
     @property
     def imsi(self):
@@ -94,7 +88,7 @@ class SubscriptionCollection(Collection):
         res = await self.api.subscriptions.get_subscription(id)
         return self.prepare_model(res)
 
-    async def list(self):
+    async def list(self) -> List[Subscription]:
         # TODO: Implement me!
         raise NotImplementedError
 
@@ -105,9 +99,9 @@ class SubscriptionCollection(Collection):
         msisdn: str,
         testmode: bool = True,
     ) -> Subscription:
-        """Create a new subscription. A subscription is typically tied to a device.
+        """Create a new subscription. A subscription is typically tied to a mobile device.
 
-        #### Note! At the moment it's only possible to create testmode subscriptions.
+        **Note!** At the moment it's only possible to create testmode subscriptions.
 
         Args:
             id (str): External ID of the subscription. Email-like.

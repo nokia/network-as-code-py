@@ -1,10 +1,12 @@
+from typing import List
 from .resource import Model, Collection
 
 
 class Notification(Model):
+
     @property
     def id(self):
-        return self.attrs["uuid"]
+        return self.uuid
 
     @property
     def uuid(self):
@@ -23,7 +25,11 @@ class NotificationCollection(Collection):
     def get(self, id: str) -> Notification:
         return self.prepare_model({"uuid": id})
 
-    async def create(self) -> Notification:
+    def list(self) -> List[Notification]:
+        # TODO: Implement me!
+        raise NotImplementedError
+
+    async def create(self, attrs=None) -> Notification:
         res = await self.api.notifications.create_notification_channel()
         uuid = res["subscription_id"]
 
