@@ -7,9 +7,7 @@ class AdminAPI(Endpoint):
         Used to determine if the API gateway and backend are accessible and working.
         """
         res = await self.client.get("/admin/hello")
-        data = self.client._result(
-            res, json=True
-        )  # TODO: Data validation using Pydantic
+        data = self.client.result(res, json=True)
 
         if isinstance(data, dict) and "service" in data:
             return data["service"]

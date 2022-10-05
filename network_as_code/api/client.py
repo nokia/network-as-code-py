@@ -38,7 +38,7 @@ class APIClient(httpx.AsyncClient):
         self.notifications = NotificationsAPI(self)
 
     @classmethod
-    def _result(cls, response: httpx.Response, json=False, raw=False):
+    def result(cls, response: httpx.Response, json=False, raw=False):
         """Helper function to extract and parse the result of an API response.
 
         ### Args:

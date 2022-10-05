@@ -4,12 +4,19 @@ version = "0.4.0"
 description = ""
 authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lahtinen@nokia.com>"]
 
+[tool.pyright]
+include = ["network_as_code"]
+exclude = ["**/__pycache__", "**/.pytest_cache", "**/.*"]
+pythonVersion = "3.7"
+pythonPlatform = "Linux"
+
 [tool.poetry.dependencies]
 python = "^3.7"
 python-dotenv = "^0.19.2"
 python-dateutil = "^2.8.2"
 httpx = "^0.23.0"
 websockets = "^10.3"
+pydantic = "^1.10.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
