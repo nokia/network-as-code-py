@@ -1,132 +1,64 @@
-from typing import List
-from .resource import Model, Collection
+from pydantic import BaseModel, EmailStr, PrivateAttr
+from ..models import Location, Bandwidth, CustomBandwidth
+from ..api import APIClient
 
 
-class Subscription(Model):
-    """Representation of a mobile subscription.
+class Subscription(BaseModel):
+    api: APIClient = PrivateAttr()
+    sid: EmailStr
+    imsi: str
+    msisdn: str
 
-    Through this class many of the parameters of a
-    subscription can be configured on the network.
-    """
-    @property
-    def id(self) -> str:
-        return self.attrs["sid"]
+    async def location(self) -> Location:
+        data = await self.api.subscriptions.get_subscriber_location(self.sid)
+        location_info_field = "locationInfo"
+        if location_info_field not in data:
+            raise RuntimeError(f"API did not return {location_info_field}")
+        return Location(**data[location_info_field])
 
-    @property
-    def imsi(self) -> str:
-        return self.attrs["imsi"]
 
-    @property
-    def msisdn(self):
-        return self.attrs["msisdn"]
-
-    async def get_location(self) -> dict:
-        """Get the last reported location of the subscriber.
+    async def get_bandwidth(self):
+        """Query the current bandwidth profile of the subscriber.
 
         Returns:
-            A `dict` containing various information about the latest reported location.
+            Either a `Bandwidth` or `CustomBandwidth` depending on the type of current profile.
         """
-        res = await self.api.subscriptions.get_subscriber_location(self.id)
-        return res.get("locationInfo")
+        data = await self.api.subscriptions.get_subscriber_bandwidth(self.sid)
 
-    async def get_bandwidth(self) -> str:
-        """Get the bandwidth identifier for the subscriber.
+        if "serviceTier" in data and data["serviceTier"] == "custom":
+            data = await self.api.subscriptions.get_subscriber_custom_bandwidth(self.sid)
+            return CustomBandwidth(**data)
+        return Bandwidth(**data)
 
-        Returns:
-            Currently active bandwidth configuration name.
-        """
-        res = await self.api.subscriptions.get_subscriber_bandwidth(self.id)
-        return res.get("serviceTier")
+    async def set_bandwidth(self, *, name: str = None, up: int = None, down: int = None):
+        """Modify bandwidth profile of the subscription.
 
-    async def set_bandwidth(self, name: str) -> str:
-        """Update the bandwidth identifier for the subscriber.
+        This function accepts either a predefined bandwidth profile `name` or a custom set of parameters.
+        Keep in mind that the custom bandwidth configuration will be provided as "best effort".
 
         Args:
-            name (str): Desired bandwidth configuration name.
+            name (str): Name of a predefined bandwidth profile
+            up: (int): Desired custom upload speed in bits per second
+            down (int): Desired custom download speed in bits per second
 
         Returns:
-            Currently active bandwidth configuration name.
+            `Bandwidth` if a `name` was given, or `CustomBandwidth` if custom values were given.
         """
-        res = await self.api.subscriptions.set_subscriber_bandwidth(self.id, name)
-        return res.get("serviceTier")
+        if name is not None and (up is not None or down is not None):
+            raise RuntimeError("Can't set the bandwidth 'name' and 'up/down' simultaneuosly.")
 
-    async def get_custom_bandwidth(self):
-        """Get the bandwidth (uplink and downlink) limits for the subscriber.
+        if name:
+            data = await self.api.subscriptions.set_subscriber_bandwidth(self.sid, name)
+            return Bandwidth(**data)
 
-        Returns:
-            A `tuple` of currently set custom upload and download limits.
-        """
-        res = await self.api.subscriptions.get_subscriber_custom_bandwidth(self.id)
-        return res.get("upload"), res.get("download")
+        elif up > 0 and down > 0:
+            data = await self.api.subscriptions.set_subscriber_custom_bandwidth(self.sid, up, down)
+            return CustomBandwidth(**data)
 
-    async def set_custom_bandwidth(self, up: int, down: int):
-        """Update the bandwidth (uplink and downlink) of the subscriber.
-
-        Args:
-            up (int): The new upload (uplink) limit.
-            down (int): The new download (downlink) limit.
-
-        Returns:
-            A `tuple` of currently set custom upload and download limits.
-        """
-        res = await self.api.subscriptions.set_subscriber_custom_bandwidth(
-            self.id, up, down
-        )
-        return res.get("upload"), res.get("download")
-
-
-class SubscriptionCollection(Collection):
-    model = Subscription
-
-    async def get(self, id) -> Subscription:
-        """Get a subscription by its external ID.
-
-        Args:
-            id (str): External ID of the subscription.
-
-        Returns:
-            A :py:class:`Subscription` object.
-        """
-        # TODO: Value checking here.
-        res = await self.api.subscriptions.get_subscription(id)
-        return self.prepare_model(res)
-
-    async def list(self) -> List[Subscription]:
-        # TODO: Implement me!
-        raise NotImplementedError
-
-    async def create(
-        self,
-        id: str,
-        imsi: str,
-        msisdn: str,
-        testmode: bool = True,
-    ) -> Subscription:
-        """Create a new subscription. A subscription is typically tied to a mobile device.
-
-        **Note!** At the moment it's only possible to create testmode subscriptions.
-
-        Args:
-            id (str): External ID of the subscription. Email-like.
-            imsi (str): Phone-number like number with 14 to 16 digits.
-            msisdn (str): Phone-number like number with 10 to 14 digits.
-            testmode (bool): Whether to create a simulated or real subscription.
-
-        Returns:
-            A :py:class:`Subscription` object.
-        """
-        # TODO: Value checking here.
-        res = await self.api.subscriptions.create_subscription(id, imsi, msisdn)
-        return self.prepare_model(res)
-
-    async def delete(self, id: str, testmode: bool = True) -> bool:
+    async def delete(self):
         """Delete a subscription. A subscription is typically tied to a device.
 
-        #### Note! Only test-mode subscriptions can be deleted!
-
-        Args:
-            id (str): External ID of the subscription. Email-like.
-            testmode (bool): Whether to create a simulated or real subscription.
+        #### Note! Only a test-mode subscription can be deleted!
         """
-        # TODO: Value checking here.
-        return await self.api.subscriptions.delete_subscription(id)
+        # TODO: Add a way to check whether this subscription is real or simulated.
+        return await self.api.subscriptions.delete_subscription(self.sid)

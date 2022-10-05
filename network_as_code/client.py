@@ -1,9 +1,5 @@
 from .api import APIClient
-from .models import (
-    NetworkSliceCollection,
-    SubscriptionCollection,
-    NotificationCollection,
-)
+from .namespaces import Subscriptions, Notifications, NetworkSlices
 
 
 class NetworkAsCodeClient:
@@ -23,9 +19,9 @@ class NetworkAsCodeClient:
 
     def __init__(self, token: str, **kwargs):
         self._api = APIClient(token=token, **kwargs)
-        self._slicing = NetworkSliceCollection(self._api)
-        self._subscriptions = SubscriptionCollection(self._api)
-        self._notifications = NotificationCollection(self._api)
+        self._slicing = NetworkSlices(self._api)
+        self._subscriptions = Subscriptions(self._api)
+        self._notifications = Notifications(self._api)
 
     async def __aenter__(self):
         return self
