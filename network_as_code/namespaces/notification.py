@@ -1,5 +1,5 @@
 from typing import List
-from .namespace import Namespace
+from network_as_code.namespaces import Namespace
 
 
 class Notifications(Namespace):

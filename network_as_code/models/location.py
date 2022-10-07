@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class Location(BaseModel):
     age: int = Field(..., alias="ageOfLocationInfo")
     tracking_area: str = Field(..., alias="trackingAreaId")

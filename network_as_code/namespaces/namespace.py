@@ -1,9 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from ..api import APIClient
+    from network_as_code.api import APIClient
 
 
 class Namespace(ABC):

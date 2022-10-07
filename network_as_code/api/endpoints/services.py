@@ -1,5 +1,5 @@
 from typing import List
-from .endpoint import Endpoint
+from network_as_code.api.endpoints import Endpoint
 
 
 class ServicesAPI(Endpoint):

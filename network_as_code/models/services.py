@@ -18,10 +18,12 @@ class Slice(BaseModel):
     data_network_list_name: str = Field(..., alias="dnnList")
     packet_data_network_gateway_id: str = Field(..., alias="pdnGwId")
 
+
 class Region(BaseModel):
     name: str
     latitude: int
     longitude: int
+
 
 class Service(BaseModel):
     id: UUID

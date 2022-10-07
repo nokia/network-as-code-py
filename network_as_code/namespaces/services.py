@@ -1,6 +1,7 @@
 from typing import List
-from ..models import Service
-from .namespace import Namespace
+from network_as_code.models import Service
+from network_as_code.namespaces import Namespace
+
 
 class Services(Namespace):
     async def get(self, service_id: str) -> Service:

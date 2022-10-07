@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
-from ..models import Location, Bandwidth, CustomBandwidth
-from ..api import APIClient
+from network_as_code.api import APIClient
+from network_as_code.models import Location, Bandwidth, CustomBandwidth
 
 
 class Subscription(BaseModel):
@@ -16,7 +16,6 @@ class Subscription(BaseModel):
             raise RuntimeError(f"API did not return {location_info_field}")
         return Location(**data[location_info_field])
 
-
     async def get_bandwidth(self):
         """Query the current bandwidth profile of the subscriber.
 
@@ -26,11 +25,15 @@ class Subscription(BaseModel):
         data = await self.api.subscriptions.get_subscriber_bandwidth(self.sid)
 
         if "serviceTier" in data and data["serviceTier"] == "custom":
-            data = await self.api.subscriptions.get_subscriber_custom_bandwidth(self.sid)
+            data = await self.api.subscriptions.get_subscriber_custom_bandwidth(
+                self.sid
+            )
             return CustomBandwidth(**data)
         return Bandwidth(**data)
 
-    async def set_bandwidth(self, *, name: str = None, up: int = None, down: int = None):
+    async def set_bandwidth(
+        self, *, name: str = None, up: int = None, down: int = None
+    ):
         """Modify bandwidth profile of the subscription.
 
         This function accepts either a predefined bandwidth profile `name` or a custom set of parameters.
@@ -45,14 +48,18 @@ class Subscription(BaseModel):
             `Bandwidth` if a `name` was given, or `CustomBandwidth` if custom values were given.
         """
         if name is not None and (up is not None or down is not None):
-            raise RuntimeError("Can't set the bandwidth 'name' and 'up/down' simultaneuosly.")
+            raise RuntimeError(
+                "Can't set the bandwidth 'name' and 'up/down' simultaneuosly."
+            )
 
         if name:
             data = await self.api.subscriptions.set_subscriber_bandwidth(self.sid, name)
             return Bandwidth(**data)
 
         elif up > 0 and down > 0:
-            data = await self.api.subscriptions.set_subscriber_custom_bandwidth(self.sid, up, down)
+            data = await self.api.subscriptions.set_subscriber_custom_bandwidth(
+                self.sid, up, down
+            )
             return CustomBandwidth(**data)
 
     async def delete(self):

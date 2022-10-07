@@ -1,4 +1,4 @@
-from .endpoint import Endpoint
+from network_as_code.api.endpoints import Endpoint
 
 
 class SubscriptionsAPI(Endpoint):
@@ -40,7 +40,9 @@ class SubscriptionsAPI(Endpoint):
         )
         return self.client.result(res, json=True)
 
-    async def set_subscriber_custom_bandwidth(self, id: str, up: int, down: int) -> dict:
+    async def set_subscriber_custom_bandwidth(
+        self, id: str, up: int, down: int
+    ) -> dict:
         res = await self.client.patch(
             "/subscriber/bandwidth/custom",
             json={"sid": id, "upload": up, "download": down},

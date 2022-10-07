@@ -1,10 +1,12 @@
 import sys
 import httpx
 import json as JSON
-from .endpoints.admin import AdminAPI
-from .endpoints.services import ServicesAPI
-from .endpoints.subscriptions import SubscriptionsAPI
-from .endpoints.notifications import NotificationsAPI
+from network_as_code.api.endpoints import (
+    AdminAPI,
+    ServicesAPI,
+    NotificationsAPI,
+    SubscriptionsAPI,
+)
 
 
 class APIClient(httpx.AsyncClient):

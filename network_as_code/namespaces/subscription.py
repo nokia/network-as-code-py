@@ -1,6 +1,7 @@
 from typing import List
-from .namespace import Namespace
-from ..models import Subscription
+from network_as_code.models import Subscription
+from network_as_code.namespaces import Namespace
+
 
 class Subscriptions(Namespace):
     """Representation of a mobile subscription.
