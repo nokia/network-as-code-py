@@ -1,5 +1,5 @@
-from network_as_code.api import APIClient
-from network_as_code.namespaces import Subscriptions, Notifications, NetworkSlices
+from .api import APIClient
+from .namespaces import Subscriptions, Notifications, NetworkSlices
 
 
 class NetworkAsCodeClient:

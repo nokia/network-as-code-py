@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from network_as_code.api import APIClient
+    from ..api import APIClient
 
 
 class Namespace(ABC):

@@ -1,4 +1,4 @@
-from network_as_code.api.endpoints import Endpoint
+from . import Endpoint
 
 
 class SubscriptionsAPI(Endpoint):

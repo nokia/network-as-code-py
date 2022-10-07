@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from network_as_code.client import APIClient
+    from .. import APIClient
 
 
 class Endpoint:

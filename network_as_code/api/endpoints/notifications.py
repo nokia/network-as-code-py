@@ -1,5 +1,5 @@
 import websockets
-from network_as_code.api.endpoints import Endpoint
+from . import Endpoint
 
 
 class NotificationsAPI(Endpoint):

@@ -1,6 +1,6 @@
 from typing import List
-from network_as_code.models import Slice
-from network_as_code.namespaces import Namespace
+from . import Namespace
+from ..models import Slice
 
 
 class NetworkSlices(Namespace):

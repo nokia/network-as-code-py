@@ -1,6 +1,6 @@
 from typing import List
-from network_as_code.models import Subscription
-from network_as_code.namespaces import Namespace
+from . import Namespace
+from ..models import Subscription
 
 
 class Subscriptions(Namespace):
@@ -19,12 +19,7 @@ class Subscriptions(Namespace):
         res = await self.api.subscriptions.get_subscription(id)
         return Subscription(api=self.api, **res)
 
-    async def create(
-        self,
-        id: str,
-        imsi: str,
-        msisdn: str,
-    ) -> Subscription:
+    async def create(self, id: str, imsi: str, msisdn: str) -> Subscription:
         """Create a new subscription. A subscription is typically tied to a mobile device.
 
         **Note!** At the moment it's only possible to create testmode subscriptions.

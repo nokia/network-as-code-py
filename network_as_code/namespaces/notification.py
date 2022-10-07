@@ -1,5 +1,6 @@
 from typing import List
-from network_as_code.namespaces import Namespace
+from . import Namespace
+from ..models import Notification
 
 
 class Notifications(Namespace):
@@ -9,14 +10,14 @@ class Notifications(Namespace):
     async def poll(self):
         return await self.api.notifications.poll_channel(self.uuid)
 
-    def get(self, id: str) -> Notifications:
+    def get(self, id: str) -> Notification:
         return self.prepare_model({"uuid": id})
 
-    def list(self) -> List[Notifications]:
+    def list(self) -> List[Notification]:
         # TODO: Implement me!
         raise NotImplementedError
 
-    async def create(self, attrs=None) -> Notifications:
+    async def create(self, attrs=None) -> Notification:
         res = await self.api.notifications.create_notification_channel()
         uuid = res["subscription_id"]
 
