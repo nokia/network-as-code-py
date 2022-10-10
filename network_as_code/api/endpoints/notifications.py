@@ -6,10 +6,10 @@ from . import Endpoint
 class NotificationsAPI(Endpoint):
     """A client for handling Notification API calls"""
 
-    async def get_websocket_channel(self, uuid: str) -> ws.WebSocketClientProtocol:
+    def get_websocket_channel(self, uuid: str):
         """Open a notification channel over websocket"""
         base_dir_override = "ws://nwac.atg.dynamic.nsn-net.net/nwac/v4"
-        return await ws.connect(
+        return ws.connect(
             f"{base_dir_override}/notifier/notifications/ws/{uuid}",
             ping_timeout=None,
         )

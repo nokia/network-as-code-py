@@ -19,7 +19,7 @@ class NotificationChannel(BaseModel):
         return str(self.uuid)
 
     @property
-    async def websocket(self):
+    def websocket(self):
         """Opens a websocket connection to the remote notification channel
 
         Example: TODO: Finish this example...
@@ -29,7 +29,7 @@ class NotificationChannel(BaseModel):
         ```
         """
         # TODO: Is returning a websocket too low-level? Can we abstract it?
-        return await self._api.notifications.get_websocket_channel(self._uuid)
+        return self._api.notifications.get_websocket_channel(self._uuid)
 
     async def poll(self) -> List[Notification]:
         """Retrieve a list of all notifications that are currently in this channel's queue
