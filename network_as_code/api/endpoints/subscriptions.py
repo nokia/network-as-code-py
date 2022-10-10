@@ -50,5 +50,5 @@ class SubscriptionsAPI(Endpoint):
         return self.client.result(res, json=True)
 
     async def get_subscriber_custom_bandwidth(self, id: str) -> dict:
-        res = await self.client.patch("/subscriber/bandwidth/custom", json={"sid": id})
+        res = await self.client.post("/subscriber/bandwidth/custom", json={"sid": id})
         return self.client.result(res, json=True)
