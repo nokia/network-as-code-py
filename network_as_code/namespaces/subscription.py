@@ -17,7 +17,7 @@ class Subscriptions(Namespace):
             id (str): External ID of the subscription. Email-like.
         """
         res = await self.api.subscriptions.get_subscription(id)
-        return Subscription(_api=self.api, **res)
+        return Subscription(api=self.api, **res)
 
     async def create(self, id: str, imsi: str, msisdn: str) -> Subscription:
         """Create a new subscription. A subscription is typically tied to a mobile device.
@@ -33,7 +33,7 @@ class Subscriptions(Namespace):
             A `Subscription` object.
         """
         data = await self.api.subscriptions.create_subscription(id, imsi, msisdn)
-        return Subscription(_api=self.api, **data)
+        return Subscription(api=self.api, **data)
 
     async def list(self) -> List[Subscription]:
         # TODO: Implement me!

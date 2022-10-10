@@ -1,6 +1,6 @@
 from typing import List
 from uuid import UUID
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel
 from ..api import APIClient
 
 
@@ -10,7 +10,7 @@ class Notification(BaseModel):
 
 
 class NotificationChannel(BaseModel):
-    _api: APIClient = PrivateAttr()
+    api: APIClient
     uuid: UUID
 
     @property
@@ -29,7 +29,7 @@ class NotificationChannel(BaseModel):
         ```
         """
         # TODO: Is returning a websocket too low-level? Can we abstract it?
-        return self._api.notifications.get_websocket_channel(self._uuid)
+        return self.api.notifications.get_websocket_channel(self._uuid)
 
     async def poll(self) -> List[Notification]:
         """Retrieve a list of all notifications that are currently in this channel's queue
@@ -37,7 +37,7 @@ class NotificationChannel(BaseModel):
         Returns:
             A list of `Notification` objects or an empty list if no new notifications
         """
-        data = await self._api.notifications.poll_channel(self._uuid)
+        data = await self.api.notifications.poll_channel(self._uuid)
         return [Notification(**d) for d in data]
 
     async def close(self) -> None:
@@ -45,4 +45,4 @@ class NotificationChannel(BaseModel):
 
         No new messages can be read from this channel after this operation.
         """
-        await self._api.notifications.delete_notification_channel(self._uuid)
+        await self.api.notifications.delete_notification_channel(self._uuid)
