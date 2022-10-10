@@ -55,20 +55,20 @@ async def test_creation_of_nac_subscriber(client: NetworkAsCodeClient):
 
 async def test_getting_network_profile(device: Subscription):
     network_profile = await device.get_bandwidth()
-    assert network_profile == "uav_lowpowermode"
+    assert network_profile.service_tier == "uav_lowpowermode"
 
 
 async def test_setting_network_profile(device: Subscription):
     await device.set_bandwidth(name="uav_streaming")
     network_profile = await device.get_bandwidth()
-    assert network_profile == "uav_streaming"
+    assert network_profile.service_tier == "uav_streaming"
 
 
 async def test_setting_custom_network_profile(device: Subscription):
     await device.set_bandwidth(up=5000, down=20000)
     await sleep(2)
     network_profile = await device.get_bandwidth()
-    assert network_profile == "custom"
+    assert network_profile.service_tier == "custom"
 
 
 async def test_getting_device_location(device: Subscription):
