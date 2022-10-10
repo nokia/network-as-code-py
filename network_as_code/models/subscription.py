@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
-from .location import Location
+from .location import DeviceLocation
 from .bandwidth import Bandwidth, CustomBandwidth
 from ..api import APIClient
 
@@ -10,12 +10,12 @@ class Subscription(BaseModel):
     imsi: str
     msisdn: str
 
-    async def location(self) -> Location:
+    async def location(self) -> DeviceLocation:
         data = await self._api.subscriptions.get_subscriber_location(self.sid)
         location_info_field = "locationInfo"
         if location_info_field not in data:
-            raise RuntimeError(f"API did not return {location_info_field}")
-        return Location(**data[location_info_field])
+            raise RuntimeError(f"API did not return '{location_info_field}'")
+        return DeviceLocation(**data[location_info_field])
 
     async def get_bandwidth(self):
         """Query the current bandwidth profile of the subscriber.

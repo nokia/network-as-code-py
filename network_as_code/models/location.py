@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class Location(BaseModel):
+class DeviceLocation(BaseModel):
     age: int = Field(..., alias="ageOfLocationInfo")
     tracking_area: str = Field(..., alias="trackingAreaId")
     plmn_id: int = Field(..., alias="plmnId")
