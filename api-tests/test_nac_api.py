@@ -3,7 +3,7 @@ import random
 import pytest
 from asyncio import sleep
 from network_as_code import NetworkAsCodeClient
-from network_as_code.models import Subscription, NotificationChannel
+from network_as_code.models import Subscription, NotificationChannel, CustomBandwidth
 
 os.environ["TESTMODE"] = "1"
 SDK_TOKEN = os.getenv("NAC_TOKEN", "test12345")
@@ -68,6 +68,9 @@ async def test_setting_custom_network_profile(device: Subscription):
     await device.set_bandwidth(up=5000, down=20000)
     await sleep(2)
     network_profile = await device.get_bandwidth()
+    assert isinstance(network_profile, CustomBandwidth)
+    assert network_profile.upload == 5000
+    assert network_profile.download == 20000
     assert network_profile.service_tier == "custom"
 
 
