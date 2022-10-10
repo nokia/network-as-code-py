@@ -1,17 +1,21 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, PrivateAttr
 from .location import DeviceLocation
 from .bandwidth import Bandwidth, CustomBandwidth
 from ..api import APIClient
 
 
 class Subscription(BaseModel):
-    api: APIClient
+    _api: APIClient = PrivateAttr()
     sid: EmailStr
     imsi: str
     msisdn: str
 
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
     async def location(self) -> DeviceLocation:
-        data = await self.api.subscriptions.get_subscriber_location(self.sid)
+        data = await self._api.subscriptions.get_subscriber_location(self.sid)
         location_info_field = "locationInfo"
         if location_info_field not in data:
             raise RuntimeError(f"API did not return '{location_info_field}'")
@@ -23,10 +27,10 @@ class Subscription(BaseModel):
         Returns:
             Either a `Bandwidth` or `CustomBandwidth` depending on the type of current profile.
         """
-        data = await self.api.subscriptions.get_subscriber_bandwidth(self.sid)
+        data = await self._api.subscriptions.get_subscriber_bandwidth(self.sid)
 
         if "serviceTier" in data and data["serviceTier"] == "custom":
-            data = await self.api.subscriptions.get_subscriber_custom_bandwidth(
+            data = await self._api.subscriptions.get_subscriber_custom_bandwidth(
                 self.sid
             )
             return CustomBandwidth(**data)
@@ -54,11 +58,11 @@ class Subscription(BaseModel):
             )
 
         if name:
-            data = await self.api.subscriptions.set_subscriber_bandwidth(self.sid, name)
+            data = await self._api.subscriptions.set_subscriber_bandwidth(self.sid, name)
             return Bandwidth(**data)
 
         elif up > 0 and down > 0:
-            data = await self.api.subscriptions.set_subscriber_custom_bandwidth(
+            data = await self._api.subscriptions.set_subscriber_custom_bandwidth(
                 self.sid, up, down
             )
             return CustomBandwidth(**data)
@@ -69,4 +73,4 @@ class Subscription(BaseModel):
         #### Note! Only a test-mode subscription can be deleted!
         """
         # TODO: Add a way to check whether this subscription is real or simulated.
-        return await self.api.subscriptions.delete_subscription(self.sid)
+        return await self._api.subscriptions.delete_subscription(self.sid)
