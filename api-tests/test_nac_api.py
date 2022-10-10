@@ -8,7 +8,7 @@ from network_as_code.models import Subscription, NotificationChannel
 os.environ["TESTMODE"] = "1"
 SDK_TOKEN = os.getenv("NAC_TOKEN", "test12345")
 # BASE_URL = "http://nwac.atg.dynamic.nsn-net.net/nwac/v4"
-BASE_URL = "http://localhost:5050/nwac/v4"
+BASE_URL = "http://nwac.atg.dynamic.nsn-net.net/nwac/v4"
 
 
 def create_random_imsi():
