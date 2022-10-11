@@ -10,7 +10,7 @@ class Subscriptions(Namespace):
     subscription can be configured on the network.
     """
 
-    async def get(self, id) -> Subscription:
+    async def get(self, id: str) -> Subscription:
         """Get a subscription by its external ID.
 
         Args:

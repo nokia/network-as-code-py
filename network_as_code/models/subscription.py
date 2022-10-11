@@ -14,6 +14,10 @@ class Subscription(BaseModel):
         super().__init__(**data)
         self._api = api
 
+    @property
+    def id(self):
+        return str(self.sid)
+
     async def location(self) -> DeviceLocation:
         data = await self._api.subscriptions.get_subscriber_location(self.sid)
         location_info_field = "locationInfo"
@@ -58,7 +62,9 @@ class Subscription(BaseModel):
             )
 
         if name:
-            data = await self._api.subscriptions.set_subscriber_bandwidth(self.sid, name)
+            data = await self._api.subscriptions.set_subscriber_bandwidth(
+                self.sid, name
+            )
             return Bandwidth(**data)
 
         elif up > 0 and down > 0:
@@ -71,6 +77,9 @@ class Subscription(BaseModel):
         """Delete a subscription. A subscription is typically tied to a device.
 
         #### Note! Only a test-mode subscription can be deleted!
+
+        Returns:
+            `True` if deletion was successful, `False` otherwise
         """
         # TODO: Add a way to check whether this subscription is real or simulated.
         return await self._api.subscriptions.delete_subscription(self.sid)

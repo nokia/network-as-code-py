@@ -11,9 +11,8 @@ class Notifications(Namespace):
         Returns:
             A new NotificationChannel instance
         """
-        if isinstance(uuid, str):
-            uuid = UUID(uuid)
-        return NotificationChannel(api=self.api, uuid=uuid)
+        _uuid = UUID(uuid) if isinstance(uuid, str) else uuid
+        return NotificationChannel(api=self.api, uuid=_uuid)
 
     def list_channels(self) -> List[NotificationChannel]:
         """Fetch a list of available Notification channels from the API.
@@ -39,10 +38,3 @@ class Notifications(Namespace):
     async def delete(self, uuid: "UUID|str"):
         """Delete (close) a remote notification channel."""
         return await self.api.notifications.delete_notification_channel(str(uuid))
-
-    async def close(self, uuid: "UUID|str"):
-        """Delete (close) a remote notification channel.
-
-        This is an alias for `notifications.delete()` method.
-        """
-        return await self.delete(uuid)
