@@ -1,22 +1,8 @@
 from uuid import UUID
 from typing import List
-from pydantic import BaseModel, Field
-
-
-class Slice(BaseModel):
-    service_id: UUID = Field(..., alias="serviceId")
-    name: str
-    list_name: str = Field(..., alias="listName")
-    plmn: str = Field(..., alias="plmnName")
-    set_id: str = Field(..., alias="setId")
-    region_id: str = Field(..., alias="regionId")
-    access_point_name: str = Field(..., alias="apnName")
-    slice_type: str = Field(..., alias="sliceTypeId")
-    slice_service_type: str = Field(..., alias="SliceServiceType")
-    slice_differentiator: str = Field(..., alias="sd")
-    data_network_name: str = Field(..., alias="dataNetworkName")
-    data_network_list_name: str = Field(..., alias="dnnList")
-    packet_data_network_gateway_id: str = Field(..., alias="pdnGwId")
+from pydantic import BaseModel, PrivateAttr
+from .slice import Slice
+from ..api import APIClient
 
 
 class Region(BaseModel):
@@ -26,7 +12,12 @@ class Region(BaseModel):
 
 
 class Service(BaseModel):
+    _api: APIClient = PrivateAttr()
     id: UUID
     name: str
     regions: List[Region]
     slices: List[Slice]
+
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
