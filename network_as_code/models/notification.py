@@ -1,33 +1,52 @@
-from .resource import Model, Collection
+from typing import List
+from uuid import UUID
+from pydantic import BaseModel, PrivateAttr
+from ..api import APIClient
 
 
-class Notification(Model):
+class Notification(BaseModel):
+    pass
+    # TODO: What are the fields of a Notification object?
+
+
+class NotificationChannel(BaseModel):
+    _api: APIClient = PrivateAttr()
+    uuid: UUID
+
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
     @property
-    def id(self):
-        return self.attrs["uuid"]
+    def _uuid(self):
+        """A string representation of the channel's UUID"""
+        return str(self.uuid)
 
     @property
-    def uuid(self):
-        return self.attrs["uuid"]
+    def websocket(self):
+        """Opens a websocket connection to the remote notification channel
 
-    async def get_websocket_channel(self):
-        return await self.api.notifications.get_websocket_channel(self.uuid)
+        Example: TODO: Finish this example...
+        ```python
+        async with channel.websocket as sock:
+            sock.recv()
+        ```
+        """
+        # TODO: Is returning a websocket too low-level? Can we abstract it?
+        return self._api.notifications.get_websocket_channel(self._uuid)
 
-    async def poll(self):
-        return await self.api.notifications.poll_channel(self.uuid)
+    async def poll(self) -> List[Notification]:
+        """Retrieve a list of all notifications that are currently in this channel's queue
 
+        Returns:
+            A list of `Notification` objects or an empty list if no new notifications
+        """
+        data = await self._api.notifications.poll_channel(self._uuid)
+        return [Notification(**d) for d in data]
 
-class NotificationCollection(Collection):
-    model = Notification
+    async def close(self) -> None:
+        """Closes the remote channel.
 
-    def get(self, id: str) -> Notification:
-        return self.prepare_model({"uuid": id})
-
-    async def create(self) -> Notification:
-        res = await self.api.notifications.create_notification_channel()
-        uuid = res["subscription_id"]
-
-        return self.prepare_model({"uuid": uuid})
-
-    async def delete(self, id: str):  # testmode: bool = True
-        return await self.api.notifications.delete_notification_channel(id)
+        No new messages can be read from this channel after this operation.
+        """
+        await self._api.notifications.delete_notification_channel(self._uuid)

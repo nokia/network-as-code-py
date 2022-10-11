@@ -1,20 +1,19 @@
-from .endpoint import Endpoint
+from typing import List
+from . import Endpoint
 
 
 class ServicesAPI(Endpoint):
-    async def get_all_services(self):
+    async def get_all_services(self) -> List[dict]:
         res = await self.client.get("/services")
-        return self.client._result(res, json=True)
+        return self.client.result(res, json=True)
 
-    async def get_service(self, service_id: str):
+    async def get_service(self, service_id: str) -> dict:
         res = await self.client.get(f"/services/{service_id}")
-        return self.client._result(res, json=True)
+        return self.client.result(res, json=True)
 
-    async def get_slice(self, service_id: str, slice_id: str):
-        """"""
-        # TODO: Input validation
+    async def get_slice(self, service_id: str, slice_id: str) -> dict:
         res = await self.client.get(f"/services/{service_id}/slices/{slice_id}")
-        return self.client._result(res, json=True)
+        return self.client.result(res, json=True)
 
     async def create_slice(
         self,
@@ -29,7 +28,7 @@ class ServicesAPI(Endpoint):
         set_id: str,
         access_point_name: str,
         packet_data_network_gateway: str,
-    ):
+    ) -> dict:
         # TODO: Input validation
         res = await self.client.post(
             f"/services/{service_id}/slices",
@@ -48,9 +47,9 @@ class ServicesAPI(Endpoint):
                 "pdnGwId": packet_data_network_gateway,
             },
         )
-        return self.client._result(res, json=True)
+        return self.client.result(res, json=True)
 
-    async def delete_slice(self, service_id, slice_id):
+    async def delete_slice(self, service_id, slice_id) -> bool:
         res = await self.client.delete(f"/services/{service_id}/slices/{slice_id}")
-        # TODO: Handle API errors with res.raise_for_status() since not using self.client._result()
+        # TODO: Handle API errors with res.raise_for_status() since not using self.client.result()
         return res.status_code == 204

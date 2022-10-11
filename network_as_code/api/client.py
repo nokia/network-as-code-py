@@ -1,10 +1,7 @@
 import sys
 import httpx
 import json as JSON
-from .endpoints.admin import AdminAPI
-from .endpoints.services import ServicesAPI
-from .endpoints.subscriptions import SubscriptionsAPI
-from .endpoints.notifications import NotificationsAPI
+from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
 
 
 class APIClient(httpx.AsyncClient):
@@ -38,7 +35,7 @@ class APIClient(httpx.AsyncClient):
         self.notifications = NotificationsAPI(self)
 
     @classmethod
-    def _result(cls, response: httpx.Response, json=False, raw=False):
+    def result(cls, response: httpx.Response, json=False, raw=False):
         """Helper function to extract and parse the result of an API response.
 
         ### Args:

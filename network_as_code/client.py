@@ -1,9 +1,5 @@
 from .api import APIClient
-from .models import (
-    NetworkSliceCollection,
-    SubscriptionCollection,
-    NotificationCollection,
-)
+from .namespaces import Subscriptions, Notifications, NetworkSlices, Services
 
 
 class NetworkAsCodeClient:
@@ -14,6 +10,8 @@ class NetworkAsCodeClient:
     from network_as_code import NetworkAsCodeClient
 
     client = NetworkAsCodeClient(token="your_api_token")
+    sub = client.subscriptions.get("user@example.com")
+    print(sub.location())
     ```
 
     ### Args:
@@ -23,9 +21,10 @@ class NetworkAsCodeClient:
 
     def __init__(self, token: str, **kwargs):
         self._api = APIClient(token=token, **kwargs)
-        self._slicing = NetworkSliceCollection(self._api)
-        self._subscriptions = SubscriptionCollection(self._api)
-        self._notifications = NotificationCollection(self._api)
+        self._slicing = NetworkSlices(self._api)
+        self._subscriptions = Subscriptions(self._api)
+        self._notifications = Notifications(self._api)
+        self._services = Services(self._api)
 
     async def __aenter__(self):
         return self
@@ -64,6 +63,14 @@ class NetworkAsCodeClient:
         TODO: Write some documentation about the notifications namespace here.
         """
         return self._notifications
+
+    @property
+    def services(self):
+        """Namespace containing functionalities related to various services of Network as Code.
+
+        TODO: Write some documentation about the services namespace here.
+        """
+        return self._services
 
     #### TOP-LEVEL METHODS
     async def connected(self):  # Just and example of a top-level method
