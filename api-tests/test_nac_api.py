@@ -49,8 +49,18 @@ async def device(client: NetworkAsCodeClient):
     await subscription.delete()
 
 
-async def test_creation_of_nac_subscriber(client: NetworkAsCodeClient):
-    assert await client.connected()
+async def test_client_creation_and_context_manager_and_connection():
+    async with NetworkAsCodeClient(
+        token="testing", base_url=BASE_URL, testmode=True
+    ) as client:
+        assert await client.connected()
+
+    assert client._api.is_closed
+
+
+async def test_getting_subscription(client: NetworkAsCodeClient, device: Subscription):
+    subscriber = await client.subscriptions.get(device.id)
+    assert subscriber == device
 
 
 async def test_getting_network_profile(device: Subscription):
@@ -90,6 +100,13 @@ async def channel(client: NetworkAsCodeClient):
 
 def test_can_create_valid_channel(channel: NotificationChannel):
     assert channel.uuid is not None and channel.uuid != ""
+
+
+async def test_can_get_channel(
+    client: NetworkAsCodeClient, channel: NotificationChannel
+):
+    _channel = await client.notifications.get_channel(channel.uuid)
+    assert _channel == channel
 
 
 async def test_can_poll_messages_from_channel(
