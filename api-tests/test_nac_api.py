@@ -7,8 +7,9 @@ from network_as_code.models import Subscription, NotificationChannel, CustomBand
 
 os.environ["TESTMODE"] = "1"
 SDK_TOKEN = os.getenv("NAC_TOKEN", "test12345")
+
 # BASE_URL = "http://nwac.atg.dynamic.nsn-net.net/nwac/v4"
-BASE_URL = "http://nwac.atg.dynamic.nsn-net.net/nwac/v4"
+BASE_URL = "https://poc4.p.rapidapi.com/nwac/v4/"
 
 
 def create_random_imsi():
@@ -30,7 +31,7 @@ def create_random_msisdn():
 @pytest.fixture
 async def client():
     client = NetworkAsCodeClient(
-        token="testing",
+        token=SDK_TOKEN,
         base_url=BASE_URL,
         testmode=True,
     )
@@ -51,7 +52,7 @@ async def device(client: NetworkAsCodeClient):
 
 async def test_client_creation_and_context_manager_and_connection():
     async with NetworkAsCodeClient(
-        token="testing", base_url=BASE_URL, testmode=True
+        token=SDK_TOKEN, base_url=BASE_URL, testmode=True
     ) as client:
         assert await client.connected()
 
@@ -91,42 +92,42 @@ async def test_getting_device_location(device: Subscription):
     assert float(location.elevation) == 123.0
 
 
-@pytest.fixture
-async def channel(client: NetworkAsCodeClient):
-    channel = await client.notifications.new_channel()
-    yield channel
-    await client.notifications.delete(channel.uuid)
+# @pytest.fixture
+# async def channel(client: NetworkAsCodeClient):
+#     channel = await client.notifications.new_channel()
+#     yield channel
+#     await client.notifications.delete(channel.uuid)
 
 
-def test_can_create_valid_channel(channel: NotificationChannel):
-    assert channel.uuid is not None and channel.uuid != ""
+# def test_can_create_valid_channel(channel: NotificationChannel):
+#     assert channel.uuid is not None and channel.uuid != ""
 
 
-async def test_can_get_channel(
-    client: NetworkAsCodeClient, channel: NotificationChannel
-):
-    _channel = await client.notifications.get_channel(channel.uuid)
-    assert _channel == channel
+# async def test_can_get_channel(
+#     client: NetworkAsCodeClient, channel: NotificationChannel
+# ):
+#     _channel = await client.notifications.get_channel(channel.uuid)
+#     assert _channel == channel
 
 
-async def test_can_poll_messages_from_channel(
-    client: NetworkAsCodeClient, channel: NotificationChannel
-):
-    await client._api.post(
-        f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",
-        json={"msg": "hello, world"},
-    )
-    msgs = await channel.poll()
-    assert len(msgs) == 1
+# async def test_can_poll_messages_from_channel(
+#     client: NetworkAsCodeClient, channel: NotificationChannel
+# ):
+#     await client._api.post(
+#         f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",
+#         json={"msg": "hello, world"},
+#     )
+#     msgs = await channel.poll()
+#     assert len(msgs) == 1
 
 
-async def test_can_read_messages_via_websocket(
-    client: NetworkAsCodeClient, channel: NotificationChannel
-):
-    await client._api.post(
-        f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",
-        json={"msg": "hello, world"},
-    )
-    async with channel.websocket as sock:
-        msg = await sock.recv()
-        assert msg == '{"msg": "hello, world"}'
+# async def test_can_read_messages_via_websocket(
+#     client: NetworkAsCodeClient, channel: NotificationChannel
+# ):
+#     await client._api.post(
+#         f"{BASE_URL}/notifier/callback-handler/{channel.uuid}",
+#         json={"msg": "hello, world"},
+#     )
+#     async with channel.websocket as sock:
+#         msg = await sock.recv()
+#         assert msg == '{"msg": "hello, world"}'

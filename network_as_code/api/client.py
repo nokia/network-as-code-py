@@ -21,7 +21,8 @@ class APIClient(httpx.AsyncClient):
         **kwargs,
     ):
         headers = {
-            "x-apikey": token,
+            "X-RapidAPI-Key": token,
+            "X-RapidAPI-Host": "poc4.nokia-evaluation.rapidapi.com",
             "x-testmode": "true" if testmode else "false",
             "Accept": "application/json",
             "Content-Type": "application/json",
