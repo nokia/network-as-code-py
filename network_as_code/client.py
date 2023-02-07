@@ -1,5 +1,5 @@
 from .api import APIClient
-from .namespaces import Subscriptions, Notifications, NetworkSlices, Services
+# from .namespaces import Subscriptions, Notifications, NetworkSlices, Services
 
 
 class NetworkAsCodeClient:
@@ -21,61 +21,48 @@ class NetworkAsCodeClient:
 
     def __init__(self, token: str, **kwargs):
         self._api = APIClient(token=token, **kwargs)
-        self._slicing = NetworkSlices(self._api)
-        self._subscriptions = Subscriptions(self._api)
-        self._notifications = Notifications(self._api)
-        self._services = Services(self._api)
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_value, traceback):
-        await self.close()
-
-    async def close(self):
-        """Closes the API client.
-
-        After this no more API requests can be made using this client.
-        """
-        await self._api.aclose()
+        # self._slicing = NetworkSlices(self._api)
+        # self._subscriptions = Subscriptions(self._api)
+        # self._notifications = Notifications(self._api)
+        # self._services = Services(self._api)
 
     #### NAMESPACES
-    @property
-    def slicing(self):
-        """Namespace containing functionalities related to network slicing.
+    # @property
+    # def slicing(self):
+    #     """Namespace containing functionalities related to network slicing.
 
-        TODO: Write some documentation about the slice namespace here.
-        """
-        return self._slicing
+    #     TODO: Write some documentation about the slice namespace here.
+    #     """
+    #     return self._slicing
 
-    @property
-    def subscriptions(self):
-        """Namespace containing functionalities related to mobile subscriptions.
+    # @property
+    # def subscriptions(self):
+    #     """Namespace containing functionalities related to mobile subscriptions.
 
-        TODO: Write some documentation about the subscription namespace here.
-        """
-        return self._subscriptions
+    #     TODO: Write some documentation about the subscription namespace here.
+    #     """
+    #     return self._subscriptions
 
-    @property
-    def notifications(self):
-        """Namespace containing functionalities related to various notifications from Network as Code.
+    # @property
+    # def notifications(self):
+    #     """Namespace containing functionalities related to various notifications from Network as Code.
 
-        TODO: Write some documentation about the notifications namespace here.
-        """
-        return self._notifications
+    #     TODO: Write some documentation about the notifications namespace here.
+    #     """
+    #     return self._notifications
 
-    @property
-    def services(self):
-        """Namespace containing functionalities related to various services of Network as Code.
+    # @property
+    # def services(self):
+    #     """Namespace containing functionalities related to various services of Network as Code.
 
-        TODO: Write some documentation about the services namespace here.
-        """
-        return self._services
+    #     TODO: Write some documentation about the services namespace here.
+    #     """
+    #     return self._services
 
     #### TOP-LEVEL METHODS
-    async def connected(self):  # Just and example of a top-level method
+    def connected(self):  # Just and example of a top-level method
         """
         Check whether this client can reach the Network as Code API gateway and backend.
         """
-        connection_status = await self._api.admin.check_api_connection()
+        connection_status = self._api.admin.check_api_connection()
         return True if connection_status == "up" else False
