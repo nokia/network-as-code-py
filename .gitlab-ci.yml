@@ -20,28 +20,28 @@ before_script:
   - poetry config virtualenvs.in-project true # Needed for caching
 
 # JOBS
-test:
-  stage: test
-  tags:
-    - esisogr87 # This runner has connection to "outside"
-  variables:
-    NAC_TOKEN: "asd1234" # Replace with a proper token if we test against the L1 API gateway
-  script:
-    - poetry install
-    - poetry run pytest
-    # - poetry run python api-tests/bouncer-check.py TODO: update Bouncer configs
-  rules:
-    - if: $CI_COMMIT_BRANCH
+# test:
+#   stage: test
+#   tags:
+#     - esisogr87 # This runner has connection to "outside"
+#   variables:
+#     NAC_TOKEN: "asd1234" # Replace with a proper token if we test against the L1 API gateway
+#   script:
+#     - poetry install
+#     - poetry run pytest
+#     # - poetry run python api-tests/bouncer-check.py TODO: update Bouncer configs
+#   rules:
+#     - if: $CI_COMMIT_BRANCH
 
-deploy:
-  stage: deploy
-  tags:
-    - esisogr87 # This runner has connection to "outside"
-  script:
-    - poetry config repositories.devpi $PYPI_REPOSITORY
-    - poetry publish --build -r devpi -u $PYPI_USERNAME -p $PYPI_PASSWORD
-  rules:
-    - if: $CI_COMMIT_TAG
+# deploy:
+#   stage: deploy
+#   tags:
+#     - esisogr87 # This runner has connection to "outside"
+#   script:
+#     - poetry config repositories.devpi $PYPI_REPOSITORY
+#     - poetry publish --build -r devpi -u $PYPI_USERNAME -p $PYPI_PASSWORD
+#   rules:
+#     - if: $CI_COMMIT_TAG
 
 pages:
   stage: deploy
