@@ -4,7 +4,7 @@ import json as JSON
 from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
 
 
-class APIClient(httpx.AsyncClient):
+class APIClient(httpx.Client):
     """A client for communicating with Network as Code APIs.
 
     ### Args:
@@ -31,9 +31,9 @@ class APIClient(httpx.AsyncClient):
         super().__init__(headers=headers, base_url=base_url, **kwargs)
 
         self.admin = AdminAPI(self)
-        self.services = ServicesAPI(self)
-        self.subscriptions = SubscriptionsAPI(self)
-        self.notifications = NotificationsAPI(self)
+        # self.services = ServicesAPI(self)
+        # self.subscriptions = SubscriptionsAPI(self)
+        # self.notifications = NotificationsAPI(self)
 
     @classmethod
     def result(cls, response: httpx.Response, json=False, raw=False):
