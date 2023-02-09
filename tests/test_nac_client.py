@@ -21,15 +21,15 @@ def test_getting_a_device(client):
 def test_creating_a_qos_flow(client):
     device = client.devices.get("sami.lahtinen@nokia.com", ip = "127.0.0.1")
 
-    device.create_qos_flow(service_ip="8.8.8.8", service_tier="QOS_L")
+    device.create_session(service_ip="8.8.8.8", service_tier="QOS_L")
 
-    assert len(device.qos_flows()) == 1
+    assert len(device.sessions()) == 1
 
 def test_clearing_qos_flows(client):
     device = client.devices.get("sami.lahtinen@nokia.com", ip = "127.0.0.1")
 
-    device.create_qos_flow(service_ip="8.8.8.8", service_tier="QOS_L")
+    device.create_session(service_ip="8.8.8.8", service_tier="QOS_L")
 
-    device.clear_qos_flows()
+    device.clear_sessions()
 
-    assert len(device.qos_flows()) == 0
+    assert len(device.sessions()) == 0

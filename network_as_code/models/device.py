@@ -1,31 +1,31 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
 from typing import List
 from ..api import APIClient
-from ..models.qos_flow import QosFlow
+from ..models.session import Session
 
 class Device(BaseModel):
     _api: APIClient = PrivateAttr()
-    _qos_flows: List[QosFlow] = PrivateAttr()
+    _sessions: List[Session] = PrivateAttr()
     sid: EmailStr
-    ip: str
+    ip: str 
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
-        self._qos_flows = []
+        self._sessions = []
 
     @property
     def id(self):
         return str(self.sid)
 
-    def create_qos_flow(self, service_ip, service_tier):
+    def create_session(self, service_ip, service_tier):
         # TODO: This should call an API
-        self._qos_flows.append(QosFlow(ue_ip=self.ip, service_ip=service_ip, service_tier=service_tier))
+        self._sessions.append(Session(device_ip=self.ip, service_ip=service_ip, service_tier=service_tier))
 
-    def qos_flows(self) -> List[QosFlow]:
+    def sessions(self) -> List[Session]:
         # TODO: This should query an API
-        return self._qos_flows
+        return self._sessions
 
-    def clear_qos_flows(self):
+    def clear_sessions(self):
         # TODO: This should run delete on all QoS Flows
-        self._qos_flows.clear()
+        self._sessions.clear()
