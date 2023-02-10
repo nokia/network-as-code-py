@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
 from typing import List
+
+from network_as_code.api.binding_generation.openapi_client.model.qo_s_resource import QoSResource
 from ..api import APIClient
 from ..models.session import Session
 
@@ -19,7 +21,15 @@ class Device(BaseModel):
         return str(self.sid)
 
     def create_session(self, service_ip, service_tier):
-        # TODO: This should call an API
+        self._api.sessions.send_subscribe_sessions_post(QoSResource(
+            qos=service_tier,
+            id=self.sid,
+            ports="4242",
+            ip=self.ip,
+            appIp=service_ip,
+            appPorts="80"
+        ))
+
         self._sessions.append(Session(device_ip=self.ip, service_ip=service_ip, service_tier=service_tier))
 
     def sessions(self) -> List[Session]:

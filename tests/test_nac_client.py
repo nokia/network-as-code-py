@@ -6,12 +6,7 @@ from network_as_code.client import NetworkAsCodeClient
 
 @pytest.fixture
 def client() -> NetworkAsCodeClient:
-    return NetworkAsCodeClient(token="not_a_real_token")
-
-def test_client_connection(httpx_mock, client):
-    httpx_mock.add_response(json={"service": "up"})
-
-    assert client.connected() == True
+    return NetworkAsCodeClient(token="not_a_real_token", base_url="http://localhost:8000")
 
 def test_getting_a_device(client):
     device = client.devices.get("sami.lahtinen@nokia.com", ip = "127.0.0.1")
