@@ -1,6 +1,5 @@
 .gitignore
 .gitlab-ci.yml
-.openapi-generator-ignore
 .travis.yml
 README.md
 docs/apis/tags/QosApi.md
@@ -36,9 +35,4 @@ setup.py
 test-requirements.txt
 test/__init__.py
 test/test_models/__init__.py
-test/test_models/test_as_session_with_qo_s_subscription.py
-test/test_models/test_flow_info.py
-test/test_models/test_http_validation_error.py
-test/test_models/test_qo_s_resource.py
-test/test_models/test_validation_error.py
 tox.ini

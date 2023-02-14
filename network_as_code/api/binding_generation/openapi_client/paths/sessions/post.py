@@ -42,6 +42,9 @@ request_body_qo_s_resource = api_client.RequestBody(
     },
     required=True,
 )
+_auth = [
+    'RapidApiKey',
+]
 SchemaFor201ResponseBodyApplicationJson = AsSessionWithQoSSubscription
 
 
@@ -182,6 +185,7 @@ class BaseApi(api_client.Api):
             headers=_headers,
             fields=_fields,
             body=_body,
+            auth_settings=_auth,
             stream=stream,
             timeout=timeout,
         )

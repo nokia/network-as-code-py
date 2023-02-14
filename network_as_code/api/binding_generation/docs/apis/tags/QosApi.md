@@ -17,6 +17,7 @@ Create device communication bandwidth (QoS) service.
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import openapi_client
 from openapi_client.apis.tags import qos_api
@@ -30,6 +31,16 @@ configuration = openapi_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -108,7 +119,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
