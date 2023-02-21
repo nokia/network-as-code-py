@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
 from typing import List
 
-from network_as_code.api.binding_generation.openapi_client.model.qo_s_resource import QoSResource
+from openapi_client.model.qo_s_resource import QoSResource
 from ..api import APIClient
 from ..models.session import Session
 

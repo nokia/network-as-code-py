@@ -13,13 +13,13 @@ pythonPlatform = "Linux"
 [tool.poetry.dependencies]
 python = "^3.7"
 python-dotenv = "^0.19.2"
-python-dateutil = "^2.8.2"
 httpx = "^0.23.0"
 websockets = "^10.3"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 urllib3 = "^1.26.14"
 frozendict = "^2.3.4"
 urllib3-mock = "^0.3.3"
+openapi-client = {path = "binding_generation"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"

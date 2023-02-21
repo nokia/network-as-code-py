@@ -1,8 +1,8 @@
 import sys
 
-from .binding_generation.openapi_client import Configuration, ApiClient
+from openapi_client import Configuration, ApiClient
 
-from .binding_generation.openapi_client.apis.tags import qos_api
+from openapi_client.apis.tags import qos_api
 
 # import httpx
 # import json as JSON
