@@ -1,22 +1,14 @@
+
+
 import network_as_code as nac
+from network_as_code.client import NetworkAsCodeClient
 
-client = nac.NetworkAsCodeClient(
-    token="testing",
-    base_url="http://localhost:5050/nwac/v4",
-    testmode=True
-)
+def main():
+    device = client.devices.get("my_device@nokia.com", ip = "10.0.12.35")
 
-print("Client connected:", client.connected())
-print("Creating a test user")
+    session = device.create_session(service_ip="10.0.23.20", service_tier="QOS_L")
 
-device = client.subscriptions.create(
-    id="test.user@domain.tld",
-    imsi="123456789012345",
-    msisdn="1234567890",
-)
+    execute_bandwidth_intensive_task()
 
-print("Created.")
+    device.clear_sessions()
 
-location = device.get_location()
-
-print(location)
