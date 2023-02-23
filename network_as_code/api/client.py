@@ -1,10 +1,14 @@
 import sys
-import httpx
-import json as JSON
-from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
 
+from openapi_client import Configuration, ApiClient
 
-class APIClient(httpx.Client):
+from openapi_client.apis.tags import qos_api
+
+# import httpx
+# import json as JSON
+# # from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
+
+class APIClient:
     """A client for communicating with Network as Code APIs.
 
     ### Args:
@@ -17,7 +21,7 @@ class APIClient(httpx.Client):
         self,
         token: str,
         testmode: bool = False,
-        base_url: str = "https://network-as-code-poc.p.rapidapi.com",
+        base_url: str = "http://localhost:8000",
         **kwargs,
     ):
         headers = {
@@ -28,39 +32,17 @@ class APIClient(httpx.Client):
             "Content-Type": "application/json",
         }
 
-        super().__init__(headers=headers, base_url=base_url, **kwargs)
+        config = Configuration(
+            host=base_url,
+            api_key={
+                "RapidApiKey": token
+            }
+        )
 
-        self.admin = AdminAPI(self)
-        # self.services = ServicesAPI(self)
-        # self.subscriptions = SubscriptionsAPI(self)
-        # self.notifications = NotificationsAPI(self)
+        self._openapi_client = ApiClient(
+            config,
+            header_name="X-RapidAPI-Host",
+            header_value="poc4.nokia-evaluation.rapidapi.com"
+        )
 
-    @classmethod
-    def result(cls, response: httpx.Response, json=False, raw=False):
-        """Helper function to extract and parse the result of an API response.
-
-        ### Args:
-            response (Response): A HTTPX Response object representing a response from the API
-            json (bool): Whether to parse the response body as JSON
-            raw (bool): Whether to return the response body as raw bytes
-
-        If neither `json` nor `raw` is set to `True` the response body will be returned as a `string`.
-        """
-        # TODO: Handling request exceptions. Maybe through a HTTPX middleware?
-        assert not (json and raw)  # Can't have both output types selected
-        try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError:
-            # TODO: Parse errors instead of simply printing their body content
-            print("ERROR: The API gateway returned the following error:", end="")
-            try:
-                print(JSON.dumps(response.json(), indent=2))
-            except Exception:
-                print(response.text)
-            sys.exit(1)  # TODO: Should this raise APIError instead?
-
-        if json:
-            return response.json()
-        if raw:
-            return response.content
-        return response.text
+        self.sessions = qos_api.QosApi(self._openapi_client)
