@@ -339,7 +339,7 @@ description = "QoS"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-develop = false
+develop = true
 
 [package.dependencies]
 certifi = ">=14.5.14"
@@ -351,7 +351,7 @@ urllib3 = ">=1.26.7,<1.27.0"
 
 [package.source]
 type = "directory"
-url = "binding_generation"
+url = "binding_generation/openapi_client"
 
 [[package]]
 name = "packaging"
@@ -694,7 +694,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d15ba370254247baa11f3ce3c5c127529b2aa5d170edf2c1d1d14639b2c7136f"
+content-hash = "af5782e6a4af06568e50bfd96f61ebb9a9cc8fb00719315d0b2b931eaf102daf"
 
 [metadata.files]
 anyio = [
