@@ -21,12 +21,12 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        base_url: str = "http://localhost:8000",
+        base_url: str = "https://qos-poc.p.rapidapi.com",
         **kwargs,
     ):
         headers = {
             "X-RapidAPI-Key": token,
-            "X-RapidAPI-Host": "poc4.nokia-evaluation.rapidapi.com",
+            "X-RapidAPI-Host": "qos-poc.nokia-evaluation.rapidapi.com",
             "x-testmode": "true" if testmode else "false",
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ class APIClient:
         self._openapi_client = ApiClient(
             config,
             header_name="X-RapidAPI-Host",
-            header_value="poc4.nokia-evaluation.rapidapi.com"
+            header_value="qos-poc.nokia-evaluation.rapidapi.com"
         )
 
         self.sessions = qos_api.QosApi(self._openapi_client)

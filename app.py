@@ -1,14 +1,14 @@
 
 
 import network_as_code as nac
-from network_as_code.client import NetworkAsCodeClient
 
 def main():
-    device = client.devices.get("my_device@nokia.com", ip = "10.0.12.35")
+    client = nac.NetworkAsCodeClient(token="<you-token-here>")
 
-    session = device.create_session(service_ip="10.0.23.20", service_tier="QOS_L")
+    device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
 
-    execute_bandwidth_intensive_task()
+    session = device.create_session(service_ip="5.6.7.8", profile="M_L")
 
     device.clear_sessions()
 
+main()
