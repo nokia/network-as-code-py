@@ -141,9 +141,9 @@ import time
 import openapi_client
 from pprint import pprint
 from openapi_client.apis.tags import qos_api
-from openapi_client.model.as_session_with_qo_s_subscription import AsSessionWithQoSSubscription
+from openapi_client.model.create_session import CreateSession
 from openapi_client.model.http_validation_error import HTTPValidationError
-from openapi_client.model.qo_s_resource import QoSResource
+from openapi_client.model.session_info import SessionInfo
 # Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = openapi_client.Configuration(
@@ -165,21 +165,31 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 with openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = qos_api.QosApi(api_client)
-    qo_s_resource = QoSResource(
+    create_session = CreateSession(
         qos="qos_example",
         id="id_example",
         ip="ip_example",
-        ports="ports_example",
+        ports=PortsSpec(
+            ranges=[
+                PortsSpecRangesInner(
+                    _from=1.0,
+                    to=1.0,
+                )
+            ],
+            ports=[
+                1.0
+            ],
+        ),
         app_ip="app_ip_example",
-        app_ports="app_ports_example",
-    ) # QoSResource | 
+        app_ports=PortsSpec(),
+    ) # CreateSession | 
 
     try:
         # Create QoS service
-        api_response = api_instance.send_subscribe_sessions_post(qo_s_resource)
+        api_response = api_instance.create_qos_sessions_post(create_session)
         pprint(api_response)
     except openapi_client.ApiException as e:
-        print("Exception when calling QosApi->send_subscribe_sessions_post: %s\n" % e)
+        print("Exception when calling QosApi->create_qos_sessions_post: %s\n" % e)
 ```
 
 ## Documentation for API Endpoints
@@ -188,14 +198,17 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*QosApi* | [**send_subscribe_sessions_post**](docs/apis/tags/QosApi.md#send_subscribe_sessions_post) | **post** /sessions | Create QoS service
+*QosApi* | [**create_qos_sessions_post**](docs/apis/tags/QosApi.md#create_qos_sessions_post) | **post** /sessions | Create QoS service
+*QosApi* | [**delete_qos_sessions_resource_id_delete**](docs/apis/tags/QosApi.md#delete_qos_sessions_resource_id_delete) | **delete** /sessions/{resource_id} | Delete Qos
+*QosApi* | [**get_qos_sessions_resource_id_get**](docs/apis/tags/QosApi.md#get_qos_sessions_resource_id_get) | **get** /sessions/{resource_id} | Return QoS settings
 
 ## Documentation For Models
 
- - [AsSessionWithQoSSubscription](docs/models/AsSessionWithQoSSubscription.md)
- - [FlowInfo](docs/models/FlowInfo.md)
+ - [CreateSession](docs/models/CreateSession.md)
  - [HTTPValidationError](docs/models/HTTPValidationError.md)
- - [QoSResource](docs/models/QoSResource.md)
+ - [PortsSpec](docs/models/PortsSpec.md)
+ - [PortsSpecRangesInner](docs/models/PortsSpecRangesInner.md)
+ - [SessionInfo](docs/models/SessionInfo.md)
  - [ValidationError](docs/models/ValidationError.md)
 
 ## Documentation For Authorization

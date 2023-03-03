@@ -1,10 +1,7 @@
 # do not import all endpoints into this module because that uses a lot of memory and stack frames
 # if you need the ability to import all endpoints from this module, import them with
-# from openapi_client.apis.path_to_api import path_to_api
+# from openapi_client.paths.sessions_resource_id import Api
 
-import enum
+from openapi_client.paths import PathValues
 
-
-class PathValues(str, enum.Enum):
-    SESSIONS = "/sessions"
-    SESSIONS_RESOURCE_ID = "/sessions/{resource_id}"
+path = PathValues.SESSIONS_RESOURCE_ID
