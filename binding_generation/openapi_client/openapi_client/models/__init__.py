@@ -11,8 +11,9 @@
 # import sys
 # sys.setrecursionlimit(n)
 
-from openapi_client.model.as_session_with_qo_s_subscription import AsSessionWithQoSSubscription
-from openapi_client.model.flow_info import FlowInfo
+from openapi_client.model.create_session import CreateSession
 from openapi_client.model.http_validation_error import HTTPValidationError
-from openapi_client.model.qo_s_resource import QoSResource
+from openapi_client.model.ports_spec import PortsSpec
+from openapi_client.model.ports_spec_ranges_inner import PortsSpecRangesInner
+from openapi_client.model.session_info import SessionInfo
 from openapi_client.model.validation_error import ValidationError

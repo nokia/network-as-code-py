@@ -13,12 +13,12 @@
         ],
         "summary": "Create QoS service",
         "description": "Create device communication bandwidth (QoS) service.",
-        "operationId": "send_subscribe_sessions_post",
+        "operationId": "create_qos_sessions_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/QoSResource"
+                "$ref": "#/components/schemas/CreateSession"
               }
             }
           },
@@ -30,10 +30,86 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AsSessionWithQoSSubscription"
+                  "$ref": "#/components/schemas/SessionInfo"
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{resource_id}": {
+      "get": {
+        "tags": [
+          "qos"
+        ],
+        "summary": "Return QoS settings",
+        "description": "Return device communication bandwidth (QoS) settings.",
+        "operationId": "get_qos_sessions__resource_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Resource Id",
+              "type": "string"
+            },
+            "name": "resource_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "qos"
+        ],
+        "summary": "Delete Qos",
+        "operationId": "delete_qos_sessions__resource_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Resource Id",
+              "type": "string"
+            },
+            "name": "resource_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "422": {
             "description": "Validation Error",
@@ -58,83 +134,8 @@
       }
     },
     "schemas": {
-      "AsSessionWithQoSSubscription": {
-        "title": "AsSessionWithQoSSubscription",
-        "required": [
-          "qosReference",
-          "flowInfo"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string",
-            "description": "Resource URL of the subscription"
-          },
-          "supportedFeatures": {
-            "title": "Supportedfeatures",
-            "type": "string",
-            "description": "Resource URL of the subscription"
-          },
-          "qosReference": {
-            "title": "Qosreference",
-            "type": "string",
-            "description": "Reference of the requested QoS level"
-          },
-          "flowInfo": {
-            "title": "Flowinfo",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FlowInfo"
-            },
-            "description": "Flow informations that might be affected by the given QoS operation"
-          },
-          "ueIpv4Addr": {
-            "title": "Ueipv4Addr",
-            "type": "string",
-            "description": "IPV4 address of the device"
-          },
-          "ueIpv6Addr": {
-            "title": "Ueipv6Addr",
-            "type": "string",
-            "description": "IPV4 address of the device"
-          }
-        }
-      },
-      "FlowInfo": {
-        "title": "FlowInfo",
-        "type": "object",
-        "properties": {
-          "flowId": {
-            "title": "Flowid",
-            "type": "integer",
-            "description": "ID of the flow"
-          },
-          "flowDescriptions": {
-            "title": "Flowdescriptions",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Descriptors of the given flow"
-          }
-        }
-      },
-      "HTTPValidationError": {
-        "title": "HTTPValidationError",
-        "type": "object",
-        "properties": {
-          "detail": {
-            "title": "Detail",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            }
-          }
-        }
-      },
-      "QoSResource": {
-        "title": "QoSResource",
+      "CreateSession": {
+        "title": "CreateSession",
         "required": [
           "qos",
           "id",
@@ -159,9 +160,7 @@
             "description": "IP address of the device"
           },
           "ports": {
-            "title": "Ports",
-            "type": "string",
-            "description": "Like 5060-5070, 12345"
+            "$ref": "#/components/schemas/PortsSpec"
           },
           "appIp": {
             "title": "Appip",
@@ -169,9 +168,95 @@
             "description": "IP address of the application"
           },
           "appPorts": {
-            "title": "Appports",
+            "$ref": "#/components/schemas/PortsSpec"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "PortsSpec": {
+        "title": "PortsSpec",
+        "type": "object",
+        "properties": {
+          "ranges": {
+            "title": "Ranges",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PortsSpecRangesInner"
+            }
+          },
+          "ports": {
+            "title": "Ports",
+            "maximum": 65535.0,
+            "minimum": 1.0,
+            "type": "array",
+            "items": {
+              "maximum": 65535.0,
+              "minimum": 1.0,
+              "type": "integer"
+            },
+            "description": "List of port numbers the application may use. Optional."
+          }
+        }
+      },
+      "PortsSpecRangesInner": {
+        "title": "PortsSpecRangesInner",
+        "required": [
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "title": "From",
+            "maximum": 65535.0,
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "Start of port range."
+          },
+          "to": {
+            "title": "To",
+            "maximum": 65535.0,
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "End of port range."
+          }
+        }
+      },
+      "SessionInfo": {
+        "title": "SessionInfo",
+        "required": [
+          "id",
+          "qos",
+          "qosStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
             "type": "string",
-            "description": "Like 5060-5070, 12345"
+            "description": "ID of the created resource."
+          },
+          "qos": {
+            "title": "Qos",
+            "type": "string",
+            "description": "Name of the QoS setting."
+          },
+          "qosStatus": {
+            "title": "Qosstatus",
+            "type": "string",
+            "description": "Status of the QoS resource. REQUESTED, AVAILABLE or UNAVAILABLE"
           }
         }
       },

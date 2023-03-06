@@ -25,17 +25,17 @@ import frozendict  # noqa: F401
 
 from openapi_client import schemas  # noqa: F401
 
-from openapi_client.model.qo_s_resource import QoSResource
-from openapi_client.model.as_session_with_qo_s_subscription import AsSessionWithQoSSubscription
+from openapi_client.model.create_session import CreateSession
 from openapi_client.model.http_validation_error import HTTPValidationError
+from openapi_client.model.session_info import SessionInfo
 
 from . import path
 
 # body param
-SchemaForRequestBodyApplicationJson = QoSResource
+SchemaForRequestBodyApplicationJson = CreateSession
 
 
-request_body_qo_s_resource = api_client.RequestBody(
+request_body_create_session = api_client.RequestBody(
     content={
         'application/json': api_client.MediaType(
             schema=SchemaForRequestBodyApplicationJson),
@@ -45,7 +45,7 @@ request_body_qo_s_resource = api_client.RequestBody(
 _auth = [
     'RapidApiKey',
 ]
-SchemaFor201ResponseBodyApplicationJson = AsSessionWithQoSSubscription
+SchemaFor201ResponseBodyApplicationJson = SessionInfo
 
 
 @dataclass
@@ -94,7 +94,7 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _send_subscribe_sessions_post_oapg(
+    def _create_qos_sessions_post_oapg(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: typing_extensions.Literal["application/json"] = ...,
@@ -107,7 +107,7 @@ class BaseApi(api_client.Api):
     ]: ...
 
     @typing.overload
-    def _send_subscribe_sessions_post_oapg(
+    def _create_qos_sessions_post_oapg(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = ...,
@@ -121,7 +121,7 @@ class BaseApi(api_client.Api):
 
 
     @typing.overload
-    def _send_subscribe_sessions_post_oapg(
+    def _create_qos_sessions_post_oapg(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         skip_deserialization: typing_extensions.Literal[True],
@@ -132,7 +132,7 @@ class BaseApi(api_client.Api):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _send_subscribe_sessions_post_oapg(
+    def _create_qos_sessions_post_oapg(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = ...,
@@ -145,7 +145,7 @@ class BaseApi(api_client.Api):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _send_subscribe_sessions_post_oapg(
+    def _create_qos_sessions_post_oapg(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = 'application/json',
@@ -173,7 +173,7 @@ class BaseApi(api_client.Api):
                 'The required body parameter has an invalid value of: unset. Set a valid value instead')
         _fields = None
         _body = None
-        serialized_data = request_body_qo_s_resource.serialize(body, content_type)
+        serialized_data = request_body_create_session.serialize(body, content_type)
         _headers.add('Content-Type', content_type)
         if 'fields' in serialized_data:
             _fields = serialized_data['fields']
@@ -205,11 +205,11 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class SendSubscribeSessionsPost(BaseApi):
+class CreateQosSessionsPost(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def send_subscribe_sessions_post(
+    def create_qos_sessions_post(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: typing_extensions.Literal["application/json"] = ...,
@@ -222,7 +222,7 @@ class SendSubscribeSessionsPost(BaseApi):
     ]: ...
 
     @typing.overload
-    def send_subscribe_sessions_post(
+    def create_qos_sessions_post(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = ...,
@@ -236,7 +236,7 @@ class SendSubscribeSessionsPost(BaseApi):
 
 
     @typing.overload
-    def send_subscribe_sessions_post(
+    def create_qos_sessions_post(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         skip_deserialization: typing_extensions.Literal[True],
@@ -247,7 +247,7 @@ class SendSubscribeSessionsPost(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def send_subscribe_sessions_post(
+    def create_qos_sessions_post(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = ...,
@@ -260,7 +260,7 @@ class SendSubscribeSessionsPost(BaseApi):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def send_subscribe_sessions_post(
+    def create_qos_sessions_post(
         self,
         body: typing.Union[SchemaForRequestBodyApplicationJson,],
         content_type: str = 'application/json',
@@ -269,7 +269,7 @@ class SendSubscribeSessionsPost(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._send_subscribe_sessions_post_oapg(
+        return self._create_qos_sessions_post_oapg(
             body=body,
             content_type=content_type,
             accept_content_types=accept_content_types,
@@ -343,7 +343,7 @@ class ApiForpost(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._send_subscribe_sessions_post_oapg(
+        return self._create_qos_sessions_post_oapg(
             body=body,
             content_type=content_type,
             accept_content_types=accept_content_types,

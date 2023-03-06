@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
-from typing import List
+from typing import List, Union
 
-from openapi_client.model.qo_s_resource import QoSResource
+from openapi_client.model.create_session import CreateSession
+from openapi_client.model.ports_spec import PortsSpec
 from openapi_client.schemas import unset
 from ..api import APIClient
 from ..models.session import Session
@@ -21,8 +22,8 @@ class Device(BaseModel):
     def id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports = None, service_ports = None):
-        qos_resource = QoSResource(
+    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None):
+        session_resource = CreateSession(
             qos=profile,
             id=self.sid,
             ip=self.ip,
@@ -31,9 +32,9 @@ class Device(BaseModel):
             appPorts=service_ports if service_ports is not None else unset,
         )
 
-        self._api.sessions.send_subscribe_sessions_post(qos_resource)
+        session = self._api.sessions.create_qos_sessions_post(session_resource)
 
-        self._sessions.append(Session(device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=profile))
+        self._sessions.append(Session(id=session.id, device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session.qos, status=session.status))
 
     def sessions(self) -> List[Session]:
         # TODO: This should query an API
