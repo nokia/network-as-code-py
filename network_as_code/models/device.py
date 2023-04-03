@@ -1,9 +1,9 @@
 from pydantic import BaseModel, EmailStr, PrivateAttr
 from typing import List, Union
 
-from openapi_client.model.create_session import CreateSession
-from openapi_client.model.ports_spec import PortsSpec
-from openapi_client.schemas import unset
+from qos_client.model.create_session import CreateSession
+from qos_client.model.ports_spec import PortsSpec
+from qos_client.schemas import unset
 from ..api import APIClient
 from ..models.session import Session
 
@@ -37,8 +37,8 @@ class Device(BaseModel):
         self._sessions.append(Session(id=session.id, device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session.qos, status=session.status))
 
     def sessions(self) -> List[Session]:
-        # TODO: This should query an API
-        return self._sessions
+        sessions = self._api.sessions.get_all_qos_sessions_get(query_params={"id": self.sid})
+        return map(sessions)
 
     def clear_sessions(self):
         # TODO: This should run delete on all QoS Flows
