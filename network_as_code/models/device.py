@@ -38,8 +38,11 @@ class Device(BaseModel):
 
     def sessions(self) -> List[Session]:
         sessions = self._api.sessions.get_all_qos_sessions_get(query_params={"id": self.sid})
-        return map(sessions)
+        return list(map(lambda session : self.__convert_session_model(session), sessions))
 
     def clear_sessions(self):
-        # TODO: This should run delete on all QoS Flows
-        self._sessions.clear()
+        for session in self.sessions():
+            session.delete()
+
+    def __convert_session_model(self, session) -> Session:
+       return Session(id=session.id, device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session.qos, status=session.status) 
