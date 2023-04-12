@@ -1,6 +1,6 @@
 import sys
-
-from openapi_client import Configuration, ApiClient
+from openapi_client.api_client import ApiClient, Configuration
+# from openapi_client import Configuration, ApiClient
 
 from openapi_client.apis.tags import qos_api
 
