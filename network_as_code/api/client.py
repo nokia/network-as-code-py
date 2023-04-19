@@ -1,8 +1,8 @@
 import sys
-from openapi_client.api_client import ApiClient, Configuration
-# from openapi_client import Configuration, ApiClient
 
-from openapi_client.apis.tags import qos_api
+from qos_client.api_client import Configuration, ApiClient
+
+from qos_client.apis.tags import qos_api
 
 # import httpx
 # import json as JSON
@@ -39,10 +39,10 @@ class APIClient:
             }
         )
 
-        self._openapi_client = ApiClient(
+        self._qos_client = ApiClient(
             config,
             header_name="X-RapidAPI-Host",
             header_value="qos-poc.nokia-evaluation.rapidapi.com"
         )
 
-        self.sessions = qos_api.QosApi(self._openapi_client)
+        self.sessions = qos_api.QosApi(self._qos_client)
