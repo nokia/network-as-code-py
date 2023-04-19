@@ -50,7 +50,7 @@ pages:
   stage: deploy
   script:
     - poetry install
-    - poetry run pdoc --html --output-dir public network_as_code
+    - poetry run pdoc --output-dir public network_as_code
   artifacts:
     paths:
       - public
