@@ -1,4 +1,6 @@
 
+import os
+
 from binding_generation.qos_client.qos_client.model.ports_spec import PortsSpecRangesInner
 import pytest
 
@@ -8,8 +10,8 @@ from network_as_code.models.session import PortsSpec
 
 @pytest.fixture
 def client() -> NetworkAsCodeClient:
-    # return NetworkAsCodeClient(token="not_a_real_token", base_url="http://nwac-us-east1-nb-dev.open5glab.net")
-    return NetworkAsCodeClient(token="not_a_real_token", base_url="http://localhost:8000")
+    token = os.environ["NAC_TOKEN"]
+    return NetworkAsCodeClient(token=token)
 
 def test_getting_a_device(client):
     device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")

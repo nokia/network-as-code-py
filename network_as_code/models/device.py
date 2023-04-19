@@ -33,16 +33,17 @@ class Device(BaseModel):
         )
 
         session = self._api.sessions.create_qos_sessions_post(session_resource)
+        session = session.body
 
-        self._sessions.append(Session(id=session.id, device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session.qos, status=session.status))
+        self._sessions.append(Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qos"], status=session["qosStatus"]))
 
     def sessions(self) -> List[Session]:
         sessions = self._api.sessions.get_all_qos_sessions_get(query_params={"id": self.sid})
-        return list(map(lambda session : self.__convert_session_model(session), sessions))
+        return list(map(lambda session : self.__convert_session_model(session), sessions.body))
 
     def clear_sessions(self):
         for session in self.sessions():
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-       return Session(id=session.id, device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session.qos, status=session.status) 
+       return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session["qos"], status=session["qosStatus"]) 

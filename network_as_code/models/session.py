@@ -18,5 +18,9 @@ class Session(BaseModel, arbitrary_types_allowed = True):
     profile: str
     status: str
 
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
     def delete(self):
         self._api.sessions.delete_qos_sessions_resource_id_delete(path_params={'resource_id': self.id})
