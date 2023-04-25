@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "network_as_code"
-version = "0.6.0"
+version = "0.7.0"
 description = ""
 authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lahtinen@nokia.com>"]
 packages = [
     { include = "network_as_code" },
-    { include = "qos_client", from = "binding_generation"}
+    { include = "qos_client", from = "binding_generation"},
+    { include = "location_client", from = "binding_generation"}
 ]
 
 [tool.pyright]
@@ -21,6 +22,7 @@ httpx = "^0.23.0"
 websockets = "^10.3"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 qos_client = {path = "./binding_generation/qos_client", develop = true}
+location_client = {path = "./binding_generation/location_client", develop = true}
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"
@@ -41,3 +43,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 # addopts = "-n auto"
 # asyncio_mode = "auto"
+norecursedirs = "binding_generation"

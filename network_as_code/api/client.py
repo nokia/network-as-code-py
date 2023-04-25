@@ -1,8 +1,12 @@
 import sys
 
-from qos_client.api_client import Configuration, ApiClient
+import qos_client.api_client as qos_api_client
 
 from qos_client.apis.tags import qos_api
+
+import location_client.api_client as location_api_client
+
+from location_client.apis.tags import location_api
 
 # import httpx
 # import json as JSON
@@ -21,28 +25,36 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        base_url: str = "https://qos-poc.p.rapidapi.com",
+        qos_base_url: str = "https://qos-poc.p.rapidapi.com",
+        location_base_url: str = "https://qos-poc.p.rapidapi.com",
         **kwargs,
     ):
-        headers = {
-            "X-RapidAPI-Key": token,
-            "X-RapidAPI-Host": "qos-poc.nokia-evaluation.rapidapi.com",
-            "x-testmode": "true" if testmode else "false",
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        }
-
-        config = Configuration(
-            host=base_url,
+        qos_config = qos_api_client.Configuration(
+            host=qos_base_url,
             api_key={
                 "RapidApiKey": token
             }
         )
 
-        self._qos_client = ApiClient(
-            config,
+        self._qos_client = qos_api_client.ApiClient(
+            qos_config,
             header_name="X-RapidAPI-Host",
             header_value="qos-poc.nokia-evaluation.rapidapi.com"
         )
 
         self.sessions = qos_api.QosApi(self._qos_client)
+
+        location_config = location_api_client.Configuration(
+            host=location_base_url,
+            api_key={
+                "RapidApiKey": token
+            }
+        )
+
+        self._location_client = location_api_client.ApiClient(
+            location_config,
+            header_name="X-RapidAPI-Host",
+            header_value="qos-poc.nokia-evaluation.rapidapi.com"
+        )
+
+        self.location = location_api.LocationApi(self._location_client)

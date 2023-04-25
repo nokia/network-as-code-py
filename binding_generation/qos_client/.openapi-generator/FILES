@@ -38,10 +38,4 @@ setup.py
 test-requirements.txt
 test/__init__.py
 test/test_models/__init__.py
-test/test_models/test_create_session.py
-test/test_models/test_http_validation_error.py
-test/test_models/test_ports_spec.py
-test/test_models/test_ports_spec_ranges_inner.py
-test/test_models/test_session_info.py
-test/test_models/test_validation_error.py
 tox.ini

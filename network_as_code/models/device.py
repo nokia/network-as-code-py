@@ -1,11 +1,14 @@
+from os import access
 from pydantic import BaseModel, EmailStr, PrivateAttr
 from typing import List, Union
 
 from qos_client.model.create_session import CreateSession
 from qos_client.model.ports_spec import PortsSpec
 from qos_client.schemas import unset
+
 from ..api import APIClient
 from ..models.session import Session
+from ..models.location import CivicAddress, Location
 
 class Device(BaseModel):
     _api: APIClient = PrivateAttr()
@@ -47,3 +50,37 @@ class Device(BaseModel):
 
     def __convert_session_model(self, session) -> Session:
        return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session["qos"], status=session["qosStatus"]) 
+
+    def location(self) -> Location:
+        query_parameters = {
+            "device_id": self.sid
+        }
+        response = self._api.location.location_query_get_get(query_parameters)
+        body = response.body
+
+        longitude = body["point"]["lon"]
+        latitude = body["point"]["lat"]
+        civic_address = None
+
+        if "civicAddress" in body.keys():
+            civic_address = CivicAddress(
+                country=body["civicAddress"]["country"],
+                a1=body["civicAddress"]["a1"],
+                a2=body["civicAddress"]["a2"],
+                a3=body["civicAddress"]["a3"],
+                a4=body["civicAddress"]["a4"],
+                a5=body["civicAddress"]["a5"],
+                a6=body["civicAddress"]["a6"]
+            )
+
+        return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
+
+    def verify_location(self, longitude: float, latitude: float, accuracy: str) -> bool:
+        query_parameters = {
+            "device_id": self.sid,
+            "longitude": longitude,
+            "latitude": latitude,
+            "accuracy": accuracy
+        }
+
+        return self._api.location.verify_location_verify_get(query_parameters).body
