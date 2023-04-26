@@ -1,0 +1,241 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Location",
+    "description": "Location can verify if the specified user is within the given area",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/verify": {
+      "get": {
+        "tags": [
+          "location"
+        ],
+        "summary": "Location Verification service",
+        "description": "Verifies the location of specified user within the the given area.",
+        "operationId": "verify_location_verify_get",
+        "parameters": [
+          {
+            "required": true, "schema": {
+              "title": "Device Id",
+              "type": "string"
+            },
+            "name": "deviceId",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Latitude",
+              "type": "number"
+            },
+            "name": "latitude",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Longitude",
+              "type": "number"
+            },
+            "name": "longitude",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Accuracy",
+              "type": "string"
+            },
+            "name": "accuracy",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get": {
+      "get": {
+        "tags": [
+          "location"
+        ],
+        "summary": "Location Query service",
+        "description": "Get the location of the device",
+        "operationId": "location_query_get_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Device Id",
+              "type": "string"
+            },
+            "name": "deviceId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "RapidApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-RapidAPI-Key"
+      }
+    },
+    "schemas": {
+      "CivicAddress": {
+        "title": "CivicAddress",
+        "type": "object",
+        "properties": {
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "A1": {
+            "title": "A1",
+            "type": "string"
+          },
+          "A2": {
+            "title": "A2",
+            "type": "string"
+          },
+          "A3": {
+            "title": "A3",
+            "type": "string"
+          },
+          "A4": {
+            "title": "A4",
+            "type": "string"
+          },
+          "A5": {
+            "title": "A5",
+            "type": "string"
+          },
+          "A6": {
+            "title": "A6",
+            "type": "string"
+          }
+        }
+      },
+      "GeographicalCoordinates": {
+        "title": "GeographicalCoordinates",
+        "required": [
+          "lon",
+          "lat"
+        ],
+        "type": "object",
+        "properties": {
+          "lon": {
+            "title": "Lon",
+            "type": "number"
+          },
+          "lat": {
+            "title": "Lat",
+            "type": "number"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "Location": {
+        "title": "Location",
+        "type": "object",
+        "properties": {
+          "point": {
+            "$ref": "#/components/schemas/GeographicalCoordinates"
+          },
+          "civicAddress": {
+            "$ref": "#/components/schemas/CivicAddress"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+       "RapidApiKey": []
+    }
+  ]
+}
