@@ -25,8 +25,8 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        qos_base_url: str = "https://qos-poc.p.rapidapi.com",
-        location_base_url: str = "https://qos-poc.p.rapidapi.com",
+        qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
+        location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
         **kwargs,
     ):
         qos_config = qos_api_client.Configuration(
@@ -39,7 +39,7 @@ class APIClient:
         self._qos_client = qos_api_client.ApiClient(
             qos_config,
             header_name="X-RapidAPI-Host",
-            header_value="qos-poc.nokia-evaluation.rapidapi.com"
+            header_value="qos-on-demand.nokia-dev.rapidapi.com"
         )
 
         self.sessions = qos_api.QosApi(self._qos_client)
@@ -54,7 +54,7 @@ class APIClient:
         self._location_client = location_api_client.ApiClient(
             location_config,
             header_name="X-RapidAPI-Host",
-            header_value="qos-poc.nokia-evaluation.rapidapi.com"
+            header_value="location-verification.nokia-dev.rapidapi.com"
         )
 
         self.location = location_api.LocationApi(self._location_client)

@@ -53,7 +53,7 @@ class Device(BaseModel):
 
     def location(self) -> Location:
         query_parameters = {
-            "device_id": self.sid
+            "deviceId": self.sid
         }
         response = self._api.location.location_query_get_get(query_parameters)
         body = response.body
@@ -77,7 +77,7 @@ class Device(BaseModel):
 
     def verify_location(self, longitude: float, latitude: float, accuracy: str) -> bool:
         query_parameters = {
-            "device_id": self.sid,
+            "deviceId": self.sid,
             "longitude": longitude,
             "latitude": latitude,
             "accuracy": accuracy

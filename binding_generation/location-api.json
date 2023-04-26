@@ -20,7 +20,7 @@
               "title": "Device Id",
               "type": "string"
             },
-            "name": "device_id",
+            "name": "deviceId",
             "in": "query"
           },
           {
@@ -83,7 +83,7 @@
               "title": "Device Id",
               "type": "string"
             },
-            "name": "device_id",
+            "name": "deviceId",
             "in": "query"
           }
         ],

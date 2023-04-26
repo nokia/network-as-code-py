@@ -35,7 +35,7 @@ AccuracySchema = schemas.StrSchema
 RequestRequiredQueryParams = typing_extensions.TypedDict(
     'RequestRequiredQueryParams',
     {
-        'device_id': typing.Union[DeviceIdSchema, str, ],
+        'deviceId': typing.Union[DeviceIdSchema, str, ],
         'latitude': typing.Union[LatitudeSchema, decimal.Decimal, int, float, ],
         'longitude': typing.Union[LongitudeSchema, decimal.Decimal, int, float, ],
         'accuracy': typing.Union[AccuracySchema, str, ],
@@ -54,7 +54,7 @@ class RequestQueryParams(RequestRequiredQueryParams, RequestOptionalQueryParams)
 
 
 request_query_device_id = api_client.QueryParameter(
-    name="device_id",
+    name="deviceId",
     style=api_client.ParameterStyle.FORM,
     schema=DeviceIdSchema,
     required=True,

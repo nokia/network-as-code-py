@@ -1,6 +1,5 @@
 .gitignore
 .gitlab-ci.yml
-.openapi-generator-ignore
 .travis.yml
 README.md
 docs/apis/tags/LocationApi.md
@@ -36,9 +35,4 @@ setup.py
 test-requirements.txt
 test/__init__.py
 test/test_models/__init__.py
-test/test_models/test_civic_address.py
-test/test_models/test_geographical_coordinates.py
-test/test_models/test_http_validation_error.py
-test/test_models/test_location.py
-test/test_models/test_validation_error.py
 tox.ini

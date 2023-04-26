@@ -48,7 +48,7 @@ with location_client.ApiClient(configuration) as api_client:
 
     # example passing only required values which don't have defaults set
     query_params = {
-        'device_id': "device_id_example",
+        'deviceId': "deviceId_example",
     }
     try:
         # Location Query service
@@ -74,7 +74,7 @@ skip_deserialization | bool | default is False | when True, headers and body wil
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-device_id | DeviceIdSchema | | 
+deviceId | DeviceIdSchema | | 
 
 
 # DeviceIdSchema
@@ -163,7 +163,7 @@ with location_client.ApiClient(configuration) as api_client:
 
     # example passing only required values which don't have defaults set
     query_params = {
-        'device_id': "device_id_example",
+        'deviceId': "deviceId_example",
         'latitude': 3.14,
         'longitude': 3.14,
         'accuracy': "accuracy_example",
@@ -191,7 +191,7 @@ skip_deserialization | bool | default is False | when True, headers and body wil
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-device_id | DeviceIdSchema | | 
+deviceId | DeviceIdSchema | | 
 latitude | LatitudeSchema | | 
 longitude | LongitudeSchema | | 
 accuracy | AccuracySchema | | 

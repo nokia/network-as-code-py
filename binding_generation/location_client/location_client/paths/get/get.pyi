@@ -33,7 +33,7 @@ DeviceIdSchema = schemas.StrSchema
 RequestRequiredQueryParams = typing_extensions.TypedDict(
     'RequestRequiredQueryParams',
     {
-        'device_id': typing.Union[DeviceIdSchema, str, ],
+        'deviceId': typing.Union[DeviceIdSchema, str, ],
     }
 )
 RequestOptionalQueryParams = typing_extensions.TypedDict(
@@ -49,7 +49,7 @@ class RequestQueryParams(RequestRequiredQueryParams, RequestOptionalQueryParams)
 
 
 request_query_device_id = api_client.QueryParameter(
-    name="device_id",
+    name="deviceId",
     style=api_client.ParameterStyle.FORM,
     schema=DeviceIdSchema,
     required=True,

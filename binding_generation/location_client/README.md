@@ -164,7 +164,7 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 with location_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = location_api.LocationApi(api_client)
-    device_id = "device_id_example" # str | 
+    device_id = "deviceId_example" # str | 
 
     try:
         # Location Query service
