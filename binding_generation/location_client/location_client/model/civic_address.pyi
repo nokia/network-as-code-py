@@ -36,13 +36,146 @@ class CivicAddress(
     class MetaOapg:
         
         class properties:
-            country = schemas.StrSchema
-            A1 = schemas.StrSchema
-            A2 = schemas.StrSchema
-            A3 = schemas.StrSchema
-            A4 = schemas.StrSchema
-            A5 = schemas.StrSchema
-            A6 = schemas.StrSchema
+            
+            
+            class country(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'country':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A1(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A1':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A2(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A2':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A3(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A3':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A4(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A4':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A5(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A5':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class A6(
+                schemas.StrBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneStrMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, str, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'A6':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
             __annotations__ = {
                 "country": country,
                 "A1": A1,
@@ -113,13 +246,13 @@ class CivicAddress(
     def __new__(
         cls,
         *args: typing.Union[dict, frozendict.frozendict, ],
-        country: typing.Union[MetaOapg.properties.country, str, schemas.Unset] = schemas.unset,
-        A1: typing.Union[MetaOapg.properties.A1, str, schemas.Unset] = schemas.unset,
-        A2: typing.Union[MetaOapg.properties.A2, str, schemas.Unset] = schemas.unset,
-        A3: typing.Union[MetaOapg.properties.A3, str, schemas.Unset] = schemas.unset,
-        A4: typing.Union[MetaOapg.properties.A4, str, schemas.Unset] = schemas.unset,
-        A5: typing.Union[MetaOapg.properties.A5, str, schemas.Unset] = schemas.unset,
-        A6: typing.Union[MetaOapg.properties.A6, str, schemas.Unset] = schemas.unset,
+        country: typing.Union[MetaOapg.properties.country, None, str, schemas.Unset] = schemas.unset,
+        A1: typing.Union[MetaOapg.properties.A1, None, str, schemas.Unset] = schemas.unset,
+        A2: typing.Union[MetaOapg.properties.A2, None, str, schemas.Unset] = schemas.unset,
+        A3: typing.Union[MetaOapg.properties.A3, None, str, schemas.Unset] = schemas.unset,
+        A4: typing.Union[MetaOapg.properties.A4, None, str, schemas.Unset] = schemas.unset,
+        A5: typing.Union[MetaOapg.properties.A5, None, str, schemas.Unset] = schemas.unset,
+        A6: typing.Union[MetaOapg.properties.A6, None, str, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'CivicAddress':

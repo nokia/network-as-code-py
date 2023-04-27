@@ -16,11 +16,12 @@
         "operationId": "verify_location_verify_get",
         "parameters": [
           {
-            "required": true, "schema": {
+            "required": true,
+            "schema": {
               "title": "Device Id",
               "type": "string"
             },
-            "name": "deviceId",
+            "name": "device_id",
             "in": "query"
           },
           {
@@ -83,7 +84,7 @@
               "title": "Device Id",
               "type": "string"
             },
-            "name": "deviceId",
+            "name": "device_id",
             "in": "query"
           }
         ],
@@ -127,31 +128,38 @@
         "properties": {
           "country": {
             "title": "Country",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A1": {
             "title": "A1",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A2": {
             "title": "A2",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A3": {
             "title": "A3",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A4": {
             "title": "A4",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A5": {
             "title": "A5",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "A6": {
             "title": "A6",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
