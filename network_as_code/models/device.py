@@ -53,8 +53,9 @@ class Device(BaseModel):
 
     def location(self) -> Location:
         query_parameters = {
-            "deviceId": self.sid
+           "device_id": self.sid 
         }
+
         response = self._api.location.location_query_get_get(query_parameters)
         body = response.body
 
@@ -65,19 +66,19 @@ class Device(BaseModel):
         if "civicAddress" in body.keys():
             civic_address = CivicAddress(
                 country=body["civicAddress"]["country"],
-                a1=body["civicAddress"]["a1"],
-                a2=body["civicAddress"]["a2"],
-                a3=body["civicAddress"]["a3"],
-                a4=body["civicAddress"]["a4"],
-                a5=body["civicAddress"]["a5"],
-                a6=body["civicAddress"]["a6"]
+                a1=body["civicAddress"]["A1"] if isinstance(body["civicAddress"]["A1"], str) else None,
+                a2=body["civicAddress"]["A2"] if isinstance(body["civicAddress"]["A2"], str) else None,
+                a3=body["civicAddress"]["A3"] if isinstance(body["civicAddress"]["A3"], str) else None,
+                a4=body["civicAddress"]["A4"] if isinstance(body["civicAddress"]["A4"], str) else None,
+                a5=body["civicAddress"]["A5"] if isinstance(body["civicAddress"]["A5"], str) else None,
+                a6=body["civicAddress"]["A6"] if isinstance(body["civicAddress"]["A6"], str) else None
             )
 
         return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
 
     def verify_location(self, longitude: float, latitude: float, accuracy: str) -> bool:
         query_parameters = {
-            "deviceId": self.sid,
+            "device_id": self.sid,
             "longitude": longitude,
             "latitude": latitude,
             "accuracy": accuracy
