@@ -84,4 +84,8 @@ class Device(BaseModel):
             "accuracy": accuracy
         }
 
-        return self._api.location.verify_location_verify_get(query_parameters).body
+        try:
+            self._api.location.verify_location_verify_get(query_parameters).body
+            return True
+        except:
+            return False

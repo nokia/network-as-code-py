@@ -14,4 +14,9 @@ def test_getting_a_device_location_sends_out_request(client):
 def test_verifying_a_device_location_sends_out_request(client):
     device = client.devices.get("testuser@testcsp.net", ip = "1.1.1.2")
 
-    device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, accuracy="10km")
+    assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, accuracy="10km")
+
+def test_verifying_a_device_location_too_returns_false(client):
+    device = client.devices.get("testuser@testcsp.net", ip = "1.1.1.2")
+
+    assert not device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, accuracy="10km")
