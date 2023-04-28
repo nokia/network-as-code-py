@@ -38,7 +38,7 @@ class Device(BaseModel):
         session = self._api.sessions.create_qos_sessions_post(session_resource)
         session = session.body
 
-        self._sessions.append(Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qos"], status=session["qosStatus"]))
+        return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qos"], status=session["qosStatus"])
 
     def sessions(self) -> List[Session]:
         sessions = self._api.sessions.get_all_qos_sessions_get(query_params={"id": self.sid})
