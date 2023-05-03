@@ -24,3 +24,7 @@ class Session(BaseModel, arbitrary_types_allowed = True):
 
     def delete(self):
         self._api.sessions.delete_qos_sessions_resource_id_delete(path_params={'resource_id': self.id})
+
+    @staticmethod
+    def convert_session_model(api, ip, session):
+        return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qos"], status=session["qosStatus"]) 
