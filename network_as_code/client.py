@@ -1,5 +1,6 @@
 from .api import APIClient
 from .namespaces import Devices
+from .namespaces import Sessions
 
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
@@ -21,6 +22,7 @@ class NetworkAsCodeClient:
     def __init__(self, token: str, **kwargs):
         self._api = APIClient(token=token, **kwargs)
         self._devices = Devices(self._api)
+        self._sessions = Sessions(self._api)
 
     #### NAMESPACES
 
@@ -32,10 +34,10 @@ class NetworkAsCodeClient:
         """
         return self._devices
 
-    #### TOP-LEVEL METHODS
-    def connected(self):  # Just and example of a top-level method
+    @property
+    def sessions(self):
+        """Namespace containing functionalities related to mobile subscriptions.
+
+        TODO: Write some documentation about the subscription namespace here.
         """
-        Check whether this client can reach the Network as Code API gateway and backend.
-        """
-        connection_status = self._api.admin.check_api_connection()
-        return True if connection_status == "up" else False
+        return self._sessions
