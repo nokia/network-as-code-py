@@ -25,38 +25,47 @@ class Device(BaseModel):
     def id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None):
-        session_resource = CreateSession(
-            qos=profile,
-            id=self.sid,
-            ip=self.ip,
-            ports=device_ports if device_ports is not None else unset,
-            appIp=service_ip,
-            appPorts=service_ports if service_ports is not None else unset,
-        )
+    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None):
+        session_resource = {
+            "qosProfile": profile,
+            "id": self.sid,
+            "ip": self.ip,
+            "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else unset,
+            "appIp": service_ip,
+            "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else unset,
+        }
 
-        session = self._api.sessions.create_qos_sessions_post(session_resource)
+        if duration:
+            session_resource["duration"] = duration
+
+        if notification_url:
+            session_resource["notificationUrl"] = notification_url
+
+        session = self._api.sessions.create_session(session_resource)
         session = session.body
 
-        return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qos"], status=session["qosStatus"])
+        return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qosProfile"], status=session["qosStatus"])
 
     def sessions(self) -> List[Session]:
-        sessions = self._api.sessions.get_all_qos_sessions_get(query_params={"id": self.sid})
-        return list(map(lambda session : self.__convert_session_model(session), sessions.body))
+        try:
+            sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
+            return list(map(lambda session : self.__convert_session_model(session), sessions.body))
+        except:
+            return []
 
     def clear_sessions(self):
         for session in self.sessions():
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-       return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session["qos"], status=session["qosStatus"]) 
+       return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"]) 
 
     def location(self) -> Location:
         query_parameters = {
            "device_id": self.sid 
         }
 
-        response = self._api.location.location_query_get_get(query_parameters)
+        response = self._api.location.get_location(query_parameters)
         body = response.body
 
         longitude = body["point"]["lon"]
@@ -85,7 +94,6 @@ class Device(BaseModel):
         }
 
         try:
-            self._api.location.verify_location_verify_get(query_parameters).body
-            return True
+            return self._api.location.verify_location(query_parameters).body
         except:
             return False

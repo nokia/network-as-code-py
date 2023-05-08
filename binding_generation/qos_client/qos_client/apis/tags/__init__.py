@@ -6,4 +6,4 @@ import enum
 
 
 class TagValues(str, enum.Enum):
-    QOS = "qos"
+    DEFAULT = "default"

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "network_as_code"
-version = "0.7.2"
+version = "0.8.0"
 description = ""
 authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lahtinen@nokia.com>"]
 packages = [

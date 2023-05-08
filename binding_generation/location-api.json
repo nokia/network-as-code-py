@@ -13,7 +13,7 @@
         ],
         "summary": "Location Verification service",
         "description": "Verifies the location of specified user within the the given area.",
-        "operationId": "verify_location_verify_get",
+        "operationId": "verifyLocation",
         "parameters": [
           {
             "required": true,
@@ -76,7 +76,7 @@
         ],
         "summary": "Location Query service",
         "description": "Get the location of the device",
-        "operationId": "location_query_get_get",
+        "operationId": "getLocation",
         "parameters": [
           {
             "required": true,

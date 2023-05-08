@@ -35,41 +35,54 @@ class CreateSession(
 
     class MetaOapg:
         required = {
+            "qosProfile",
             "appIp",
-            "qos",
             "ip",
             "id",
         }
         
         class properties:
-            qos = schemas.StrSchema
+            qosProfile = schemas.StrSchema
             id = schemas.StrSchema
             ip = schemas.StrSchema
             appIp = schemas.StrSchema
         
             @staticmethod
-            def ports() -> typing.Type['PortsSpec']:
+            def devicePorts() -> typing.Type['PortsSpec']:
                 return PortsSpec
         
             @staticmethod
-            def appPorts() -> typing.Type['PortsSpec']:
+            def applicationServerPorts() -> typing.Type['PortsSpec']:
                 return PortsSpec
+            
+            
+            class duration(
+                schemas.IntSchema
+            ):
+            
+            
+                class MetaOapg:
+                    inclusive_maximum = 86400
+                    inclusive_minimum = 1
+            notificationUrl = schemas.StrSchema
             __annotations__ = {
-                "qos": qos,
+                "qosProfile": qosProfile,
                 "id": id,
                 "ip": ip,
                 "appIp": appIp,
-                "ports": ports,
-                "appPorts": appPorts,
+                "devicePorts": devicePorts,
+                "applicationServerPorts": applicationServerPorts,
+                "duration": duration,
+                "notificationUrl": notificationUrl,
             }
     
+    qosProfile: MetaOapg.properties.qosProfile
     appIp: MetaOapg.properties.appIp
-    qos: MetaOapg.properties.qos
     ip: MetaOapg.properties.ip
     id: MetaOapg.properties.id
     
     @typing.overload
-    def __getitem__(self, name: typing_extensions.Literal["qos"]) -> MetaOapg.properties.qos: ...
+    def __getitem__(self, name: typing_extensions.Literal["qosProfile"]) -> MetaOapg.properties.qosProfile: ...
     
     @typing.overload
     def __getitem__(self, name: typing_extensions.Literal["id"]) -> MetaOapg.properties.id: ...
@@ -81,21 +94,27 @@ class CreateSession(
     def __getitem__(self, name: typing_extensions.Literal["appIp"]) -> MetaOapg.properties.appIp: ...
     
     @typing.overload
-    def __getitem__(self, name: typing_extensions.Literal["ports"]) -> 'PortsSpec': ...
+    def __getitem__(self, name: typing_extensions.Literal["devicePorts"]) -> 'PortsSpec': ...
     
     @typing.overload
-    def __getitem__(self, name: typing_extensions.Literal["appPorts"]) -> 'PortsSpec': ...
+    def __getitem__(self, name: typing_extensions.Literal["applicationServerPorts"]) -> 'PortsSpec': ...
+    
+    @typing.overload
+    def __getitem__(self, name: typing_extensions.Literal["duration"]) -> MetaOapg.properties.duration: ...
+    
+    @typing.overload
+    def __getitem__(self, name: typing_extensions.Literal["notificationUrl"]) -> MetaOapg.properties.notificationUrl: ...
     
     @typing.overload
     def __getitem__(self, name: str) -> schemas.UnsetAnyTypeSchema: ...
     
-    def __getitem__(self, name: typing.Union[typing_extensions.Literal["qos", "id", "ip", "appIp", "ports", "appPorts", ], str]):
+    def __getitem__(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", ], str]):
         # dict_instance[name] accessor
         return super().__getitem__(name)
     
     
     @typing.overload
-    def get_item_oapg(self, name: typing_extensions.Literal["qos"]) -> MetaOapg.properties.qos: ...
+    def get_item_oapg(self, name: typing_extensions.Literal["qosProfile"]) -> MetaOapg.properties.qosProfile: ...
     
     @typing.overload
     def get_item_oapg(self, name: typing_extensions.Literal["id"]) -> MetaOapg.properties.id: ...
@@ -107,39 +126,49 @@ class CreateSession(
     def get_item_oapg(self, name: typing_extensions.Literal["appIp"]) -> MetaOapg.properties.appIp: ...
     
     @typing.overload
-    def get_item_oapg(self, name: typing_extensions.Literal["ports"]) -> typing.Union['PortsSpec', schemas.Unset]: ...
+    def get_item_oapg(self, name: typing_extensions.Literal["devicePorts"]) -> typing.Union['PortsSpec', schemas.Unset]: ...
     
     @typing.overload
-    def get_item_oapg(self, name: typing_extensions.Literal["appPorts"]) -> typing.Union['PortsSpec', schemas.Unset]: ...
+    def get_item_oapg(self, name: typing_extensions.Literal["applicationServerPorts"]) -> typing.Union['PortsSpec', schemas.Unset]: ...
+    
+    @typing.overload
+    def get_item_oapg(self, name: typing_extensions.Literal["duration"]) -> typing.Union[MetaOapg.properties.duration, schemas.Unset]: ...
+    
+    @typing.overload
+    def get_item_oapg(self, name: typing_extensions.Literal["notificationUrl"]) -> typing.Union[MetaOapg.properties.notificationUrl, schemas.Unset]: ...
     
     @typing.overload
     def get_item_oapg(self, name: str) -> typing.Union[schemas.UnsetAnyTypeSchema, schemas.Unset]: ...
     
-    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["qos", "id", "ip", "appIp", "ports", "appPorts", ], str]):
+    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", ], str]):
         return super().get_item_oapg(name)
     
 
     def __new__(
         cls,
         *args: typing.Union[dict, frozendict.frozendict, ],
+        qosProfile: typing.Union[MetaOapg.properties.qosProfile, str, ],
         appIp: typing.Union[MetaOapg.properties.appIp, str, ],
-        qos: typing.Union[MetaOapg.properties.qos, str, ],
         ip: typing.Union[MetaOapg.properties.ip, str, ],
         id: typing.Union[MetaOapg.properties.id, str, ],
-        ports: typing.Union['PortsSpec', schemas.Unset] = schemas.unset,
-        appPorts: typing.Union['PortsSpec', schemas.Unset] = schemas.unset,
+        devicePorts: typing.Union['PortsSpec', schemas.Unset] = schemas.unset,
+        applicationServerPorts: typing.Union['PortsSpec', schemas.Unset] = schemas.unset,
+        duration: typing.Union[MetaOapg.properties.duration, decimal.Decimal, int, schemas.Unset] = schemas.unset,
+        notificationUrl: typing.Union[MetaOapg.properties.notificationUrl, str, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'CreateSession':
         return super().__new__(
             cls,
             *args,
+            qosProfile=qosProfile,
             appIp=appIp,
-            qos=qos,
             ip=ip,
             id=id,
-            ports=ports,
-            appPorts=appPorts,
+            devicePorts=devicePorts,
+            applicationServerPorts=applicationServerPorts,
+            duration=duration,
+            notificationUrl=notificationUrl,
             _configuration=_configuration,
             **kwargs,
         )

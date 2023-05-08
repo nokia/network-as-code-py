@@ -168,10 +168,10 @@ with location_client.ApiClient(configuration) as api_client:
 
     try:
         # Location Query service
-        api_response = api_instance.location_query_get_get(device_id)
+        api_response = api_instance.get_location(device_id)
         pprint(api_response)
     except location_client.ApiException as e:
-        print("Exception when calling LocationApi->location_query_get_get: %s\n" % e)
+        print("Exception when calling LocationApi->get_location: %s\n" % e)
 ```
 
 ## Documentation for API Endpoints
@@ -180,8 +180,8 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*LocationApi* | [**location_query_get_get**](docs/apis/tags/LocationApi.md#location_query_get_get) | **get** /get | Location Query service
-*LocationApi* | [**verify_location_verify_get**](docs/apis/tags/LocationApi.md#verify_location_verify_get) | **get** /verify | Location Verification service
+*LocationApi* | [**get_location**](docs/apis/tags/LocationApi.md#get_location) | **get** /get | Location Query service
+*LocationApi* | [**verify_location**](docs/apis/tags/LocationApi.md#verify_location) | **get** /verify | Location Verification service
 
 ## Documentation For Models
 
