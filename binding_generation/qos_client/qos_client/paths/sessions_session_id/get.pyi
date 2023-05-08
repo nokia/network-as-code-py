@@ -26,15 +26,14 @@ import frozendict  # noqa: F401
 from qos_client import schemas  # noqa: F401
 
 from qos_client.model.http_validation_error import HTTPValidationError
-
-from . import path
+from qos_client.model.session_info import SessionInfo
 
 # Path params
-ResourceIdSchema = schemas.StrSchema
+SessionIdSchema = schemas.StrSchema
 RequestRequiredPathParams = typing_extensions.TypedDict(
     'RequestRequiredPathParams',
     {
-        'resource_id': typing.Union[ResourceIdSchema, str, ],
+        'sessionId': typing.Union[SessionIdSchema, str, ],
     }
 )
 RequestOptionalPathParams = typing_extensions.TypedDict(
@@ -49,26 +48,30 @@ class RequestPathParams(RequestRequiredPathParams, RequestOptionalPathParams):
     pass
 
 
-request_path_resource_id = api_client.PathParameter(
-    name="resource_id",
+request_path_session_id = api_client.PathParameter(
+    name="sessionId",
     style=api_client.ParameterStyle.SIMPLE,
-    schema=ResourceIdSchema,
+    schema=SessionIdSchema,
     required=True,
 )
-_auth = [
-    'RapidApiKey',
-]
+SchemaFor200ResponseBodyApplicationJson = SessionInfo
 
 
 @dataclass
-class ApiResponseFor204(api_client.ApiResponse):
+class ApiResponseFor200(api_client.ApiResponse):
     response: urllib3.HTTPResponse
-    body: schemas.Unset = schemas.unset
+    body: typing.Union[
+        SchemaFor200ResponseBodyApplicationJson,
+    ]
     headers: schemas.Unset = schemas.unset
 
 
-_response_for_204 = api_client.OpenApiResponse(
-    response_cls=ApiResponseFor204,
+_response_for_200 = api_client.OpenApiResponse(
+    response_cls=ApiResponseFor200,
+    content={
+        'application/json': api_client.MediaType(
+            schema=SchemaFor200ResponseBodyApplicationJson),
+    },
 )
 SchemaFor422ResponseBodyApplicationJson = HTTPValidationError
 
@@ -89,10 +92,6 @@ _response_for_422 = api_client.OpenApiResponse(
             schema=SchemaFor422ResponseBodyApplicationJson),
     },
 )
-_status_code_to_response = {
-    '204': _response_for_204,
-    '422': _response_for_422,
-}
 _all_accept_content_types = (
     'application/json',
 )
@@ -100,7 +99,7 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _delete_qos_sessions_resource_id_delete_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -108,11 +107,11 @@ class BaseApi(api_client.Api):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: typing_extensions.Literal[False] = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
     ]: ...
 
     @typing.overload
-    def _delete_qos_sessions_resource_id_delete_oapg(
+    def _get_session_oapg(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         path_params: RequestPathParams = frozendict.frozendict(),
@@ -122,7 +121,7 @@ class BaseApi(api_client.Api):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _delete_qos_sessions_resource_id_delete_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -130,11 +129,11 @@ class BaseApi(api_client.Api):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _delete_qos_sessions_resource_id_delete_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -143,7 +142,7 @@ class BaseApi(api_client.Api):
         skip_deserialization: bool = False,
     ):
         """
-        Delete Qos
+        Return QoS settings.
         :param skip_deserialization: If true then api_response.response will be set but
             api_response.body and api_response.headers will not be deserialized into schema
             class instances
@@ -153,7 +152,7 @@ class BaseApi(api_client.Api):
 
         _path_params = {}
         for parameter in (
-            request_path_resource_id,
+            request_path_session_id,
         ):
             parameter_data = path_params.get(parameter.name, schemas.unset)
             if parameter_data is schemas.unset:
@@ -172,7 +171,7 @@ class BaseApi(api_client.Api):
 
         response = self.api_client.call_api(
             resource_path=used_path,
-            method='delete'.upper(),
+            method='get'.upper(),
             headers=_headers,
             auth_settings=_auth,
             stream=stream,
@@ -194,11 +193,11 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class DeleteQosSessionsResourceIdDelete(BaseApi):
+class GetSession(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def delete_qos_sessions_resource_id_delete(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -206,11 +205,11 @@ class DeleteQosSessionsResourceIdDelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: typing_extensions.Literal[False] = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
     ]: ...
 
     @typing.overload
-    def delete_qos_sessions_resource_id_delete(
+    def get_session(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         path_params: RequestPathParams = frozendict.frozendict(),
@@ -220,7 +219,7 @@ class DeleteQosSessionsResourceIdDelete(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def delete_qos_sessions_resource_id_delete(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -228,11 +227,11 @@ class DeleteQosSessionsResourceIdDelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def delete_qos_sessions_resource_id_delete(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -240,7 +239,7 @@ class DeleteQosSessionsResourceIdDelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._delete_qos_sessions_resource_id_delete_oapg(
+        return self._get_session_oapg(
             path_params=path_params,
             accept_content_types=accept_content_types,
             stream=stream,
@@ -249,11 +248,11 @@ class DeleteQosSessionsResourceIdDelete(BaseApi):
         )
 
 
-class ApiFordelete(BaseApi):
+class ApiForget(BaseApi):
     # this class is used by api classes that refer to endpoints by path and http method names
 
     @typing.overload
-    def delete(
+    def get(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -261,11 +260,11 @@ class ApiFordelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: typing_extensions.Literal[False] = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
     ]: ...
 
     @typing.overload
-    def delete(
+    def get(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         path_params: RequestPathParams = frozendict.frozendict(),
@@ -275,7 +274,7 @@ class ApiFordelete(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def delete(
+    def get(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -283,11 +282,11 @@ class ApiFordelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = ...,
     ) -> typing.Union[
-        ApiResponseFor204,
+        ApiResponseFor200,
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def delete(
+    def get(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -295,7 +294,7 @@ class ApiFordelete(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._delete_qos_sessions_resource_id_delete_oapg(
+        return self._get_session_oapg(
             path_params=path_params,
             accept_content_types=accept_content_types,
             stream=stream,

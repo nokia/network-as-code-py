@@ -5,12 +5,12 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**location_query_get_get**](#location_query_get_get) | **get** /get | Location Query service
-[**verify_location_verify_get**](#verify_location_verify_get) | **get** /verify | Location Verification service
+[**get_location**](#get_location) | **get** /get | Location Query service
+[**verify_location**](#verify_location) | **get** /verify | Location Verification service
 
-# **location_query_get_get**
-<a name="location_query_get_get"></a>
-> Location location_query_get_get(device_id)
+# **get_location**
+<a name="get_location"></a>
+> Location get_location(device_id)
 
 Location Query service
 
@@ -52,12 +52,12 @@ with location_client.ApiClient(configuration) as api_client:
     }
     try:
         # Location Query service
-        api_response = api_instance.location_query_get_get(
+        api_response = api_instance.get_location(
             query_params=query_params,
         )
         pprint(api_response)
     except location_client.ApiException as e:
-        print("Exception when calling LocationApi->location_query_get_get: %s\n" % e)
+        print("Exception when calling LocationApi->get_location: %s\n" % e)
 ```
 ### Parameters
 
@@ -89,10 +89,10 @@ str,  | str,  |  |
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-200 | [ApiResponseFor200](#location_query_get_get.ApiResponseFor200) | Successful Response
-422 | [ApiResponseFor422](#location_query_get_get.ApiResponseFor422) | Validation Error
+200 | [ApiResponseFor200](#get_location.ApiResponseFor200) | Successful Response
+422 | [ApiResponseFor422](#get_location.ApiResponseFor422) | Validation Error
 
-#### location_query_get_get.ApiResponseFor200
+#### get_location.ApiResponseFor200
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -105,7 +105,7 @@ Type | Description  | Notes
 [**Location**](../../models/Location.md) |  | 
 
 
-#### location_query_get_get.ApiResponseFor422
+#### get_location.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -124,9 +124,9 @@ Type | Description  | Notes
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
-# **verify_location_verify_get**
-<a name="verify_location_verify_get"></a>
-> verify_location_verify_get(device_idlatitudelongitudeaccuracy)
+# **verify_location**
+<a name="verify_location"></a>
+> verify_location(device_idlatitudelongitudeaccuracy)
 
 Location Verification service
 
@@ -170,11 +170,11 @@ with location_client.ApiClient(configuration) as api_client:
     }
     try:
         # Location Verification service
-        api_response = api_instance.verify_location_verify_get(
+        api_response = api_instance.verify_location(
             query_params=query_params,
         )
     except location_client.ApiException as e:
-        print("Exception when calling LocationApi->verify_location_verify_get: %s\n" % e)
+        print("Exception when calling LocationApi->verify_location: %s\n" % e)
 ```
 ### Parameters
 
@@ -230,17 +230,17 @@ str,  | str,  |  |
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-204 | [ApiResponseFor204](#verify_location_verify_get.ApiResponseFor204) | Successful Response
-422 | [ApiResponseFor422](#verify_location_verify_get.ApiResponseFor422) | Validation Error
+204 | [ApiResponseFor204](#verify_location.ApiResponseFor204) | Successful Response
+422 | [ApiResponseFor422](#verify_location.ApiResponseFor422) | Validation Error
 
-#### verify_location_verify_get.ApiResponseFor204
+#### verify_location.ApiResponseFor204
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
 body | Unset | body was not defined |
 headers | Unset | headers were not defined |
 
-#### verify_location_verify_get.ApiResponseFor422
+#### verify_location.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |

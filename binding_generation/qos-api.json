@@ -8,20 +8,19 @@
   "paths": {
     "/sessions": {
       "get": {
-        "tags": [
-          "qos"
-        ],
         "summary": "Return QoS settings for your device.",
         "description": "Return device communication bandwidth (QoS) settings for your device.",
-        "operationId": "get_all_qos_sessions_get",
+        "operationId": "getAllSessions",
         "parameters": [
           {
+            "description": "Device ID",
             "required": true,
             "schema": {
-              "title": "Id",
-              "type": "string"
+              "title": "Device-Id",
+              "type": "string",
+              "description": "Device ID"
             },
-            "name": "id",
+            "name": "device-id",
             "in": "query"
           }
         ],
@@ -31,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Qos Sessions Get",
+                  "title": "Response Getallsessions",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/SessionInfo"
@@ -53,12 +52,9 @@
         }
       },
       "post": {
-        "tags": [
-          "qos"
-        ],
         "summary": "Create QoS service",
         "description": "Create device communication bandwidth (QoS) service.",
-        "operationId": "create_qos_sessions_post",
+        "operationId": "createSession",
         "requestBody": {
           "content": {
             "application/json": {
@@ -93,22 +89,19 @@
         }
       }
     },
-    "/sessions/{resource_id}": {
+    "/sessions/{sessionId}": {
       "get": {
-        "tags": [
-          "qos"
-        ],
-        "summary": "Return QoS settings",
+        "summary": "Return QoS settings.",
         "description": "Return device communication bandwidth (QoS) settings.",
-        "operationId": "get_qos_sessions__resource_id__get",
+        "operationId": "getSession",
         "parameters": [
           {
             "required": true,
             "schema": {
-              "title": "Resource Id",
+              "title": "Sessionid",
               "type": "string"
             },
-            "name": "resource_id",
+            "name": "sessionId",
             "in": "path"
           }
         ],
@@ -136,19 +129,16 @@
         }
       },
       "delete": {
-        "tags": [
-          "qos"
-        ],
-        "summary": "Delete Qos",
-        "operationId": "delete_qos_sessions__resource_id__delete",
+        "summary": "Delete Qos Handler",
+        "operationId": "deleteSession",
         "parameters": [
           {
             "required": true,
             "schema": {
-              "title": "Resource Id",
+              "title": "Sessionid",
               "type": "string"
             },
-            "name": "resource_id",
+            "name": "sessionId",
             "in": "path"
           }
         ],
@@ -182,17 +172,17 @@
       "CreateSession": {
         "title": "CreateSession",
         "required": [
-          "qos",
+          "qosProfile",
           "id",
           "ip",
           "appIp"
         ],
         "type": "object",
         "properties": {
-          "qos": {
-            "title": "Qos",
+          "qosProfile": {
+            "title": "Qosprofile",
             "type": "string",
-            "description": "Name of the requested QoS"
+            "description": "Name of the requested QoS profile."
           },
           "id": {
             "title": "Id",
@@ -204,7 +194,7 @@
             "type": "string",
             "description": "IP address of the device"
           },
-          "ports": {
+          "devicePorts": {
             "$ref": "#/components/schemas/PortsSpec"
           },
           "appIp": {
@@ -212,8 +202,20 @@
             "type": "string",
             "description": "IP address of the application"
           },
-          "appPorts": {
+          "applicationServerPorts": {
             "$ref": "#/components/schemas/PortsSpec"
+          },
+          "duration": {
+            "title": "Duration",
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "Session duration in seconds."
+          },
+          "notificationUrl": {
+            "title": "Notificationurl",
+            "type": "string",
+            "description": "Notification URL for session-related events."
           }
         }
       },
@@ -283,7 +285,7 @@
         "title": "SessionInfo",
         "required": [
           "id",
-          "qos",
+          "qosProfile",
           "qosStatus"
         ],
         "type": "object",
@@ -293,15 +295,27 @@
             "type": "string",
             "description": "ID of the created resource."
           },
-          "qos": {
-            "title": "Qos",
+          "qosProfile": {
+            "title": "Qosprofile",
             "type": "string",
-            "description": "Name of the QoS setting."
+            "description": "Name of the QoS profile."
           },
           "qosStatus": {
             "title": "Qosstatus",
             "type": "string",
             "description": "Status of the QoS resource. REQUESTED, AVAILABLE or UNAVAILABLE"
+          },
+          "startedAt": {
+            "title": "Startedat",
+            "type": "integer",
+            "description": "Timestamp of session start in seconds since unix epoch",
+            "nullable": true
+          },
+          "expiresAt": {
+            "title": "Expiresat",
+            "type": "integer",
+            "description": "Timestamp of session expiration if the session was not deleted, in seconds since unix epoch",
+            "nullable": true
           }
         }
       },

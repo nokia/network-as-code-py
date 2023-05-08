@@ -119,7 +119,7 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _verify_location_verify_get_oapg(
+    def _verify_location_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -131,7 +131,7 @@ class BaseApi(api_client.Api):
     ]: ...
 
     @typing.overload
-    def _verify_location_verify_get_oapg(
+    def _verify_location_oapg(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
@@ -141,7 +141,7 @@ class BaseApi(api_client.Api):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _verify_location_verify_get_oapg(
+    def _verify_location_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -153,7 +153,7 @@ class BaseApi(api_client.Api):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _verify_location_verify_get_oapg(
+    def _verify_location_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -216,11 +216,11 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class VerifyLocationVerifyGet(BaseApi):
+class VerifyLocation(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def verify_location_verify_get(
+    def verify_location(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -232,7 +232,7 @@ class VerifyLocationVerifyGet(BaseApi):
     ]: ...
 
     @typing.overload
-    def verify_location_verify_get(
+    def verify_location(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
@@ -242,7 +242,7 @@ class VerifyLocationVerifyGet(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def verify_location_verify_get(
+    def verify_location(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -254,7 +254,7 @@ class VerifyLocationVerifyGet(BaseApi):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def verify_location_verify_get(
+    def verify_location(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -262,7 +262,7 @@ class VerifyLocationVerifyGet(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._verify_location_verify_get_oapg(
+        return self._verify_location_oapg(
             query_params=query_params,
             accept_content_types=accept_content_types,
             stream=stream,
@@ -317,7 +317,7 @@ class ApiForget(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._verify_location_verify_get_oapg(
+        return self._verify_location_oapg(
             query_params=query_params,
             accept_content_types=accept_content_types,
             stream=stream,

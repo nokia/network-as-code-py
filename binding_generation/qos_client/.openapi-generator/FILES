@@ -2,7 +2,7 @@
 .gitlab-ci.yml
 .travis.yml
 README.md
-docs/apis/tags/QosApi.md
+docs/apis/tags/DefaultApi.md
 docs/models/CreateSession.md
 docs/models/HTTPValidationError.md
 docs/models/PortsSpec.md
@@ -13,7 +13,7 @@ git_push.sh
 qos_client/__init__.py
 qos_client/api_client.py
 qos_client/apis/__init__.py
-qos_client/apis/tags/qos_api.py
+qos_client/apis/tags/default_api.py
 qos_client/configuration.py
 qos_client/exceptions.py
 qos_client/model/__init__.py
@@ -38,4 +38,10 @@ setup.py
 test-requirements.txt
 test/__init__.py
 test/test_models/__init__.py
+test/test_models/test_create_session.py
+test/test_models/test_http_validation_error.py
+test/test_models/test_ports_spec.py
+test/test_models/test_ports_spec_ranges_inner.py
+test/test_models/test_session_info.py
+test/test_models/test_validation_error.py
 tox.ini

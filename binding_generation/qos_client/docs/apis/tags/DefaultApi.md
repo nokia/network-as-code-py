@@ -1,18 +1,18 @@
 <a name="__pageTop"></a>
-# qos_client.apis.tags.qos_api.QosApi
+# qos_client.apis.tags.default_api.DefaultApi
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_qos_sessions_post**](#create_qos_sessions_post) | **post** /sessions | Create QoS service
-[**delete_qos_sessions_resource_id_delete**](#delete_qos_sessions_resource_id_delete) | **delete** /sessions/{resource_id} | Delete Qos
-[**get_all_qos_sessions_get**](#get_all_qos_sessions_get) | **get** /sessions | Return QoS settings for your device.
-[**get_qos_sessions_resource_id_get**](#get_qos_sessions_resource_id_get) | **get** /sessions/{resource_id} | Return QoS settings
+[**create_session**](#create_session) | **post** /sessions | Create QoS service
+[**delete_session**](#delete_session) | **delete** /sessions/{sessionId} | Delete Qos Handler
+[**get_all_sessions**](#get_all_sessions) | **get** /sessions | Return QoS settings for your device.
+[**get_session**](#get_session) | **get** /sessions/{sessionId} | Return QoS settings.
 
-# **create_qos_sessions_post**
-<a name="create_qos_sessions_post"></a>
-> SessionInfo create_qos_sessions_post(create_session)
+# **create_session**
+<a name="create_session"></a>
+> SessionInfo create_session(create_session)
 
 Create QoS service
 
@@ -23,7 +23,7 @@ Create device communication bandwidth (QoS) service.
 * Api Key Authentication (RapidApiKey):
 ```python
 import qos_client
-from qos_client.apis.tags import qos_api
+from qos_client.apis.tags import default_api
 from qos_client.model.create_session import CreateSession
 from qos_client.model.http_validation_error import HTTPValidationError
 from qos_client.model.session_info import SessionInfo
@@ -47,14 +47,14 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with qos_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = qos_api.QosApi(api_client)
+    api_instance = default_api.DefaultApi(api_client)
 
     # example passing only required values which don't have defaults set
     body = CreateSession(
-        qos="qos_example",
+        qos_profile="qos_profile_example",
         id="id_example",
         ip="ip_example",
-        ports=PortsSpec(
+        device_ports=PortsSpec(
             ranges=[
                 PortsSpecRangesInner(
                     _from=1.0,
@@ -66,16 +66,18 @@ with qos_client.ApiClient(configuration) as api_client:
             ],
         ),
         app_ip="app_ip_example",
-        app_ports=PortsSpec(),
+        application_server_ports=PortsSpec(),
+        duration=1.0,
+        notification_url="notification_url_example",
     )
     try:
         # Create QoS service
-        api_response = api_instance.create_qos_sessions_post(
+        api_response = api_instance.create_session(
             body=body,
         )
         pprint(api_response)
     except qos_client.ApiException as e:
-        print("Exception when calling QosApi->create_qos_sessions_post: %s\n" % e)
+        print("Exception when calling DefaultApi->create_session: %s\n" % e)
 ```
 ### Parameters
 
@@ -101,10 +103,10 @@ Type | Description  | Notes
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-201 | [ApiResponseFor201](#create_qos_sessions_post.ApiResponseFor201) | Successful Response
-422 | [ApiResponseFor422](#create_qos_sessions_post.ApiResponseFor422) | Validation Error
+201 | [ApiResponseFor201](#create_session.ApiResponseFor201) | Successful Response
+422 | [ApiResponseFor422](#create_session.ApiResponseFor422) | Validation Error
 
-#### create_qos_sessions_post.ApiResponseFor201
+#### create_session.ApiResponseFor201
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -117,7 +119,7 @@ Type | Description  | Notes
 [**SessionInfo**](../../models/SessionInfo.md) |  | 
 
 
-#### create_qos_sessions_post.ApiResponseFor422
+#### create_session.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -136,18 +138,18 @@ Type | Description  | Notes
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
-# **delete_qos_sessions_resource_id_delete**
-<a name="delete_qos_sessions_resource_id_delete"></a>
-> delete_qos_sessions_resource_id_delete(resource_id)
+# **delete_session**
+<a name="delete_session"></a>
+> delete_session(session_id)
 
-Delete Qos
+Delete Qos Handler
 
 ### Example
 
 * Api Key Authentication (RapidApiKey):
 ```python
 import qos_client
-from qos_client.apis.tags import qos_api
+from qos_client.apis.tags import default_api
 from qos_client.model.http_validation_error import HTTPValidationError
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost
@@ -169,19 +171,19 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with qos_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = qos_api.QosApi(api_client)
+    api_instance = default_api.DefaultApi(api_client)
 
     # example passing only required values which don't have defaults set
     path_params = {
-        'resource_id': "resource_id_example",
+        'sessionId': "sessionId_example",
     }
     try:
-        # Delete Qos
-        api_response = api_instance.delete_qos_sessions_resource_id_delete(
+        # Delete Qos Handler
+        api_response = api_instance.delete_session(
             path_params=path_params,
         )
     except qos_client.ApiException as e:
-        print("Exception when calling QosApi->delete_qos_sessions_resource_id_delete: %s\n" % e)
+        print("Exception when calling DefaultApi->delete_session: %s\n" % e)
 ```
 ### Parameters
 
@@ -198,9 +200,9 @@ skip_deserialization | bool | default is False | when True, headers and body wil
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-resource_id | ResourceIdSchema | | 
+sessionId | SessionIdSchema | | 
 
-# ResourceIdSchema
+# SessionIdSchema
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -212,17 +214,17 @@ str,  | str,  |  |
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-204 | [ApiResponseFor204](#delete_qos_sessions_resource_id_delete.ApiResponseFor204) | Successful Response
-422 | [ApiResponseFor422](#delete_qos_sessions_resource_id_delete.ApiResponseFor422) | Validation Error
+204 | [ApiResponseFor204](#delete_session.ApiResponseFor204) | Successful Response
+422 | [ApiResponseFor422](#delete_session.ApiResponseFor422) | Validation Error
 
-#### delete_qos_sessions_resource_id_delete.ApiResponseFor204
+#### delete_session.ApiResponseFor204
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
 body | Unset | body was not defined |
 headers | Unset | headers were not defined |
 
-#### delete_qos_sessions_resource_id_delete.ApiResponseFor422
+#### delete_session.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -241,9 +243,9 @@ Type | Description  | Notes
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
-# **get_all_qos_sessions_get**
-<a name="get_all_qos_sessions_get"></a>
-> [SessionInfo] get_all_qos_sessions_get(id)
+# **get_all_sessions**
+<a name="get_all_sessions"></a>
+> [SessionInfo] get_all_sessions(device_id)
 
 Return QoS settings for your device.
 
@@ -254,7 +256,7 @@ Return device communication bandwidth (QoS) settings for your device.
 * Api Key Authentication (RapidApiKey):
 ```python
 import qos_client
-from qos_client.apis.tags import qos_api
+from qos_client.apis.tags import default_api
 from qos_client.model.http_validation_error import HTTPValidationError
 from qos_client.model.session_info import SessionInfo
 from pprint import pprint
@@ -277,20 +279,20 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with qos_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = qos_api.QosApi(api_client)
+    api_instance = default_api.DefaultApi(api_client)
 
     # example passing only required values which don't have defaults set
     query_params = {
-        'id': "id_example",
+        'device-id': "device-id_example",
     }
     try:
         # Return QoS settings for your device.
-        api_response = api_instance.get_all_qos_sessions_get(
+        api_response = api_instance.get_all_sessions(
             query_params=query_params,
         )
         pprint(api_response)
     except qos_client.ApiException as e:
-        print("Exception when calling QosApi->get_all_qos_sessions_get: %s\n" % e)
+        print("Exception when calling DefaultApi->get_all_sessions: %s\n" % e)
 ```
 ### Parameters
 
@@ -307,25 +309,27 @@ skip_deserialization | bool | default is False | when True, headers and body wil
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-id | IdSchema | | 
+device-id | DeviceIdSchema | | 
 
 
-# IdSchema
+# DeviceIdSchema
+
+Device ID
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-str,  | str,  |  | 
+str,  | str,  | Device ID | 
 
 ### Return Types, Responses
 
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-200 | [ApiResponseFor200](#get_all_qos_sessions_get.ApiResponseFor200) | Successful Response
-422 | [ApiResponseFor422](#get_all_qos_sessions_get.ApiResponseFor422) | Validation Error
+200 | [ApiResponseFor200](#get_all_sessions.ApiResponseFor200) | Successful Response
+422 | [ApiResponseFor422](#get_all_sessions.ApiResponseFor422) | Validation Error
 
-#### get_all_qos_sessions_get.ApiResponseFor200
+#### get_all_sessions.ApiResponseFor200
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -344,7 +348,7 @@ Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 [**SessionInfo**]({{complexTypePrefix}}SessionInfo.md) | [**SessionInfo**]({{complexTypePrefix}}SessionInfo.md) | [**SessionInfo**]({{complexTypePrefix}}SessionInfo.md) |  | 
 
-#### get_all_qos_sessions_get.ApiResponseFor422
+#### get_all_sessions.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -363,11 +367,11 @@ Type | Description  | Notes
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
-# **get_qos_sessions_resource_id_get**
-<a name="get_qos_sessions_resource_id_get"></a>
-> SessionInfo get_qos_sessions_resource_id_get(resource_id)
+# **get_session**
+<a name="get_session"></a>
+> SessionInfo get_session(session_id)
 
-Return QoS settings
+Return QoS settings.
 
 Return device communication bandwidth (QoS) settings.
 
@@ -376,7 +380,7 @@ Return device communication bandwidth (QoS) settings.
 * Api Key Authentication (RapidApiKey):
 ```python
 import qos_client
-from qos_client.apis.tags import qos_api
+from qos_client.apis.tags import default_api
 from qos_client.model.http_validation_error import HTTPValidationError
 from qos_client.model.session_info import SessionInfo
 from pprint import pprint
@@ -399,20 +403,20 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with qos_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = qos_api.QosApi(api_client)
+    api_instance = default_api.DefaultApi(api_client)
 
     # example passing only required values which don't have defaults set
     path_params = {
-        'resource_id': "resource_id_example",
+        'sessionId': "sessionId_example",
     }
     try:
-        # Return QoS settings
-        api_response = api_instance.get_qos_sessions_resource_id_get(
+        # Return QoS settings.
+        api_response = api_instance.get_session(
             path_params=path_params,
         )
         pprint(api_response)
     except qos_client.ApiException as e:
-        print("Exception when calling QosApi->get_qos_sessions_resource_id_get: %s\n" % e)
+        print("Exception when calling DefaultApi->get_session: %s\n" % e)
 ```
 ### Parameters
 
@@ -429,9 +433,9 @@ skip_deserialization | bool | default is False | when True, headers and body wil
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-resource_id | ResourceIdSchema | | 
+sessionId | SessionIdSchema | | 
 
-# ResourceIdSchema
+# SessionIdSchema
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -443,10 +447,10 @@ str,  | str,  |  |
 Code | Class | Description
 ------------- | ------------- | -------------
 n/a | api_client.ApiResponseWithoutDeserialization | When skip_deserialization is True this response is returned
-200 | [ApiResponseFor200](#get_qos_sessions_resource_id_get.ApiResponseFor200) | Successful Response
-422 | [ApiResponseFor422](#get_qos_sessions_resource_id_get.ApiResponseFor422) | Validation Error
+200 | [ApiResponseFor200](#get_session.ApiResponseFor200) | Successful Response
+422 | [ApiResponseFor422](#get_session.ApiResponseFor422) | Validation Error
 
-#### get_qos_sessions_resource_id_get.ApiResponseFor200
+#### get_session.ApiResponseFor200
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |
@@ -459,7 +463,7 @@ Type | Description  | Notes
 [**SessionInfo**](../../models/SessionInfo.md) |  | 
 
 
-#### get_qos_sessions_resource_id_get.ApiResponseFor422
+#### get_session.ApiResponseFor422
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 response | urllib3.HTTPResponse | Raw response |

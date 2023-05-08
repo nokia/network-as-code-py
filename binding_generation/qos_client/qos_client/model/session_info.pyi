@@ -35,38 +35,86 @@ class SessionInfo(
 
     class MetaOapg:
         required = {
+            "qosProfile",
             "qosStatus",
-            "qos",
             "id",
         }
         
         class properties:
             id = schemas.StrSchema
-            qos = schemas.StrSchema
+            qosProfile = schemas.StrSchema
             qosStatus = schemas.StrSchema
+            
+            
+            class startedAt(
+                schemas.IntBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneDecimalMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, decimal.Decimal, int, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'startedAt':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
+            
+            
+            class expiresAt(
+                schemas.IntBase,
+                schemas.NoneBase,
+                schemas.Schema,
+                schemas.NoneDecimalMixin
+            ):
+            
+            
+                def __new__(
+                    cls,
+                    *args: typing.Union[None, decimal.Decimal, int, ],
+                    _configuration: typing.Optional[schemas.Configuration] = None,
+                ) -> 'expiresAt':
+                    return super().__new__(
+                        cls,
+                        *args,
+                        _configuration=_configuration,
+                    )
             __annotations__ = {
                 "id": id,
-                "qos": qos,
+                "qosProfile": qosProfile,
                 "qosStatus": qosStatus,
+                "startedAt": startedAt,
+                "expiresAt": expiresAt,
             }
     
+    qosProfile: MetaOapg.properties.qosProfile
     qosStatus: MetaOapg.properties.qosStatus
-    qos: MetaOapg.properties.qos
     id: MetaOapg.properties.id
     
     @typing.overload
     def __getitem__(self, name: typing_extensions.Literal["id"]) -> MetaOapg.properties.id: ...
     
     @typing.overload
-    def __getitem__(self, name: typing_extensions.Literal["qos"]) -> MetaOapg.properties.qos: ...
+    def __getitem__(self, name: typing_extensions.Literal["qosProfile"]) -> MetaOapg.properties.qosProfile: ...
     
     @typing.overload
     def __getitem__(self, name: typing_extensions.Literal["qosStatus"]) -> MetaOapg.properties.qosStatus: ...
     
     @typing.overload
+    def __getitem__(self, name: typing_extensions.Literal["startedAt"]) -> MetaOapg.properties.startedAt: ...
+    
+    @typing.overload
+    def __getitem__(self, name: typing_extensions.Literal["expiresAt"]) -> MetaOapg.properties.expiresAt: ...
+    
+    @typing.overload
     def __getitem__(self, name: str) -> schemas.UnsetAnyTypeSchema: ...
     
-    def __getitem__(self, name: typing.Union[typing_extensions.Literal["id", "qos", "qosStatus", ], str]):
+    def __getitem__(self, name: typing.Union[typing_extensions.Literal["id", "qosProfile", "qosStatus", "startedAt", "expiresAt", ], str]):
         # dict_instance[name] accessor
         return super().__getitem__(name)
     
@@ -75,33 +123,43 @@ class SessionInfo(
     def get_item_oapg(self, name: typing_extensions.Literal["id"]) -> MetaOapg.properties.id: ...
     
     @typing.overload
-    def get_item_oapg(self, name: typing_extensions.Literal["qos"]) -> MetaOapg.properties.qos: ...
+    def get_item_oapg(self, name: typing_extensions.Literal["qosProfile"]) -> MetaOapg.properties.qosProfile: ...
     
     @typing.overload
     def get_item_oapg(self, name: typing_extensions.Literal["qosStatus"]) -> MetaOapg.properties.qosStatus: ...
     
     @typing.overload
+    def get_item_oapg(self, name: typing_extensions.Literal["startedAt"]) -> typing.Union[MetaOapg.properties.startedAt, schemas.Unset]: ...
+    
+    @typing.overload
+    def get_item_oapg(self, name: typing_extensions.Literal["expiresAt"]) -> typing.Union[MetaOapg.properties.expiresAt, schemas.Unset]: ...
+    
+    @typing.overload
     def get_item_oapg(self, name: str) -> typing.Union[schemas.UnsetAnyTypeSchema, schemas.Unset]: ...
     
-    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["id", "qos", "qosStatus", ], str]):
+    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["id", "qosProfile", "qosStatus", "startedAt", "expiresAt", ], str]):
         return super().get_item_oapg(name)
     
 
     def __new__(
         cls,
         *args: typing.Union[dict, frozendict.frozendict, ],
+        qosProfile: typing.Union[MetaOapg.properties.qosProfile, str, ],
         qosStatus: typing.Union[MetaOapg.properties.qosStatus, str, ],
-        qos: typing.Union[MetaOapg.properties.qos, str, ],
         id: typing.Union[MetaOapg.properties.id, str, ],
+        startedAt: typing.Union[MetaOapg.properties.startedAt, None, decimal.Decimal, int, schemas.Unset] = schemas.unset,
+        expiresAt: typing.Union[MetaOapg.properties.expiresAt, None, decimal.Decimal, int, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'SessionInfo':
         return super().__new__(
             cls,
             *args,
+            qosProfile=qosProfile,
             qosStatus=qosStatus,
-            qos=qos,
             id=id,
+            startedAt=startedAt,
+            expiresAt=expiresAt,
             _configuration=_configuration,
             **kwargs,
         )

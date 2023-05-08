@@ -7,4 +7,4 @@ import enum
 
 class PathValues(str, enum.Enum):
     SESSIONS = "/sessions"
-    SESSIONS_RESOURCE_ID = "/sessions/{resource_id}"
+    SESSIONS_SESSION_ID = "/sessions/{sessionId}"

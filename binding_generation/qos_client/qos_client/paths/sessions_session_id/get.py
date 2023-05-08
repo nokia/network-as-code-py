@@ -31,11 +31,11 @@ from qos_client.model.session_info import SessionInfo
 from . import path
 
 # Path params
-ResourceIdSchema = schemas.StrSchema
+SessionIdSchema = schemas.StrSchema
 RequestRequiredPathParams = typing_extensions.TypedDict(
     'RequestRequiredPathParams',
     {
-        'resource_id': typing.Union[ResourceIdSchema, str, ],
+        'sessionId': typing.Union[SessionIdSchema, str, ],
     }
 )
 RequestOptionalPathParams = typing_extensions.TypedDict(
@@ -50,10 +50,10 @@ class RequestPathParams(RequestRequiredPathParams, RequestOptionalPathParams):
     pass
 
 
-request_path_resource_id = api_client.PathParameter(
-    name="resource_id",
+request_path_session_id = api_client.PathParameter(
+    name="sessionId",
     style=api_client.ParameterStyle.SIMPLE,
-    schema=ResourceIdSchema,
+    schema=SessionIdSchema,
     required=True,
 )
 _auth = [
@@ -108,7 +108,7 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _get_qos_sessions_resource_id_get_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -120,7 +120,7 @@ class BaseApi(api_client.Api):
     ]: ...
 
     @typing.overload
-    def _get_qos_sessions_resource_id_get_oapg(
+    def _get_session_oapg(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         path_params: RequestPathParams = frozendict.frozendict(),
@@ -130,7 +130,7 @@ class BaseApi(api_client.Api):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _get_qos_sessions_resource_id_get_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -142,7 +142,7 @@ class BaseApi(api_client.Api):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _get_qos_sessions_resource_id_get_oapg(
+    def _get_session_oapg(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -151,7 +151,7 @@ class BaseApi(api_client.Api):
         skip_deserialization: bool = False,
     ):
         """
-        Return QoS settings
+        Return QoS settings.
         :param skip_deserialization: If true then api_response.response will be set but
             api_response.body and api_response.headers will not be deserialized into schema
             class instances
@@ -161,7 +161,7 @@ class BaseApi(api_client.Api):
 
         _path_params = {}
         for parameter in (
-            request_path_resource_id,
+            request_path_session_id,
         ):
             parameter_data = path_params.get(parameter.name, schemas.unset)
             if parameter_data is schemas.unset:
@@ -202,11 +202,11 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class GetQosSessionsResourceIdGet(BaseApi):
+class GetSession(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def get_qos_sessions_resource_id_get(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -218,7 +218,7 @@ class GetQosSessionsResourceIdGet(BaseApi):
     ]: ...
 
     @typing.overload
-    def get_qos_sessions_resource_id_get(
+    def get_session(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         path_params: RequestPathParams = frozendict.frozendict(),
@@ -228,7 +228,7 @@ class GetQosSessionsResourceIdGet(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def get_qos_sessions_resource_id_get(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -240,7 +240,7 @@ class GetQosSessionsResourceIdGet(BaseApi):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def get_qos_sessions_resource_id_get(
+    def get_session(
         self,
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -248,7 +248,7 @@ class GetQosSessionsResourceIdGet(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_qos_sessions_resource_id_get_oapg(
+        return self._get_session_oapg(
             path_params=path_params,
             accept_content_types=accept_content_types,
             stream=stream,
@@ -303,7 +303,7 @@ class ApiForget(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_qos_sessions_resource_id_get_oapg(
+        return self._get_session_oapg(
             path_params=path_params,
             accept_content_types=accept_content_types,
             stream=stream,

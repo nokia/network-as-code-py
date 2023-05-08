@@ -31,11 +31,11 @@ from qos_client.model.session_info import SessionInfo
 from . import path
 
 # Query params
-IdSchema = schemas.StrSchema
+DeviceIdSchema = schemas.StrSchema
 RequestRequiredQueryParams = typing_extensions.TypedDict(
     'RequestRequiredQueryParams',
     {
-        'id': typing.Union[IdSchema, str, ],
+        'device-id': typing.Union[DeviceIdSchema, str, ],
     }
 )
 RequestOptionalQueryParams = typing_extensions.TypedDict(
@@ -50,10 +50,10 @@ class RequestQueryParams(RequestRequiredQueryParams, RequestOptionalQueryParams)
     pass
 
 
-request_query_id = api_client.QueryParameter(
-    name="id",
+request_query_device_id = api_client.QueryParameter(
+    name="device-id",
     style=api_client.ParameterStyle.FORM,
-    schema=IdSchema,
+    schema=DeviceIdSchema,
     required=True,
     explode=True,
 )
@@ -134,7 +134,7 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _get_all_qos_sessions_get_oapg(
+    def _get_all_sessions_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -146,7 +146,7 @@ class BaseApi(api_client.Api):
     ]: ...
 
     @typing.overload
-    def _get_all_qos_sessions_get_oapg(
+    def _get_all_sessions_oapg(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
@@ -156,7 +156,7 @@ class BaseApi(api_client.Api):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _get_all_qos_sessions_get_oapg(
+    def _get_all_sessions_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -168,7 +168,7 @@ class BaseApi(api_client.Api):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _get_all_qos_sessions_get_oapg(
+    def _get_all_sessions_oapg(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -187,7 +187,7 @@ class BaseApi(api_client.Api):
 
         prefix_separator_iterator = None
         for parameter in (
-            request_query_id,
+            request_query_device_id,
         ):
             parameter_data = query_params.get(parameter.name, schemas.unset)
             if parameter_data is schemas.unset:
@@ -228,11 +228,11 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class GetAllQosSessionsGet(BaseApi):
+class GetAllSessions(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def get_all_qos_sessions_get(
+    def get_all_sessions(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -244,7 +244,7 @@ class GetAllQosSessionsGet(BaseApi):
     ]: ...
 
     @typing.overload
-    def get_all_qos_sessions_get(
+    def get_all_sessions(
         self,
         skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
@@ -254,7 +254,7 @@ class GetAllQosSessionsGet(BaseApi):
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def get_all_qos_sessions_get(
+    def get_all_sessions(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -266,7 +266,7 @@ class GetAllQosSessionsGet(BaseApi):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def get_all_qos_sessions_get(
+    def get_all_sessions(
         self,
         query_params: RequestQueryParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -274,7 +274,7 @@ class GetAllQosSessionsGet(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_all_qos_sessions_get_oapg(
+        return self._get_all_sessions_oapg(
             query_params=query_params,
             accept_content_types=accept_content_types,
             stream=stream,
@@ -329,7 +329,7 @@ class ApiForget(BaseApi):
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_all_qos_sessions_get_oapg(
+        return self._get_all_sessions_oapg(
             query_params=query_params,
             accept_content_types=accept_content_types,
             stream=stream,
