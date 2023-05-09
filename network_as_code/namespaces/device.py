@@ -1,7 +1,9 @@
 from typing import List
 from . import Namespace
 from ..models import Device
-
+from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter
+from urllib.error import HTTPError
+from pydantic import ValidationError
 
 class Devices(Namespace):
     """Representation of a mobile subscription.
@@ -16,6 +18,21 @@ class Devices(Namespace):
         Args:
             id (str): External ID of the subscription. Email-like.
         """
+
+        # Error Case: Creating and Getting device
+        try:
+            global ret_device
+            ret_device = Device(api=self.api, sid = id, ip = ip)
+        except HTTPError as e:
+            if e.code == 403:
+                raise AuthenticationException(e)
+            elif e.code == 404:
+                raise DeviceNotFound(e)
+            elif e.code >= 500:
+                raise ServiceError(e)
+        except ValidationError as e:
+            raise InvalidParameter(e)
+
         # res = self.api.subscriptions.get_subscription(id)
-        return Device(api=self.api, sid = id, ip = ip)
+        return ret_device
 

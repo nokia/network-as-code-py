@@ -1,6 +1,7 @@
 
 from . import Namespace
 from ..models import Session
+from ..errors import error_handler
 
 class Sessions(Namespace):
     """Representation of a mobile subscription.
@@ -15,5 +16,8 @@ class Sessions(Namespace):
         Args:
             id (str): ID of the QoS Session 
         """
-        session_object = self.api.sessions.get_session({ 'sessionId': id}).body
+        # Error Case: Getting session
+        response = error_handler(func=self.api.sessions.get_session, arg={ 'sessionId': id})
+        session_object = response.body
+        # session_object = self.api.sessions.get_session({ 'sessionId': id}).body
         return Session.convert_session_model(self.api, "",  session_object)

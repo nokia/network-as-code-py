@@ -9,6 +9,7 @@ from qos_client.schemas import unset
 from ..api import APIClient
 from ..models.session import Session
 from ..models.location import CivicAddress, Location
+from ..errors import error_handler
 
 class Device(BaseModel):
     _api: APIClient = PrivateAttr()
@@ -41,14 +42,20 @@ class Device(BaseModel):
         if notification_url:
             session_resource["notificationUrl"] = notification_url
 
-        session = self._api.sessions.create_session(session_resource)
+
+        # Error Case: Creating session
+        global session 
+        session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
+        # session = self._api.sessions.create_session(session_resource)
         session = session.body
 
         return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qosProfile"], status=session["qosStatus"])
 
     def sessions(self) -> List[Session]:
         try:
-            sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
+            # Error Case: Getting all sessions
+            sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid}, key="query_params")
+            # sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
             return list(map(lambda session : self.__convert_session_model(session), sessions.body))
         except:
             return []
@@ -65,7 +72,10 @@ class Device(BaseModel):
            "device_id": self.sid 
         }
 
-        response = self._api.location.get_location(query_parameters)
+        # Error Case: Getting location
+        global response
+        response = error_handler(func=self._api.location.get_location, arg=query_parameters)
+        # response = self._api.location.get_location(query_parameters)
         body = response.body
 
         longitude = body["point"]["lon"]
@@ -94,6 +104,10 @@ class Device(BaseModel):
         }
 
         try:
-            return self._api.location.verify_location(query_parameters).body
+            # Error Case: Verifying location
+            global res
+            res = error_handler(func=self._api.location.verify_location, arg=query_parameters)
+            return res.body
+            # return self._api.location.verify_location(query_parameters).body
         except:
             return False
