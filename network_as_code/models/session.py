@@ -5,6 +5,8 @@ from typing import Union, List
 
 from network_as_code.api.client import APIClient
 
+from ..errors import error_handler
+
 ALIASES = {
     "start": "from",
     "end": "to"
@@ -36,7 +38,9 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         self._api = api
 
     def delete(self):
-        self._api.sessions.delete_session(path_params={'sessionId': self.id})
+        # Error Case: Deleting session
+        error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id}, key="path_params")
+        # self._api.sessions.delete_session(path_params={'sessionId': self.id})
 
     @staticmethod
     def convert_session_model(api, ip, session):
