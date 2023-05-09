@@ -65,4 +65,3 @@ def test_clearing_qos_flows(client):
     device.clear_sessions()
 
     assert len(device.sessions()) == 0
-

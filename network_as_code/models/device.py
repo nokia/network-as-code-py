@@ -9,7 +9,7 @@ from qos_client.schemas import unset
 from ..api import APIClient
 from ..models.session import Session
 from ..models.location import CivicAddress, Location
-from ..errors import error_handler
+from ..errors import DeviceNotFound, NotFound, error_handler
 
 class Device(BaseModel):
     _api: APIClient = PrivateAttr()
@@ -52,13 +52,13 @@ class Device(BaseModel):
         return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qosProfile"], status=session["qosStatus"])
 
     def sessions(self) -> List[Session]:
-        try:
-            # Error Case: Getting all sessions
-            sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid}, key="query_params")
-            # sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
-            return list(map(lambda session : self.__convert_session_model(session), sessions.body))
-        except:
+        # Error Case: Getting all sessions
+        sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid})
+        # sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
+        if not sessions:
             return []
+        else:
+            return list(map(lambda session : self.__convert_session_model(session), sessions.body))
 
     def clear_sessions(self):
         for session in self.sessions():

@@ -39,7 +39,7 @@ class Session(BaseModel, arbitrary_types_allowed = True):
 
     def delete(self):
         # Error Case: Deleting session
-        error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id}, key="path_params")
+        error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id})
         # self._api.sessions.delete_session(path_params={'sessionId': self.id})
 
     @staticmethod
