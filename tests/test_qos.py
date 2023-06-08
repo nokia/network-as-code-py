@@ -57,6 +57,25 @@ def test_creating_a_qos_flow_with_service_port_range(client):
 
     session.delete()
 
+def test_creating_a_qos_flow_with_duration(client):
+    device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
+
+    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", duration=60)
+
+    assert session.started_at
+    assert session.expires_at
+
+    assert session.duration() == 60
+
+    session.delete()
+
+def test_creating_a_qos_flow_with_notification_url(client):
+    device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
+
+    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications")
+
+    session.delete()
+
 def test_clearing_qos_flows(client):
     device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
 

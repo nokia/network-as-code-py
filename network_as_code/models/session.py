@@ -32,18 +32,27 @@ class Session(BaseModel, arbitrary_types_allowed = True):
     service_ports: Union[PortsSpec, None] 
     profile: str
     status: str
+    started_at: Union[int, None]
+    expires_at: Union[int, None]
+    notification_url: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
 
     def delete(self):
-        # Error Case: Deleting session
         error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id})
-        # self._api.sessions.delete_session(path_params={'sessionId': self.id})
+
+    def duration(self):
+        if self.started_at and self.expires_at:
+            return self.expires_at - self.started_at
+        else:
+            return None
 
     @staticmethod
     def convert_session_model(api, ip, session):
-        return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"]) 
+        started_at = int(session["startedAt"]) if session["startedAt"] else None
+        expires_at = int(session["expiresAt"]) if session["expiresAt"] else None
+        return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
 
 

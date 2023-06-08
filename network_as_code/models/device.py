@@ -49,7 +49,7 @@ class Device(BaseModel):
         # session = self._api.sessions.create_session(session_resource)
         session = session.body
 
-        return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=device_ports, service_ip=service_ip, service_ports=service_ports, profile=session["qosProfile"], status=session["qosStatus"])
+        return Session.convert_session_model(self._api, self.ip, session)
 
     def sessions(self) -> List[Session]:
         # Error Case: Getting all sessions
@@ -65,7 +65,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-       return Session(api=self._api, id=session["id"], device_ip=self.ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"]) 
+       return Session.convert_session_model(self._api, self.ip, session)
 
     def location(self) -> Location:
         query_parameters = {
