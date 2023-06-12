@@ -63,7 +63,7 @@ In general, the SDK is always downstream of specification and
 often downstream of API implementation. This means that the
 process usually goes like this:
 
-'''
+```
 +---------------------+
 |                     |
 |  High-level spec    |
@@ -101,7 +101,7 @@ process usually goes like this:
 |    Abstraction      |
 |                     |
 +---------------------+
-'''
+```
 
 Essentially, features are outlined in a high-level specification,
 which is used to inform the API implementation. The OAS spec is
@@ -113,7 +113,7 @@ However, an alternative workflow can be followed for more
 developer efficiency without being blocked by API implementation
 as much:
 
-'''
+```
 +---------------------+
 |                     |
 |  High-level spec    +--------------------
@@ -143,7 +143,7 @@ as much:
 |   Code generation   +------+ Connect API+abstractions |
 |                     |      |                          |
 +---------+-----------+      +--------------------------+
-'''
+```
 
 This approach allows you to create the high-level interfaces concurrent
 to the actual API implementation, assuming that the high-level spec
