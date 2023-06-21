@@ -36,6 +36,17 @@ before_script:
 #   rules:
 #     - if: $CI_COMMIT_BRANCH
 
+build:
+  stage: build
+  tags:
+    - esisogr87 # This runner has connection to "outside"
+  script:
+    - poetry install
+    - poetry build
+  artifacts:
+    paths:
+      - dist/*
+
 deploy:
   stage: deploy
   tags:
@@ -45,6 +56,7 @@ deploy:
     - poetry publish --build -r devpi -u $PYPI_USERNAME -p $PYPI_PASSWORD
   rules:
     - if: $CI_COMMIT_TAG
+
 
 pages:
   stage: deploy
