@@ -12,6 +12,26 @@ from ..models.location import CivicAddress, Location
 from ..errors import DeviceNotFound, NotFound, error_handler
 
 class Device(BaseModel):
+    """
+    A class representing the `Device` model.
+
+    #### Private Attributes:
+        _api(APIClient): An API client object.
+        _sessions(List[Session]): List of device session instances.
+
+
+    #### Public Attributes:
+        sid(EmailStr): Device Identifier email string.
+        ip(str): IP address of the device.
+
+    #### Public Methods:
+        create_session (Session): Creates a session for the device.
+        sessions (List[Session]): Returns all the sessions created by the device id.
+        clear_sessions (): Deletes all the sessions created by the device id.
+        location (Location): Gets the location of the device and returns a Location client object.
+        verify_location (bool): Verifies if a device is located in a given location point.
+    """
+
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
     sid: EmailStr
@@ -27,6 +47,21 @@ class Device(BaseModel):
         return str(self.sid)
 
     def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None):
+        """Creates a session for the device.
+
+        #### Args:
+            service_ip (any): IP address of the service.
+            profile (any): Name of the requested QoS profile.
+            device_ports (optional): List of the device ports.
+            service_ports (optional): List of the application server ports.
+            duration (optional): Session duration in seconds.
+            notification_url (optional): Notification URL for session-related events.
+
+        #### Example:
+            ```python
+            session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications")
+            ```
+        """
         session_resource = {
             "qosProfile": profile,
             "id": self.sid,
@@ -52,6 +87,13 @@ class Device(BaseModel):
         return Session.convert_session_model(self._api, self.ip, session)
 
     def sessions(self) -> List[Session]:
+        """List sessions of the device.
+
+        #### Example:
+            ```python
+            sessions = device.sessions()
+            ```
+        """
         # Error Case: Getting all sessions
         sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid})
         # sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
@@ -61,6 +103,7 @@ class Device(BaseModel):
             return list(map(lambda session : self.__convert_session_model(session), sessions.body))
 
     def clear_sessions(self):
+        """Clears sessions of the device."""
         for session in self.sessions():
             session.delete()
 
@@ -68,6 +111,13 @@ class Device(BaseModel):
        return Session.convert_session_model(self._api, self.ip, session)
 
     def location(self) -> Location:
+        """Returns the location of the device.
+
+        #### Example:
+            ```python
+            location = device.location()
+            ```
+        """
         query_parameters = {
            "device_id": self.sid 
         }
@@ -96,6 +146,18 @@ class Device(BaseModel):
         return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
 
     def verify_location(self, longitude: float, latitude: float, accuracy: str) -> bool:
+        """Verifies the location of the device(Returns boolean value).
+
+        #### Args:
+            longitude (float): longitude of the device.
+            latitude (float): longitude of the device.
+            accuracy (str): Accuracy range in distance.
+            
+        #### Example:
+            ```python
+            located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, accuracy="10km")
+            ```
+        """
         query_parameters = {
             "device_id": self.sid,
             "longitude": longitude,
