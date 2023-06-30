@@ -1,5 +1,7 @@
+from qos_client.model.session_info import SessionInfo
 
-def error_handler(func, arg, key=None):
+
+def error_handler(func, arg, key=None) -> SessionInfo:
     """An error handler function. 
     
     Returns success response or raises error when the given function has exception.

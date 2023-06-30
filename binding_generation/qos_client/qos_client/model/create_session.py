@@ -65,6 +65,7 @@ class CreateSession(
                     inclusive_maximum = 86400
                     inclusive_minimum = 1
             notificationUrl = schemas.StrSchema
+            notificationAuthToken = schemas.StrSchema
             __annotations__ = {
                 "qosProfile": qosProfile,
                 "id": id,
@@ -74,6 +75,7 @@ class CreateSession(
                 "applicationServerPorts": applicationServerPorts,
                 "duration": duration,
                 "notificationUrl": notificationUrl,
+                "notificationAuthToken": notificationAuthToken,
             }
     
     qosProfile: MetaOapg.properties.qosProfile
@@ -106,9 +108,12 @@ class CreateSession(
     def __getitem__(self, name: typing_extensions.Literal["notificationUrl"]) -> MetaOapg.properties.notificationUrl: ...
     
     @typing.overload
+    def __getitem__(self, name: typing_extensions.Literal["notificationAuthToken"]) -> MetaOapg.properties.notificationAuthToken: ...
+    
+    @typing.overload
     def __getitem__(self, name: str) -> schemas.UnsetAnyTypeSchema: ...
     
-    def __getitem__(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", ], str]):
+    def __getitem__(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", "notificationAuthToken", ], str]):
         # dict_instance[name] accessor
         return super().__getitem__(name)
     
@@ -138,9 +143,12 @@ class CreateSession(
     def get_item_oapg(self, name: typing_extensions.Literal["notificationUrl"]) -> typing.Union[MetaOapg.properties.notificationUrl, schemas.Unset]: ...
     
     @typing.overload
+    def get_item_oapg(self, name: typing_extensions.Literal["notificationAuthToken"]) -> typing.Union[MetaOapg.properties.notificationAuthToken, schemas.Unset]: ...
+    
+    @typing.overload
     def get_item_oapg(self, name: str) -> typing.Union[schemas.UnsetAnyTypeSchema, schemas.Unset]: ...
     
-    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", ], str]):
+    def get_item_oapg(self, name: typing.Union[typing_extensions.Literal["qosProfile", "id", "ip", "appIp", "devicePorts", "applicationServerPorts", "duration", "notificationUrl", "notificationAuthToken", ], str]):
         return super().get_item_oapg(name)
     
 
@@ -155,6 +163,7 @@ class CreateSession(
         applicationServerPorts: typing.Union['PortsSpec', schemas.Unset] = schemas.unset,
         duration: typing.Union[MetaOapg.properties.duration, decimal.Decimal, int, schemas.Unset] = schemas.unset,
         notificationUrl: typing.Union[MetaOapg.properties.notificationUrl, str, schemas.Unset] = schemas.unset,
+        notificationAuthToken: typing.Union[MetaOapg.properties.notificationAuthToken, str, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'CreateSession':
@@ -169,6 +178,7 @@ class CreateSession(
             applicationServerPorts=applicationServerPorts,
             duration=duration,
             notificationUrl=notificationUrl,
+            notificationAuthToken=notificationAuthToken,
             _configuration=_configuration,
             **kwargs,
         )

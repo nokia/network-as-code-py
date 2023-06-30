@@ -140,7 +140,7 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import time
 import qos_client
 from pprint import pprint
-from qos_client.apis.tags import qos_api
+from qos_client.apis.tags import default_api
 from qos_client.model.create_session import CreateSession
 from qos_client.model.http_validation_error import HTTPValidationError
 from qos_client.model.session_info import SessionInfo
@@ -164,12 +164,12 @@ configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with qos_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = qos_api.QosApi(api_client)
+    api_instance = default_api.DefaultApi(api_client)
     create_session = CreateSession(
-        qos="qos_example",
+        qos_profile="qos_profile_example",
         id="id_example",
         ip="ip_example",
-        ports=PortsSpec(
+        device_ports=PortsSpec(
             ranges=[
                 PortsSpecRangesInner(
                     _from=1.0,
@@ -181,15 +181,18 @@ with qos_client.ApiClient(configuration) as api_client:
             ],
         ),
         app_ip="app_ip_example",
-        app_ports=PortsSpec(),
+        application_server_ports=PortsSpec(),
+        duration=1.0,
+        notification_url="notification_url_example",
+        notification_auth_token="notification_auth_token_example",
     ) # CreateSession | 
 
     try:
         # Create QoS service
-        api_response = api_instance.create_qos_sessions_post(create_session)
+        api_response = api_instance.create_session(create_session)
         pprint(api_response)
     except qos_client.ApiException as e:
-        print("Exception when calling QosApi->create_qos_sessions_post: %s\n" % e)
+        print("Exception when calling DefaultApi->create_session: %s\n" % e)
 ```
 
 ## Documentation for API Endpoints
@@ -198,10 +201,10 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*QosApi* | [**create_qos_sessions_post**](docs/apis/tags/QosApi.md#create_qos_sessions_post) | **post** /sessions | Create QoS service
-*QosApi* | [**delete_qos_sessions_resource_id_delete**](docs/apis/tags/QosApi.md#delete_qos_sessions_resource_id_delete) | **delete** /sessions/{resource_id} | Delete Qos
-*QosApi* | [**get_all_qos_sessions_get**](docs/apis/tags/QosApi.md#get_all_qos_sessions_get) | **get** /sessions | Return QoS settings for your device.
-*QosApi* | [**get_qos_sessions_resource_id_get**](docs/apis/tags/QosApi.md#get_qos_sessions_resource_id_get) | **get** /sessions/{resource_id} | Return QoS settings
+*DefaultApi* | [**create_session**](docs/apis/tags/DefaultApi.md#create_session) | **post** /sessions | Create QoS service
+*DefaultApi* | [**delete_session**](docs/apis/tags/DefaultApi.md#delete_session) | **delete** /sessions/{sessionId} | Delete Qos Handler
+*DefaultApi* | [**get_all_sessions**](docs/apis/tags/DefaultApi.md#get_all_sessions) | **get** /sessions | Return QoS settings for your device.
+*DefaultApi* | [**get_session**](docs/apis/tags/DefaultApi.md#get_session) | **get** /sessions/{sessionId} | Return QoS settings.
 
 ## Documentation For Models
 
