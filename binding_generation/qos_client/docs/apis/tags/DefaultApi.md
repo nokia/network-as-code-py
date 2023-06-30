@@ -69,6 +69,7 @@ with qos_client.ApiClient(configuration) as api_client:
         application_server_ports=PortsSpec(),
         duration=1.0,
         notification_url="notification_url_example",
+        notification_auth_token="notification_auth_token_example",
     )
     try:
         # Create QoS service

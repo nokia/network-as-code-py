@@ -32,7 +32,8 @@ class Devices(Namespace):
                 raise ServiceError(e)
         except ValidationError as e:
             raise InvalidParameter(e)
-
+        
+        # ret_device = Device(api=self.api, sid = id, ip = ip)
         # res = self.api.subscriptions.get_subscription(id)
         return ret_device
 

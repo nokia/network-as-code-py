@@ -67,6 +67,7 @@ class Session(BaseModel, arbitrary_types_allowed = True):
     def delete(self):
         """Deletes a given session."""
         error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id})
+        # self._api.sessions.delete_session({'sessionId': self.id})
 
     def duration(self):
         """Returns the duration of a given session."""

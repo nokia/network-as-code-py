@@ -11,6 +11,12 @@ from ..models.session import Session
 from ..models.location import CivicAddress, Location
 from ..errors import DeviceNotFound, NotFound, error_handler
 
+
+class Event(BaseModel):
+    target: str
+    atUnix: int
+
+
 class Device(BaseModel):
     """
     A class representing the `Device` model.
@@ -46,7 +52,7 @@ class Device(BaseModel):
     def id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None):
+    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_token = None):
         """Creates a session for the device.
 
         #### Args:
@@ -56,10 +62,11 @@ class Device(BaseModel):
             service_ports (optional): List of the application server ports.
             duration (optional): Session duration in seconds.
             notification_url (optional): Notification URL for session-related events.
+            notification_token (optional): Security bearer token to authenticate registration of session.
 
         #### Example:
             ```python
-            session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications")
+            session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
         session_resource = {
@@ -77,12 +84,18 @@ class Device(BaseModel):
         if notification_url:
             session_resource["notificationUrl"] = notification_url
 
+        if notification_token:
+            session_resource["notificationAuthToken"] = "Bearer "+notification_token
+
 
         # Error Case: Creating session
         global session 
         session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
         # session = self._api.sessions.create_session(session_resource)
         session = session.body
+
+        # Convert response body to an Event model
+        # Event(target=session.id, atUnix=session.expiresAt)
 
         return Session.convert_session_model(self._api, self.ip, session)
 

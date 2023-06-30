@@ -23,6 +23,7 @@ websockets = "^10.3"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 qos_client = {path = "binding_generation/qos_client"}
 location_client = {path = "binding_generation/location_client"}
+pytest-env = "^0.8.2"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"
@@ -44,3 +45,6 @@ build-backend = "poetry.core.masonry.api"
 # addopts = "--ignore=tests/test_qos.py"
 # asyncio_mode = "auto"
 norecursedirs = "binding_generation"
+env = [
+    "NAC_TOKEN=6378012965mshb70a48eb13b4ca2p168604jsn0b50b4006f93"
+]
