@@ -1,37 +1,44 @@
 pipeline {
-    agent { 
-        node {
-            label 'docker-agent-python'
-            }
-      }
+    agent any
     triggers {
         pollSCM '* * * * *'
+    }
+    environment {
+        PYPI_REPOSITORY = 'test_pypi_repository'
+        PYPI_USERNAME = "${PYPI_USERNAME}"
+        PYPI_PASSWORD = "${PYPI_PASSWORD}"
     }
     stages {
         stage('Build') {
             steps {
                 echo "Building.."
-                sh '''
-                export https_proxy=http://fihel1d-proxy.emea.nsn-net.net:8080
-                export http_proxy=http://fihel1d-proxy.emea.nsn-net.net:8080
-                pip install poetry
-                '''
+                script {
+                    sh '''
+                        curl -sSL https://install.python-poetry.org | python3
+                        $HOME/.local/bin/poetry install
+                        $HOME/.local/bin/poetry build
+                    '''
+                }
             }
         }
         stage('Test') {
             steps {
                 echo "Testing.."
-                sh '''
-                poetry install
-                poetry run pytest
-                '''
+                script {
+                    sh '''
+                        $HOME/.local/bin/poetry install
+                        $HOME/.local/bin/poetry run pytest
+                    '''
+                }
+                
             }
         }
-        stage('Deliver') {
+        stage('Deploy') {
             steps {
-                echo 'Deliver....'
+                echo 'Deploying....'
                 sh '''
-                echo "doing delivery stuff.."
+                $HOME/.local/bin/poetry config repositories.devpi ${PYPI_REPOSITORY}
+                $HOME/.local/bin/poetry publish --build -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
                 '''
             }
         }
