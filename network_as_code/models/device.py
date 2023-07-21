@@ -40,7 +40,7 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
-    sid: EmailStr
+    sid: str
     ip: str 
 
     def __init__(self, api: APIClient, **data) -> None:
