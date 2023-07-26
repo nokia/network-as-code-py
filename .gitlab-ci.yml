@@ -21,20 +21,10 @@ before_script:
 
 # JOBS
 
-# TODO: This is uncommented while a testing instance is unavailable
-#       Re-enable testing when an instance is available
-
-# test:
-#   stage: test
-#   tags:
-#     - esisogr87 # This runner has connection to "outside"
-#   variables:
-#     NAC_TOKEN: "asd1234" # Replace with a proper token if we test against the L1 API gateway
-#   script:
-#     - poetry install
-#     - poetry run pytest
-#   rules:
-#     - if: $CI_COMMIT_BRANCH
+stages:
+  - test
+  - build
+  - deploy
 
 test:
   stage: test
