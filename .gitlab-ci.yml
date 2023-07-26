@@ -36,6 +36,14 @@ before_script:
 #   rules:
 #     - if: $CI_COMMIT_BRANCH
 
+test:
+  stage: test
+  tags:
+    - esisogr87 # This runner has connection to "outside"
+  script:
+    - poetry install
+    - poetry run pytest --cov=network_as_code
+
 build:
   stage: build
   tags:
