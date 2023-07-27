@@ -63,6 +63,17 @@ pipeline {
         }        
       }
     }
+    stage('Version bumping') {
+      steps {
+        container('beluga') {
+          script {
+            sh """
+              python3 -m poetry version \$(git describe --tags --abbrev=0)
+            """
+          }
+        }        
+      }
+    }
     stage('Build') {
       steps {
         container('beluga') {
