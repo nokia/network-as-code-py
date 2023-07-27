@@ -50,6 +50,13 @@ pipeline {
     PYPI_USERNAME = "${PYPI_USERNAME}"
     PYPI_PASSWORD = "${PYPI_PASSWORD}"
   }
+  options {
+    gitLabConnection('gitlab-ee2')  // the GitLab connection name defined in Jenkins, check the value from pipeline configure UI
+    timeout(time: 60, unit: 'MINUTES')
+    buildDiscarder(logRotator(daysToKeepStr: '30', artifactDaysToKeepStr: '1'))
+    disableConcurrentBuilds()
+    timestamps()
+  }
   stages {
     stage('Test') {
       steps {
