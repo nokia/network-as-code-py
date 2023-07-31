@@ -21,6 +21,7 @@ Activate a network slice.
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import slice_client
 from slice_client.apis.tags import slice_api
@@ -32,6 +33,16 @@ configuration = slice_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with slice_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -111,7 +122,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
@@ -125,6 +136,7 @@ Create a network slice.
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import slice_client
 from slice_client.apis.tags import slice_api
@@ -138,6 +150,16 @@ configuration = slice_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with slice_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -238,7 +260,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
@@ -252,6 +274,7 @@ Deactivate a network slice. The slice state must be active to be able to perform
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import slice_client
 from slice_client.apis.tags import slice_api
@@ -263,6 +286,16 @@ configuration = slice_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with slice_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -342,7 +375,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
@@ -356,6 +389,7 @@ Delete network slice. The slice state must not be active to perform this operati
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import slice_client
 from slice_client.apis.tags import slice_api
@@ -367,6 +401,16 @@ configuration = slice_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with slice_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -438,7 +482,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
@@ -452,6 +496,7 @@ Get network slice data.
 
 ### Example
 
+* Api Key Authentication (RapidApiKey):
 ```python
 import slice_client
 from slice_client.apis.tags import slice_api
@@ -464,6 +509,16 @@ configuration = slice_client.Configuration(
     host = "http://localhost"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: RapidApiKey
+configuration.api_key['RapidApiKey'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['RapidApiKey'] = 'Bearer'
 # Enter a context with an instance of the API client
 with slice_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
@@ -542,7 +597,7 @@ Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[RapidApiKey](../../../README.md#RapidApiKey)
 
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 

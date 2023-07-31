@@ -230,6 +230,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "RapidApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-RapidAPI-Key"
+      }
+    },
     "schemas": {
       "AdministrativeState": {
         "title": "AdministrativeState",
@@ -495,5 +502,10 @@
         }
       }
     }
-  }
+  },
+  "security": [
+    {
+      "RapidApiKey": []
+    }
+  ]
 }
