@@ -6,7 +6,8 @@ authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lah
 packages = [
     { include = "network_as_code" },
     { include = "qos_client", from = "binding_generation"},
-    { include = "location_client", from = "binding_generation"}
+    { include = "location_client", from = "binding_generation"},
+    { include = "devicestatus_client", from = "binding_generation"}
 ]
 
 [tool.pyright]
@@ -20,6 +21,7 @@ python = "^3.7"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 qos_client = {path = "binding_generation/qos_client"}
 location_client = {path = "binding_generation/location_client"}
+devicestatus_client = {path = "binding_generation/devicestatus_client"}
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"
@@ -42,6 +44,3 @@ build-backend = "poetry.core.masonry.api"
 # addopts = "--ignore=tests/test_qos.py"
 # asyncio_mode = "auto"
 norecursedirs = "binding_generation"
-env = [
-    "NAC_TOKEN=6378012965mshb70a48eb13b4ca2p168604jsn0b50b4006f93"
-]
