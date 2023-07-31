@@ -1,5 +1,5 @@
 from os import access
-from pydantic import BaseModel, EmailStr, PrivateAttr
+from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union
 
 from qos_client.model.create_session import CreateSession
@@ -9,7 +9,10 @@ from qos_client.schemas import unset
 from ..api import APIClient
 from ..models.session import Session
 from ..models.location import CivicAddress, Location
-from ..errors import DeviceNotFound, NotFound, error_handler
+# from ..models.device_status import ConnectivitySubscription
+from devicestatus_client.model.connectivity_data import ConnectivityData
+from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
+from urllib.error import HTTPError
 
 
 class Event(BaseModel):
@@ -36,6 +39,9 @@ class Device(BaseModel):
         clear_sessions (): Deletes all the sessions created by the device id.
         location (Location): Gets the location of the device and returns a Location client object.
         verify_location (bool): Verifies if a device is located in a given location point.
+        get_connectivity (ConnectivityData): Retrieve device connectivity status data
+        update_connectivity (ConnectivityData): Update device connectivity status data
+        delete_connectivity (): Delete device connectivity status
     """
 
     _api: APIClient = PrivateAttr()
@@ -186,3 +192,4 @@ class Device(BaseModel):
             # return self._api.location.verify_location(query_parameters).body
         except:
             return False
+        

@@ -8,6 +8,10 @@ import location_client.api_client as location_api_client
 
 from location_client.apis.tags import location_api
 
+import devicestatus_client.api_client as devicestatus_api_client
+
+from devicestatus_client.apis.tags import default_api as devicestatus_api
+
 # import httpx
 # import json as JSON
 # # from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
@@ -27,6 +31,7 @@ class APIClient:
         testmode: bool = False,
         qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
         location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
+        devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
         **kwargs,
     ):
         qos_config = qos_api_client.Configuration(
@@ -58,3 +63,18 @@ class APIClient:
         )
 
         self.location = location_api.LocationApi(self._location_client)
+
+        devicestatus_config = devicestatus_api_client.Configuration(
+            host=devicestatus_base_url,
+            api_key={
+                "RapidApiKey": token
+            }
+        )
+
+        self._devicestatus_client = devicestatus_api_client.ApiClient(
+            devicestatus_config,
+            header_name="X-RapidAPI-Host",
+            header_value="device-status.nokia-dev.rapidapi.com"
+        )
+
+        self.devicestatus = devicestatus_api.DefaultApi(self._devicestatus_client)
