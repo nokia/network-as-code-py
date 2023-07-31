@@ -1,6 +1,7 @@
 from .api import APIClient
 from .namespaces import Devices
 from .namespaces import Sessions
+from .namespaces import Slices
 from .namespaces import Connectivity
 
 class NetworkAsCodeClient:
@@ -24,6 +25,7 @@ class NetworkAsCodeClient:
         self._api = APIClient(token=token, **kwargs)
         self._devices = Devices(self._api)
         self._sessions = Sessions(self._api)
+        self._slices = Slices(self._api)
         self._connectivity = Connectivity(self._api)
 
     #### NAMESPACES
@@ -43,11 +45,11 @@ class NetworkAsCodeClient:
         TODO: Write some documentation about the subscription namespace here.
         """
         return self._sessions
-    
+
+    @property
+    def slices(self):
+        return self._slices
+
     @property
     def connectivity(self):
-        """Namespace containing functionalities related to mobile subscriptions.
-
-        TODO: Write some documentation about the subscription namespace here.
-        """
         return self._connectivity
