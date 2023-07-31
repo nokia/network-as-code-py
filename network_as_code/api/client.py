@@ -8,6 +8,10 @@ import location_client.api_client as location_api_client
 
 from location_client.apis.tags import location_api
 
+import slice_client.api_client as slice_api_client
+
+from slice_client.apis.tags import slice_api
+
 import devicestatus_client.api_client as devicestatus_api_client
 
 from devicestatus_client.apis.tags import default_api as devicestatus_api
@@ -31,6 +35,7 @@ class APIClient:
         testmode: bool = False,
         qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
         location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
+        slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
         devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
         **kwargs,
     ):
@@ -63,6 +68,21 @@ class APIClient:
         )
 
         self.location = location_api.LocationApi(self._location_client)
+
+        slice_config = slice_api_client.Configuration(
+            host=slice_base_url,
+            api_key={
+                "RapidApiKey": token
+            }
+        )
+
+        self._slice_client = slice_api_client.ApiClient(
+            slice_config,
+            header_name="X-RapidAPI-Host",
+            header_value="network-slicing.nokia-dev.rapidapi.com"
+        )
+
+        self.slice = slice_api.SliceApi(self._slice_client)
 
         devicestatus_config = devicestatus_api_client.Configuration(
             host=devicestatus_base_url,

@@ -7,6 +7,7 @@ packages = [
     { include = "network_as_code" },
     { include = "qos_client", from = "binding_generation"},
     { include = "location_client", from = "binding_generation"},
+    { include = "slice_client", from = "binding_generation"},
     { include = "devicestatus_client", from = "binding_generation"}
 ]
 
@@ -21,6 +22,7 @@ python = "^3.7"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 qos_client = {path = "binding_generation/qos_client"}
 location_client = {path = "binding_generation/location_client"}
+slice_client = {path = "binding_generation/slice_client"}
 devicestatus_client = {path = "binding_generation/devicestatus_client"}
 
 [tool.poetry.group.dev.dependencies]
