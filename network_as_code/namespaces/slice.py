@@ -5,11 +5,11 @@ from ..models import Slice
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
-from slice_client.model.throughput import Throughput
-from slice_client.model.slice_data import SliceData
-from slice_client.model.network_identifier import NetworkIdentifier
-from slice_client.model.slice_info import SliceInfo
-from slice_client.model.area_of_service import AreaOfService
+from slice_client.models import Throughput
+from slice_client.models import SliceData
+from slice_client.models import NetworkIdentifier
+from slice_client.models import SliceInfo
+from slice_client.models import AreaOfService
 
 
 class Slices(Namespace):
@@ -24,12 +24,12 @@ class Slices(Namespace):
                slice_info: SliceInfo, 
                area_of_service: AreaOfService, 
                notification_url: str,
+               name: Optional[str] = None,
                notification_auth_token: Optional[str] = None,
                slice_downlink_throughput: Optional[Throughput] = None, 
                slice_uplink_throughput: Optional[Throughput] = None,
                device_downlink_throughput: Optional[Throughput] = None,
                device_uplink_throughput: Optional[Throughput] = None,
-               name: Optional[str] = None,
                max_data_connections: Optional[int] = None,
                max_devices: Optional[int] = None
                ) -> Slice:
@@ -71,15 +71,32 @@ class Slices(Namespace):
                 "sliceInfo": slice_info,
                 "areaOfService": area_of_service,
                 "notificationUrl": notification_url,
-                "notificationAuthToken": notification_auth_token,
-                "name": name,
-                "maxDataConnections": max_data_connections,
-                "maxDevices": max_devices,
-                "sliceUplinkThroughput": slice_uplink_throughput,
-                "sliceDownlinkThroughput": slice_downlink_throughput,
-                "deviceUplinkThroughput": device_uplink_throughput,
-                "deviceDownlinkThroughput": device_downlink_throughput
             }
+
+            if name:
+                body["name"] = name
+
+            if notification_auth_token:
+                body["notificationAuthToken"] = notification_auth_token
+
+            if max_data_connections:
+                body["maxDataConnections"] = max_data_connections 
+
+            if max_devices:
+                body["maxDevices"] = max_devices
+
+            if slice_downlink_throughput:
+                body["sliceDownlinkThroughput"] = slice_downlink_throughput
+
+            if slice_uplink_throughput:
+                body["sliceUplinkThroughput"] = slice_uplink_throughput
+
+            if device_uplink_throughput:
+                body["deviceUplinkThroughput"] = device_uplink_throughput
+
+            if device_downlink_throughput:
+                body["deviceDownlinkThroughput"] = device_downlink_throughput
+
             slice_data = self.api.slice.create_slice(body)
             slice.sid = slice_data.csi_id
             slice.state = slice_data.state
