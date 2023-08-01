@@ -4,7 +4,10 @@ from . import Namespace
 from ..models.device import Device 
 from ..models.device_status import ConnectivitySubscription
 
-from devicestatus_client.model.device import Device as BindingDevice
+from devicestatus_client.models import Device as BindingDevice
+from devicestatus_client.models import CreateEventSubscription
+from devicestatus_client.models import CreateEventSubscription, EventSubscriptionDetail
+from devicestatus_client.models import Webhook
 
 from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
@@ -20,11 +23,13 @@ class Connectivity(Namespace):
     """
 
     def subscribe(self, 
-                max_num_of_reports: int, 
-                notification_url: str,
-                device: Device,
-                notification_auth_token: Optional[str] = None,
-                ) -> ConnectivitySubscription:
+                  event_type: str,
+                  max_num_of_reports: int, 
+                  notification_url: str,
+                  device: Device,
+                  subscription_expire_time: Optional[str] = None,
+                  notification_auth_token: Optional[str] = None,
+                  ) -> ConnectivitySubscription:
         """Create subscription for device connectivity status.
 
         Args:
@@ -45,14 +50,13 @@ class Connectivity(Namespace):
 
         # Error Case: Creating Connectivity Subscription
         try:
-            connectivity_resource = {
-                "id": device.id,
-                "device": BindingDevice(networkAccessIdentifier=device.id),
-                "maxNumOfReports": max_num_of_reports,
-                "notificationUrl": notification_url,
-                "notificationAuthToken": notification_auth_token
-            }
-            connectivity_data = self.api.devicestatus.create_connectivity_subscription(connectivity_resource)
+            body = CreateEventSubscription(
+                subscriptionDetail=EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.id)),
+                subscriptionExpireTime=subscription_expire_time,
+                maxNumOfReports=max_num_of_reports,
+                webhook=Webhook(notificationUrl=notification_url, notificationAuthToken=notification_auth_token)
+            )
+            connectivity_data = self.api.devicestatus.create_event_subscription(body)
             connectivity_subscription.id = connectivity_data.id
 
         except HTTPError as e:
@@ -81,13 +85,13 @@ class Connectivity(Namespace):
 
         # Error Case: Getting connectivity status data
         global connectivity_data
-        connectivity_data = error_handler(func=self.api.devicestatus.get_connectivity, arg=id)
+        connectivity_data = error_handler(func=self.api.devicestatus.get_event_subscription, arg=id)
 
         return ConnectivitySubscription(
             id=connectivity_data.id,
             api=self.api, 
             max_num_of_reports = connectivity_data.max_num_of_reports, 
-            notification_url = None,
-            notification_auth_token = None,
-            device = None
+            notification_url = connectivity_data.webhook.notification_url,
+            notification_auth_token = connectivity_data.webhook.notification_auth_token,
+            device = Device(api=self.api, sid=connectivity_data.subscription_detail.device.network_access_identifier, ip=connectivity_data.subcsription_detail.device.ipv4_address)
         )
