@@ -1,11 +1,16 @@
 
 import time
 
+from fastapi import FastAPI, Header
+
 from pydantic import BaseModel
+
+from typing_extensions import Annotated
+from typing import Union
 
 import network_as_code as nac
 
-from network_as_code.models.slice import Point, AreaOfService
+from network_as_code.models.slice import Point, AreaOfService, NetworkIdentifier, SliceInfo
 
 client = nac.NetworkAsCodeClient(
     token="<MY_TOKEN>"
@@ -20,29 +25,43 @@ device = client.devices.get("testuser@open5glab.net", ip="1.1.1.2")
 slice = client.slices.create(
     network_id = NetworkIdentifier(mcc="664", mnc="22"),
     slice_info = SliceInfo(service_type="eMBB", differentiator="42A5de"),
-    area_of_service=AreaOfService(poligon=[Point(lat=42.0, lon=42.0), Point(lat=41.0, lon=42.0), Point(lat=42.0, lon=41.0)])
+    area_of_service=AreaOfService(poligon=[Point(lat=42.0, lon=42.0), Point(lat=41.0, lon=42.0), Point(lat=42.0, lon=41.0)]),
+    notification_url="http://notify.me/here",
+    notification_auth_token="my-token"
 )
 
-while slice.state != "CREATED":
-    slice.refresh()
-    time.sleep(1)
+# Our web server for receiving notifications
 
-# Activating a slice
-slice.activate()
-while slice.state != "AVAILABLE":
-    slice.refresh()
-    time.sleep(1)
+app = FastAPI()
 
-# We can attach a device to an active slice
-slice.attach(device)
+class Notification(BaseModel):
+    resource: str
+    action: str
+    state: str
 
-# We can also then detach devices
-slice.detach(device)
+# We'll keep track of when we are retiring the slice between the notifications
+retiring = False
 
-# Deactivating a slice
-slice.deactivate()
-while slice.state != "CREATED":
-    slice.refresh()
+@app.post("/notifications")
+def receive_notification(notification: Notification, authorization: Annotated[Union[str, None], Header]):
+    if authorization == "Bearer my-token":
+        slice = client.slices.get(notification.resource)
 
-# Only deactivated slices may be deleted
-slice.delete()
+        # Handler for when the slice has been built
+        if notification.state == "AVAILABLE":
+            # If we are deactivating the slice, we will receive notification here too
+            if retiring:
+                # Deactivated slices can be deleted
+                slice.delete()
+            else:
+                slice.activate()
+
+        # Handler for when the slice has been activated
+        elif notification.state == "OPERATING":
+            print("Slice is active")
+
+            # Activated slices can be deactivated
+            slice.deactivate()
+
+            global retiring
+            retiring = True
