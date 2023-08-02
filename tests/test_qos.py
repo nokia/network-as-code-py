@@ -15,20 +15,20 @@ def test_creating_a_qos_flow(client):
 
     session.delete()
 
-# def test_getting_a_created_qos_session_by_id(client):
-#     device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
+def test_getting_a_created_qos_session_by_id(client):
+    device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
 
-#     session = device.create_session(service_ip="5.6.7.8", profile="QOS_L")
+    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L")
 
-#     assert client.sessions.get(session.id).id == session.id
+    assert client.sessions.get(session.id).id == session.id
 
-#     session.delete()
+    session.delete()
 
-#     try:
-#         client.sessions.get(session.id)
-#         assert False # Should fail
-#     except:
-#         assert True
+    try:
+        client.sessions.get(session.id)
+        assert False # Should fail
+    except:
+        assert True
 
 def test_creating_a_qos_flow_with_port_info(client):
     device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
