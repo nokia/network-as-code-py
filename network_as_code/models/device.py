@@ -58,7 +58,7 @@ class Device(BaseModel):
     def id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_token = None):
+    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None):
         """Creates a session for the device.
 
         #### Args:
@@ -90,8 +90,8 @@ class Device(BaseModel):
         if notification_url:
             session_resource["notificationUrl"] = notification_url
 
-        if notification_token:
-            session_resource["notificationAuthToken"] = "Bearer "+notification_token
+        if notification_auth_token:
+            session_resource["notificationAuthToken"] = "Bearer "+notification_auth_token
 
 
         # Error Case: Creating session

@@ -72,7 +72,7 @@ def test_creating_a_qos_flow_with_duration(client):
 def test_creating_a_qos_flow_with_notification_url(client):
     device = client.devices.get("testuser@open5glab.net", ip = "1.1.1.2")
 
-    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_token="c8974e592c2fa383d4a3960714")
+    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714")
 
     session.delete()
 
