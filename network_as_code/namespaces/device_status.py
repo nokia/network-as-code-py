@@ -50,12 +50,19 @@ class Connectivity(Namespace):
 
         # Error Case: Creating Connectivity Subscription
         try:
-            body = CreateEventSubscription(
-                subscriptionDetail=EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.network_access_id)),
-                subscriptionExpireTime=subscription_expire_time,
-                maxNumOfReports=max_num_of_reports,
-                webhook=Webhook(notificationUrl=notification_url, notificationAuthToken=notification_auth_token)
-            )
+            body = {
+                "subscriptionDetail": EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.id)),
+                "maxNumOfReports": max_num_of_reports,
+            }
+
+            if subscription_expire_time:
+                body["subscriptionExpireTime"] = subscription_expire_time
+
+            if notification_auth_token:
+                body["webhook"] = Webhook(notificationUrl=notification_url, notificationAuthToken=notification_auth_token)
+            else:
+                body["webhook"] = Webhook(notificationUrl=notification_url)
+
             connectivity_data = self.api.devicestatus.create_event_subscription(body)
             connectivity_subscription.id = connectivity_data.id
 
