@@ -56,6 +56,6 @@ class ConnectivitySubscription(BaseModel):
         """
 
         # Error Case: Delete connectivity status
-        error_handler(func=self._api.devicestatus.delete_connectivity_handler, arg=self.id)
+        self._api.devicestatus.delete_event_subscription({"id": self.id})
 
 
