@@ -47,7 +47,6 @@ def test_getting_a_slice(client):
         notification_url="https://notify.me/here"
     )
 
-
     fetched_slice = client.slices.get(new_slice.sid)
 
     assert new_slice.sid == fetched_slice.sid

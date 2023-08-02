@@ -35,19 +35,19 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         areaOfService (AreaOfService): Location of the slice
         maxDataConnections (optional): Optional maximum number of data connection sessions in the slice.
         maxDevices (optional): Optional maximum number of devices using the slice.
-        sliceDownlinkThroughput (optional): 
-        sliceUplinkThroughput (optional):
-        deviceDownlinkThroughput (optional):
-        deviceUplinkThroughput: (optional):
+        sliceDownlinkThroughput (optional): Optional throughput object
+        sliceUplinkThroughput (optional): Optional throughput object
+        deviceDownlinkThroughput (optional): Optional throughput object
+        deviceUplinkThroughput: (optional): Optional throughput object
 
 
     #### Public Methods:
-        get (SliceData | None): Get network slice data.
         activate (None): Activate a network slice.
         attach (): Attach a network slice to a device.
         deactivate (None): Deactivate a network slice. The slice state must be active to be able to perform this operation.
         delete (None): Delete network slice. The slice state must not be active to perform this operation.
-
+        refresh (None): Refresh the state of the network slice.
+        
     #### Callback Functions:
         on_creation ():
         on_event ():
@@ -65,10 +65,10 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     area_of_service: AreaOfService
     max_data_connections: Optional[int] = Field(None, description="Maximum number of data connection sessions in the slice.", ge=0)
     max_devices: Optional[int] = Field(None, description="Maximum number of devices using the slice.", ge=0)
-    slice_downlink_throughput: Optional[Throughput]
-    slice_uplink_throughput: Optional[Throughput]
-    device_downlink_throughput: Optional[Throughput]
-    device_uplink_throughput: Optional[Throughput]
+    slice_downlink_throughput: Optional[Throughput] = None
+    slice_uplink_throughput: Optional[Throughput] = None
+    device_downlink_throughput: Optional[Throughput] = None
+    device_uplink_throughput: Optional[Throughput] = None
 
 
     def __init__(self, api: APIClient, **data) -> None:
@@ -77,47 +77,57 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self._sessions = []
 
     def activate(self) -> None:
-        """Activate network slice by id.
+        """Activate network slice.
 
         #### Args:
-            id (str): Resource id.
+            None
 
         #### Example:
             ```python
-            slice_data.slice.activate(id)
+            slice.activate()
             ```
         """
-        self._api.slice.activate_slice(self.id)
+        self._api.slice.activate_slice(self.sid)
     
     def deactivate(self) -> None:
-        """Deactivate network slice by id.
+        """Deactivate network slice.
 
         #### Args:
-            id (str): Resource id.
+            None
 
         #### Example:
             ```python
-            slice_data.slice.deactivate(id)
+            slice.deactivate()
             ```
         """
-        self._api.slice.deactivate_slice(self.id)
+        self._api.slice.deactivate_slice(self.sid)
     
     def delete(self) -> None:
-        """Delete network slice by id.
+        """Delete network slice.
 
         #### Args:
-            id (str): Resource id.
+            None
 
         #### Example:
             ```python
-            slice_data.slice.delete(id)
+            slice.delete()
             ```
         """
-        self._api.slice.delete_slice(self.id)
+        self._api.slice.delete_slice(self.sid)
 
     def refresh(self) -> None:
+        """Refresh state of the network slice.
+
+        #### Args:
+            None
+
+        #### Example:
+            ```python
+            slice.refresh()
+            ```
+        """
         try:
-            slice_data = self._api.slice.get_slice(self.id)
+            slice_data = self._api.slice.get_slice(self.sid)
 
             self.state = slice_data.state
         except HTTPError as e:
