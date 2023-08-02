@@ -69,7 +69,7 @@ class Device(BaseModel):
     def network_access_id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None):
+    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> Session:
         """Creates a session for the device.
 
         #### Args:
@@ -109,8 +109,8 @@ class Device(BaseModel):
 
         # Error Case: Creating session
         global session 
-        session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
-        # session = self._api.sessions.create_session(session_resource)
+        # session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
+        session = self._api.sessions.create_session(session_resource)
         session = session.body
 
         # Convert response body to an Event model

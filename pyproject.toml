@@ -46,3 +46,6 @@ build-backend = "poetry.core.masonry.api"
 # addopts = "--ignore=tests/test_qos.py"
 # asyncio_mode = "auto"
 norecursedirs = "binding_generation"
+env = [
+    "NAC_TOKEN=2e78fdfd1fmsh6f084cb9396baf5p16de2cjsnfaa8d7577b8a"
+]
