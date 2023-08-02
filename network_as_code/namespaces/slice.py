@@ -5,11 +5,12 @@ from ..models import Slice
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
-from slice_client.models import Throughput
-from slice_client.models import SliceData
-from slice_client.models import NetworkIdentifier
-from slice_client.models import SliceInfo
-from slice_client.models import AreaOfService
+from slice_client.model.throughput import Throughput
+from slice_client.model.slice_data import SliceData
+from slice_client.model.network_identifier import NetworkIdentifier
+from slice_client.model.slice_info import SliceInfo
+from slice_client.model.area_of_service import AreaOfService
+from slice_client.model.point import Point
 
 
 class Slices(Namespace):
@@ -54,8 +55,11 @@ class Slices(Namespace):
             state = "NOT_SUBMITTED",
             name = name, 
             network_identifier = network_id,
-            slice_info = slice_info, 
-            area_of_service = area_of_service, 
+            slice_info = slice_info,
+            area_of_service = area_of_service,
+            # network_identifier = NetworkIdentifier(mcc=network_id["mcc"], mnc=network_id["mnc"]),
+            # slice_info = SliceInfo(service_type=slice_info["service_type"], differentiator=slice_info["differentiator"]), 
+            # area_of_service = AreaOfService(poligon=area_of_service["poligon"]), 
             maxDataConnections = max_data_connections,
             maxDevices = max_devices,
             sliceDownlinkThroughput = slice_downlink_throughput, 
@@ -98,6 +102,7 @@ class Slices(Namespace):
                 body["deviceDownlinkThroughput"] = device_downlink_throughput
 
             slice_data = self.api.slice.create_slice(body)
+            # slice_data = self.api.slice.create_slice({"notificationUrl": "", "networkIdentifier": {"mcc": "000aaFFF", "mnc": "000eeGGG"}, "areaOfService": {"poligon": [{"lat": 0, "lon": 0},{"lat": 0, "lon": 0},{"lat": 0, "lon": 0},{"lat": 0, "lon": 0}]}, "sliceInfo": {"service_type": "eMBB","differentiator": "44eab5"} })
             slice.sid = slice_data.csi_id
             slice.state = slice_data.state
         except HTTPError as e:

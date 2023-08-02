@@ -27,6 +27,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         _sessions(List[Session]): List of device session instances.
 
     #### Public Attributes:
+        sid (optional): String ID of the slice
+        state (str): State of the slice (ie. NOT_SUBMITTED)
         name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
         networkIdentifier (NetworkIdentifier): Name of the network
         sliceInfo (SliceInfo): Purpose of this slice
@@ -54,7 +56,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
-    id: Optional[str]
+    sid: Optional[str]
     state: str
     name: Optional[str] = Field(None, description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
                                 min_length=8, max_length=64, regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
