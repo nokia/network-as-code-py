@@ -32,10 +32,9 @@ class Device(BaseModel):
 
     #### Public Attributes:
         sid(EmailStr): Device Identifier email string.
-        # ip(str): IP address of the device.
-        phoneNumber(str): Phone Number string
-        ipv4Address: DeviceIpv4Addr
-        ipv6Address: string
+        phone_number(str): Phone Number string
+        ipv4_address (DeviceIpv4Addr): DeviceIpv4Addr
+        ipv6_address (str): string
 
     #### Public Methods:
         create_session (Session): Creates a session for the device.
@@ -50,11 +49,10 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
-    sid: str
-    #ip: str 
-    phoneNumber: str 
-    ipv4Address: DeviceIpv4Addr
-    ipv6Address: str
+    sid: Union[str, None]
+    phone_number: Union[str, None]
+    ipv4_address: Union[DeviceIpv4Addr, None]
+    ipv6_address: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -85,10 +83,9 @@ class Device(BaseModel):
         session_resource = {
             "qosProfile": profile,
             "network_access_id": self.sid,
-            #"ip": self.ip,
-            "phoneNumber": self.phoneNumber, 
-            "ipv4Address": self.ipv4Address,
-            "ipv4Address": self.ipv6Address,
+            "phone_number": self.phone_number, 
+            "ipv4_address": self.ipv4_address,
+            "ipv6_address": self.ipv6_address,
             "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else unset,
             "appIp": service_ip,
             "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else unset,
@@ -114,7 +111,7 @@ class Device(BaseModel):
         # Event(target=session.network_access_id, atUnix=session.expiresAt)
 
         #return Session.convert_session_model(self._api, self.ip, session)
-        return Session.convert_session_model(self._api, self.ipv4Address, self.ipv6Address, session)
+        return Session.convert_session_model(self._api, session)
 
     def sessions(self) -> List[Session]:
         """List sessions of the device.
@@ -138,7 +135,8 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-       return Session.convert_session_model(self._api, self.ipv4Address, self.ipv6Address, session)
+        #return Session.convert_session_model(self._api, self.ip, session)
+       return Session.convert_session_model(self._api, session)
 
     def location(self) -> Location:
         """Returns the location of the device.
