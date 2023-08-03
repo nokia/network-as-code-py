@@ -14,6 +14,7 @@ subscription = client.connectivity.subscribe(
     device=device, 
     max_num_of_reports=5, 
     notification_url="https://example.com/notifications", 
+    notification_auth_token="my_token"
 )
 
 subscription.delete()
