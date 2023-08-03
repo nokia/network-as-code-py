@@ -13,6 +13,7 @@ from ..models.location import CivicAddress, Location
 from devicestatus_client.model.connectivity_data import ConnectivityData
 from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
+from ....binding_generation.devicestatus_client.devicestatus_client.model import DeviceIpv4Addr
 
 
 class Event(BaseModel):
@@ -31,12 +32,15 @@ class Device(BaseModel):
 
     #### Public Attributes:
         sid(EmailStr): Device Identifier email string.
-        ip(str): IP address of the device.
+        # ip(str): IP address of the device.
+        phoneNumber(str): Phone Number string
+        ipv4Address: DeviceIpv4Addr
+        ipv6Address: string
 
     #### Public Methods:
         create_session (Session): Creates a session for the device.
-        sessions (List[Session]): Returns all the sessions created by the device id.
-        clear_sessions (): Deletes all the sessions created by the device id.
+        sessions (List[Session]): Returns all the sessions created by the device network_access_id.
+        clear_sessions (): Deletes all the sessions created by the device network_access_id.
         location (Location): Gets the location of the device and returns a Location client object.
         verify_location (bool): Verifies if a device is located in a given location point.
         get_connectivity (ConnectivityData): Retrieve device connectivity status data
@@ -47,7 +51,10 @@ class Device(BaseModel):
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
     sid: str
-    ip: str 
+    #ip: str 
+    phoneNumber: str 
+    ipv4Address: DeviceIpv4Addr
+    ipv6Address: str
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -55,7 +62,7 @@ class Device(BaseModel):
         self._sessions = []
 
     @property
-    def id(self):
+    def network_access_id(self):
         return str(self.sid)
 
     def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None):
@@ -77,8 +84,11 @@ class Device(BaseModel):
         """
         session_resource = {
             "qosProfile": profile,
-            "id": self.sid,
-            "ip": self.ip,
+            "network_access_id": self.sid,
+            #"ip": self.ip,
+            "phoneNumber": self.phoneNumber, 
+            "ipv4Address": self.ipv4Address,
+            "ipv4Address": self.ipv6Address,
             "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else unset,
             "appIp": service_ip,
             "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else unset,
@@ -101,9 +111,10 @@ class Device(BaseModel):
         session = session.body
 
         # Convert response body to an Event model
-        # Event(target=session.id, atUnix=session.expiresAt)
+        # Event(target=session.network_access_id, atUnix=session.expiresAt)
 
-        return Session.convert_session_model(self._api, self.ip, session)
+        #return Session.convert_session_model(self._api, self.ip, session)
+        return Session.convert_session_model(self._api, self.ipv4Address, self.ipv6Address, session)
 
     def sessions(self) -> List[Session]:
         """List sessions of the device.
@@ -127,7 +138,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-       return Session.convert_session_model(self._api, self.ip, session)
+       return Session.convert_session_model(self._api, self.ipv4Address, self.ipv6Address, session)
 
     def location(self) -> Location:
         """Returns the location of the device.
