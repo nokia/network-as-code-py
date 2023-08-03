@@ -26,4 +26,7 @@ class Notification(BaseModel):
 
 @app.post("/notifications")
 def receive_notification(notification: Notification):
-    print(notification.status)
+    if notification.status == "UNREACHABLE":
+        print("Device is offline!")
+    elif notification.status == "REACHABLE":
+        print("Device is online!")
