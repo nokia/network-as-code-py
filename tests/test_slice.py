@@ -2,33 +2,24 @@
 from network_as_code.models.slice import Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point
 
 def test_creating_a_slice(client):
-    # slice = client.slices.create(
-    #     network_id={"mcc": "358ffYYT", "mnc": "246fsTRE"},
-    #     slice_info={"service_type": "eMBB", "differentiator": "44eab5"},
-    #     area_of_service={"poligon": [
-    #         {"lat": 47.344, "lon": 104.349}, 
-    #         {"lat": 35.344, "lon": 76.619}, 
-    #         {"lat": 12.344, "lon": 142.541}, 
-    #         {"lat": 19.43, "lon": 103.53}
-    #     ]},
-    #     notification_url="https://notify.me/here"
-    # )
     slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+        name="testslice",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-        notification_url="https://notify.me/here"
+        notification_url="https://notify.me/here",
     )
 
-    slice.delete()
+#     slice.delete()
 
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
         name="mySliceName",
-        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
         notification_url="https://notify.me/here",
+        notification_auth_token="my-token",
         slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
         slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
         device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
