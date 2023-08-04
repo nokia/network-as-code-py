@@ -13,12 +13,18 @@ from ..models.location import CivicAddress, Location
 from devicestatus_client.model.connectivity_data import ConnectivityData
 from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
-from ....binding_generation.devicestatus_client.devicestatus_client.model import DeviceIpv4Addr
 
 
 class Event(BaseModel):
     target: str
     atUnix: int
+
+
+class DeviceIpv4Addr(BaseModel):
+    public_address: str
+    private_address: str
+    public_port: int
+
 
 
 class Device(BaseModel):
