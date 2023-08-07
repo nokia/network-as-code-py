@@ -51,7 +51,7 @@ class Connectivity(Namespace):
         # Error Case: Creating Connectivity Subscription
         try:
             body = CreateEventSubscription(
-                subscriptionDetail=EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.id)),
+                subscriptionDetail=EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.network_access_id)),
                 subscriptionExpireTime=subscription_expire_time,
                 maxNumOfReports=max_num_of_reports,
                 webhook=Webhook(notificationUrl=notification_url, notificationAuthToken=notification_auth_token)
