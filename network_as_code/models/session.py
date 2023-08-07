@@ -32,15 +32,12 @@ class Session(BaseModel, arbitrary_types_allowed = True):
 
     #### Public Attributes:
         id (str): Session identifier.
-        device_ip (str): IP address of the device.
-        device_ports (Union[PortsSpec, None]): List of ports for a device.
         service_ip (str): IP address of a service.
         service_ports (Union[PortsSpec, None]): List of ports for a service.
         profile (str): Name of the requested QoS profile.
         status(str): Status of the requested QoS.
         started_at (Union[int, None]): Starting time of the session.
         expires_at (Union[int, None]): Expiry time of the session.
-        notification_url (Union[int, None]): Notification URL for session-related events.
     #### Public Methods:
         delete (None): Deletes a given session.
         duration (int | None): Returns the duration of a given session.
@@ -50,15 +47,15 @@ class Session(BaseModel, arbitrary_types_allowed = True):
 
     _api: APIClient = PrivateAttr()
     id: str
-    device_ip: str
-    device_ports: Union[PortsSpec, None]
-    service_ip: str
-    service_ports: Union[PortsSpec, None] 
+    #device_ip: str
+    #device_ports: Union[PortsSpec, None]
+    #service_ip: str
+    #service_ports: Union[PortsSpec, None] 
     profile: str
     status: str
     started_at: Union[int, None]
     expires_at: Union[int, None]
-    notification_url: Union[str, None]
+    #notification_url: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -87,6 +84,7 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         """
         started_at = int(session["startedAt"]) if session["startedAt"] else None
         expires_at = int(session["expiresAt"]) if session["expiresAt"] else None
-        return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
+        #return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
+        return Session(api=api, id=session["id"], service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
 
 
