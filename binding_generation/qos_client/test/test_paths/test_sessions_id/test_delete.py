@@ -12,15 +12,15 @@ from unittest.mock import patch
 import urllib3
 
 import qos_client
-from qos_client.paths.sessions_session_id import delete  # noqa: E501
+from qos_client.paths.sessions_id import delete  # noqa: E501
 from qos_client import configuration, schemas, api_client
 
 from .. import ApiTestMixin
 
 
-class TestSessionsSessionId(ApiTestMixin, unittest.TestCase):
+class TestSessionsId(ApiTestMixin, unittest.TestCase):
     """
-    SessionsSessionId unit test stubs
+    SessionsId unit test stubs
         Delete Qos Handler  # noqa: E501
     """
     _configuration = configuration.Configuration()
@@ -33,7 +33,8 @@ class TestSessionsSessionId(ApiTestMixin, unittest.TestCase):
         pass
 
     response_status = 204
-    response_body = ''
+
+
 
 
 if __name__ == '__main__':

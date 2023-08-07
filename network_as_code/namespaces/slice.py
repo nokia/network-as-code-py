@@ -5,11 +5,12 @@ from ..models import Slice
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
-from slice_client.models import Throughput
-from slice_client.models import SliceData
-from slice_client.models import NetworkIdentifier
-from slice_client.models import SliceInfo
-from slice_client.models import AreaOfService
+from slice_client.model.throughput import Throughput
+from slice_client.model.slice_data import SliceData
+from slice_client.model.network_identifier import NetworkIdentifier
+from slice_client.model.slice_info import SliceInfo
+from slice_client.model.area_of_service import AreaOfService
+from slice_client.model.point import Point
 
 
 class Slices(Namespace):
@@ -33,29 +34,47 @@ class Slices(Namespace):
                max_data_connections: Optional[int] = None,
                max_devices: Optional[int] = None
                ) -> Slice:
-        """Create a slice with its network identifier, slice info, area of service, slice downlink throughput, slice uplink throughput, device downlink throughput, and device uplink throughput.
+        """Create a slice with its network identifier, slice info, area of service, and notification url.
 
-        Args:
+        #### Args:
             network_id (NetworkIdentifier): Name of the network
             slice_info (SliceInfo): Purpose of this slice
             area_of_service (AreaOfService): Location of the slice
-            slice_downlink_throughput (optional): 
-            slice_uplink_throughput (optional):
-            device_downlink_throughput (optional):
-            device_uplink_throughput: (optional):
+            slice_downlink_throughput (optional): Optional throughput object
+            slice_uplink_throughput (optional): Optional throughput object
+            device_downlink_throughput (optional): Optional throughput object
+            device_uplink_throughput: (optional): Optional throughput object
             name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
             max_data_connections (optional): Optional maximum number of data connection sessions in the slice.
             max_devices (optional): Optional maximum number of devices using the slice.
+
+        #### Example:
+        ```python
+        from network_as_code.models.slice import NetworkIdentifier, SliceInfo, AreaOfService, Point
+        
+        network_id = NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE")
+        slice_info = SliceInfo(service_type="eMBB", differentiator="44eab5")
+        area_of_service = AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)])
+        notification_url = "https://notify.me/here"
+
+        new_slice = nac_client.slices.create(
+            network_id = network_id,
+            slice_info = slice_info,
+            area_of_service = area_of_service,
+            notification_url = notification_url
+        )
+        ```
+
         """
 
         slice = Slice(
             api=self.api, 
-            id = None,
+            sid = None,
             state = "NOT_SUBMITTED",
             name = name, 
             network_identifier = network_id,
-            slice_info = slice_info, 
-            area_of_service = area_of_service, 
+            slice_info = slice_info,
+            area_of_service = area_of_service,
             maxDataConnections = max_data_connections,
             maxDevices = max_devices,
             sliceDownlinkThroughput = slice_downlink_throughput, 
@@ -120,14 +139,14 @@ class Slices(Namespace):
 
         #### Example:
             ```python
-            slice_data = slice_data.slice.get(id)
+            fetched_slice = nac_client.slices.get(id)
             ```
         """
         slice_data = self.api.slice.get_slice(id)
 
         slice = Slice(
             api=self.api, 
-            id = slice_data.csi_id,
+            sid = slice_data.csi_id,
             state = slice_data.state,
             name = slice_data.slice.name, 
             networkIdentifier = slice_data.slice.network_id,

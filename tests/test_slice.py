@@ -3,21 +3,23 @@ from network_as_code.models.slice import Throughput, NetworkIdentifier, SliceInf
 
 def test_creating_a_slice(client):
     slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="358", mnc="246"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+        name="testslice",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-        notification_url="https://notify.me/here"
+        notification_url="https://notify.me/here",
     )
 
-    slice.delete()
+#     slice.delete()
 
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
         name="mySliceName",
-        network_id=NetworkIdentifier(mcc="358", mnc="246"),
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
         notification_url="https://notify.me/here",
+        notification_auth_token="my-token",
         slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
         slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
         device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
@@ -29,30 +31,29 @@ def test_creating_a_slice_with_optional_args(client):
     slice.delete()
 
 def test_getting_a_slice(client):
-    slice = client.slices.create(
-        name="mySliceName",
-        network_id=NetworkIdentifier(mcc="358", mnc="246"),
+    new_slice = client.slices.create(
+        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-        notification_url="https://notify.me/here",
-        slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
-        slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
-        device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
-        device_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324)
+        notification_url="https://notify.me/here"
     )
 
-    client.slices.get(slice.id)
+    fetched_slice = client.slices.get(new_slice.sid)
 
-    slice.delete()
+    assert new_slice.sid == fetched_slice.sid
+
+    new_slice.delete()
 
 # def test_activating_and_attaching_a_slice(client):
 #     device = client.devices.get("testdevice@nokia.com")
 
-#     slice = client.slices.create(
-#             network="open5glab",
-#             slice_type="slice-general-purpose",
-#             area_of_service={"longitude": 60.2052, "latitude": 24.65}
-#         )
+    # slice = client.slices.create(
+    #     network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
+    #     slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+    #     area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
+    #     notification_url="https://notify.me/here"
+    # )
+
 #     def on_creation_handler(slice):
 #         slice.activate()
 #         slice.attach()
@@ -62,11 +63,13 @@ def test_getting_a_slice(client):
 # def test_logging_a_slice(client):
 #     device = client.devices.get("testdevice@nokia.com")
 
-#     slice = client.slices.create(
-#             network="open5glab",
-#             slice_type="slice-general-purpose",
-#             area_of_service={"longitude": 60.2052, "latitude": 24.65}
-#         )
+    # slice = client.slices.create(
+    #     network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
+    #     slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+    #     area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
+    #     notification_url="https://notify.me/here"
+    # )
+
 #     def event_logger(slice, message):
 #         print(message)
 
@@ -74,14 +77,10 @@ def test_getting_a_slice(client):
 
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="358", mnc="246"),
+        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-        notification_url="https://notify.me/here",
-        slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
-        slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
-        device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
-        device_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324)
+        notification_url="https://notify.me/here"
     )
 
     slice.activate()
