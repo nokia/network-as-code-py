@@ -6,5 +6,6 @@ import enum
 
 
 class PathValues(str, enum.Enum):
-    SESSIONS = "/sessions"
     SESSIONS_SESSION_ID = "/sessions/{sessionId}"
+    SESSIONS = "/sessions"
+    SESSIONS_ID = "/sessions/{id}"

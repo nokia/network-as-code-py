@@ -51,7 +51,7 @@ class Connectivity(Namespace):
         # Error Case: Creating Connectivity Subscription
         try:
             body = {
-                "subscriptionDetail": EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.id)),
+                "subscriptionDetail": EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.network_access_id)),
                 "maxNumOfReports": max_num_of_reports,
             }
 

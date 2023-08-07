@@ -5,6 +5,7 @@ from typing import List, Union
 from qos_client.model.create_session import CreateSession
 from qos_client.model.ports_spec import PortsSpec
 from qos_client.schemas import unset
+from qos_client.models import DeviceIpv4Addr as BDeviceIpv4Addr
 
 from ..api import APIClient
 from ..models.session import Session
@@ -86,16 +87,22 @@ class Device(BaseModel):
             session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
+
         session_resource = {
             "qosProfile": profile,
-            "network_access_id": self.sid,
-            "phone_number": self.phone_number, 
-            "ipv4_address": self.ipv4_address,
-            "ipv6_address": self.ipv6_address,
+            "device": {
+                "networkAccessIdentifier": self.sid,
+                "ipv4Address": BDeviceIpv4Addr(publicAddress=self.ipv4_address.public_address, privateAddress=self.ipv4_address.private_address, public_port=self.ipv4_address.public_port) if self.ipv4_address else unset,
+                "ipv6Address": self.ipv6_address
+            },
             "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else unset,
-            "appIp": service_ip,
+            "applicationServer": {
+                "ipv4Address": service_ip,
+            },
             "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else unset,
         }
+
+        print(session_resource)
 
         if duration:
             session_resource["duration"] = duration
@@ -108,15 +115,9 @@ class Device(BaseModel):
 
 
         # Error Case: Creating session
-        global session 
-        # session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
-        session = self._api.sessions.create_session(session_resource)
+        session = self._api.sessions.create_session(body=session_resource)
         session = session.body
 
-        # Convert response body to an Event model
-        # Event(target=session.network_access_id, atUnix=session.expiresAt)
-
-        #return Session.convert_session_model(self._api, self.ip, session)
         return Session.convert_session_model(self._api, session)
 
     def sessions(self) -> List[Session]:

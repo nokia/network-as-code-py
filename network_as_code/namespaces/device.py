@@ -12,7 +12,7 @@ class Devices(Namespace):
     subscription can be configured on the network.
     """
 
-    def get(self, id: str, ip = None) -> Device:
+    def get(self, id: str, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
         """Get a subscription by its external ID.
 
         Args:
@@ -22,7 +22,7 @@ class Devices(Namespace):
         # Error Case: Creating and Getting device
         try:
             global ret_device
-            ret_device = Device(api=self.api, sid = id, ip = ip)
+            ret_device = Device(api=self.api, sid = id, ipv4_address = ipv4_address, ipv6_address = ipv6_address, phone_number = phone_number)
         except HTTPError as e:
             if e.code == 403:
                 raise AuthenticationException(e)

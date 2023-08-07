@@ -2,7 +2,7 @@ import sys
 
 import qos_client.api_client as qos_api_client
 
-from qos_client.apis.tags import default_api as qos_api
+from qos_client.apis.tags import sessions_api as qos_api
 
 import location_client.api_client as location_api_client
 
@@ -52,7 +52,7 @@ class APIClient:
             header_value="qos-on-demand.nokia-dev.rapidapi.com"
         )
 
-        self.sessions = qos_api.DefaultApi(self._qos_client)
+        self.sessions = qos_api.SessionsApi(self._qos_client)
 
         location_config = location_api_client.Configuration(
             host=location_base_url,
