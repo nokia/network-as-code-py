@@ -66,13 +66,13 @@ class CreateEventSubscription(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'subscriptionDetail':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -142,7 +142,7 @@ class CreateEventSubscription(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         webhook: 'Webhook',
         subscriptionDetail: typing.Union[MetaOapg.properties.subscriptionDetail, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
         subscriptionExpireTime: typing.Union[MetaOapg.properties.subscriptionExpireTime, str, schemas.Unset] = schemas.unset,
@@ -152,7 +152,7 @@ class CreateEventSubscription(
     ) -> 'CreateEventSubscription':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             webhook=webhook,
             subscriptionDetail=subscriptionDetail,
             subscriptionExpireTime=subscriptionExpireTime,

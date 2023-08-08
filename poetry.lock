@@ -184,7 +184,7 @@ toml = ["tomli"]
 [[package]]
 name = "devicestatus-client"
 version = "1.0.0"
-description = "Device Status"
+description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -393,7 +393,7 @@ i18n = ["Babel (>=2.7)"]
 [[package]]
 name = "location-client"
 version = "1.0.0"
-description = "Location"
+description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -874,7 +874,7 @@ files = [
 [[package]]
 name = "qos-client"
 version = "1.0.0"
-description = "QoS on Demand"
+description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -925,7 +925,7 @@ files = [
 [[package]]
 name = "slice-client"
 version = "1.0.0"
-description = "Slice"
+description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"

@@ -212,7 +212,7 @@ class Slice(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         areaOfService: 'AreaOfService',
         notificationUrl: typing.Union[MetaOapg.properties.notificationUrl, str, ],
         networkIdentifier: 'NetworkIdentifier',
@@ -230,7 +230,7 @@ class Slice(
     ) -> 'Slice':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             areaOfService=areaOfService,
             notificationUrl=notificationUrl,
             networkIdentifier=networkIdentifier,

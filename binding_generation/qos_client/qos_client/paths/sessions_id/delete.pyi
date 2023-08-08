@@ -140,25 +140,25 @@ class SchemaFor422ResponseBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                                *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                                 **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                             ) -> 'items':
                                                 return super().__new__(
                                                     cls,
-                                                    *args,
+                                                    *_args,
                                                     _configuration=_configuration,
                                                     **kwargs,
                                                 )
                                 
                                     def __new__(
                                         cls,
-                                        arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]]],
+                                        _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]]],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                     ) -> 'loc':
                                         return super().__new__(
                                             cls,
-                                            arg,
+                                            _arg,
                                             _configuration=_configuration,
                                         )
                                 
@@ -211,7 +211,7 @@ class SchemaFor422ResponseBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             msg: typing.Union[MetaOapg.properties.msg, str, ],
                             loc: typing.Union[MetaOapg.properties.loc, list, tuple, ],
                             type: typing.Union[MetaOapg.properties.type, str, ],
@@ -220,7 +220,7 @@ class SchemaFor422ResponseBodyApplicationJson(
                         ) -> 'items':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 msg=msg,
                                 loc=loc,
                                 type=type,
@@ -230,12 +230,12 @@ class SchemaFor422ResponseBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
+                    _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'detail':
                     return super().__new__(
                         cls,
-                        arg,
+                        _arg,
                         _configuration=_configuration,
                     )
             
@@ -268,14 +268,14 @@ class SchemaFor422ResponseBodyApplicationJson(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         detail: typing.Union[MetaOapg.properties.detail, list, tuple, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'SchemaFor422ResponseBodyApplicationJson':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             detail=detail,
             _configuration=_configuration,
             **kwargs,
@@ -394,7 +394,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 

@@ -95,7 +95,7 @@ class EventDetail(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         qosStatus: 'EventQosStatus',
         statusInfo: 'StatusInfo',
         sessionId: typing.Union[MetaOapg.properties.sessionId, str, ],
@@ -104,7 +104,7 @@ class EventDetail(
     ) -> 'EventDetail':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             qosStatus=qosStatus,
             statusInfo=statusInfo,
             sessionId=sessionId,

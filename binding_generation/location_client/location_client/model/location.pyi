@@ -78,7 +78,7 @@ class Location(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         point: typing.Union['GeographicalCoordinates', schemas.Unset] = schemas.unset,
         civicAddress: typing.Union['CivicAddress', schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -86,7 +86,7 @@ class Location(
     ) -> 'Location':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             point=point,
             civicAddress=civicAddress,
             _configuration=_configuration,

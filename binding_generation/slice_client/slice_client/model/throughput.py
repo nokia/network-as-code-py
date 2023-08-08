@@ -72,7 +72,7 @@ class Throughput(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         guaranteed: typing.Union[MetaOapg.properties.guaranteed, decimal.Decimal, int, float, schemas.Unset] = schemas.unset,
         maximum: typing.Union[MetaOapg.properties.maximum, decimal.Decimal, int, float, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -80,7 +80,7 @@ class Throughput(
     ) -> 'Throughput':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             guaranteed=guaranteed,
             maximum=maximum,
             _configuration=_configuration,

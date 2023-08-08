@@ -68,13 +68,13 @@ class EventSubscriptionInfo(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'subscriptionDetail':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -167,7 +167,7 @@ class EventSubscriptionInfo(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         eventSubscriptionId: typing.Union[MetaOapg.properties.eventSubscriptionId, str, ],
         webhook: 'Webhook',
         subscriptionDetail: typing.Union[MetaOapg.properties.subscriptionDetail, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
@@ -180,7 +180,7 @@ class EventSubscriptionInfo(
     ) -> 'EventSubscriptionInfo':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             eventSubscriptionId=eventSubscriptionId,
             webhook=webhook,
             subscriptionDetail=subscriptionDetail,

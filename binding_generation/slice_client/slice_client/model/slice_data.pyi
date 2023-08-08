@@ -121,7 +121,7 @@ class SliceData(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         csi_id: typing.Union[MetaOapg.properties.csi_id, str, ],
         slice: 'Slice',
         state: typing.Union[MetaOapg.properties.state, str, ],
@@ -133,7 +133,7 @@ class SliceData(
     ) -> 'SliceData':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             csi_id=csi_id,
             slice=slice,
             state=state,

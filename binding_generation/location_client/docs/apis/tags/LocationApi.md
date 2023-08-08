@@ -1,4 +1,4 @@
-<a name="__pageTop"></a>
+<a id="__pageTop"></a>
 # location_client.apis.tags.location_api.LocationApi
 
 All URIs are relative to *http://localhost*
@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**verify_location**](#verify_location) | **get** /verify | Location Verification service
 
 # **get_location**
-<a name="get_location"></a>
+<a id="get_location"></a>
 > Location get_location(device_id)
 
 Location Query service
@@ -125,7 +125,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **verify_location**
-<a name="verify_location"></a>
+<a id="verify_location"></a>
 > verify_location(device_idlatitudelongitudeaccuracy)
 
 Location Verification service

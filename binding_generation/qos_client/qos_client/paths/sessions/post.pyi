@@ -87,13 +87,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'phoneNumber':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -126,13 +126,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'networkAccessIdentifier':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -183,13 +183,13 @@ class SchemaForRequestBodyApplicationJson(
                                                     
                                                         def __new__(
                                                             cls,
-                                                            *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                                            *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                                             _configuration: typing.Optional[schemas.Configuration] = None,
                                                             **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                                         ) -> 'publicAddress':
                                                             return super().__new__(
                                                                 cls,
-                                                                *args,
+                                                                *_args,
                                                                 _configuration=_configuration,
                                                                 **kwargs,
                                                             )
@@ -222,13 +222,13 @@ class SchemaForRequestBodyApplicationJson(
                                                     
                                                         def __new__(
                                                             cls,
-                                                            *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                                            *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                                             _configuration: typing.Optional[schemas.Configuration] = None,
                                                             **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                                         ) -> 'privateAddress':
                                                             return super().__new__(
                                                                 cls,
-                                                                *args,
+                                                                *_args,
                                                                 _configuration=_configuration,
                                                                 **kwargs,
                                                             )
@@ -240,7 +240,7 @@ class SchemaForRequestBodyApplicationJson(
                                                     
                                                     
                                                         class MetaOapg:
-                                                            items = schemas.IntSchema
+                                                            any_of_0 = schemas.IntSchema
                                                             any_of_1 = schemas.AnyTypeSchema
                                                             
                                                             @classmethod
@@ -254,20 +254,20 @@ class SchemaForRequestBodyApplicationJson(
                                                                 # classes don't exist yet because their module has not finished
                                                                 # loading
                                                                 return [
-                                                                    cls.items,
+                                                                    cls.any_of_0,
                                                                     cls.any_of_1,
                                                                 ]
                                                     
                                                     
                                                         def __new__(
                                                             cls,
-                                                            *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                                            *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                                             _configuration: typing.Optional[schemas.Configuration] = None,
                                                             **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                                         ) -> 'publicPort':
                                                             return super().__new__(
                                                                 cls,
-                                                                *args,
+                                                                *_args,
                                                                 _configuration=_configuration,
                                                                 **kwargs,
                                                             )
@@ -312,7 +312,7 @@ class SchemaForRequestBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                *args: typing.Union[dict, frozendict.frozendict, ],
+                                                *_args: typing.Union[dict, frozendict.frozendict, ],
                                                 publicAddress: typing.Union[MetaOapg.properties.publicAddress, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                                                 privateAddress: typing.Union[MetaOapg.properties.privateAddress, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                                                 publicPort: typing.Union[MetaOapg.properties.publicPort, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
@@ -321,7 +321,7 @@ class SchemaForRequestBodyApplicationJson(
                                             ) -> 'any_of_0':
                                                 return super().__new__(
                                                     cls,
-                                                    *args,
+                                                    *_args,
                                                     publicAddress=publicAddress,
                                                     privateAddress=privateAddress,
                                                     publicPort=publicPort,
@@ -348,13 +348,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ipv4Address':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -387,13 +387,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ipv6Address':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -445,7 +445,7 @@ class SchemaForRequestBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             phoneNumber: typing.Union[MetaOapg.properties.phoneNumber, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             networkAccessIdentifier: typing.Union[MetaOapg.properties.networkAccessIdentifier, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             ipv4Address: typing.Union[MetaOapg.properties.ipv4Address, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
@@ -455,7 +455,7 @@ class SchemaForRequestBodyApplicationJson(
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 phoneNumber=phoneNumber,
                                 networkAccessIdentifier=networkAccessIdentifier,
                                 ipv4Address=ipv4Address,
@@ -483,13 +483,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'device':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -522,13 +522,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'id':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -561,13 +561,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'ip':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -667,14 +667,14 @@ class SchemaForRequestBodyApplicationJson(
                                                 
                                                     def __new__(
                                                         cls,
-                                                        *args: typing.Union[dict, frozendict.frozendict, ],
+                                                        *_args: typing.Union[dict, frozendict.frozendict, ],
                                                         to: typing.Union[MetaOapg.properties.to, decimal.Decimal, int, ],
                                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                                     ) -> 'items':
                                                         return super().__new__(
                                                             cls,
-                                                            *args,
+                                                            *_args,
                                                             to=to,
                                                             _configuration=_configuration,
                                                             **kwargs,
@@ -682,12 +682,12 @@ class SchemaForRequestBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
+                                                _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                             ) -> 'any_of_0':
                                                 return super().__new__(
                                                     cls,
-                                                    arg,
+                                                    _arg,
                                                     _configuration=_configuration,
                                                 )
                                         
@@ -713,13 +713,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ranges':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -743,12 +743,12 @@ class SchemaForRequestBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
+                                                _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                             ) -> 'any_of_0':
                                                 return super().__new__(
                                                     cls,
-                                                    arg,
+                                                    _arg,
                                                     _configuration=_configuration,
                                                 )
                                         
@@ -774,13 +774,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ports':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -818,7 +818,7 @@ class SchemaForRequestBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             ranges: typing.Union[MetaOapg.properties.ranges, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             ports: typing.Union[MetaOapg.properties.ports, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             _configuration: typing.Optional[schemas.Configuration] = None,
@@ -826,7 +826,7 @@ class SchemaForRequestBodyApplicationJson(
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 ranges=ranges,
                                 ports=ports,
                                 _configuration=_configuration,
@@ -852,13 +852,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'devicePorts':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -909,13 +909,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ipv4Address':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -948,13 +948,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ipv6Address':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -992,7 +992,7 @@ class SchemaForRequestBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             ipv4Address: typing.Union[MetaOapg.properties.ipv4Address, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             ipv6Address: typing.Union[MetaOapg.properties.ipv6Address, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             _configuration: typing.Optional[schemas.Configuration] = None,
@@ -1000,7 +1000,7 @@ class SchemaForRequestBodyApplicationJson(
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 ipv4Address=ipv4Address,
                                 ipv6Address=ipv6Address,
                                 _configuration=_configuration,
@@ -1026,13 +1026,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'applicationServer':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1065,13 +1065,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'appIp':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1171,14 +1171,14 @@ class SchemaForRequestBodyApplicationJson(
                                                 
                                                     def __new__(
                                                         cls,
-                                                        *args: typing.Union[dict, frozendict.frozendict, ],
+                                                        *_args: typing.Union[dict, frozendict.frozendict, ],
                                                         to: typing.Union[MetaOapg.properties.to, decimal.Decimal, int, ],
                                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                                     ) -> 'items':
                                                         return super().__new__(
                                                             cls,
-                                                            *args,
+                                                            *_args,
                                                             to=to,
                                                             _configuration=_configuration,
                                                             **kwargs,
@@ -1186,12 +1186,12 @@ class SchemaForRequestBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
+                                                _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                             ) -> 'any_of_0':
                                                 return super().__new__(
                                                     cls,
-                                                    arg,
+                                                    _arg,
                                                     _configuration=_configuration,
                                                 )
                                         
@@ -1217,13 +1217,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ranges':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -1247,12 +1247,12 @@ class SchemaForRequestBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
+                                                _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                             ) -> 'any_of_0':
                                                 return super().__new__(
                                                     cls,
-                                                    arg,
+                                                    _arg,
                                                     _configuration=_configuration,
                                                 )
                                         
@@ -1278,13 +1278,13 @@ class SchemaForRequestBodyApplicationJson(
                                 
                                     def __new__(
                                         cls,
-                                        *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                        *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                     ) -> 'ports':
                                         return super().__new__(
                                             cls,
-                                            *args,
+                                            *_args,
                                             _configuration=_configuration,
                                             **kwargs,
                                         )
@@ -1322,7 +1322,7 @@ class SchemaForRequestBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             ranges: typing.Union[MetaOapg.properties.ranges, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             ports: typing.Union[MetaOapg.properties.ports, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
                             _configuration: typing.Optional[schemas.Configuration] = None,
@@ -1330,7 +1330,7 @@ class SchemaForRequestBodyApplicationJson(
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 ranges=ranges,
                                 ports=ports,
                                 _configuration=_configuration,
@@ -1356,13 +1356,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'applicationServerPorts':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1400,13 +1400,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'duration':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1439,13 +1439,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'notificationUrl':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1478,13 +1478,13 @@ class SchemaForRequestBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'notificationAuthToken':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1587,7 +1587,7 @@ class SchemaForRequestBodyApplicationJson(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         qosProfile: typing.Union[MetaOapg.properties.qosProfile, str, ],
         device: typing.Union[MetaOapg.properties.device, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
         id: typing.Union[MetaOapg.properties.id, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
@@ -1604,7 +1604,7 @@ class SchemaForRequestBodyApplicationJson(
     ) -> 'SchemaForRequestBodyApplicationJson':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             qosProfile=qosProfile,
             device=device,
             id=id,
@@ -1653,7 +1653,7 @@ class SchemaFor201ResponseBodyApplicationJson(
             
             
                 class MetaOapg:
-                    items = schemas.IntSchema
+                    any_of_0 = schemas.IntSchema
                     any_of_1 = schemas.AnyTypeSchema
                     
                     @classmethod
@@ -1667,20 +1667,20 @@ class SchemaFor201ResponseBodyApplicationJson(
                         # classes don't exist yet because their module has not finished
                         # loading
                         return [
-                            cls.items,
+                            cls.any_of_0,
                             cls.any_of_1,
                         ]
             
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'startedAt':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1692,7 +1692,7 @@ class SchemaFor201ResponseBodyApplicationJson(
             
             
                 class MetaOapg:
-                    items = schemas.IntSchema
+                    any_of_0 = schemas.IntSchema
                     any_of_1 = schemas.AnyTypeSchema
                     
                     @classmethod
@@ -1706,20 +1706,20 @@ class SchemaFor201ResponseBodyApplicationJson(
                         # classes don't exist yet because their module has not finished
                         # loading
                         return [
-                            cls.items,
+                            cls.any_of_0,
                             cls.any_of_1,
                         ]
             
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'expiresAt':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -1782,7 +1782,7 @@ class SchemaFor201ResponseBodyApplicationJson(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         qosProfile: typing.Union[MetaOapg.properties.qosProfile, str, ],
         qosStatus: typing.Union[MetaOapg.properties.qosStatus, str, ],
         id: typing.Union[MetaOapg.properties.id, str, ],
@@ -1793,7 +1793,7 @@ class SchemaFor201ResponseBodyApplicationJson(
     ) -> 'SchemaFor201ResponseBodyApplicationJson':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             qosProfile=qosProfile,
             qosStatus=qosStatus,
             id=id,
@@ -1890,25 +1890,25 @@ class SchemaFor422ResponseBodyApplicationJson(
                                         
                                             def __new__(
                                                 cls,
-                                                *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                                                *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                                                 _configuration: typing.Optional[schemas.Configuration] = None,
                                                 **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                                             ) -> 'items':
                                                 return super().__new__(
                                                     cls,
-                                                    *args,
+                                                    *_args,
                                                     _configuration=_configuration,
                                                     **kwargs,
                                                 )
                                 
                                     def __new__(
                                         cls,
-                                        arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]]],
+                                        _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ]]],
                                         _configuration: typing.Optional[schemas.Configuration] = None,
                                     ) -> 'loc':
                                         return super().__new__(
                                             cls,
-                                            arg,
+                                            _arg,
                                             _configuration=_configuration,
                                         )
                                 
@@ -1961,7 +1961,7 @@ class SchemaFor422ResponseBodyApplicationJson(
                     
                         def __new__(
                             cls,
-                            *args: typing.Union[dict, frozendict.frozendict, ],
+                            *_args: typing.Union[dict, frozendict.frozendict, ],
                             msg: typing.Union[MetaOapg.properties.msg, str, ],
                             loc: typing.Union[MetaOapg.properties.loc, list, tuple, ],
                             type: typing.Union[MetaOapg.properties.type, str, ],
@@ -1970,7 +1970,7 @@ class SchemaFor422ResponseBodyApplicationJson(
                         ) -> 'items':
                             return super().__new__(
                                 cls,
-                                *args,
+                                *_args,
                                 msg=msg,
                                 loc=loc,
                                 type=type,
@@ -1980,12 +1980,12 @@ class SchemaFor422ResponseBodyApplicationJson(
             
                 def __new__(
                     cls,
-                    arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
+                    _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]], typing.List[typing.Union[MetaOapg.items, dict, frozendict.frozendict, ]]],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'detail':
                     return super().__new__(
                         cls,
-                        arg,
+                        _arg,
                         _configuration=_configuration,
                     )
             
@@ -2018,14 +2018,14 @@ class SchemaFor422ResponseBodyApplicationJson(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         detail: typing.Union[MetaOapg.properties.detail, list, tuple, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'SchemaFor422ResponseBodyApplicationJson':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             detail=detail,
             _configuration=_configuration,
             **kwargs,
@@ -2159,7 +2159,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 

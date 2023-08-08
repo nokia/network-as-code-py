@@ -91,7 +91,7 @@ class Device(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         phoneNumber: typing.Union[MetaOapg.properties.phoneNumber, str, schemas.Unset] = schemas.unset,
         networkAccessIdentifier: typing.Union[MetaOapg.properties.networkAccessIdentifier, str, schemas.Unset] = schemas.unset,
         ipv4Address: typing.Union['DeviceIpv4Addr', schemas.Unset] = schemas.unset,
@@ -101,7 +101,7 @@ class Device(
     ) -> 'Device':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             phoneNumber=phoneNumber,
             networkAccessIdentifier=networkAccessIdentifier,
             ipv4Address=ipv4Address,

@@ -48,12 +48,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'country':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -68,12 +68,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A1':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -88,12 +88,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A2':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -108,12 +108,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A3':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -128,12 +128,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A4':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -148,12 +148,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A5':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             
@@ -168,12 +168,12 @@ class CivicAddress(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[None, str, ],
+                    *_args: typing.Union[None, str, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'A6':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                     )
             __annotations__ = {
@@ -245,7 +245,7 @@ class CivicAddress(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         country: typing.Union[MetaOapg.properties.country, None, str, schemas.Unset] = schemas.unset,
         A1: typing.Union[MetaOapg.properties.A1, None, str, schemas.Unset] = schemas.unset,
         A2: typing.Union[MetaOapg.properties.A2, None, str, schemas.Unset] = schemas.unset,
@@ -258,7 +258,7 @@ class CivicAddress(
     ) -> 'CivicAddress':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             country=country,
             A1=A1,
             A2=A2,

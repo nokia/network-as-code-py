@@ -1,4 +1,4 @@
-<a name="__pageTop"></a>
+<a id="__pageTop"></a>
 # slice_client.apis.tags.default_api.DefaultApi
 
 All URIs are relative to *http://localhost*
@@ -8,7 +8,7 @@ Method | HTTP request | Description
 [**get_all_slices**](#get_all_slices) | **get** /slices | Returns All Slices
 
 # **get_all_slices**
-<a name="get_all_slices"></a>
+<a id="get_all_slices"></a>
 > [SliceData] get_all_slices()
 
 Returns All Slices

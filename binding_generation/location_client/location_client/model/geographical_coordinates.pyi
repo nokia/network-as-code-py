@@ -79,7 +79,7 @@ class GeographicalCoordinates(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         lon: typing.Union[MetaOapg.properties.lon, decimal.Decimal, int, float, ],
         lat: typing.Union[MetaOapg.properties.lat, decimal.Decimal, int, float, ],
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -87,7 +87,7 @@ class GeographicalCoordinates(
     ) -> 'GeographicalCoordinates':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             lon=lon,
             lat=lat,
             _configuration=_configuration,

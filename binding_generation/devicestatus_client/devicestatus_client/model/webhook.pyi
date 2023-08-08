@@ -77,7 +77,7 @@ class Webhook(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         notificationUrl: typing.Union[MetaOapg.properties.notificationUrl, str, ],
         notificationAuthToken: typing.Union[MetaOapg.properties.notificationAuthToken, str, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -85,7 +85,7 @@ class Webhook(
     ) -> 'Webhook':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             notificationUrl=notificationUrl,
             notificationAuthToken=notificationAuthToken,
             _configuration=_configuration,

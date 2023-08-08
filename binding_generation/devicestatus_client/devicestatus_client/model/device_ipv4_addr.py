@@ -80,7 +80,7 @@ class DeviceIpv4Addr(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         publicAddress: typing.Union[MetaOapg.properties.publicAddress, str, schemas.Unset] = schemas.unset,
         privateAddress: typing.Union[MetaOapg.properties.privateAddress, str, schemas.Unset] = schemas.unset,
         publicPort: typing.Union[MetaOapg.properties.publicPort, decimal.Decimal, int, schemas.Unset] = schemas.unset,
@@ -89,7 +89,7 @@ class DeviceIpv4Addr(
     ) -> 'DeviceIpv4Addr':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             publicAddress=publicAddress,
             privateAddress=privateAddress,
             publicPort=publicPort,

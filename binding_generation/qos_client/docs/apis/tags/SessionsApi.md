@@ -1,4 +1,4 @@
-<a name="__pageTop"></a>
+<a id="__pageTop"></a>
 # qos_client.apis.tags.sessions_api.SessionsApi
 
 All URIs are relative to *http://poc-nb.us-east-1.nwac-dev.net/qod/v0*
@@ -11,7 +11,7 @@ Method | HTTP request | Description
 [**get_session**](#get_session) | **get** /sessions/{sessionId} | Return QoS settings.
 
 # **create_session**
-<a name="create_session"></a>
+<a id="create_session"></a>
 > {str: (bool, date, datetime, dict, float, int, list, str, none_type)} create_session()
 
 Create QoS service
@@ -295,10 +295,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -904,10 +904,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -934,10 +934,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -1045,7 +1045,7 @@ decimal.Decimal, int,  | decimal.Decimal,  |  |
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **delete_session**
-<a name="delete_session"></a>
+<a id="delete_session"></a>
 > bool, date, datetime, dict, float, int, list, str, none_type delete_session(id)
 
 Delete Qos Handler
@@ -1233,7 +1233,7 @@ decimal.Decimal, int,  | decimal.Decimal,  |  |
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **get_all_sessions**
-<a name="get_all_sessions"></a>
+<a id="get_all_sessions"></a>
 > [{str: (bool, date, datetime, dict, float, int, list, str, none_type)}] get_all_sessions(device_id)
 
 Return QoS settings for your device.
@@ -1365,10 +1365,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -1395,10 +1395,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -1506,7 +1506,7 @@ decimal.Decimal, int,  | decimal.Decimal,  |  |
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **get_session**
-<a name="get_session"></a>
+<a id="get_session"></a>
 > {str: (bool, date, datetime, dict, float, int, list, str, none_type)} get_session(session_id)
 
 Return QoS settings.
@@ -1623,10 +1623,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes
@@ -1653,10 +1653,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes

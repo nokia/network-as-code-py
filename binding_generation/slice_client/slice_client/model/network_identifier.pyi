@@ -89,7 +89,7 @@ class NetworkIdentifier(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         mnc: typing.Union[MetaOapg.properties.mnc, str, ],
         mcc: typing.Union[MetaOapg.properties.mcc, str, ],
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -97,7 +97,7 @@ class NetworkIdentifier(
     ) -> 'NetworkIdentifier':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             mnc=mnc,
             mcc=mcc,
             _configuration=_configuration,

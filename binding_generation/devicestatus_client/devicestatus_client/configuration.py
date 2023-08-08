@@ -100,14 +100,18 @@ conf = devicestatus_client.Configuration(
 
     _default = None
 
-    def __init__(self, host=None,
-                 api_key=None, api_key_prefix=None,
-                 username=None, password=None,
-                 discard_unknown_keys=False,
-                 disabled_client_side_validations="",
-                 server_index=None, server_variables=None,
-                 server_operation_index=None, server_operation_variables=None,
-                 ):
+    def __init__(
+        self,
+        host=None,
+        api_key=None,
+        api_key_prefix=None,
+        discard_unknown_keys=False,
+        disabled_client_side_validations="",
+        server_index=None,
+        server_variables=None,
+        server_operation_index=None,
+        server_operation_variables=None,
+    ):
         """Constructor
         """
         self._base_path = "http://localhost" if host is None else host
@@ -138,13 +142,6 @@ conf = devicestatus_client.Configuration(
         self.refresh_api_key_hook = None
         """function hook to refresh API key if expired
         """
-        self.username = username
-        """Username for HTTP basic authentication
-        """
-        self.password = password
-        """Password for HTTP basic authentication
-        """
-        self.discard_unknown_keys = discard_unknown_keys
         self.disabled_client_side_validations = disabled_client_side_validations
         self.logger = {}
         """Logging Settings
@@ -183,6 +180,10 @@ conf = devicestatus_client.Configuration(
         """
         self.assert_hostname = None
         """Set this to True/False to enable/disable SSL hostname verification.
+        """
+        self.tls_server_name = None
+        """SSL/TLS Server Name Indication (SNI)
+           Set this to the SNI value expected by the server.
         """
 
         self.connection_pool_maxsize = multiprocessing.cpu_count() * 5

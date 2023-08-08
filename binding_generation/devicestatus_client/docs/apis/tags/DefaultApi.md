@@ -1,4 +1,4 @@
-<a name="__pageTop"></a>
+<a id="__pageTop"></a>
 # devicestatus_client.apis.tags.default_api.DefaultApi
 
 All URIs are relative to *http://localhost*
@@ -14,7 +14,7 @@ Method | HTTP request | Description
 [**update_connectivity**](#update_connectivity) | **put** /connectivity/{id} | Update device connectivity status
 
 # **create_connectivity_subscription**
-<a name="create_connectivity_subscription"></a>
+<a id="create_connectivity_subscription"></a>
 > ConnectivityData create_connectivity_subscription(connectivity_subscription)
 
 Create subscription for device connectivity status
@@ -129,7 +129,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **create_event_subscription**
-<a name="create_event_subscription"></a>
+<a id="create_event_subscription"></a>
 > EventSubscriptionInfo create_event_subscription(create_event_subscription)
 
 Create subscription for device status events
@@ -246,7 +246,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **delete_connectivity**
-<a name="delete_connectivity"></a>
+<a id="delete_connectivity"></a>
 > delete_connectivity(id)
 
 Delete Connectivity Handler
@@ -351,7 +351,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **delete_event_subscription**
-<a name="delete_event_subscription"></a>
+<a id="delete_event_subscription"></a>
 > delete_event_subscription(id)
 
 Delete Event Subscription Handler
@@ -456,7 +456,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **get_connectivity**
-<a name="get_connectivity"></a>
+<a id="get_connectivity"></a>
 > ConnectivityData get_connectivity(id)
 
 Get device connectivity status
@@ -571,7 +571,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **get_event_subscription**
-<a name="get_event_subscription"></a>
+<a id="get_event_subscription"></a>
 > EventSubscriptionInfo get_event_subscription(id)
 
 Retrieve a device status event subscription for a device
@@ -686,7 +686,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **update_connectivity**
-<a name="update_connectivity"></a>
+<a id="update_connectivity"></a>
 > ConnectivityData update_connectivity(idconnectivity_subscription)
 
 Update device connectivity status

@@ -86,10 +86,10 @@ dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal
 #### anyOf
 Class Name | Input Type | Accessed Type | Description | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-[items](#items) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
+[any_of_0](#any_of_0) | decimal.Decimal, int,  | decimal.Decimal,  |  | 
 [any_of_1](#any_of_1) | dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader,  | frozendict.frozendict, str, decimal.Decimal, BoolClass, NoneClass, tuple, bytes, FileIO |  | 
 
-# items
+# any_of_0
 
 ## Model Type Info
 Input Type | Accessed Type | Description | Notes

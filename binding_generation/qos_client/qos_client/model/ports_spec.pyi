@@ -59,12 +59,12 @@ class PortsSpec(
                     
                         def __new__(
                             cls,
-                            arg: typing.Union[typing.Tuple['PortsSpecRangesInner'], typing.List['PortsSpecRangesInner']],
+                            _arg: typing.Union[typing.Tuple['PortsSpecRangesInner'], typing.List['PortsSpecRangesInner']],
                             _configuration: typing.Optional[schemas.Configuration] = None,
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                arg,
+                                _arg,
                                 _configuration=_configuration,
                             )
                     
@@ -90,13 +90,13 @@ class PortsSpec(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'ranges':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -120,12 +120,12 @@ class PortsSpec(
                     
                         def __new__(
                             cls,
-                            arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
+                            _arg: typing.Union[typing.Tuple[typing.Union[MetaOapg.items, decimal.Decimal, int, ]], typing.List[typing.Union[MetaOapg.items, decimal.Decimal, int, ]]],
                             _configuration: typing.Optional[schemas.Configuration] = None,
                         ) -> 'any_of_0':
                             return super().__new__(
                                 cls,
-                                arg,
+                                _arg,
                                 _configuration=_configuration,
                             )
                     
@@ -151,13 +151,13 @@ class PortsSpec(
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'ports':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -195,7 +195,7 @@ class PortsSpec(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         ranges: typing.Union[MetaOapg.properties.ranges, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
         ports: typing.Union[MetaOapg.properties.ports, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -203,7 +203,7 @@ class PortsSpec(
     ) -> 'PortsSpec':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             ranges=ranges,
             ports=ports,
             _configuration=_configuration,

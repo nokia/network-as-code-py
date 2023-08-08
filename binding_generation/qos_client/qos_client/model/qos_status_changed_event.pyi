@@ -95,7 +95,7 @@ class QosStatusChangedEvent(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         eventTime: typing.Union[MetaOapg.properties.eventTime, str, ],
         eventType: 'EventType',
         eventDetail: 'EventDetail',
@@ -104,7 +104,7 @@ class QosStatusChangedEvent(
     ) -> 'QosStatusChangedEvent':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             eventTime=eventTime,
             eventType=eventType,
             eventDetail=eventDetail,

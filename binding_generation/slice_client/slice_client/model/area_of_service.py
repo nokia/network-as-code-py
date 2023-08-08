@@ -52,12 +52,12 @@ class AreaOfService(
             
                 def __new__(
                     cls,
-                    arg: typing.Union[typing.Tuple['Point'], typing.List['Point']],
+                    _arg: typing.Union[typing.Tuple['Point'], typing.List['Point']],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                 ) -> 'poligon':
                     return super().__new__(
                         cls,
-                        arg,
+                        _arg,
                         _configuration=_configuration,
                     )
             
@@ -90,14 +90,14 @@ class AreaOfService(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         poligon: typing.Union[MetaOapg.properties.poligon, list, tuple, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
         **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
     ) -> 'AreaOfService':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             poligon=poligon,
             _configuration=_configuration,
             **kwargs,

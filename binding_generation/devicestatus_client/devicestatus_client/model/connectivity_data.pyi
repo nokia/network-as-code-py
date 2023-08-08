@@ -77,7 +77,7 @@ class ConnectivityData(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         id: typing.Union[MetaOapg.properties.id, str, ],
         maxNumOfReports: typing.Union[MetaOapg.properties.maxNumOfReports, decimal.Decimal, int, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -85,7 +85,7 @@ class ConnectivityData(
     ) -> 'ConnectivityData':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             id=id,
             maxNumOfReports=maxNumOfReports,
             _configuration=_configuration,

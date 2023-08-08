@@ -52,7 +52,7 @@ class SessionInfo(
             
             
                 class MetaOapg:
-                    items = schemas.IntSchema
+                    any_of_0 = schemas.IntSchema
                     any_of_1 = schemas.AnyTypeSchema
                     
                     @classmethod
@@ -66,20 +66,20 @@ class SessionInfo(
                         # classes don't exist yet because their module has not finished
                         # loading
                         return [
-                            cls.items,
+                            cls.any_of_0,
                             cls.any_of_1,
                         ]
             
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'startedAt':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -91,7 +91,7 @@ class SessionInfo(
             
             
                 class MetaOapg:
-                    items = schemas.IntSchema
+                    any_of_0 = schemas.IntSchema
                     any_of_1 = schemas.AnyTypeSchema
                     
                     @classmethod
@@ -105,20 +105,20 @@ class SessionInfo(
                         # classes don't exist yet because their module has not finished
                         # loading
                         return [
-                            cls.items,
+                            cls.any_of_0,
                             cls.any_of_1,
                         ]
             
             
                 def __new__(
                     cls,
-                    *args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
+                    *_args: typing.Union[dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, bool, None, list, tuple, bytes, io.FileIO, io.BufferedReader, ],
                     _configuration: typing.Optional[schemas.Configuration] = None,
                     **kwargs: typing.Union[schemas.AnyTypeSchema, dict, frozendict.frozendict, str, date, datetime, uuid.UUID, int, float, decimal.Decimal, None, list, tuple, bytes],
                 ) -> 'expiresAt':
                     return super().__new__(
                         cls,
-                        *args,
+                        *_args,
                         _configuration=_configuration,
                         **kwargs,
                     )
@@ -181,7 +181,7 @@ class SessionInfo(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         qosProfile: typing.Union[MetaOapg.properties.qosProfile, str, ],
         qosStatus: typing.Union[MetaOapg.properties.qosStatus, str, ],
         id: typing.Union[MetaOapg.properties.id, str, ],
@@ -192,7 +192,7 @@ class SessionInfo(
     ) -> 'SessionInfo':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             qosProfile=qosProfile,
             qosStatus=qosStatus,
             id=id,

@@ -1,4 +1,4 @@
-<a name="__pageTop"></a>
+<a id="__pageTop"></a>
 # slice_client.apis.tags.slice_api.SliceApi
 
 All URIs are relative to *http://localhost*
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 [**get_slice**](#get_slice) | **get** /slices/{id} | Get network slice data.
 
 # **activate_slice**
-<a name="activate_slice"></a>
+<a id="activate_slice"></a>
 > bool, date, datetime, dict, float, int, list, str, none_type activate_slice(id)
 
 Activate a network slice.
@@ -127,7 +127,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **create_slice**
-<a name="create_slice"></a>
+<a id="create_slice"></a>
 > SliceData create_slice(slice)
 
 Create a network slice.
@@ -265,7 +265,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **deactivate_slice**
-<a name="deactivate_slice"></a>
+<a id="deactivate_slice"></a>
 > bool, date, datetime, dict, float, int, list, str, none_type deactivate_slice(id)
 
 Deactivate a network slice.
@@ -380,7 +380,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **delete_slice**
-<a name="delete_slice"></a>
+<a id="delete_slice"></a>
 > delete_slice(id)
 
 Delete network slice.
@@ -487,7 +487,7 @@ Type | Description  | Notes
 [[Back to top]](#__pageTop) [[Back to API list]](../../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../../README.md#documentation-for-models) [[Back to README]](../../../README.md)
 
 # **get_slice**
-<a name="get_slice"></a>
+<a id="get_slice"></a>
 > SliceData get_slice(id)
 
 Get network slice data.

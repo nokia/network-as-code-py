@@ -82,7 +82,7 @@ class Point(
 
     def __new__(
         cls,
-        *args: typing.Union[dict, frozendict.frozendict, ],
+        *_args: typing.Union[dict, frozendict.frozendict, ],
         lat: typing.Union[MetaOapg.properties.lat, decimal.Decimal, int, float, schemas.Unset] = schemas.unset,
         lon: typing.Union[MetaOapg.properties.lon, decimal.Decimal, int, float, schemas.Unset] = schemas.unset,
         _configuration: typing.Optional[schemas.Configuration] = None,
@@ -90,7 +90,7 @@ class Point(
     ) -> 'Point':
         return super().__new__(
             cls,
-            *args,
+            *_args,
             lat=lat,
             lon=lon,
             _configuration=_configuration,

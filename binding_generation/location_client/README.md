@@ -193,8 +193,9 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Authorization
 
- Authentication schemes defined for the API:
-## RapidApiKey
+Authentication schemes defined for the API:
+<a id="RapidApiKey"></a>
+### RapidApiKey
 
 - **Type**: API key
 - **API key parameter name**: X-RapidAPI-Key
