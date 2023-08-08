@@ -14,11 +14,11 @@ packages = [
 [tool.pyright]
 include = ["network_as_code"]
 exclude = ["**/__pycache__", "**/.pytest_cache", "**/.*"]
-pythonVersion = "^3.7"
+pythonVersion = "^3.9"
 pythonPlatform = "Linux"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 qos_client = {path = "binding_generation/qos_client"}
 location_client = {path = "binding_generation/location_client"}
