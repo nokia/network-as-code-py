@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 import math
 from . import Namespace
 from ..models import Slice
@@ -131,7 +131,7 @@ class Slices(Namespace):
 
         return slice
 
-    def get(self, id: str) -> Slice | None:
+    def get(self, id: str) -> Union[Slice, None]:
         """Get network slice by id.
 
         #### Args:
