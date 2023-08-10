@@ -1,6 +1,6 @@
 from os import access
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
-from typing import List, Union
+from typing import List, Union, Optional
 
 
 from ..api import APIClient
@@ -16,9 +16,9 @@ class Event(BaseModel):
 
 
 class DeviceIpv4Addr(BaseModel):
-    public_address: str
-    private_address: str
-    public_port: int
+    public_address: Optional[str]
+    private_address: Optional[str]
+    public_port: Optional[int]
 
 
 
