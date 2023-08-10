@@ -850,6 +850,25 @@ py = "*"
 pytest = ">=3.10"
 
 [[package]]
+name = "pytest-httpx"
+version = "0.23.1"
+description = "Send responses to httpx."
+category = "dev"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "pytest_httpx-0.23.1-py3-none-any.whl", hash = "sha256:ba38a9e6c685d3cf6197551a79bf7e41f8bbc57a6d1de65b537f77e87f56ecd3"},
+    {file = "pytest_httpx-0.23.1.tar.gz", hash = "sha256:cfed19eb8b13cbdf464bbb1c4ef88717d88d42334aa9ce516e56e46975c77f74"},
+]
+
+[package.dependencies]
+httpx = ">=0.24.0,<0.25.0"
+pytest = ">=6.0,<8.0"
+
+[package.extras]
+testing = ["pytest-asyncio (>=0.21.0,<0.22.0)", "pytest-cov (>=4.0.0,<5.0.0)"]
+
+[[package]]
 name = "pytest-xdist"
 version = "2.5.0"
 description = "pytest xdist plugin for distributed testing and loop-on-failing modes"
@@ -1092,4 +1111,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "bf9f40bec8bda21aeba6d239591f92b387add64c68f5d8032b1b6d5d42d1ff7f"
+content-hash = "03e2f74ad8844087737fcad586d52a3e5f5a80c569c5dc72cfb1784bedfb8949"
