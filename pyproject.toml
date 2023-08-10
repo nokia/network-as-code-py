@@ -24,6 +24,7 @@ qos_client = {path = "binding_generation/qos_client"}
 location_client = {path = "binding_generation/location_client"}
 slice_client = {path = "binding_generation/slice_client"}
 devicestatus_client = {path = "binding_generation/devicestatus_client"}
+httpx = "^0.24.1"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"
