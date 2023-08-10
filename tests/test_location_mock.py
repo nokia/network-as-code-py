@@ -2,20 +2,17 @@ import httpx
 from pytest_httpx import httpx_mock
 from network_as_code.api.location_api import LocationAPI
 from network_as_code.models.location import CivicAddress, Location
+from network_as_code.models.device import Device, DeviceIpv4Addr
 
 import pytest
-#import httpx-mock
-
 
 @pytest.fixture
-def location_api():
-    return LocationAPI(device_id="test_device_id")
+def device(client) -> Device:
+    device = client.devices.get("test_device_id", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+    return device
 
-def test_get_location(httpx_mock: httpx_mock, location_api):
+def test_get_location(httpx_mock: httpx_mock, device):
     url = "https://location-verification.p-eu.rapidapi.com/get?device_id=test_device_id"
-    params = {"device_id": "test_device_id"}
-    headers = {"X-RapidAPI-Key": "acd2047419mshfa34a75847e0933p1fad5ejsnc0a43f8b5f4e", "X-RapidAPI-Host": "location-verification.nokia-dev.rapidapi.com"}
-
 
     mock_response = {
         "point": {"lon": 0, "lat": 0},
@@ -24,42 +21,30 @@ def test_get_location(httpx_mock: httpx_mock, location_api):
     httpx_mock.add_response(
         url=url, 
         method='GET', 
-        headers=headers,
         json=mock_response
     )
 
-    response = location_api.getLocation(device_id="test_device_id")
-    assert response == mock_response
+    location = device.location()
+    
+    assert location.longitude == 0.0
+    assert location.latitude == 0.0
+    assert location.civic_address
 
-def test_verify_location(httpx_mock: httpx_mock, location_api):
+def test_verify_location(httpx_mock: httpx_mock, device):
    
     params = {
-        "latitude":"test_latitude",
-        "longitude":"test_longitude",
+        "longitude":"19",
+        "latitude":"47",
         "device_id":"test_device_id",
-        "accuracy":"test_accuracy"
+        "accuracy":"10km"
         }
     url = f"https://location-verification.p-eu.rapidapi.com/verify?latitude={params['latitude']}&longitude={params['longitude']}&device_id={params['device_id']}&accuracy={params['accuracy']}"
-
-    headers = {
-        "X-RapidAPI-Key": "acd2047419mshfa34a75847e0933p1fad5ejsnc0a43f8b5f4e", 
-        "X-RapidAPI-Host": "location-verification.nokia-dev.rapidapi.com"
-    }
 
     httpx_mock.add_response(
         url=url, 
         method='GET', 
         #params=params,  # <-- Added this line to ensure mock matches the request based on query params
-        headers=headers,
         json={"message": "Success"}
     )
 
-    response = location_api.verifyLocation(
-        latitude="test_latitude", 
-        longitude="test_longitude", 
-        device_id="test_device_id", 
-        accuracy="test_accuracy"
-    )
-    #content = response.json()
-
-    assert response == {"message": "Success"}
+    assert device.verify_location(longitude=19, latitude=47, accuracy="10km")

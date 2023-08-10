@@ -206,7 +206,7 @@ toml = ["tomli"]
 [[package]]
 name = "devicestatus-client"
 version = "1.0.0"
-description = ""
+description = "Device Status"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -469,28 +469,6 @@ MarkupSafe = ">=2.0"
 
 [package.extras]
 i18n = ["Babel (>=2.7)"]
-
-[[package]]
-name = "location-client"
-version = "1.0.0"
-description = ""
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = []
-develop = false
-
-[package.dependencies]
-certifi = ">=14.5.14"
-frozendict = ">=2.3.4,<2.4.0"
-python-dateutil = ">=2.7.0,<2.8.0"
-setuptools = ">=21.0.0"
-typing_extensions = ">=4.3.0,<4.4.0"
-urllib3 = ">=1.26.7,<1.27.0"
-
-[package.source]
-type = "directory"
-url = "binding_generation/location_client"
 
 [[package]]
 name = "markupsafe"
@@ -973,7 +951,7 @@ files = [
 [[package]]
 name = "qos-client"
 version = "1.0.0"
-description = ""
+description = "QoS on Demand"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -1024,7 +1002,7 @@ files = [
 [[package]]
 name = "slice-client"
 version = "1.0.0"
-description = ""
+description = "Slice"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -1111,4 +1089,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "03e2f74ad8844087737fcad586d52a3e5f5a80c569c5dc72cfb1784bedfb8949"
+content-hash = "8ae2e32ef64639c13b0c4122d9c36e889dff739f7bce82b252876bc19453147a"

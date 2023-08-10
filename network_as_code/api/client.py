@@ -4,10 +4,6 @@ import qos_client.api_client as qos_api_client
 
 from qos_client.apis.tags import sessions_api as qos_api
 
-import location_client.api_client as location_api_client
-
-from location_client.apis.tags import location_api
-
 import slice_client.api_client as slice_api_client
 
 from slice_client.apis.tags import slice_api
@@ -16,9 +12,7 @@ import devicestatus_client.api_client as devicestatus_api_client
 
 from devicestatus_client.apis.tags import default_api as devicestatus_api
 
-# import httpx
-# import json as JSON
-# # from .endpoints import AdminAPI, ServicesAPI, NotificationsAPI, SubscriptionsAPI
+from .location_api import LocationAPI 
 
 class APIClient:
     """A client for communicating with Network as Code APIs.
@@ -54,21 +48,6 @@ class APIClient:
 
         self.sessions = qos_api.SessionsApi(self._qos_client)
 
-        location_config = location_api_client.Configuration(
-            host=location_base_url,
-            api_key={
-                "RapidApiKey": token
-            }
-        )
-
-        self._location_client = location_api_client.ApiClient(
-            location_config,
-            header_name="X-RapidAPI-Host",
-            header_value="location-verification.nokia-dev.rapidapi.com"
-        )
-
-        self.location = location_api.LocationApi(self._location_client)
-
         slice_config = slice_api_client.Configuration(
             host=slice_base_url,
             api_key={
@@ -98,3 +77,5 @@ class APIClient:
         )
 
         self.devicestatus = devicestatus_api.DefaultApi(self._devicestatus_client)
+
+        self.location = LocationAPI(token)

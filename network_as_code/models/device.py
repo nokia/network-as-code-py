@@ -153,15 +153,8 @@ class Device(BaseModel):
             location = device.location()
             ```
         """
-        query_parameters = {
-           "device_id": self.sid 
-        }
-
-        # Error Case: Getting location
-        global response
-        response = error_handler(func=self._api.location.get_location, arg=query_parameters)
-        # response = self._api.location.get_location(query_parameters)
-        body = response.body
+        response = self._api.location.get_location(self.sid)
+        body = response
 
         longitude = body["point"]["lon"]
         latitude = body["point"]["lat"]
@@ -193,19 +186,5 @@ class Device(BaseModel):
             located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, accuracy="10km")
             ```
         """
-        query_parameters = {
-            "device_id": self.sid,
-            "longitude": longitude,
-            "latitude": latitude,
-            "accuracy": accuracy
-        }
-
-        try:
-            # Error Case: Verifying location
-            global res
-            res = error_handler(func=self._api.location.verify_location, arg=query_parameters)
-            return res.body
-            # return self._api.location.verify_location(query_parameters).body
-        except:
-            return False
+        return self._api.location.verify_location(latitude, longitude, self.sid, accuracy)
         
