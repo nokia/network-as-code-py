@@ -25,14 +25,14 @@ class Slices(Namespace):
                slice_info: SliceInfo, 
                area_of_service: AreaOfService, 
                notification_url: str,
-               name: Optional[str] = None,
-               notification_auth_token: Optional[str] = None,
-               slice_downlink_throughput: Optional[Throughput] = None, 
-               slice_uplink_throughput: Optional[Throughput] = None,
-               device_downlink_throughput: Optional[Throughput] = None,
-               device_uplink_throughput: Optional[Throughput] = None,
-               max_data_connections: Optional[int] = None,
-               max_devices: Optional[int] = None
+               name: Union[str, None] = None,
+               notification_auth_token: Union[str, None] = None,
+               slice_downlink_throughput: Union[Throughput, None] = None,
+               slice_uplink_throughput: Union[Throughput, None] = None,
+               device_downlink_throughput: Union[Throughput, None] = None,
+               device_uplink_throughput: Union[Throughput, None] = None,
+               max_data_connections: Union[int, None] = None,
+               max_devices: Union[int, None] = None
                ) -> Slice:
         """Create a slice with its network identifier, slice info, area of service, and notification url.
 
