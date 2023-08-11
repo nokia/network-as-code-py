@@ -3,14 +3,6 @@ from ..api.slice_api import SliceAPI
 
 from network_as_code.api.device_api import DeviceAPI
 
-import location_client.api_client as location_api_client
-
-from location_client.apis.tags import location_api
-
-import slice_client.api_client as slice_api_client
-
-from slice_client.apis.tags import slice_api
-
 import devicestatus_client.api_client as devicestatus_api_client
 
 from devicestatus_client.apis.tags import default_api as devicestatus_api
@@ -42,36 +34,6 @@ class APIClient:
             host="qos-on-demand.nokia-dev.rapidapi.com",
             url=qos_base_url
         )
-
-        location_config = location_api_client.Configuration(
-            host=location_base_url,
-            api_key={
-                "RapidApiKey": token
-            }
-        )
-
-        self._location_client = location_api_client.ApiClient(
-            location_config,
-            header_name="X-RapidAPI-Host",
-            header_value="location-verification.nokia-dev.rapidapi.com"
-        )
-
-        self.location = location_api.LocationApi(self._location_client)
-
-        slice_config = slice_api_client.Configuration(
-            host=slice_base_url,
-            api_key={
-                "RapidApiKey": token
-            }
-        )
-
-        self._slice_client = slice_api_client.ApiClient(
-            slice_config,
-            header_name="X-RapidAPI-Host",
-            header_value="network-slicing.nokia-dev.rapidapi.com"
-        )
-
-        self.slice = slice_api.SliceApi(self._slice_client)
 
         devicestatus_config = devicestatus_api_client.Configuration(
             host=devicestatus_base_url,
