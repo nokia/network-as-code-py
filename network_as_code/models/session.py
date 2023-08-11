@@ -62,9 +62,11 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         self._api = api
 
     def delete(self):
-        """Deletes a given session."""
+        """
+        Deletes a given session
+        ."""
         error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id})
-        # self._api.sessions.delete_session({'sessionId': self.id})
+        self._api.sessions.delete_session(self.id)
 
     def duration(self):
         """Returns the duration of a given session."""
@@ -82,9 +84,9 @@ class Session(BaseModel, arbitrary_types_allowed = True):
             ip (any): IP address of the service.
             session (any): A `Session` object created by the low-level API.
         """
-        started_at = int(session["startedAt"]) if session["startedAt"] else None
-        expires_at = int(session["expiresAt"]) if session["expiresAt"] else None
-        #return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
-        return Session(api=api, id=session["id"], service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
+        started_at = int(session["startedAt"]) if session.get("startedAt", False) else None
+        expires_at = int(session["expiresAt"]) if session.get("expiresAt", False) else None
+        print(session)
+        return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
 
 

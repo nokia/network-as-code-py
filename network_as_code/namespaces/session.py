@@ -18,6 +18,7 @@ class Sessions(Namespace):
         """
         # Error Case: Getting session
         response = error_handler(func=self.api.sessions.get_session, arg={ 'sessionId': id})
-        session_object = response.body
-        # session_object = self.api.sessions.get_session({ 'sessionId': id}).body
-        return Session.convert_session_model(self.api, "",  session_object)
+        # session_object = response.body
+        session_object = self.api.sessions.get_session({ 'sessionId': id})
+
+        return Session.convert_session_model(self.api, "",  session_object.json())
