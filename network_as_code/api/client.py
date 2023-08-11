@@ -1,9 +1,11 @@
 import sys
 from ..api.slice_api import SliceAPI
 
-import qos_client.api_client as qos_api_client
+from network_as_code.api.device_api import DeviceAPI
 
-from qos_client.apis.tags import sessions_api as qos_api
+import location_client.api_client as location_api_client
+
+from location_client.apis.tags import location_api
 
 import slice_client.api_client as slice_api_client
 
@@ -34,20 +36,27 @@ class APIClient:
         devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
         **kwargs,
     ):
-        qos_config = qos_api_client.Configuration(
-            host=qos_base_url,
+
+        self.sessions = DeviceAPI(
+            key=token,
+            host="qos-on-demand.nokia-dev.rapidapi.com",
+            url=qos_base_url
+        )
+
+        location_config = location_api_client.Configuration(
+            host=location_base_url,
             api_key={
                 "RapidApiKey": token
             }
         )
 
-        self._qos_client = qos_api_client.ApiClient(
-            qos_config,
+        self._location_client = location_api_client.ApiClient(
+            location_config,
             header_name="X-RapidAPI-Host",
-            header_value="qos-on-demand.nokia-dev.rapidapi.com"
+            header_value="location-verification.nokia-dev.rapidapi.com"
         )
 
-        self.sessions = qos_api.SessionsApi(self._qos_client)
+        self.location = location_api.LocationApi(self._location_client)
 
         slice_config = slice_api_client.Configuration(
             host=slice_base_url,

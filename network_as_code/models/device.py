@@ -2,13 +2,9 @@ from os import access
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union
 
-from qos_client.model.create_session import CreateSession
-from qos_client.model.ports_spec import PortsSpec
-from qos_client.schemas import unset
-from qos_client.models import DeviceIpv4Addr as BDeviceIpv4Addr
 
 from ..api import APIClient
-from ..models.session import Session
+from ..models.session import Session, PortsSpec
 from ..models.location import CivicAddress, Location
 # from ..models.device_status import ConnectivitySubscription
 from devicestatus_client.model.connectivity_data import ConnectivityData
@@ -87,22 +83,20 @@ class Device(BaseModel):
             session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
-
         session_resource = {
             "qosProfile": profile,
             "device": {
                 "networkAccessIdentifier": self.sid,
-                "ipv4Address": BDeviceIpv4Addr(publicAddress=self.ipv4_address.public_address, privateAddress=self.ipv4_address.private_address, public_port=self.ipv4_address.public_port) if self.ipv4_address else unset,
-                "ipv6Address": self.ipv6_address
+                "ipv4Address": {
+                    "publicAddress": self.ipv4_address.public_address
+                }
             },
-            "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else unset,
             "applicationServer": {
-                "ipv4Address": service_ip,
+                "ipv4Address": service_ip
             },
-            "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else unset,
+            "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else None,
+            "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else None,
         }
-
-        print(session_resource)
 
         if duration:
             session_resource["duration"] = duration
@@ -113,15 +107,19 @@ class Device(BaseModel):
         if notification_auth_token:
             session_resource["notificationAuthToken"] = "Bearer "+notification_auth_token
 
-
         # Error Case: Creating session
-        session = self._api.sessions.create_session(body=session_resource)
-        session = session.body
+        global session
+        session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
 
-        return Session.convert_session_model(self._api, session)
+        session = self._api.sessions.create_session(session_resource)
+
+        # Convert response body to an Event model
+        # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
+
+        return Session.convert_session_model(self._api, self.ipv4_address, session.json())
 
     def sessions(self) -> List[Session]:
-        """List sessions of the device.
+        """List sessions of the device. TODO change the name to get_sessions
 
         #### Example:
             ```python
@@ -130,11 +128,11 @@ class Device(BaseModel):
         """
         # Error Case: Getting all sessions
         sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid})
-        # sessions = self._api.sessions.get_all_sessions(query_params={"device-id": self.sid})
+        sessions = self._api.sessions.get_all_sessions({"device-id": self.sid})
         if not sessions:
             return []
         else:
-            return list(map(lambda session : self.__convert_session_model(session), sessions.body))
+            return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
 
     def clear_sessions(self):
         """Clears sessions of the device."""
@@ -142,8 +140,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> Session:
-        #return Session.convert_session_model(self._api, self.ip, session)
-       return Session.convert_session_model(self._api, session)
+       return Session.convert_session_model(self._api, self.ipv4_address, session)
 
     def location(self) -> Location:
         """Returns the location of the device.
