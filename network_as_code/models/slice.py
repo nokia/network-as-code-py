@@ -1,7 +1,7 @@
 from os import access
 from urllib.error import HTTPError
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
-from typing import List, Union, Optional
+from typing import Dict, List, Union, Optional
 from enum import Enum
 
 from slice_client.model.throughput import Throughput
@@ -139,3 +139,23 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                 raise ServiceError(e)
         except ValidationError as e:
             raise InvalidParameter(e)
+
+
+
+
+    @staticmethod
+    def network_identifier(networkIdentifierDict: Dict[str, str]):
+        return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
+    
+    @staticmethod
+    def slice_info(sliceInfoDict: Dict[str, str]):
+        return SliceInfo(service_type=sliceInfoDict['service_type'], differentiator=sliceInfoDict['differentiator'])
+    
+    @staticmethod
+    def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
+        poligon = areaOfServiceDict['poligon']
+        return AreaOfService(poligon=[Point(lat=poligon[0]['lat'], lon=poligon[0]['lon']), Point(lat=poligon[1]['lat'], lon=poligon[1]['lon']), Point(lat=poligon[2]['lat'], lon=poligon[2]['lon']), Point(lat=poligon[3]['lat'], lon=poligon[3]['lon'])]), 
+
+    @staticmethod
+    def throughput(throughputdict: Dict[int, int]):
+        return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])

@@ -1,4 +1,5 @@
 import sys
+from ..api.slice_api import SliceAPI
 
 import qos_client.api_client as qos_api_client
 
@@ -79,3 +80,8 @@ class APIClient:
         self.devicestatus = devicestatus_api.DefaultApi(self._devicestatus_client)
 
         self.location = LocationAPI(token)
+        self.slice_new = SliceAPI(
+            base_url=slice_base_url, 
+            rapid_key=token,
+            rapid_host="network-slicing.nokia-dev.rapidapi.com"
+        )
