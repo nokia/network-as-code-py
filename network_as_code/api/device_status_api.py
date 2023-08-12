@@ -3,11 +3,28 @@ import httpx
 from typing import Optional
 import datetime
 
+def delete_none(_dict):
+    """Delete None values recursively from all of the dictionaries"""
+    for key, value in list(_dict.items()):
+        if isinstance(value, dict):
+            delete_none(value)
+        elif value is None:
+            del _dict[key]
+        elif isinstance(value, list):
+            for v_i in value:
+                if isinstance(v_i, dict):
+                    delete_none(v_i)
+
+    return _dict
+
+
 class DeviceStatusAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
-        self.rapid_key = rapid_key
-        self.rapid_host = rapid_host
-        self.client = httpx.Client(base_url=base_url, verify=False)   
+        self.client = httpx.Client(base_url=base_url, headers={
+            "content-type": "application/json",
+            "X-RapidAPI-Key": rapid_key,
+            "X-RapidAPI-Host": rapid_host
+        })   
 
     def create_subscription(self,
                             device,
@@ -15,10 +32,10 @@ class DeviceStatusAPI:
                             notification_url: str,
                             notification_auth_token: str,
                             max_number_of_reports: Optional[int] = None,
-                            subscription_expire_time: Optional[datetime.datetime] = None):
+                            subscription_expire_time: Optional[str] = None):
         res = self.client.post(
             "/event-subscriptions",
-            json={
+            json=delete_none({
                 "subscriptionDetail": {
                     "device": {
                         "phoneNumber": device.phone_number,
@@ -38,21 +55,23 @@ class DeviceStatusAPI:
                     "notificationUrl": notification_url,
                     "notificationAuthToken": notification_auth_token
                 }
-            }
+            })
         )
+
+        print(res.json())
 
         res.raise_for_status()
 
         return res.json()
 
     def get_subscription(self, id: str):
-        res = self.client.get("/event-subscriptions/", params={"id": id})
+        res = self.client.get(f"/event-subscriptions/{id}")
 
         res.raise_for_status()
 
         return res.json()
 
     def delete_subscription(self, id: str):
-        res = self.client.delete("/event-subscriptions/", params={"id": id})
+        res = self.client.delete(f"/event-subscriptions/{id}")
 
         res.raise_for_status()
