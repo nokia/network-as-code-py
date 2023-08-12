@@ -5,9 +5,6 @@ description = ""
 authors = ["Pavel Garmuyev <pavel.garmuyev@nokia.com>", "Sami Lahtinen <sami.lahtinen@nokia.com>"]
 packages = [
     { include = "network_as_code" },
-    { include = "qos_client", from = "binding_generation"},
-    { include = "slice_client", from = "binding_generation"},
-    { include = "devicestatus_client", from = "binding_generation"}
 ]
 
 [tool.pyright]
@@ -19,9 +16,6 @@ pythonPlatform = "Linux"
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = {extras = ["email"], version = "^1.10.2"}
-qos_client = {path = "binding_generation/qos_client"}
-slice_client = {path = "binding_generation/slice_client"}
-devicestatus_client = {path = "binding_generation/devicestatus_client"}
 httpx = "^0.24.1"
 
 [tool.poetry.group.dev.dependencies]

@@ -26,9 +26,9 @@ class Connectivity(Namespace):
                   event_type: str,
                   max_num_of_reports: int, 
                   notification_url: str,
+                  notification_auth_token: str,
                   device: Device,
                   subscription_expire_time: Optional[str] = None,
-                  notification_auth_token: Optional[str] = None,
                   ) -> ConnectivitySubscription:
         """Create subscription for device connectivity status.
 
@@ -50,21 +50,15 @@ class Connectivity(Namespace):
 
         # Error Case: Creating Connectivity Subscription
         try:
-            body = {
-                "subscriptionDetail": EventSubscriptionDetail(eventType=event_type, device=BindingDevice(networkAccessIdentifier=device.network_access_id)),
-                "maxNumOfReports": max_num_of_reports,
-            }
-
-            if subscription_expire_time:
-                body["subscriptionExpireTime"] = subscription_expire_time
-
-            if notification_auth_token:
-                body["webhook"] = Webhook(notificationUrl=notification_url, notificationAuthToken=notification_auth_token)
-            else:
-                body["webhook"] = Webhook(notificationUrl=notification_url)
-
-            connectivity_data = self.api.devicestatus.create_event_subscription(body)
-            connectivity_subscription.id = connectivity_data.body["eventSubscriptionId"]
+            connectivity_data = self.api.devicestatus.create_subscription(
+                device,
+                event_type,
+                notification_url,
+                notification_auth_token,
+                max_num_of_reports,
+                subscription_expire_time
+            )
+            connectivity_subscription.id = connectivity_data["eventSubscriptionId"]
 
         except HTTPError as e:
             if e.code == 403:
@@ -92,17 +86,17 @@ class Connectivity(Namespace):
 
         # Error Case: Getting connectivity status data
         global connectivity_data
-        connectivity_data = self.api.devicestatus.get_event_subscription({"id": id})
+        connectivity_data = self.api.devicestatus.get_subscription(id)
 
-        device_data = connectivity_data.body["subscriptionDetail"]["device"]
+        device_data = connectivity_data["subscriptionDetail"]["device"]
 
         print(device_data)
 
         return ConnectivitySubscription(
-            id=connectivity_data.body["eventSubscriptionId"],
+            id=connectivity_data["eventSubscriptionId"],
             api=self.api, 
             max_num_of_reports = 0,
-            notification_url = connectivity_data.body["webhook"]["notificationUrl"],
-            notification_auth_token = connectivity_data.body["webhook"]["notificationAuthToken"],
-            device = Device(api=self.api, sid=connectivity_data.body["subscriptionDetail"]["device"]["networkAccessIdentifier"], ip="127.0.0.1")
+            notification_url = connectivity_data["webhook"]["notificationUrl"],
+            notification_auth_token = connectivity_data["webhook"]["notificationAuthToken"],
+            device = Device(api=self.api, sid=connectivity_data["subscriptionDetail"]["device"]["networkAccessIdentifier"], ip="127.0.0.1")
         )
