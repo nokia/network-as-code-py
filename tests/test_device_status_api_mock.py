@@ -21,27 +21,24 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
         match_content=to_bytes({
             "subscriptionDetail": {
                 "device": {
-                    "phoneNumber": None,
                     "networkAccessIdentifier": "testuser@open5glab.net",
                     "ipv4Address": {
                         "publicAddress": "1.1.1.2",
                         "privateAddress": "1.1.1.2",
                         "publicPort": 80
                     },
-                    "ipv6Address": None
                 },
                 "eventType": "CONNECTIVITY"
             },
             "maxNumberOfReports": 1,
-            "subscriptionExpireTime": None,
             "webhook": {
                 "notificationUrl": "https://localhost:9090/notify",
-                "notificationAuthToken": None
+                "notificationAuthToken": "my_auth_token"
             }
         })
     )
-    
-    subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", device)
+
+    subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", "my_auth_token", device)
 
 def test_device_status_creation_with_optional_parameters(httpx_mock, device, client):
     httpx_mock.add_response(
@@ -51,14 +48,12 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
         match_content=to_bytes({
             "subscriptionDetail": {
                 "device": {
-                    "phoneNumber": None,
                     "networkAccessIdentifier": "testuser@open5glab.net",
                     "ipv4Address": {
                         "publicAddress": "1.1.1.2",
                         "privateAddress": "1.1.1.2",
                         "publicPort": 80
                     },
-                    "ipv6Address": None
                 },
                 "eventType": "CONNECTIVITY"
             },
@@ -71,7 +66,7 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
         })
     )
     
-    subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", device, notification_auth_token="my_auth_token", subscription_expire_time="2023-08-31")
+    subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", "my_auth_token", device, subscription_expire_time="2023-08-31")
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
@@ -80,23 +75,19 @@ def test_getting_device_status_subscription(httpx_mock, device, client):
             "eventSubscriptionId": "test-subscription",
             "subscriptionDetail": {
                 "device": {
-                    "phoneNumber": None,
                     "networkAccessIdentifier": "testuser@open5glab.net",
                     "ipv4Addresss": {
                         "publicAddress": "1.1.1.2"
                     },
-                    "ipv6Address": None
                 },
                 "eventType": "CONNECTIVITY"
             },
             "maxNumberOfReports": 1,
-            "subscriptionExpireTime": None,
             "webhook": {
                 "notificationUrl": "http://localhost:9090/notify",
                 "notificationAuthToken": "my-token"
             },
             "startsAt": "now",
-            "expiresAt": None
         }
     )
     
@@ -110,23 +101,19 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
             "eventSubscriptionId": "test-subscription",
             "subscriptionDetail": {
                 "device": {
-                    "phoneNumber": None,
                     "networkAccessIdentifier": "testuser@open5glab.net",
                     "ipv4Addresss": {
                         "publicAddress": "1.1.1.2"
                     },
-                    "ipv6Address": None
                 },
                 "eventType": "CONNECTIVITY"
             },
             "maxNumberOfReports": 1,
-            "subscriptionExpireTime": None,
             "webhook": {
                 "notificationUrl": "http://localhost:9090/notify",
                 "notificationAuthToken": "my-token"
             },
             "startsAt": "now",
-            "expiresAt": None
         }
     )
     
