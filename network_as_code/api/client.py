@@ -1,5 +1,5 @@
 import sys
-from .slice_api import SliceAPI
+from ..api.slice_api import AttachAPI, SliceAPI
 
 from network_as_code.api.device_api import DeviceAPI
 
@@ -22,6 +22,7 @@ class APIClient:
         qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
         location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
         slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
+        slice_attach_base_url: str = "https://device-attach-norc.p-eu.rapidapi.com",
         devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
         **kwargs,
     ):
@@ -53,3 +54,5 @@ class APIClient:
             rapid_key=token,
             rapid_host="network-slicing.nokia-dev.rapidapi.com"
         )
+
+        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc.nokia-dev.rapidapi.com")
