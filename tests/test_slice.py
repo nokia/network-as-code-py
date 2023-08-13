@@ -1,5 +1,14 @@
 
+import pytest
+
+from network_as_code.models.device import Device, DeviceIpv4Addr
+
 from network_as_code.models.slice import Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point
+
+@pytest.fixture
+def device(client) -> Device:
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
+    return device
 
 def test_creating_a_slice(client):
     slice = client.slices.create(
@@ -56,36 +65,6 @@ def test_getting_a_slice(client):
 
     new_slice.delete()
 
-# def test_activating_and_attaching_a_slice(client):
-#     device = client.devices.get("testdevice@nokia.com")
-
-    # slice = client.slices.create(
-    #     network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
-    #     slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-    #     area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-    #     notification_url="https://notify.me/here"
-    # )
-
-#     def on_creation_handler(slice):
-#         slice.activate()
-#         slice.attach()
-
-#     slice.on_creation(on_creation_handler)
-
-# def test_logging_a_slice(client):
-#     device = client.devices.get("testdevice@nokia.com")
-
-    # slice = client.slices.create(
-    #     network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
-    #     slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-    #     area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
-    #     notification_url="https://notify.me/here"
-    # )
-
-#     def event_logger(slice, message):
-#         print(message)
-
-#     slice.on_event(event_logger)
 
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
@@ -101,3 +80,23 @@ def test_deactivating_and_deleting_a_slice(client):
 
     slice.delete()
 
+def test_attach_device_to_slice_and_detach(client, device):
+    slice = client.slices.create(
+        name="testslice",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
+        notification_url="https://notify.me/here",
+        notification_auth_token="my-token",
+        max_data_connections=12,
+        max_devices=3
+    )
+
+    slice.activate()
+
+    slice.attach(device, "https://example.org/notify")
+    slice.detach(device, "https://example.org/notify")
+
+    slice.deactivate()
+
+    slice.delete()

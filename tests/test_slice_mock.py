@@ -1,11 +1,17 @@
 import json
+import pytest
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
 from network_as_code.models.slice import NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput
+from network_as_code.models.device import Device, DeviceIpv4Addr
 
 def to_bytes(json_content: dict) -> bytes:
     return json.dumps(json_content).encode()
 
+@pytest.fixture
+def device(client) -> Device:
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
+    return device
 
 def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     slice_payload = {
@@ -305,3 +311,259 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     )
 
     assert client.slices.delete(slice_id="sliceone").status_code == 204
+
+def test_attach_device_to_slice(httpx_mock, client, device):
+    slice = {
+            "slice": {
+            "name": "sliceone",
+            "notificationUrl": "",
+            "notificationAuthToken": "samplenotificationtoken",
+            "networkIdentifier": {
+                "mcc": "236",
+                "mnc": "30"
+            },
+            "sliceInfo": {
+                "service_type": 1,
+                "differentiator": "AAABBB"
+            },
+            "areaOfService": {
+                "poligon": [
+                {
+                    "lat": 47.344,
+                    "lon": 104.349
+                },
+                {
+                    "lat": 35.344,
+                    "lon": 76.619
+                },
+                {
+                    "lat": 12.344,
+                    "lon": 142.541
+                },
+                {
+                    "lat": 19.43,
+                    "lon": 103.53
+                }
+                ]
+            },
+            "maxDataConnections": 12,
+            "maxDevices": 3,
+            "sliceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "sliceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            }
+            },
+            "startPollingAt": 1691482014,
+            "csi_id": "csi_368",
+            "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
+            "administrativeState": None,
+            "state": "inProgress"
+        }
+    httpx_mock.add_response(
+        method="GET",
+        json=slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{slice['slice']['name']}"
+    )
+    
+    slice = client.slices.get(slice['slice']['name'])
+
+    httpx_mock.add_response(
+        method="POST",
+        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        json={
+            "id": "string",
+            "phoneNumber": "string",
+            "deviceStatus": "ATTACHED",
+            "progress": "INPROGRESS",
+            "slice_id": "string"
+        },
+        match_content=to_bytes({
+            "phoneNumber": "+12065550100",
+            "notificationUrl": "https://notify.me/here"
+        })
+    )
+
+    slice.attach(device, "https://notify.me/here")
+
+def test_attach_device_to_slice_with_optional_params(httpx_mock, client, device):
+    slice = {
+            "slice": {
+            "name": "sliceone",
+            "notificationUrl": "",
+            "notificationAuthToken": "samplenotificationtoken",
+            "networkIdentifier": {
+                "mcc": "236",
+                "mnc": "30"
+            },
+            "sliceInfo": {
+                "service_type": 1,
+                "differentiator": "AAABBB"
+            },
+            "areaOfService": {
+                "poligon": [
+                {
+                    "lat": 47.344,
+                    "lon": 104.349
+                },
+                {
+                    "lat": 35.344,
+                    "lon": 76.619
+                },
+                {
+                    "lat": 12.344,
+                    "lon": 142.541
+                },
+                {
+                    "lat": 19.43,
+                    "lon": 103.53
+                }
+                ]
+            },
+            "maxDataConnections": 12,
+            "maxDevices": 3,
+            "sliceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "sliceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            }
+            },
+            "startPollingAt": 1691482014,
+            "csi_id": "csi_368",
+            "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
+            "administrativeState": None,
+            "state": "inProgress"
+        }
+    httpx_mock.add_response(
+        method="GET",
+        json=slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{slice['slice']['name']}"
+    )
+    
+    slice = client.slices.get(slice['slice']['name'])
+
+    httpx_mock.add_response(
+        method="POST",
+        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        json={
+            "id": "string",
+            "phoneNumber": "string",
+            "deviceStatus": "ATTACHED",
+            "progress": "INPROGRESS",
+            "slice_id": "string"
+        },
+        match_content=to_bytes({
+            "phoneNumber": "+12065550100",
+            "notificationUrl": "https://notify.me/here",
+            "notificationAuthToken": "my_auth_token"
+        })
+    )
+
+    slice.attach(device, "https://notify.me/here", notification_auth_token="my_auth_token")
+
+def test_detach_device_from_slice(httpx_mock, client, device):
+    slice = {
+            "slice": {
+            "name": "sliceone",
+            "notificationUrl": "",
+            "notificationAuthToken": "samplenotificationtoken",
+            "networkIdentifier": {
+                "mcc": "236",
+                "mnc": "30"
+            },
+            "sliceInfo": {
+                "service_type": 1,
+                "differentiator": "AAABBB"
+            },
+            "areaOfService": {
+                "poligon": [
+                {
+                    "lat": 47.344,
+                    "lon": 104.349
+                },
+                {
+                    "lat": 35.344,
+                    "lon": 76.619
+                },
+                {
+                    "lat": 12.344,
+                    "lon": 142.541
+                },
+                {
+                    "lat": 19.43,
+                    "lon": 103.53
+                }
+                ]
+            },
+            "maxDataConnections": 12,
+            "maxDevices": 3,
+            "sliceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "sliceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            }
+            },
+            "startPollingAt": 1691482014,
+            "csi_id": "csi_368",
+            "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
+            "administrativeState": None,
+            "state": "inProgress"
+        }
+    httpx_mock.add_response(
+        method="GET",
+        json=slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{slice['slice']['name']}"
+    )
+    
+    slice = client.slices.get(slice['slice']['name'])
+
+    httpx_mock.add_response(
+        method="POST",
+        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/detach",
+        json={
+            "id": "string",
+            "phoneNumber": "string",
+            "deviceStatus": "ATTACHED",
+            "progress": "INPROGRESS",
+            "slice_id": "string"
+        },
+        match_content=to_bytes({
+            "phoneNumber": "+12065550100",
+            "notificationUrl": "https://notify.me/here"
+        })
+    )
+
+    slice.detach(device, "https://notify.me/here")

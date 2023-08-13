@@ -87,7 +87,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.activate()
             ```
         """
-        self._api.slice.activate_slice(self.sid)
+        if self.sid:
+            self._api.slice_new.activate(self.sid)
     
     def deactivate(self) -> None:
         """Deactivate network slice.
@@ -100,7 +101,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.deactivate()
             ```
         """
-        self._api.slice.deactivate_slice(self.sid)
+        if self.sid:
+            self._api.slice_new.deactivate(self.sid)
     
     def delete(self) -> None:
         """Delete network slice.
@@ -113,7 +115,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.delete()
             ```
         """
-        self._api.slice.delete_slice(self.sid)
+        if self.sid:
+            self._api.slice_new.delete(self.sid)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.
@@ -127,9 +130,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         try:
-            slice_data = self._api.slice.get_slice(self.sid)
-
-            self.state = slice_data.state
+            if self.sid:
+                slice_data = self._api.slice_new.get(self.sid)
+                self.state = slice_data.state
         except HTTPError as e:
             if e.code == 403:
                 raise AuthenticationException(e)
@@ -139,8 +142,35 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                 raise ServiceError(e)
         except ValidationError as e:
             raise InvalidParameter(e)
+    
+    def attach(self, device: Device, notification_url: str, notification_auth_token: Optional[str] = None) -> None:
+        """Attach network slice.
 
+        #### Args:
+            device (Device): Device object that the slice is being attached to
 
+        #### Example:
+            ```python
+            device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+            slice.attach(device)
+            ```
+        """
+        self._api.slice_attach.attach(device, self.name, notification_url, notification_auth_token)
+
+    def detach(self, device: Device, notification_url: str, notification_auth_token: Optional[str] = None) -> None:
+        """Detach network slice.
+
+        #### Args:
+            None
+
+        #### Example:
+            ```python
+            device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+            slice.attach(device)
+            slice.detach()
+            ```
+        """
+        self._api.slice_attach.detach(device, self.name, notification_url, notification_auth_token)
 
 
     @staticmethod
