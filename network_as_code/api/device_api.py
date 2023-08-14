@@ -17,7 +17,7 @@ class DeviceAPI:
         self.host = host
         self.key = key
         self.url = url
-        self.client = httpx.Client(base_url=url, verify=False)
+        self.client = httpx.Client(base_url=url)
 
     def create_session(self, data: dict):
         """Function that hits the create session endpoint with the data
@@ -39,6 +39,9 @@ class DeviceAPI:
             },
             json=data
         )
+
+        response.raise_for_status()
+
         return response
 
     def get_all_sessions(self, device_id:dict) -> list:
@@ -58,6 +61,9 @@ class DeviceAPI:
                 'X-RapidAPI-Host': self.host
             }
         )
+
+        response.raise_for_status()
+
         return response
 
     def get_session(self, session_id:dict):
@@ -77,6 +83,9 @@ class DeviceAPI:
                 'X-RapidAPI-Host': self.host
             }
         )
+
+        response.raise_for_status()
+
         return response
 
     def delete_session(self, session_id:str):
@@ -93,4 +102,7 @@ class DeviceAPI:
                 'X-RapidAPI-Host': self.host
             }
         )
+
+        response.raise_for_status()
+
         return response

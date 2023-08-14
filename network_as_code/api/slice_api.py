@@ -7,7 +7,7 @@ class SliceAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
         self.rapid_key = rapid_key
         self.rapid_host = rapid_host
-        self.client = httpx.Client(base_url=base_url, verify=False)   
+        self.client = httpx.Client(base_url=base_url)   
 
 
     def create(self,body):
@@ -20,20 +20,27 @@ class SliceAPI:
             },
             data=body
         )
+
+        response.raise_for_status()
+
         return response
     
 
     def getAll(self):
-        return self.client.get(
+        res = self.client.get(
             url="/slices",
             headers={
                 'X-RapidAPI-Key': self.rapid_key,
                 'X-RapidAPI-Host': self.rapid_host
             }
         )
+
+        res.raise_for_status()
+
+        return res
     
     def get(self, slice_id: str):
-        return self.client.get(
+        res = self.client.get(
             url=f"/slices/{slice_id}",
             headers={
                 'X-RapidAPI-Key': self.rapid_key,
@@ -41,14 +48,22 @@ class SliceAPI:
             }
         )
 
+        res.raise_for_status()
+
+        return res
+
     def activate(self, slice_id: str):
-        return self.client.post(
+        res = self.client.post(
             url=f"/slices/{slice_id}/activate",
             headers={
                 'X-RapidAPI-Key': self.rapid_key,
                 'X-RapidAPI-Host': self.rapid_host
             }
         )
+
+        res.raise_for_status()
+
+        return res
     
     def deactivate(self, slice_id: str):
         return self.client.post(
@@ -60,13 +75,17 @@ class SliceAPI:
         )
     
     def delete(self, slice_id: str):
-        return self.client.post(
+        res = self.client.post(
             url=f"/slices/{slice_id}/delete",
             headers={
                 'X-RapidAPI-Key': self.rapid_key,
                 'X-RapidAPI-Host': self.rapid_host
             }
         )
+
+        res.raise_for_status()
+
+        return res
     
 def delete_none(_dict):
     """Delete None values recursively from all of the dictionaries"""
@@ -86,10 +105,10 @@ class AttachAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
         self.rapid_key = rapid_key
         self.rapid_host = rapid_host
-        self.client = httpx.Client(base_url=base_url, verify=False, headers={"X-RapidAPI-Key": rapid_key, "X-RapidAPI-Host": rapid_host})   
+        self.client = httpx.Client(base_url=base_url, headers={"X-RapidAPI-Key": rapid_key, "X-RapidAPI-Host": rapid_host})   
 
     def attach(self, device, slice_id: str, notification_url: str, notification_auth_token: Optional[str] = None):
-        return self.client.post(
+        res = self.client.post(
             url=f"/slice/{slice_id}/attach",
             json=delete_none({
                 "phoneNumber": device.phone_number,
@@ -97,9 +116,11 @@ class AttachAPI:
                 "notificationAuthToken": notification_auth_token
             })
         )
+
+        res.raise_for_status()
     
     def detach(self, device, slice_id: str, notification_url: str, notification_auth_token: Optional[str] = None):
-        return self.client.post(
+        res = self.client.post(
             url=f"/slice/{slice_id}/detach",
             json=delete_none({
                 "phoneNumber": device.phone_number,
@@ -107,3 +128,6 @@ class AttachAPI:
                 "notificationAuthToken": notification_auth_token
             })
         )
+
+        res.raise_for_status()
+

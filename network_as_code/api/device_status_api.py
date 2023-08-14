@@ -58,8 +58,6 @@ class DeviceStatusAPI:
             })
         )
 
-        print(res.json())
-
         res.raise_for_status()
 
         return res.json()

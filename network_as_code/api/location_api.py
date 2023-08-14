@@ -11,7 +11,7 @@ class LocationAPI:
             params = {"device_id": device_id},
             )
 
-        print(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -24,4 +24,5 @@ class LocationAPI:
                 "device_id":device_id,
                 "accuracy":accuracy},
         )
+
         return response.is_success

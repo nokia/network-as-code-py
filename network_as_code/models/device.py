@@ -6,8 +6,6 @@ from typing import List, Union
 from ..api import APIClient
 from ..models.session import Session, PortsSpec
 from ..models.location import CivicAddress, Location
-# from ..models.device_status import ConnectivitySubscription
-from devicestatus_client.model.connectivity_data import ConnectivityData
 from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
 
