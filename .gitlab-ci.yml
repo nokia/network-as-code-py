@@ -22,9 +22,9 @@ before_script:
 # JOBS
 
 stages:
+  - deploy
   - test
   - build
-  - deploy
 
 test:
   stage: test
