@@ -19,7 +19,7 @@ def test_creating_a_session_mock(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://qos-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
         match_content = json.dumps({
             "qosProfile": "QOS_L",
             "device": {
@@ -57,7 +57,7 @@ def test_getting_one_session(httpx_mock, client):
     
     httpx_mock.add_response(
         method = 'GET',
-        url = "https://qos-on-demand.p-eu.rapidapi.com/sessions/1234",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/1234",
         json=mock_response
     )
     session = client.sessions.get("1234")
@@ -77,7 +77,7 @@ def test_getting_all_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='GET',
-        url='https://qos-on-demand.p-eu.rapidapi.com/sessions?device-id=testuser@open5glab.net',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=testuser@open5glab.net',
         json=mock_response
     )
 

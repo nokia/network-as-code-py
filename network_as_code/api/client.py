@@ -19,8 +19,8 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
-        location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
+        qos_base_url: str = "https://quality-of-service-on-demand.p-eu.rapidapi.com",
+        location_base_url: str = "https://device-location.p-eu.rapidapi.com",
         slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
         slice_attach_base_url: str = "https://device-attach-norc.p-eu.rapidapi.com",
         devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
@@ -29,30 +29,17 @@ class APIClient:
 
         self.sessions = DeviceAPI(
             key=token,
-            host="qos-on-demand.nokia-dev.rapidapi.com",
+            host="quality-of-service-on-demand.nokia.rapidapi.com",
             url=qos_base_url
         )
 
-        # devicestatus_config = devicestatus_api_client.Configuration(
-        #     host=devicestatus_base_url,
-        #     api_key={
-        #         "RapidApiKey": token
-        #     }
-        # )
+        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia.rapidapi.com")
 
-        # self._devicestatus_client = devicestatus_api_client.ApiClient(
-        #     devicestatus_config,
-        #     header_name="X-RapidAPI-Host",
-        #     header_value="device-status.nokia-dev.rapidapi.com"
-        # )
-
-        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia-dev.rapidapi.com")
-
-        self.location = LocationAPI(token)
+        self.location = LocationAPI(token, base_url=location_base_url, rapid_host="device-location.nokia.rapidapi.com")
         self.slice_new = SliceAPI(
             base_url=slice_base_url, 
             rapid_key=token,
-            rapid_host="network-slicing.nokia-dev.rapidapi.com"
+            rapid_host="network-slicing.nokia.rapidapi.com"
         )
 
-        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc.nokia-dev.rapidapi.com")
+        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc.nokia.rapidapi.com")

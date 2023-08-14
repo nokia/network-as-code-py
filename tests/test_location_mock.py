@@ -12,7 +12,7 @@ def device(client) -> Device:
     return device
 
 def test_get_location(httpx_mock: httpx_mock, device):
-    url = "https://location-verification.p-eu.rapidapi.com/get?device_id=test_device_id"
+    url = "https://device-location.p-eu.rapidapi.com/get?device_id=test_device_id"
 
     mock_response = {
         "point": {"lon": 0, "lat": 0},
@@ -38,7 +38,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
         "device_id":"test_device_id",
         "accuracy":"10km"
         }
-    url = f"https://location-verification.p-eu.rapidapi.com/verify?latitude={params['latitude']}&longitude={params['longitude']}&device_id={params['device_id']}&accuracy={params['accuracy']}"
+    url = f"https://device-location.p-eu.rapidapi.com/verify?latitude={params['latitude']}&longitude={params['longitude']}&device_id={params['device_id']}&accuracy={params['accuracy']}"
 
     httpx_mock.add_response(
         url=url, 
