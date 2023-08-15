@@ -310,7 +310,7 @@ def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
 def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
-        method="POST", 
+        method="DELETE", 
         status_code=204,
         url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/delete"
     )
