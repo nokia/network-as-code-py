@@ -2,18 +2,9 @@ from os import access
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union
 
-from qos_client.model.create_session import CreateSession
-from qos_client.model.ports_spec import PortsSpec
-from qos_client.schemas import unset
-
 from ..api import APIClient
 from ..models.device import Device
-from ..models.session import Session
-from ..models.location import CivicAddress, Location
-from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from typing import Optional
-from urllib.error import HTTPError
-
 
 
 class ConnectivitySubscription(BaseModel):
