@@ -5,17 +5,10 @@ import math
 from httpx import Response
 
 from . import Namespace
-from ..models import Slice
+from ..models.slice import Slice, NetworkIdentifier, SliceInfo, Throughput, AreaOfService
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
-from slice_client.model.throughput import Throughput
-from slice_client.model.slice_data import SliceData
-from slice_client.model.network_identifier import NetworkIdentifier
-from slice_client.model.slice_info import SliceInfo
-from slice_client.model.area_of_service import AreaOfService
-from slice_client.model.point import Point
-
 
 class Slices(Namespace):
     """Representation of a 5G network slice.
@@ -240,10 +233,15 @@ class Slices(Namespace):
     
 
     def convert_area_of_service_obj(self, areaOfService: AreaOfService):
-        return {aosK:list({k: float(v) for k, v in dict(x).items()} for x in aosV) for aosK, aosV in dict(areaOfService).items()}
+        polygons = []
+
+        for point in areaOfService.poligon:
+            polygons.append({"lat": point.latitude, "lon": point.longitude})
+
+        return {"poligon": polygons}
     
     def convert_slice_info_obj(self, sliceInfo: SliceInfo):
         return {k: str(v) for k, v in dict(sliceInfo).items()}
     
     def convert_throughput_obj(self, throughput: Throughput):
-        return {k: float(v) for k, v in throughput.items()}
+        return {k: float(v) for k, v in dict(throughput).items()}

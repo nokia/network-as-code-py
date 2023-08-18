@@ -132,11 +132,16 @@ def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         url="https://network-slicing.p-eu.rapidapi.com/slices"
     )
 
+    """
+b'{"networkIdentifier": {"mnc": "30", "mcc": "236"}, "sliceInfo": {"service_type": "eMBB", "differentiator": "AAABBB"}, "areaOfService": {"poligon": [{"longitude": 104.349, "latitude": 47.344}, {"longitude": 76.619, "latitude": 35.344}, {"longitude": 142.541, "latitude": 12.344}, {"longitude": 103.53, "latitude": 19.43}]}, "notificationUrl": "", "name": "slicefour", "notificationAuthToken": "samplenotificationtoken", "maxDataConnections": 12, "maxDevices": 3, "sliceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "sliceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}}' body amongst:
+b'{"networkIdentifier": {"mnc": "30", "mcc": "236"}, "sliceInfo": {"service_type": "eMBB", "differentiator": "AAABBB"}, "areaOfService": {"poligon": [{"lat": 47.344, "lon": 104.349}, {"lat": 35.344, "lon": 76.619}, {"lat": 12.344, "lon": 142.541}, {"lat": 19.43, "lon": 103.53}]}, "notificationUrl": "", "name": "slicefour", "notificationAuthToken": "samplenotificationtoken", "maxDataConnections": 12, "maxDevices": 3, "sliceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "sliceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}}' body
+    """
+
     slice = client.slices.create(
         name="slicefour",
         network_id=NetworkIdentifier(mcc='236', mnc='30'),
         slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
-        area_of_service=AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)]),
+        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
         notification_url="",
         notification_auth_token= "samplenotificationtoken",
         slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),

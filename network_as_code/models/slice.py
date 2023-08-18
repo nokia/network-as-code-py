@@ -4,18 +4,30 @@ from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
 from enum import Enum
 
-from slice_client.model.throughput import Throughput
-from slice_client.model.slice_data import SliceData
-from slice_client.model.network_identifier import NetworkIdentifier
-from slice_client.model.slice_info import SliceInfo
-from slice_client.model.area_of_service import AreaOfService
-from slice_client.model.point import Point
-
 from ..api import APIClient
 from ..models.session import Session
 from ..models.location import CivicAddress, Location
 from ..models.device import Device
 from ..errors import NotFound, InvalidParameter, NotFound, AuthenticationException, ServiceError, error_handler
+
+class NetworkIdentifier(BaseModel):
+    mnc: str
+    mcc: str
+
+class SliceInfo(BaseModel):
+    service_type: str
+    differentiator: Optional[str]
+
+class Throughput(BaseModel):
+    guaranteed: int
+    maximum: int
+
+class Point(BaseModel):
+    longitude: Union[float, int] = Field(serialization_alias="lon")
+    latitude: Union[float, int] = Field(serialization_alias="lat")
+
+class AreaOfService(BaseModel):
+    poligon: List[Point]
 
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
@@ -184,7 +196,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     @staticmethod
     def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
         poligon = areaOfServiceDict['poligon']
-        return AreaOfService(poligon=[Point(lat=poligon[0]['lat'], lon=poligon[0]['lon']), Point(lat=poligon[1]['lat'], lon=poligon[1]['lon']), Point(lat=poligon[2]['lat'], lon=poligon[2]['lon']), Point(lat=poligon[3]['lat'], lon=poligon[3]['lon'])]), 
+        return AreaOfService(poligon=[Point(latitude=poligon[0]['lat'], longitude=poligon[0]['lon']), Point(latitude=poligon[1]['lat'], longitude=poligon[1]['lon']), Point(latitude=poligon[2]['lat'], longitude=poligon[2]['lon']), Point(latitude=poligon[3]['lat'], longitude=poligon[3]['lon'])]), 
 
     @staticmethod
     def throughput(throughputdict: Dict[int, int]):

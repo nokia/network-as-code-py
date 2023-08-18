@@ -5,8 +5,6 @@ from typing import List, Union
 from qos_client.model.create_session import CreateSession
 from qos_client.model.ports_spec import PortsSpec
 from qos_client.schemas import unset
-from devicestatus_client.model.connectivity_data import ConnectivityData
-
 
 from ..api import APIClient
 from ..models.device import Device
