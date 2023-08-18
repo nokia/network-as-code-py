@@ -40,3 +40,7 @@ build-backend = "poetry.core.masonry.api"
 # addopts = "--ignore=tests/test_qos.py"
 # asyncio_mode = "auto"
 norecursedirs = "binding_generation"
+testpaths = [
+    "tests",
+#    "integration",
+]
