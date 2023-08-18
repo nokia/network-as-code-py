@@ -113,7 +113,7 @@ class Slices(Namespace):
             if device_downlink_throughput:
                 body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
             
-            slice_data = self.api.slice_new.create(json.dumps(body))
+            slice_data = self.api.slice.create(json.dumps(body))
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
@@ -139,7 +139,7 @@ class Slices(Namespace):
             fetched_slice = nac_client.slices.get(id)
             ```
         """
-        slice_data = self.api.slice_new.get(id).json()
+        slice_data = self.api.slice.get(id).json()
         slice = Slice(
             api=self.api,
             sid=slice_data['csi_id'],
@@ -169,7 +169,7 @@ class Slices(Namespace):
             fetched_slices = nac_client.slices.getAll()
             ```
         """
-        slice_data = self.api.slice_new.getAll()
+        slice_data = self.api.slice.getAll()
 
         slices = [Slice(
             api=self.api,
@@ -201,7 +201,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.activate(slice_id=slice_id)
+        return self.api.slice.activate(slice_id=slice_id)
     
     def deactivate(self, slice_id: str) -> Response:
         """Activate a slice by id.
@@ -215,7 +215,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.deactivate(slice_id=slice_id)
+        return self.api.slice.deactivate(slice_id=slice_id)
     
     def delete(self, slice_id: str) -> Response:
         """Activate a slice by id.
@@ -229,7 +229,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.delete(slice_id=slice_id)
+        return self.api.slice.delete(slice_id=slice_id)
     
 
     def convert_area_of_service_obj(self, areaOfService: AreaOfService):
