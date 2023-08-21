@@ -127,6 +127,117 @@ class Slices(Namespace):
             raise InvalidParameter(e)
         
         return slice
+    
+    def modify(self,
+               network_id: NetworkIdentifier, 
+               slice_info: SliceInfo, 
+               area_of_service: AreaOfService, 
+               notification_url: str,
+               name: Optional[str] = None,
+               notification_auth_token: Optional[str] = None,
+               slice_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0), 
+               slice_uplink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
+               device_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
+               device_uplink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
+               max_data_connections: Optional[int] = None,
+               max_devices: Optional[int] = None
+               ) -> Slice:
+        """Modify a slice with its network identifier, slice info, area of service, and notification url.
+
+        #### Args:
+            network_id (NetworkIdentifier): Name of the network
+            slice_info (SliceInfo): Purpose of this slice
+            area_of_service (AreaOfService): Location of the slice
+            slice_downlink_throughput (optional): Optional throughput object
+            slice_uplink_throughput (optional): Optional throughput object
+            device_downlink_throughput (optional): Optional throughput object
+            device_uplink_throughput: (optional): Optional throughput object
+            name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
+            max_data_connections (optional): Optional maximum number of data connection sessions in the slice.
+            max_devices (optional): Optional maximum number of devices using the slice.
+
+        #### Example:
+        ```python
+        from network_as_code.models.slice import NetworkIdentifier, SliceInfo, AreaOfService, Point
+        
+        network_id = NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE")
+        slice_info = SliceInfo(service_type="eMBB", differentiator="44eab5")
+        area_of_service = AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)])
+        notification_url = "https://notify.me/here"
+
+        new_slice = nac_client.slices.create(
+            network_id = network_id,
+            slice_info = slice_info,
+            area_of_service = area_of_service,
+            notification_url = notification_url
+        )
+        ```
+
+        """
+
+        slice = Slice(
+            api=self.api, 
+            sid = None,
+            state = "NOT_SUBMITTED",
+            name = name, 
+            network_identifier = network_id,
+            slice_info = slice_info,
+            area_of_service = area_of_service,
+            maxDataConnections = max_data_connections,
+            maxDevices = max_devices,
+            sliceDownlinkThroughput = slice_downlink_throughput, 
+            slice_uplink_throughput = slice_uplink_throughput,
+            device_downlink_throughput = device_downlink_throughput,
+            device_uplink_throughput = device_uplink_throughput
+        )
+
+        # Error Case: Creating Slice
+        try:
+            body = {
+                "networkIdentifier": dict(network_id),
+                "sliceInfo": self.convert_slice_info_obj(slice_info),
+                "areaOfService": self.convert_area_of_service_obj(area_of_service),
+                "notificationUrl": notification_url,
+            }
+
+            if name:
+                body["name"] = name
+
+            if notification_auth_token:
+                body["notificationAuthToken"] = notification_auth_token
+
+            if max_data_connections:
+                body["maxDataConnections"] = max_data_connections 
+
+            if max_devices:
+                body["maxDevices"] = max_devices
+
+            if slice_downlink_throughput:
+                body["sliceDownlinkThroughput"] = self.convert_throughput_obj(slice_downlink_throughput)
+
+            if slice_uplink_throughput:
+                body["sliceUplinkThroughput"] = self.convert_throughput_obj(slice_uplink_throughput)
+
+            if device_uplink_throughput:
+                body["deviceUplinkThroughput"] = self.convert_throughput_obj(device_uplink_throughput)
+
+            if device_downlink_throughput:
+                body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
+            
+            slice_data = self.api.slice.modify(json.dumps(body))
+            slice.sid = slice_data.json()['csi_id']
+            slice.state = slice_data.json()['state']
+        except HTTPError as e:
+            if e.code == 403:
+                raise AuthenticationException(e)
+            elif e.code == 404:
+                raise NotFound(e)
+            elif e.code >= 500:
+                raise ServiceError(e)
+        except ValidationError as e:
+            raise InvalidParameter(e)
+        
+        return slice
 
     def get(self, id: str) -> Union[Slice, None]:
         """Get network slice by id.

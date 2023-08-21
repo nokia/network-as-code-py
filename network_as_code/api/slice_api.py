@@ -24,6 +24,17 @@ class SliceAPI:
 
         return response
     
+    
+    def modify(self,body):
+        response = self.client.put(
+            url="/slices",
+            data=body
+        )
+
+        response.raise_for_status()
+
+        return response
+    
 
     def getAll(self):
         res = self.client.get(

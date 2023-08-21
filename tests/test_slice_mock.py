@@ -214,6 +214,147 @@ b'{"networkIdentifier": {"mnc": "30", "mcc": "236"}, "sliceInfo": {"service_type
     assert slice.name == slice_payload['name']
     assert slice.state == slice_response['state']
 
+def test_modifying_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    slice_payload = {
+        "networkIdentifier": {
+            "mnc": "30",
+            "mcc": "236"
+        },
+        "sliceInfo": {
+            "service_type": "eMBB",
+            "differentiator": "AAABBB"
+        },
+        "areaOfService": {
+            "poligon": [
+                    {
+                        "lat": 47.344,
+                        "lon": 104.349
+                    },
+                    {
+                        "lat": 35.344,
+                        "lon": 76.619
+                    },
+                    {
+                        "lat": 12.344,
+                        "lon": 142.541
+                    },
+                    {
+                        "lat": 19.43,
+                        "lon": 103.53
+                    }
+            ]
+        },
+        "notificationUrl": "",
+        "name": "slicefour",
+        "notificationAuthToken": "samplenotificationtoken",
+        "maxDataConnections": 12,
+        "maxDevices": 3,
+        "sliceDownlinkThroughput": {
+            "guaranteed": 0.0,
+            "maximum": 0.0
+        },
+        "sliceUplinkThroughput": {
+            "guaranteed": 0.0,
+            "maximum": 0.0
+        },
+        "deviceUplinkThroughput": {
+            "guaranteed": 0.0,
+            "maximum": 0.0
+        },
+        "deviceDownlinkThroughput": {
+            "guaranteed": 0.0,
+            "maximum": 0.0
+        }
+    }
+
+    slice_response = {
+        "slice": {
+            "name": "slicefour",
+            "notificationUrl": "",
+            "notificationAuthToken": "samplenotificationtoken",
+            "networkIdentifier": {
+                "mcc": "236",
+                "mnc": "30"
+            },
+            "sliceInfo": {
+                "service_type": 1,
+                "differentiator": "AAABBB"
+            },
+            "areaOfService": {
+                "poligon": [
+                {
+                    "lat": 47.344,
+                    "lon": 104.349
+                },
+                {
+                    "lat": 35.344,
+                    "lon": 76.619
+                },
+                {
+                    "lat": 12.344,
+                    "lon": 142.541
+                },
+                {
+                    "lat": 19.43,
+                    "lon": 103.53
+                }
+                ]
+            },
+            "maxDataConnections": 12,
+            "maxDevices": 3,
+            "sliceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "sliceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceDownlinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            },
+            "deviceUplinkThroughput": {
+                "guaranteed": 0,
+                "maximum": 0
+            }
+            },
+            "startPollingAt": 1691482014,
+            "csi_id": "csi_989",
+            "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
+            "administrativeState": None,
+            "state": "PENDING"
+    }
+
+    httpx_mock.add_response(
+        method="PUT",
+        match_content=to_bytes(slice_payload),
+        json=slice_response,
+        url="https://network-slicing.p-eu.rapidapi.com/slices"
+    )
+
+    """
+b'{"networkIdentifier": {"mnc": "30", "mcc": "236"}, "sliceInfo": {"service_type": "eMBB", "differentiator": "AAABBB"}, "areaOfService": {"poligon": [{"longitude": 104.349, "latitude": 47.344}, {"longitude": 76.619, "latitude": 35.344}, {"longitude": 142.541, "latitude": 12.344}, {"longitude": 103.53, "latitude": 19.43}]}, "notificationUrl": "", "name": "slicefour", "notificationAuthToken": "samplenotificationtoken", "maxDataConnections": 12, "maxDevices": 3, "sliceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "sliceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}}' body amongst:
+b'{"networkIdentifier": {"mnc": "30", "mcc": "236"}, "sliceInfo": {"service_type": "eMBB", "differentiator": "AAABBB"}, "areaOfService": {"poligon": [{"lat": 47.344, "lon": 104.349}, {"lat": 35.344, "lon": 76.619}, {"lat": 12.344, "lon": 142.541}, {"lat": 19.43, "lon": 103.53}]}, "notificationUrl": "", "name": "slicefour", "notificationAuthToken": "samplenotificationtoken", "maxDataConnections": 12, "maxDevices": 3, "sliceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "sliceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceUplinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}, "deviceDownlinkThroughput": {"guaranteed": 0.0, "maximum": 0.0}}' body
+    """
+
+    slice = client.slices.modify(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+    assert slice.name == slice_payload['name']
+    assert slice.state == slice_response['state']
+
 def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     slices = [
         {
