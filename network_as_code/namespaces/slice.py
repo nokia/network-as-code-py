@@ -312,7 +312,13 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice.activate(slice_id=slice_id)
+        # TMO Customization: Omitted activate_slice() API call to simulate activating a slice with a no-op
+        # return self.api.slice.activate(slice_id=slice_id)
+        mock_response = Response(status_code = 200)
+        # mock_response.status_code = 200
+        return mock_response
+
+
     
     def deactivate(self, slice_id: str) -> Response:
         """Activate a slice by id.

@@ -167,7 +167,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.attach(device)
             ```
         """
-        self._api.slice_attach.attach(device, self.name, notification_url, notification_auth_token)
+        # TMO Customization: Omitted attach_slice() API call to simulate attaching a slice with a no-op
+        # self._api.slice_attach.attach(device, self.name, notification_url, notification_auth_token)
 
     def detach(self, device: Device, notification_url: str, notification_auth_token: Optional[str] = None) -> None:
         """Detach network slice.
