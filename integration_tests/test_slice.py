@@ -30,8 +30,8 @@ def test_creating_a_slice(client):
     slice.delete()
 
 def test_modifying_a_slice(client):
-    slice = client.slices.modify(
-        name="slicemock23",
+    slice = client.slices.create(
+        name="slicemock27",
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
@@ -44,8 +44,23 @@ def test_modifying_a_slice(client):
         max_data_connections=10,
         max_devices=5
     )
+    modified_slice = client.slices.modify(
+        name="slicemock27",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="https://notify.me/here",
+        notification_auth_token="my-token",
+        slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
+        slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        max_data_connections=10,
+        max_devices=6
+    )
 
-    assert slice.name == 'slicemock23'
+    assert modified_slice.name == 'slicemock27'
+    assert modified_slice.max_devices == 6
     slice.delete()
 
 def test_creating_a_slice_with_optional_args(client):
