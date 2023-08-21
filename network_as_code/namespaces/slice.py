@@ -183,9 +183,9 @@ class Slices(Namespace):
             network_identifier = network_id,
             slice_info = slice_info,
             area_of_service = area_of_service,
-            maxDataConnections = max_data_connections,
-            maxDevices = max_devices,
-            sliceDownlinkThroughput = slice_downlink_throughput, 
+            max_data_connections = max_data_connections,
+            max_devices = max_devices,
+            slice_downlink_throughput = slice_downlink_throughput, 
             slice_uplink_throughput = slice_uplink_throughput,
             device_downlink_throughput = device_downlink_throughput,
             device_uplink_throughput = device_uplink_throughput
