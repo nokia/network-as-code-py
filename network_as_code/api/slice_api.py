@@ -10,7 +10,7 @@ class SliceAPI:
             headers={
             "content-type": "application/json",
             "X-RapidAPI-Key": rapid_key,
-            "X-RapidAPI-Host": rapid_host
+            "X-RapidAPI-Host": "network-slicing.nokia-dev.rapidapi.com"
         })   
 
 
@@ -59,7 +59,7 @@ class SliceAPI:
     
     def delete(self, slice_id: str):
         res = self.client.delete(
-            url=f"/slices/{slice_id}/delete",
+            url=f"/slices/{slice_id}",
         )
 
         res.raise_for_status()

@@ -314,7 +314,7 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="DELETE", 
         status_code=204,
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/delete"
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone"
     )
 
     assert client.slices.delete(slice_id="sliceone").status_code == 204
