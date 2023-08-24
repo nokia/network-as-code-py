@@ -224,7 +224,7 @@ class Slices(Namespace):
             if device_downlink_throughput:
                 body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
             
-            slice_data = self.api.slice.modify(json.dumps(body))
+            slice_data = self.api.slice.create(json.dumps(body))
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
