@@ -70,8 +70,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     _sessions: List[Session] = PrivateAttr()
     sid: Optional[str]
     state: str
-    name: Optional[str] = Field(None, description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
-                                min_length=8, max_length=64, regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
+    name: Optional[str] = Field(None, description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".')
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
     area_of_service: AreaOfService

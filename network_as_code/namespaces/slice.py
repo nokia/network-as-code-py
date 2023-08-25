@@ -20,8 +20,8 @@ class Slices(Namespace):
     def create(self,
                network_id: NetworkIdentifier, 
                slice_info: SliceInfo, 
-               area_of_service: AreaOfService, 
                notification_url: str,
+               area_of_service: Optional[AreaOfService] = None, 
                name: Optional[str] = None,
                notification_auth_token: Optional[str] = None,
                slice_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0), 
@@ -85,9 +85,11 @@ class Slices(Namespace):
             body = {
                 "networkIdentifier": dict(network_id),
                 "sliceInfo": self.convert_slice_info_obj(slice_info),
-                "areaOfService": self.convert_area_of_service_obj(area_of_service),
                 "notificationUrl": notification_url,
             }
+
+            if area_of_service:
+                body["areaOfService"] = self.convert_area_of_service_obj(area_of_service)
 
             if name:
                 body["name"] = name
@@ -131,8 +133,8 @@ class Slices(Namespace):
     def modify(self,
                network_id: NetworkIdentifier, 
                slice_info: SliceInfo, 
-               area_of_service: AreaOfService, 
                notification_url: str,
+               area_of_service: Optional[AreaOfService] = None, 
                name: Optional[str] = None,
                notification_auth_token: Optional[str] = None,
                slice_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0), 
@@ -196,9 +198,11 @@ class Slices(Namespace):
             body = {
                 "networkIdentifier": dict(network_id),
                 "sliceInfo": self.convert_slice_info_obj(slice_info),
-                "areaOfService": self.convert_area_of_service_obj(area_of_service),
                 "notificationUrl": notification_url,
             }
+
+            if area_of_service:
+                body["areaOfService"] = self.convert_area_of_service_obj(area_of_service) 
 
             if name:
                 body["name"] = name
@@ -225,7 +229,6 @@ class Slices(Namespace):
                 body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
             
             slice_data = self.api.slice.create(json.dumps(body))
-            slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
             if e.code == 403:
@@ -253,12 +256,11 @@ class Slices(Namespace):
         slice_data = self.api.slice.get(id).json()
         slice = Slice(
             api=self.api,
-            sid=slice_data['csi_id'],
+            sid=None,
             state = slice_data['state'],
             name = slice_data['slice']['name'], 
             network_identifier = Slice.network_identifier(slice_data['slice']['networkIdentifier']),
             slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
-            area_of_service = Slice.area_of_service(slice_data['slice']['areaOfService']), 
             max_data_connections = slice_data['slice']['maxDataConnections'],
             max_devices = slice_data['slice']['maxDevices'], 
             slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 

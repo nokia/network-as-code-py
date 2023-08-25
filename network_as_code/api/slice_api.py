@@ -8,13 +8,14 @@ class SliceAPI:
         self.client = httpx.Client(
             base_url=base_url,
             headers={
-            "content-type": "application/json",
-            "X-RapidAPI-Key": rapid_key,
-            "X-RapidAPI-Host": "network-slicing.nokia-dev.rapidapi.com"
-        })   
+                "content-type": "application/json",
+                "X-RapidAPI-Key": rapid_key,
+                "X-RapidAPI-Host": "network-slicing.nokia.rapidapi.com"
+            })   
 
 
     def create(self,body):
+        print(body)
         response = self.client.post(
             url="/slices",
             data=body
