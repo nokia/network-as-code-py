@@ -72,9 +72,9 @@ class Slices(Namespace):
             network_identifier = network_id,
             slice_info = slice_info,
             area_of_service = area_of_service,
-            maxDataConnections = max_data_connections,
-            maxDevices = max_devices,
-            sliceDownlinkThroughput = slice_downlink_throughput, 
+            max_data_connections = max_data_connections,
+            max_devices = max_devices,
+            slice_downlink_throughput = slice_downlink_throughput, 
             slice_uplink_throughput = slice_uplink_throughput,
             device_downlink_throughput = device_downlink_throughput,
             device_uplink_throughput = device_uplink_throughput
@@ -113,7 +113,7 @@ class Slices(Namespace):
             if device_downlink_throughput:
                 body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
             
-            slice_data = self.api.slice_new.create(json.dumps(body))
+            slice_data = self.api.slice.create(json.dumps(body))
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
@@ -139,7 +139,7 @@ class Slices(Namespace):
             fetched_slice = nac_client.slices.get(id)
             ```
         """
-        slice_data = self.api.slice_new.get(id).json()
+        slice_data = self.api.slice.get(id).json()
         slice = Slice(
             api=self.api,
             sid=slice_data['csi_id'],
@@ -148,9 +148,9 @@ class Slices(Namespace):
             network_identifier = Slice.network_identifier(slice_data['slice']['networkIdentifier']),
             slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
             area_of_service = Slice.area_of_service(slice_data['slice']['areaOfService']), 
-            maxDataConnections = slice_data['slice']['maxDataConnections'],
-            maxDevices = slice_data['slice']['maxDevices'], 
-            sliceDownlinkThroughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
+            max_data_connections = slice_data['slice']['maxDataConnections'],
+            max_devices = slice_data['slice']['maxDevices'], 
+            slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
             slice_uplink_throughput = Slice.throughput(slice_data['slice']['sliceUplinkThroughput']),
             device_downlink_throughput = Slice.throughput(slice_data['slice']['deviceDownlinkThroughput']),
             device_uplink_throughput = Slice.throughput(slice_data['slice']['deviceUplinkThroughput'])
@@ -169,7 +169,7 @@ class Slices(Namespace):
             fetched_slices = nac_client.slices.getAll()
             ```
         """
-        slice_data = self.api.slice_new.getAll()
+        slice_data = self.api.slice.getAll()
 
         slices = [Slice(
             api=self.api,
@@ -179,9 +179,9 @@ class Slices(Namespace):
             network_identifier = Slice.network_identifier(slice['slice']['networkIdentifier']),
             slice_info = Slice.slice_info(slice['slice']['sliceInfo']), 
             area_of_service = Slice.area_of_service(slice['slice']['areaOfService']), 
-            maxDataConnections = slice['slice']['maxDataConnections'],
-            maxDevices = slice['slice']['maxDevices'],
-            sliceDownlinkThroughput = Slice.throughput(slice['slice']['sliceDownlinkThroughput']), 
+            max_data_connections = slice['slice']['maxDataConnections'],
+            max_devices = slice['slice']['maxDevices'],
+            slice_downlink_throughput = Slice.throughput(slice['slice']['sliceDownlinkThroughput']), 
             slice_uplink_throughput = Slice.throughput(slice['slice']['sliceUplinkThroughput']),
             device_downlink_throughput = Slice.throughput(slice['slice']['deviceDownlinkThroughput']),
             device_uplink_throughput = Slice.throughput(slice['slice']['deviceUplinkThroughput'])
@@ -201,7 +201,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.activate(slice_id=slice_id)
+        return self.api.slice.activate(slice_id=slice_id)
     
     def deactivate(self, slice_id: str) -> Response:
         """Activate a slice by id.
@@ -215,7 +215,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.deactivate(slice_id=slice_id)
+        return self.api.slice.deactivate(slice_id=slice_id)
     
     def delete(self, slice_id: str) -> Response:
         """Activate a slice by id.
@@ -229,7 +229,7 @@ class Slices(Namespace):
             ```
         """
 
-        return self.api.slice_new.delete(slice_id=slice_id)
+        return self.api.slice.delete(slice_id=slice_id)
     
 
     def convert_area_of_service_obj(self, areaOfService: AreaOfService):

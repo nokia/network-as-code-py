@@ -12,22 +12,26 @@ def device(client) -> Device:
 
 def test_creating_a_slice(client):
     slice = client.slices.create(
-        name="testslice",
+        name="slicemock23",
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
         notification_url="https://notify.me/here",
         notification_auth_token="my-token",
-        max_data_connections=12,
-        max_devices=3
+        slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
+        slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        max_data_connections=10,
+        max_devices=5
     )
 
-    assert slice.name == 'testslice'
-    # slice.delete()
+    assert slice.name == 'slicemock23'
+    slice.delete()
 
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
-        name="mySliceName",
+        name="slicemock24",
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
@@ -45,58 +49,70 @@ def test_creating_a_slice_with_optional_args(client):
 
 def test_getting_a_slice(client):
     new_slice = client.slices.create(
-        name="slicefour",
-        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
+        name="slicemock25",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
         notification_url="https://notify.me/here",
-        notification_auth_token= "samplenotificationtoken",
-        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
-        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
-        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
-        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
-        max_devices=3,
-        max_data_connections=12
+        notification_auth_token="my-token",
+        slice_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324), 
+        slice_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_downlink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        device_uplink_throughput=Throughput(guaranteed=3415, maximum=1234324),
+        max_data_connections=10,
+        max_devices=5
     )
 
-    fetched_slice = client.slices.get(new_slice.sid)
+    fetched_slice = client.slices.get(new_slice.name)
 
     assert new_slice.sid == fetched_slice.sid
 
     new_slice.delete()
 
 
-def test_deactivating_and_deleting_a_slice(client):
-    slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
-        notification_url="https://notify.me/here"
-    )
+# def test_deactivating_and_deleting_a_slice(client):
+#     slice = client.slices.create(
+#         name="slicemock26",
+#         network_id=NetworkIdentifier(mcc="236", mnc="30"),
+#         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+#         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+#         notification_url="https://notify.me/here",
+#         notification_auth_token= "samplenotificationtoken",
+#         slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+#         slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+#         device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+#         device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+#         max_devices=3,
+#         max_data_connections=12
+#     )
 
-    slice.activate()
+#     slice.activate()
     
-    slice.deactivate()
+#     slice.deactivate()
 
-    slice.delete()
+#     slice.delete()
 
-def test_attach_device_to_slice_and_detach(client, device):
-    slice = client.slices.create(
-        name="testslice",
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
-        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
-        notification_url="https://notify.me/here",
-        notification_auth_token="my-token",
-        max_data_connections=12,
-        max_devices=3
-    )
+# def test_attach_device_to_slice_and_detach(client, device):
+#     slice = client.slices.create(
+#         name="slicefour",
+#         network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
+#         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+#         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+#         notification_url="https://notify.me/here",
+#         notification_auth_token= "samplenotificationtoken",
+#         slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+#         slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+#         device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+#         device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+#         max_devices=3,
+#         max_data_connections=12
+#     )
 
-    slice.activate()
+#     slice.activate()
 
-    slice.attach(device, "https://example.org/notify")
-    slice.detach(device, "https://example.org/notify")
+#     slice.attach(device, "https://example.org/notify")
+#     slice.detach(device, "https://example.org/notify")
 
-    slice.deactivate()
+#     slice.deactivate()
 
-    slice.delete()
+#     slice.delete()

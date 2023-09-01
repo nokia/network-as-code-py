@@ -99,8 +99,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.activate()
             ```
         """
-        if self.sid:
-            self._api.slice_new.activate(self.sid)
+        if self.name:
+            self._api.slice.activate(self.name)
     
     def deactivate(self) -> None:
         """Deactivate network slice.
@@ -113,8 +113,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.deactivate()
             ```
         """
-        if self.sid:
-            self._api.slice_new.deactivate(self.sid)
+        if self.name:
+            self._api.slice.deactivate(self.name)
     
     def delete(self) -> None:
         """Delete network slice.
@@ -127,8 +127,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.delete()
             ```
         """
-        if self.sid:
-            self._api.slice_new.delete(self.sid)
+        if self.name:
+            self._api.slice.delete(self.name)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.
@@ -142,8 +142,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         try:
-            if self.sid:
-                slice_data = self._api.slice_new.get(self.sid)
+            if self.name:
+                slice_data = self._api.slice.get(self.name)
                 self.state = slice_data.state
         except HTTPError as e:
             if e.code == 403:

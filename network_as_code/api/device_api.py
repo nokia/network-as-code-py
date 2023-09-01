@@ -6,18 +6,21 @@ class DeviceAPI:
     Device API, that sends requests to the API via httpx calls
     """
     
-    def __init__(self, host: str, key: str, url:str) -> None:
-        """Methods takes host, key, and url. Then initialized the httpx client
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
+        """Methods takes rapid_host, rapid_key, and base_url. Then initialized the httpx client
 
         Args:
-            host (str): RapidAPI Host
-            key (str): RapidAPI Key
-            url (str): URL for the httpx client
+            rapid_host (str): RapidAPI Host
+            rapid_key (str): RapidAPI Key
+            base_url (str): URL for the httpx client
         """
-        self.host = host
-        self.key = key
-        self.url = url
-        self.client = httpx.Client(base_url=url)
+        self.client = httpx.Client(
+            base_url=base_url,
+            headers={
+            "content-type": "application/json",
+            "X-RapidAPI-Key": rapid_key,
+            "X-RapidAPI-Host": rapid_host
+        })
 
     def create_session(self, data: dict):
         """Function that hits the create session endpoint with the data
@@ -28,15 +31,8 @@ class DeviceAPI:
         Returns:
             Session: response of the endpoint, ideally a Session
         """
-        print("-----------")
-        print(data)
         response = self.client.post(
             url= '/sessions',
-            headers={
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': self.key,
-                'X-RapidAPI-Host': self.host
-            },
             json=data
         )
 
@@ -54,12 +50,7 @@ class DeviceAPI:
             list: returns list of session
         """
         response = self.client.get(
-            url= f'/sessions?device-id={device_id.get("device-id")}',
-            headers={
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': self.key,
-                'X-RapidAPI-Host': self.host
-            }
+            url= f'/sessions?device-id={device_id.get("device-id")}'
         )
 
         response.raise_for_status()
@@ -76,12 +67,7 @@ class DeviceAPI:
             Session: the session object
         """
         response = self.client.get(
-            url= f'/sessions/{session_id["sessionId"]}',
-            headers={
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': self.key,
-                'X-RapidAPI-Host': self.host
-            }
+            url= f'/sessions/{session_id["sessionId"]}'
         )
 
         response.raise_for_status()
@@ -95,12 +81,7 @@ class DeviceAPI:
             session_id (str): session ID
         """
         response = self.client.delete(
-            url= f'/sessions/{session_id}',
-            headers={
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': self.key,
-                'X-RapidAPI-Host': self.host
-            }
+            url= f'/sessions/{session_id}'
         )
 
         response.raise_for_status()
