@@ -6,7 +6,6 @@ from typing import List, Union, Optional
 from ..api import APIClient
 from ..models.session import Session, PortsSpec
 from ..models.location import CivicAddress, Location
-from ..errors import DeviceNotFound, NotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
 
 
@@ -105,15 +104,10 @@ class Device(BaseModel):
         if notification_auth_token:
             session_resource["notificationAuthToken"] = "Bearer "+notification_auth_token
 
-        # Error Case: Creating session
-        global session
-        session = error_handler(func=self._api.sessions.create_session, arg=session_resource)
-
         session = self._api.sessions.create_session(session_resource)
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-
         return Session.convert_session_model(self._api, self.ipv4_address, session.json())
 
     def sessions(self) -> List[Session]:
@@ -124,13 +118,8 @@ class Device(BaseModel):
             sessions = device.sessions()
             ```
         """
-        # Error Case: Getting all sessions
-        sessions = error_handler(func=self._api.sessions.get_all_sessions, arg={"device-id": self.sid})
         sessions = self._api.sessions.get_all_sessions({"device-id": self.sid})
-        if not sessions:
-            return []
-        else:
-            return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
+        return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
 
     def clear_sessions(self):
         """Clears sessions of the device."""

@@ -3,6 +3,8 @@ import httpx
 
 from typing import Optional
 
+from ..errors import error_handler
+
 class SliceAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
         self.client = httpx.Client(
@@ -17,10 +19,10 @@ class SliceAPI:
     def create(self,body):
         response = self.client.post(
             url="/slices",
-            data=body
+            json=body
         )
 
-        response.raise_for_status()
+        error_handler(response)
 
         return response
     
@@ -30,7 +32,7 @@ class SliceAPI:
             url="/slices",
         )
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res
     
@@ -39,7 +41,7 @@ class SliceAPI:
             url=f"/slices/{slice_id}",
         )
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res
 
@@ -48,7 +50,7 @@ class SliceAPI:
             url=f"/slices/{slice_id}/activate",
         )
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res
     
@@ -62,7 +64,7 @@ class SliceAPI:
             url=f"/slices/{slice_id}",
         )
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res
     
@@ -94,7 +96,7 @@ class AttachAPI:
             })
         )
 
-        res.raise_for_status()
+        error_handler(res)
     
     def detach(self, device, slice_id: str, notification_url: str, notification_auth_token: Optional[str] = None):
         res = self.client.post(
@@ -106,5 +108,5 @@ class AttachAPI:
             })
         )
 
-        res.raise_for_status()
+        error_handler(res)
 

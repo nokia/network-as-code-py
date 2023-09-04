@@ -1,6 +1,7 @@
 import os
 import json
 from network_as_code.models.device import DeviceIpv4Addr
+from network_as_code.errors import NotFound, AuthenticationException
 
 def test_getting_a_device(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
@@ -84,3 +85,40 @@ def test_getting_all_sessions(httpx_mock, client):
     session = device.sessions()
 
     assert session[0].id == "testuser@open5Glab.ne"
+
+def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
+    device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
+
+    httpx_mock.add_response(
+        method="GET",
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=nonexistent-user@open5glab.net',
+        status_code=404,
+        json={
+            "detail": "QoS subscription not found"
+        }
+    )
+
+    try:
+        device.sessions()
+        assert False
+    except NotFound as e:
+        assert True
+
+
+def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
+    device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
+
+    httpx_mock.add_response(
+        method="GET",
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=not-my-device@open5glab.net',
+        status_code=403,
+        json={
+            "message":"Invalid API key."
+        }
+    )
+
+    try:
+        device.sessions()
+        assert False
+    except AuthenticationException as e:
+        assert True

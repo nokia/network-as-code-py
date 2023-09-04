@@ -1,5 +1,6 @@
 import httpx
 
+from .. import errors
 
 class DeviceAPI:
     """
@@ -36,7 +37,7 @@ class DeviceAPI:
             json=data
         )
 
-        response.raise_for_status()
+        errors.error_handler(response)
 
         return response
 
@@ -53,7 +54,7 @@ class DeviceAPI:
             url= f'/sessions?device-id={device_id.get("device-id")}'
         )
 
-        response.raise_for_status()
+        errors.error_handler(response)
 
         return response
 
@@ -70,7 +71,7 @@ class DeviceAPI:
             url= f'/sessions/{session_id["sessionId"]}'
         )
 
-        response.raise_for_status()
+        errors.error_handler(response)
 
         return response
 
@@ -84,6 +85,7 @@ class DeviceAPI:
             url= f'/sessions/{session_id}'
         )
 
-        response.raise_for_status()
+        errors.error_handler(response)
 
         return response
+

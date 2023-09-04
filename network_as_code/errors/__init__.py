@@ -1,4 +1,4 @@
-from .error_handler import error_handler
+import httpx
 
 class NaCError(Exception):
     """Network as Code base exception."""
@@ -23,11 +23,6 @@ class NotFound(NaCError):
 class APIConnectionError(NaCError):
     """Error for when the Network as Code API cannot be reached."""
 
-
-class DeviceNotFound(NaCError):
-    """Error for when the Device does not exist. (404)"""
-
-
 class AuthenticationException(NaCError):
     """Error for when the API key is invalid, the user of the key is not subscribed to the API, or the API key was not supplied. (403)"""
         
@@ -38,3 +33,14 @@ class ServiceError(NaCError):
 
 class InvalidParameter(NaCError):
     """Error for when the user input parameters are invalid"""
+
+def error_handler(response):
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            raise NotFound() from e
+        elif e.response.status_code == 403 or e.response.status_code == 401:
+            raise AuthenticationException() from e
+        elif e.response.status_code >= 500:
+            raise ServiceError() from e

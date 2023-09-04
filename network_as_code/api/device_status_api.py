@@ -3,6 +3,8 @@ import httpx
 from typing import Optional
 import datetime
 
+from ..errors import error_handler
+
 def delete_none(_dict):
     """Delete None values recursively from all of the dictionaries"""
     for key, value in list(_dict.items()):
@@ -58,18 +60,18 @@ class DeviceStatusAPI:
             })
         )
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res.json()
 
     def get_subscription(self, id: str):
         res = self.client.get(f"/event-subscriptions/{id}")
 
-        res.raise_for_status()
+        error_handler(res)
 
         return res.json()
 
     def delete_subscription(self, id: str):
         res = self.client.delete(f"/event-subscriptions/{id}")
 
-        res.raise_for_status()
+        error_handler(res)

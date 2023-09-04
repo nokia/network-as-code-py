@@ -65,7 +65,6 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         """
         Deletes a given session
         ."""
-        error_handler(func=self._api.sessions.delete_session, arg={'sessionId': self.id})
         self._api.sessions.delete_session(self.id)
 
     def duration(self):
