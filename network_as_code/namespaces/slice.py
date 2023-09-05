@@ -4,6 +4,8 @@ import math
 
 from httpx import Response
 
+from network_as_code.services.slice_service import SliceService
+
 from . import Namespace
 from ..models.slice import Slice, NetworkIdentifier, SliceInfo, Throughput, AreaOfService
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
@@ -145,15 +147,15 @@ class Slices(Namespace):
             sid=slice_data['csi_id'],
             state = slice_data['state'],
             name = slice_data['slice']['name'], 
-            network_identifier = Slice.network_identifier(slice_data['slice']['networkIdentifier']),
-            slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
-            area_of_service = Slice.area_of_service(slice_data['slice']['areaOfService']), 
+            network_identifier = SliceService.network_identifier(slice_data['slice']['networkIdentifier']),
+            slice_info = SliceService.slice_info(slice_data['slice']['sliceInfo']), 
+            area_of_service = SliceService.area_of_service(slice_data['slice']['areaOfService']), 
             max_data_connections = slice_data['slice']['maxDataConnections'],
             max_devices = slice_data['slice']['maxDevices'], 
-            slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = Slice.throughput(slice_data['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = Slice.throughput(slice_data['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = Slice.throughput(slice_data['slice']['deviceUplinkThroughput'])
+            slice_downlink_throughput = SliceService.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
+            slice_uplink_throughput = SliceService.throughput(slice_data['slice']['sliceUplinkThroughput']),
+            device_downlink_throughput = SliceService.throughput(slice_data['slice']['deviceDownlinkThroughput']),
+            device_uplink_throughput = SliceService.throughput(slice_data['slice']['deviceUplinkThroughput'])
         )
 
         return slice
@@ -176,15 +178,15 @@ class Slices(Namespace):
             sid=slice['csi_id'],
             state = slice['state'],
             name = slice['slice']['name'], 
-            network_identifier = Slice.network_identifier(slice['slice']['networkIdentifier']),
-            slice_info = Slice.slice_info(slice['slice']['sliceInfo']), 
-            area_of_service = Slice.area_of_service(slice['slice']['areaOfService']), 
+            network_identifier = SliceService.network_identifier(slice['slice']['networkIdentifier']),
+            slice_info = SliceService.slice_info(slice['slice']['sliceInfo']), 
+            area_of_service = SliceService.area_of_service(slice['slice']['areaOfService']), 
             max_data_connections = slice['slice']['maxDataConnections'],
             max_devices = slice['slice']['maxDevices'],
-            slice_downlink_throughput = Slice.throughput(slice['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = Slice.throughput(slice['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = Slice.throughput(slice['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = Slice.throughput(slice['slice']['deviceUplinkThroughput'])
+            slice_downlink_throughput = SliceService.throughput(slice['slice']['sliceDownlinkThroughput']), 
+            slice_uplink_throughput = SliceService.throughput(slice['slice']['sliceUplinkThroughput']),
+            device_downlink_throughput = SliceService.throughput(slice['slice']['deviceDownlinkThroughput']),
+            device_uplink_throughput = SliceService.throughput(slice['slice']['deviceUplinkThroughput'])
         ) for slice in slice_data.json()]
         
         return slices
