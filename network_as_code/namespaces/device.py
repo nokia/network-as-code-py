@@ -1,9 +1,10 @@
 from typing import List
 from . import Namespace
-from ..models import Device, DeviceIpv4Addr
+from ..models import Device
 from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
+from qos_client.models import DeviceIpv4Addr as BDeviceIpv4Addr
 
 class Devices(Namespace):
     """Representation of a mobile subscription.
