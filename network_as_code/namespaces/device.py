@@ -1,6 +1,6 @@
 from typing import List
 from . import Namespace
-from ..models import Device
+from ..models import Device, DeviceIpv4Addr
 from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
@@ -15,9 +15,13 @@ class Devices(Namespace):
     def get(self, id: str, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
         """Get a subscription by its external ID.
 
-        Args:
+        Args: 
             id (str): External ID of the subscription. Email-like.
         """
+
+        #Check if ipv4_address is a simple string and convert it into the desired format (DeviceIpv4Addr)
+        if ipv4_address and isinstance(ipv4_address, str):
+            ipv4_address = DeviceIpv4Addr(public_address=ipv4_address, private_address=None, public_port=None)
 
         # Error Case: Creating and Getting device
         try:
