@@ -1,7 +1,6 @@
 from typing import List
 from . import Namespace
 from ..models import Device, DeviceIpv4Addr
-from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter
 from urllib.error import HTTPError
 from pydantic import ValidationError
 
@@ -23,21 +22,6 @@ class Devices(Namespace):
         if ipv4_address and isinstance(ipv4_address, str):
             ipv4_address = DeviceIpv4Addr(public_address=ipv4_address, private_address=None, public_port=None)
 
-        # Error Case: Creating and Getting device
-        try:
-            global ret_device
-            ret_device = Device(api=self.api, sid = id, ipv4_address = ipv4_address, ipv6_address = ipv6_address, phone_number = phone_number)
-        except HTTPError as e:
-            if e.code == 403:
-                raise AuthenticationException(e)
-            elif e.code == 404:
-                raise DeviceNotFound(e)
-            elif e.code >= 500:
-                raise ServiceError(e)
-        except ValidationError as e:
-            raise InvalidParameter(e)
-        
-        # ret_device = Device(api=self.api, sid = id, ip = ip)
-        # res = self.api.subscriptions.get_subscription(id)
+        ret_device = Device(api=self.api, sid = id, ipv4_address = ipv4_address, ipv6_address = ipv6_address, phone_number = phone_number)
         return ret_device
 

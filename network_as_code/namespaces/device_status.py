@@ -4,7 +4,6 @@ from . import Namespace
 from ..models.device import Device 
 from ..models.device_status import ConnectivitySubscription
 
-from ..errors import DeviceNotFound, AuthenticationException, ServiceError, InvalidParameter, error_handler
 from urllib.error import HTTPError
 from pydantic import ValidationError
 from typing import Optional

@@ -1,5 +1,6 @@
 import httpx
 
+from ..errors import error_handler
 
 class LocationAPI:
     def __init__(self, base_url: str, rapid_key:str, rapid_host: str):
@@ -14,7 +15,7 @@ class LocationAPI:
             params = {"device_id": device_id},
         )
 
-        response.raise_for_status()
+        error_handler(response)
 
         return response.json()
 
