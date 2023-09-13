@@ -1,19 +1,15 @@
-import os
 
 import network_as_code as nac
-import datetime
 
-SDK_TOKEN = os.environ['NAC_TOKEN']
-UE_ID = os.environ['UE_ID']
+SDK_TOKEN = "<replace-me>" 
+DEVICE_ID = "testuser@testcsp.net"
 
 # Give the device the device identifier and SDK token
 client = nac.NetworkAsCodeClient(
-    token=SDK_TOKEN,
-    base_url="http://localhost:5050/nwac/v4",
-    testmode=True # We execute API calls against simulated network
+    token=SDK_TOKEN
 )
 
-device = client.subscriptions.get(UE_ID)
+device = client.devices.get(DEVICE_ID)
 
 """
 NaC-py and Network as Code also provide access to location information exposed by
@@ -26,17 +22,10 @@ and less accurate in more sparse areas.
 """
 
 # Getting the device location is quite simple
-location = device.get_location()
+location = device.location()
 
 # The location object contains fields for longitude, latitude and also elevation
 
-longitude = location["lat"]
-latitude = location["long"]
-elevation = location["elev"]
-
-print(longitude)
-print(latitude)
-print(elevation)
-
-# The location data does not update automatically, to get an up-to-date device location, we need to fetch it again
-location = device.get_location()
+print(location.longitude)
+print(location.latitude)
+print(location.civic_address)
