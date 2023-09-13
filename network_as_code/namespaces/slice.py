@@ -4,8 +4,6 @@ import math
 
 from httpx import Response
 
-from network_as_code.services.slice_service import SliceService
-
 from . import Namespace
 from ..models.slice import Slice, NetworkIdentifier, SliceInfo, Throughput, AreaOfService
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
@@ -84,38 +82,20 @@ class Slices(Namespace):
 
         # Error Case: Creating Slice
         try:
-            body = {
-                "networkIdentifier": dict(network_id),
-                "sliceInfo": self.convert_slice_info_obj(slice_info),
-                "areaOfService": self.convert_area_of_service_obj(area_of_service),
-                "notificationUrl": notification_url,
-            }
-
-            if name:
-                body["name"] = name
-
-            if notification_auth_token:
-                body["notificationAuthToken"] = notification_auth_token
-
-            if max_data_connections:
-                body["maxDataConnections"] = max_data_connections 
-
-            if max_devices:
-                body["maxDevices"] = max_devices
-
-            if slice_downlink_throughput:
-                body["sliceDownlinkThroughput"] = self.convert_throughput_obj(slice_downlink_throughput)
-
-            if slice_uplink_throughput:
-                body["sliceUplinkThroughput"] = self.convert_throughput_obj(slice_uplink_throughput)
-
-            if device_uplink_throughput:
-                body["deviceUplinkThroughput"] = self.convert_throughput_obj(device_uplink_throughput)
-
-            if device_downlink_throughput:
-                body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
-            
-            slice_data = self.api.slice.create(body)
+            slice_data = self.api.slice.create(
+                network_id,
+                slice_info,
+                area_of_service,
+                notification_url,
+                name,
+                notification_auth_token,
+                slice_downlink_throughput,
+                slice_uplink_throughput,
+                device_downlink_throughput,
+                device_uplink_throughput,
+                max_data_connections,
+                max_devices
+            )
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
@@ -147,15 +127,15 @@ class Slices(Namespace):
             sid=slice_data['csi_id'],
             state = slice_data['state'],
             name = slice_data['slice']['name'], 
-            network_identifier = SliceService.network_identifier(slice_data['slice']['networkIdentifier']),
-            slice_info = SliceService.slice_info(slice_data['slice']['sliceInfo']), 
-            area_of_service = SliceService.area_of_service(slice_data['slice']['areaOfService']), 
+            network_identifier = Slice.network_identifier(slice_data['slice']['networkIdentifier']),
+            slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
+            area_of_service = Slice.area_of_service(slice_data['slice']['areaOfService']), 
             max_data_connections = slice_data['slice']['maxDataConnections'],
             max_devices = slice_data['slice']['maxDevices'], 
-            slice_downlink_throughput = SliceService.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = SliceService.throughput(slice_data['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = SliceService.throughput(slice_data['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = SliceService.throughput(slice_data['slice']['deviceUplinkThroughput'])
+            slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
+            slice_uplink_throughput = Slice.throughput(slice_data['slice']['sliceUplinkThroughput']),
+            device_downlink_throughput = Slice.throughput(slice_data['slice']['deviceDownlinkThroughput']),
+            device_uplink_throughput = Slice.throughput(slice_data['slice']['deviceUplinkThroughput'])
         )
 
         return slice
@@ -178,15 +158,15 @@ class Slices(Namespace):
             sid=slice['csi_id'],
             state = slice['state'],
             name = slice['slice']['name'], 
-            network_identifier = SliceService.network_identifier(slice['slice']['networkIdentifier']),
-            slice_info = SliceService.slice_info(slice['slice']['sliceInfo']), 
-            area_of_service = SliceService.area_of_service(slice['slice']['areaOfService']), 
+            network_identifier = Slice.network_identifier(slice['slice']['networkIdentifier']),
+            slice_info = Slice.slice_info(slice['slice']['sliceInfo']), 
+            area_of_service = Slice.area_of_service(slice['slice']['areaOfService']), 
             max_data_connections = slice['slice']['maxDataConnections'],
             max_devices = slice['slice']['maxDevices'],
-            slice_downlink_throughput = SliceService.throughput(slice['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = SliceService.throughput(slice['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = SliceService.throughput(slice['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = SliceService.throughput(slice['slice']['deviceUplinkThroughput'])
+            slice_downlink_throughput = Slice.throughput(slice['slice']['sliceDownlinkThroughput']), 
+            slice_uplink_throughput = Slice.throughput(slice['slice']['sliceUplinkThroughput']),
+            device_downlink_throughput = Slice.throughput(slice['slice']['deviceDownlinkThroughput']),
+            device_uplink_throughput = Slice.throughput(slice['slice']['deviceUplinkThroughput'])
         ) for slice in slice_data.json()]
         
         return slices
@@ -232,18 +212,3 @@ class Slices(Namespace):
         """
 
         return self.api.slice.delete(slice_id=slice_id)
-    
-
-    def convert_area_of_service_obj(self, areaOfService: AreaOfService):
-        polygons = []
-
-        for point in areaOfService.poligon:
-            polygons.append({"lat": point.latitude, "lon": point.longitude})
-
-        return {"poligon": polygons}
-    
-    def convert_slice_info_obj(self, sliceInfo: SliceInfo):
-        return {k: str(v) for k, v in dict(sliceInfo).items()}
-    
-    def convert_throughput_obj(self, throughput: Throughput):
-        return {k: float(v) for k, v in dict(throughput).items()}

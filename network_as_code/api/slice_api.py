@@ -1,4 +1,6 @@
+import json
 import os
+import pdb
 import httpx
 
 from typing import Optional
@@ -16,7 +18,51 @@ class SliceAPI:
         })   
 
 
-    def create(self,body):
+    def create(self,
+               network_id: any, 
+               slice_info: any, 
+               area_of_service: any, 
+               notification_url: str,
+               name: Optional[str] = None,
+               notification_auth_token: Optional[str] = None,
+               slice_downlink_throughput: Optional[any] = None, 
+               slice_uplink_throughput: Optional[any] = None,
+               device_downlink_throughput: Optional[any] = None,
+               device_uplink_throughput: Optional[any] = None,
+               max_data_connections: Optional[int] = None,
+               max_devices: Optional[int] = None):
+
+        body = {
+                "networkIdentifier": dict(network_id),
+                "sliceInfo": self.convert_slice_info_obj(slice_info),
+                "areaOfService": self.convert_area_of_service_obj(area_of_service),
+                "notificationUrl": notification_url,
+            }
+
+        if name:
+            body["name"] = name
+
+        if notification_auth_token:
+            body["notificationAuthToken"] = notification_auth_token
+
+        if max_data_connections:
+            body["maxDataConnections"] = max_data_connections 
+
+        if max_devices:
+            body["maxDevices"] = max_devices
+
+        if slice_downlink_throughput:
+            body["sliceDownlinkThroughput"] = self.convert_throughput_obj(slice_downlink_throughput)
+
+        if slice_uplink_throughput:
+            body["sliceUplinkThroughput"] = self.convert_throughput_obj(slice_uplink_throughput)
+
+        if device_uplink_throughput:
+            body["deviceUplinkThroughput"] = self.convert_throughput_obj(device_uplink_throughput)
+
+        if device_downlink_throughput:
+            body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
+
         response = self.client.post(
             url="/slices",
             json=body
@@ -67,6 +113,21 @@ class SliceAPI:
         error_handler(res)
 
         return res
+    
+    def convert_area_of_service_obj(self, areaOfService):
+        polygons = []
+
+        for point in areaOfService.poligon:
+            polygons.append({"lat": point.latitude, "lon": point.longitude})
+
+        return {"poligon": polygons}
+    
+    def convert_slice_info_obj(self, sliceInfo):
+        return {k: str(v) for k, v in dict(sliceInfo).items()}
+    
+    def convert_throughput_obj(self, throughput):
+        return {k: float(v) for k, v in dict(throughput).items()}
+
     
 def delete_none(_dict):
     """Delete None values recursively from all of the dictionaries"""
