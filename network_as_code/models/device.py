@@ -129,19 +129,22 @@ class Device(BaseModel):
     def __convert_session_model(self, session) -> Session:
        return Session.convert_session_model(self._api, self.ipv4_address, session)
 
-    def location(self) -> Location:
+    def location(self, max_age: Union[int, None] = None) -> Location:
         """Returns the location of the device.
+
+         #### Args:
+            max_age (int | None): Max acceptable age for location info in seconds
 
         #### Example:
             ```python
-            location = device.location()
+            location = device.location(max_age=60)
             ```
         """
-        response = self._api.location.get_location(self.sid)
+        response = self._api.location_retrieve.get_location(self, max_age)
         body = response
 
-        longitude = body["point"]["lon"]
-        latitude = body["point"]["lat"]
+        longitude = body["area"]["center"]["longitude"]
+        latitude = body["area"]["center"]["latitude"]
         civic_address = None
 
         if "civicAddress" in body.keys():
@@ -157,18 +160,39 @@ class Device(BaseModel):
 
         return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
 
-    def verify_location(self, longitude: float, latitude: float, accuracy: str) -> bool:
+    def verify_location(self, longitude: float, latitude: float, radius: float, max_age: Union[int, None] = None) -> bool:
         """Verifies the location of the device(Returns boolean value).
 
         #### Args:
             longitude (float): longitude of the device.
             latitude (float): longitude of the device.
-            accuracy (str): Accuracy range in distance.
+            radius (float): radius of the area in meters.
+            max_age (int | None): Max acceptable age for location info in seconds
             
         #### Example:
             ```python
-            located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, accuracy="10km")
+            located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
-        return self._api.location.verify_location(latitude, longitude, self.sid, accuracy)
+        return self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
         
+    def to_json_dict(self):
+        json_dict = { "networkAccessIdentifier": self.network_access_id }
+
+        if self.ipv4_address:
+            ipv4_address = {}
+            if self.ipv4_address.public_address:
+                ipv4_address["publicAddress"] = self.ipv4_address.public_address
+            if self.ipv4_address.private_address:
+                ipv4_address["privateAddress"] = self.ipv4_address.private_address
+            if self.ipv4_address.public_port:
+                ipv4_address["publicPort"] = self.ipv4_address.public_port
+            json_dict["ipv4Address"] = ipv4_address
+
+        if self.ipv6_address:
+            json_dict["ipv6Address"] = self.ipv6_address
+
+        if self.phone_number:
+            json_dict["phoneNumber"] = self.phone_number
+
+        return json_dict

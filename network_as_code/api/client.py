@@ -3,7 +3,7 @@ from ..api.slice_api import AttachAPI, SliceAPI
 
 from network_as_code.api.device_api import DeviceAPI
 
-from .location_api import LocationAPI 
+from .location_api import LocationVerifyAPI, LocationRetrievalAPI
 from .device_status_api import DeviceStatusAPI
 
 class APIClient:
@@ -20,7 +20,8 @@ class APIClient:
         token: str,
         testmode: bool = False,
         qos_base_url: str = "https://quality-of-service-on-demand.p-eu.rapidapi.com",
-        location_base_url: str = "https://device-location.p-eu.rapidapi.com",
+        location_verify_base_url: str = "https://location-verification.p-eu.rapidapi.com",
+        location_retrieve_base_url: str = "https://location-retrieval.p-eu.rapidapi.com",
         slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
         slice_attach_base_url: str = "https://device-attach-norc.p-eu.rapidapi.com",
         devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
@@ -31,7 +32,8 @@ class APIClient:
 
         self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia.rapidapi.com")
 
-        self.location = LocationAPI(base_url=location_base_url, rapid_key=token, rapid_host="device-location.nokia.rapidapi.com")
+        self.location_verify = LocationVerifyAPI(base_url=location_verify_base_url, rapid_key=token, rapid_host="location-verification.nokia-dev.rapidapi.com")
+        self.location_retrieve = LocationRetrievalAPI(base_url=location_retrieve_base_url, rapid_key=token, rapid_host="location-retrieval.nokia-dev.rapidapi.com")
 
         self.slice = SliceAPI(base_url=slice_base_url, rapid_key=token, rapid_host="network-slicing.nokia.rapidapi.com")
 
