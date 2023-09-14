@@ -2,31 +2,59 @@ import httpx
 
 from ..errors import error_handler
 
-class LocationAPI:
+from typing import cast
+
+class LocationVerifyAPI:
     def __init__(self, base_url: str, rapid_key:str, rapid_host: str):
         self.client = httpx.Client(
             base_url=base_url, 
             headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key
         })
 
-    def get_location(self, device_id):
-        response = self.client.get(
-            url = "/get",
-            params = {"device_id": device_id},
+    def verify_location(self, latitude, longitude, device, radius, max_age):
+        body = {
+            "device": device.to_json_dict(),
+            "area": {
+                "areaType": "Circle",
+                "center": {
+                    "latitude": latitude,
+                    "longitude": longitude
+                },
+                "radius": radius
+            }
+        }
+
+        if max_age:
+            body["maxAge"] = cast(int, max_age)
+
+        response = self.client.post(
+            url = "/verify",
+            json=body
+        )
+
+        return response.is_success
+
+
+class LocationRetrievalAPI:
+    def __init__(self, base_url: str, rapid_key:str, rapid_host: str):
+        self.client = httpx.Client(
+            base_url=base_url, 
+            headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key
+        })
+
+    def get_location(self, device, max_age):
+        body = {
+            "device": device.to_json_dict()
+        }
+
+        if max_age:
+            body["maxAge"] = cast(int, max_age)
+
+        response = self.client.post(
+            url = "/retrieve",
+            json=body
         )
 
         error_handler(response)
 
         return response.json()
-
-    def verify_location(self, latitude, longitude, device_id, accuracy):
-        response = self.client.get(
-            url = "/verify",
-            params = {
-                "latitude":latitude,
-                "longitude":longitude,
-                "device_id":device_id,
-                "accuracy":accuracy},
-        )
-
-        return response.is_success
