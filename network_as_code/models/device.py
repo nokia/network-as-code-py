@@ -63,12 +63,13 @@ class Device(BaseModel):
     def network_access_id(self):
         return str(self.sid)
 
-    def create_session(self, service_ip, profile, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> Session:
+    def create_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> Session:
         """Creates a session for the device.
 
         #### Args:
-            service_ip (any): IP address of the service.
             profile (any): Name of the requested QoS profile.
+            service_ipv4 (any): IPv4 address of the service.
+            service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
             duration (optional): Session duration in seconds.
@@ -77,23 +78,37 @@ class Device(BaseModel):
 
         #### Example:
             ```python
-            session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
+            session = device.create_session(profile="QOS_L", service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
         session_resource = {
             "qosProfile": profile,
             "device": {
-                "networkAccessIdentifier": self.sid,
-                "ipv4Address": {
-                    "publicAddress": self.ipv4_address.public_address
-                }
+                "ipv4Address": {}
             },
             "applicationServer": {
-                "ipv4Address": service_ip
+                "ipv4Address": service_ipv4
             },
             "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else None,
             "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else None,
         }
+
+        if self.sid:
+            session_resource['device']['networkAccessIdentifier'] = self.sid
+
+        if self.ipv4_address:
+            if self.ipv4_address.public_address:
+                session_resource['device']['ipv4Address']['publicAddress'] = self.ipv4_address.public_address
+            if self.ipv4_address.private_address:
+                session_resource['device']['ipv4Address']['privateAddress'] = self.ipv4_address.private_address
+            if self.ipv4_address.public_port:
+                session_resource['device']['ipv4Address']['publicPort'] = self.ipv4_address.public_port
+
+        if self.phone_number:
+            session_resource['device']['phoneNumber'] = self.phone_number
+
+        if service_ipv6:
+            session_resource['applicationServer']['ipv6Address'] = service_ipv6
 
         if duration:
             session_resource["duration"] = duration

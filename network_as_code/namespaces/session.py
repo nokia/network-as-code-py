@@ -16,6 +16,6 @@ class Sessions(Namespace):
         Args:
             id (str): ID of the QoS Session 
         """
-        session_object = self.api.sessions.get_session({ 'sessionId': id})
+        session_object = self.api.sessions.get_session(id)
 
         return Session.convert_session_model(self.api, "",  session_object.json())
