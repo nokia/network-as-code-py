@@ -19,7 +19,7 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        qos_base_url: str = "https://quality-of-service-on-demand.p-eu.rapidapi.com",
+        qos_base_url: str = "https://qos-on-demand.p-eu.rapidapi.com",
         location_verify_base_url: str = "https://location-verification.p-eu.rapidapi.com",
         location_retrieve_base_url: str = "https://location-retrieval.p-eu.rapidapi.com",
         slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
@@ -28,7 +28,7 @@ class APIClient:
         **kwargs,
     ):
 
-        self.sessions = DeviceAPI(base_url=qos_base_url, rapid_key=token, rapid_host="quality-of-service-on-demand.nokia.rapidapi.com")
+        self.sessions = DeviceAPI(base_url=qos_base_url, rapid_key=token, rapid_host="qos-on-demand.nokia-dev.rapidapi.com")
 
         self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia.rapidapi.com")
 

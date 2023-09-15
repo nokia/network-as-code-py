@@ -58,31 +58,31 @@ class DeviceAPI:
 
         return response
 
-    def get_session(self, session_id:dict):
+    def get_session(self, sessionId:str):
         """Returns a session given session ID
 
         Args:
-            session_id (dict): A dict with a key session ID
+            sessionId (str): A string session ID
 
         Returns:
             Session: the session object
         """
         response = self.client.get(
-            url= f'/sessions/{session_id["sessionId"]}'
+            url= f'/sessions/{sessionId}'
         )
 
         errors.error_handler(response)
 
         return response
 
-    def delete_session(self, session_id:str):
-        """Deletes a session given ID
+    def delete_session(self, id:str):
+        """Deletes a session given session ID
 
         Args:
-            session_id (str): session ID
+            id (str): session ID
         """
         response = self.client.delete(
-            url= f'/sessions/{session_id}'
+            url= f'/sessions/{id}'
         )
 
         errors.error_handler(response)
