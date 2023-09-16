@@ -81,45 +81,21 @@ class Device(BaseModel):
             session = device.create_session(profile="QOS_L", service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
-        session_resource = {
-            "qosProfile": profile,
-            "device": {
-                "ipv4Address": {}
-            },
-            "applicationServer": {
-                "ipv4Address": service_ipv4
-            },
-            "devicePorts": device_ports.dict(by_alias=True) if device_ports is not None else None,
-            "applicationServerPorts": service_ports.dict(by_alias=True) if service_ports is not None else None,
-        }
+        
 
-        if self.sid:
-            session_resource['device']['networkAccessIdentifier'] = self.sid
-
-        if self.ipv4_address:
-            if self.ipv4_address.public_address:
-                session_resource['device']['ipv4Address']['publicAddress'] = self.ipv4_address.public_address
-            if self.ipv4_address.private_address:
-                session_resource['device']['ipv4Address']['privateAddress'] = self.ipv4_address.private_address
-            if self.ipv4_address.public_port:
-                session_resource['device']['ipv4Address']['publicPort'] = self.ipv4_address.public_port
-
-        if self.phone_number:
-            session_resource['device']['phoneNumber'] = self.phone_number
-
-        if service_ipv6:
-            session_resource['applicationServer']['ipv6Address'] = service_ipv6
-
-        if duration:
-            session_resource["duration"] = duration
-
-        if notification_url:
-            session_resource["notificationUrl"] = notification_url
-
-        if notification_auth_token:
-            session_resource["notificationAuthToken"] = "Bearer "+notification_auth_token
-
-        session = self._api.sessions.create_session(session_resource)
+        session = self._api.sessions.create_session(
+            self.sid,
+            self.ipv4_address,
+            self.phone_number,
+            profile,
+            service_ipv4,
+            service_ipv6,
+            device_ports,
+            service_ports,
+            duration,
+            notification_url,
+            notification_auth_token
+        )
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
