@@ -82,38 +82,20 @@ class Slices(Namespace):
 
         # Error Case: Creating Slice
         try:
-            body = {
-                "networkIdentifier": dict(network_id),
-                "sliceInfo": self.convert_slice_info_obj(slice_info),
-                "areaOfService": self.convert_area_of_service_obj(area_of_service),
-                "notificationUrl": notification_url,
-            }
-
-            if name:
-                body["name"] = name
-
-            if notification_auth_token:
-                body["notificationAuthToken"] = notification_auth_token
-
-            if max_data_connections:
-                body["maxDataConnections"] = max_data_connections 
-
-            if max_devices:
-                body["maxDevices"] = max_devices
-
-            if slice_downlink_throughput:
-                body["sliceDownlinkThroughput"] = self.convert_throughput_obj(slice_downlink_throughput)
-
-            if slice_uplink_throughput:
-                body["sliceUplinkThroughput"] = self.convert_throughput_obj(slice_uplink_throughput)
-
-            if device_uplink_throughput:
-                body["deviceUplinkThroughput"] = self.convert_throughput_obj(device_uplink_throughput)
-
-            if device_downlink_throughput:
-                body["deviceDownlinkThroughput"] = self.convert_throughput_obj(device_downlink_throughput)
-            
-            slice_data = self.api.slice.create(body)
+            slice_data = self.api.slice.create(
+                network_id,
+                slice_info,
+                area_of_service,
+                notification_url,
+                name,
+                notification_auth_token,
+                slice_downlink_throughput,
+                slice_uplink_throughput,
+                device_downlink_throughput,
+                device_uplink_throughput,
+                max_data_connections,
+                max_devices
+            )
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']
         except HTTPError as e:
@@ -230,18 +212,3 @@ class Slices(Namespace):
         """
 
         return self.api.slice.delete(slice_id=slice_id)
-    
-
-    def convert_area_of_service_obj(self, areaOfService: AreaOfService):
-        polygons = []
-
-        for point in areaOfService.poligon:
-            polygons.append({"lat": point.latitude, "lon": point.longitude})
-
-        return {"poligon": polygons}
-    
-    def convert_slice_info_obj(self, sliceInfo: SliceInfo):
-        return {k: str(v) for k, v in dict(sliceInfo).items()}
-    
-    def convert_throughput_obj(self, throughput: Throughput):
-        return {k: float(v) for k, v in dict(throughput).items()}

@@ -184,7 +184,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         self._api.slice_attach.detach(device, self.name, notification_url, notification_auth_token)
 
-
     @staticmethod
     def network_identifier(networkIdentifierDict: Dict[str, str]):
         return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
