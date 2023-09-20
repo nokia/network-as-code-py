@@ -186,17 +186,41 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
     @staticmethod
     def network_identifier(networkIdentifierDict: Dict[str, str]):
+        """Returns a `NetworkIdentifier` instance.
+
+        Assigns the `mcc` and `mnc`.
+        #### Args:
+            networkIdentifierDict (Dict[str, str]): A Network Identifier object with `mcc` and `mnc` values.
+        """
         return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
     
     @staticmethod
     def slice_info(sliceInfoDict: Dict[str, str]):
+        """Returns a `SliceInfo` instance.
+
+        Assigns the `service_type` and `differentiator`.
+        #### Args:
+            sliceInfoDict (Dict[str, str]): A Slice Info object with `service_type` and `differentiator` values.
+        """
         return SliceInfo(service_type=sliceInfoDict['service_type'], differentiator=sliceInfoDict['differentiator'])
     
     @staticmethod
     def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
+        """Returns a `AreaOfService` instance.
+
+        Assigns the `poligon`.
+        #### Args:
+            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with poligon list value.
+        """
         poligon = areaOfServiceDict['poligon']
         return AreaOfService(poligon=[Point(latitude=poligon[0]['lat'], longitude=poligon[0]['lon']), Point(latitude=poligon[1]['lat'], longitude=poligon[1]['lon']), Point(latitude=poligon[2]['lat'], longitude=poligon[2]['lon']), Point(latitude=poligon[3]['lat'], longitude=poligon[3]['lon'])]), 
 
     @staticmethod
     def throughput(throughputdict: Dict[int, int]):
+        """Returns a `Throughput` instance.
+
+        Assigns the `guaranteed` and `maximum`.
+        #### Args:
+            throughputDict (Dict[int, int]): A Throughput object with `guaranteed` and `maximum` values.
+        """
         return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])

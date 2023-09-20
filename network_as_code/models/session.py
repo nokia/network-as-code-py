@@ -85,7 +85,6 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         """
         started_at = int(session["startedAt"]) if session.get("startedAt", False) else None
         expires_at = int(session["expiresAt"]) if session.get("expiresAt", False) else None
-        print(session)
         return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
 
 
