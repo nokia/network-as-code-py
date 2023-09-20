@@ -16,6 +16,9 @@ class Devices(Namespace):
 
         Args: 
             id (str): External ID of the subscription. Email-like.
+            ipv4_address (Any | None): ipv4 address of the subscription.
+            ipv6_address (Any | None): ipv6 address of the subscription.
+            phone_number (Any | None): phone number of the subscription.
         """
 
         #Check if ipv4_address is a simple string and convert it into the desired format (DeviceIpv4Addr)

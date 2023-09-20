@@ -10,11 +10,26 @@ from urllib.error import HTTPError
 
 
 class Event(BaseModel):
+    """
+    A class representing the `Event` model.
+    
+    #### Public Attributes:
+            target (float): the `target` of an event object.
+            atUnix (float): the `atUnix` of an event object.
+    """
     target: str
     atUnix: int
 
 
 class DeviceIpv4Addr(BaseModel):
+    """
+    A class representing the `DeviceIpv4Addr` model.
+    
+    #### Public Attributes:
+            public_address (float): the `public_address` of a device IPv4 address object.
+            private_address (float): the `private_address` of a device IPv4 address object.
+            public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
+    """
     public_address: Optional[str]
     private_address: Optional[str]
     public_port: Optional[int]

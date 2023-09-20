@@ -11,22 +11,56 @@ from ..models.device import Device
 from ..errors import NotFound, InvalidParameter, NotFound, AuthenticationException, ServiceError, error_handler
 
 class NetworkIdentifier(BaseModel):
+    """
+    A class representing the `NetworkIdentifier` model.
+    
+    #### Public Attributes:
+            mnc (str): the `mnc` of a network identifier object.
+            mcc (Optional[str]): the `mcc` of a network identifier object.
+    """
     mnc: str
     mcc: str
 
 class SliceInfo(BaseModel):
+    """
+    A class representing the `SliceInfo` model.
+    
+    #### Public Attributes:
+            service_type (str): the service type of a slice object, Example: `eMBB`
+            differentiator (Optional[str]): the differentiator of a slice object.
+    """
     service_type: str
     differentiator: Optional[str]
 
 class Throughput(BaseModel):
+    """
+    A class representing the `Throughput` model.
+    
+    #### Public Attributes:
+            guaranteed (int): the guaranteed throughput amount in integer
+            maximum (int): the maximum throughput amount in integer
+    """
     guaranteed: int
     maximum: int
 
 class Point(BaseModel):
+    """
+    A class representing the `Point` model.
+    
+    #### Public Attributes:
+            longitude (Union[float, int]): the `longitude` of a point object.
+            latitude (Union[float, int]): the `latitude` of a point object.
+    """
     longitude: Union[float, int] = Field(serialization_alias="lon")
     latitude: Union[float, int] = Field(serialization_alias="lat")
 
 class AreaOfService(BaseModel):
+    """
+    A class representing the `AreaOfService` model.
+    
+    #### Public Attributes:
+            poligon (List[Point]): the `poligon` value of an area of service object.
+    """
     poligon: List[Point]
 
 

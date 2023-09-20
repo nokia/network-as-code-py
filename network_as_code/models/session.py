@@ -16,10 +16,24 @@ def alias_generator(name: str) -> str:
     return ALIASES.get(name, name)
 
 class PortRange(BaseModel, allow_population_by_field_name = True, alias_generator=alias_generator):
+    """
+    A class representing the `PortRange` model.
+    
+    #### Public Attributes:
+            start (int): the `start` of a port object.
+            end (int): the `end` of a port object.
+    """
     start: int
     end: int
 
 class PortsSpec(BaseModel):
+    """
+    A class representing the `PortsSpec` model.
+    
+    #### Public Attributes:
+            ranges (List[PortRange]): the `ranges` of a ports spec object.
+            ports (Optional[str]): the `ports` of a ports spec object.
+    """
     ranges: List[PortRange] = []
     ports: List[int] = []
 
