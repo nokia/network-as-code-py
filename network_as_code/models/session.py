@@ -16,10 +16,24 @@ def alias_generator(name: str) -> str:
     return ALIASES.get(name, name)
 
 class PortRange(BaseModel, allow_population_by_field_name = True, alias_generator=alias_generator):
+    """
+    A class representing the `PortRange` model.
+    
+    #### Public Attributes:
+            start (int): the `start` of a port object.
+            end (int): the `end` of a port object.
+    """
     start: int
     end: int
 
 class PortsSpec(BaseModel):
+    """
+    A class representing the `PortsSpec` model.
+    
+    #### Public Attributes:
+            ranges (List[PortRange]): the `ranges` of a ports spec object.
+            ports (Optional[str]): the `ports` of a ports spec object.
+    """
     ranges: List[PortRange] = []
     ports: List[int] = []
 
@@ -85,7 +99,6 @@ class Session(BaseModel, arbitrary_types_allowed = True):
         """
         started_at = int(session["startedAt"]) if session.get("startedAt", False) else None
         expires_at = int(session["expiresAt"]) if session.get("expiresAt", False) else None
-        print(session)
         return Session(api=api, id=session["id"], device_ip=ip, device_ports=None, service_ip="", service_ports=None, profile=session["qosProfile"], status=session["qosStatus"], started_at=started_at, expires_at=expires_at) 
 
 

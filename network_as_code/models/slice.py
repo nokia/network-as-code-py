@@ -11,22 +11,56 @@ from ..models.device import Device
 from ..errors import NotFound, InvalidParameter, NotFound, AuthenticationException, ServiceError, error_handler
 
 class NetworkIdentifier(BaseModel):
+    """
+    A class representing the `NetworkIdentifier` model.
+    
+    #### Public Attributes:
+            mnc (str): the `mnc` of a network identifier object.
+            mcc (Optional[str]): the `mcc` of a network identifier object.
+    """
     mnc: str
     mcc: str
 
 class SliceInfo(BaseModel):
+    """
+    A class representing the `SliceInfo` model.
+    
+    #### Public Attributes:
+            service_type (str): the service type of a slice object, Example: `eMBB`
+            differentiator (Optional[str]): the differentiator of a slice object.
+    """
     service_type: str
     differentiator: Optional[str]
 
 class Throughput(BaseModel):
+    """
+    A class representing the `Throughput` model.
+    
+    #### Public Attributes:
+            guaranteed (int): the guaranteed throughput amount in integer
+            maximum (int): the maximum throughput amount in integer
+    """
     guaranteed: int
     maximum: int
 
 class Point(BaseModel):
+    """
+    A class representing the `Point` model.
+    
+    #### Public Attributes:
+            longitude (Union[float, int]): the `longitude` of a point object.
+            latitude (Union[float, int]): the `latitude` of a point object.
+    """
     longitude: Union[float, int] = Field(serialization_alias="lon")
     latitude: Union[float, int] = Field(serialization_alias="lat")
 
 class AreaOfService(BaseModel):
+    """
+    A class representing the `AreaOfService` model.
+    
+    #### Public Attributes:
+            poligon (List[Point]): the `poligon` value of an area of service object.
+    """
     poligon: List[Point]
 
 
@@ -186,17 +220,41 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
     @staticmethod
     def network_identifier(networkIdentifierDict: Dict[str, str]):
+        """Returns a `NetworkIdentifier` instance.
+
+        Assigns the `mcc` and `mnc`.
+        #### Args:
+            networkIdentifierDict (Dict[str, str]): A Network Identifier object with `mcc` and `mnc` values.
+        """
         return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
     
     @staticmethod
     def slice_info(sliceInfoDict: Dict[str, str]):
+        """Returns a `SliceInfo` instance.
+
+        Assigns the `service_type` and `differentiator`.
+        #### Args:
+            sliceInfoDict (Dict[str, str]): A Slice Info object with `service_type` and `differentiator` values.
+        """
         return SliceInfo(service_type=sliceInfoDict['service_type'], differentiator=sliceInfoDict['differentiator'])
     
     @staticmethod
     def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
+        """Returns a `AreaOfService` instance.
+
+        Assigns the `poligon`.
+        #### Args:
+            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with poligon list value.
+        """
         poligon = areaOfServiceDict['poligon']
         return AreaOfService(poligon=[Point(latitude=poligon[0]['lat'], longitude=poligon[0]['lon']), Point(latitude=poligon[1]['lat'], longitude=poligon[1]['lon']), Point(latitude=poligon[2]['lat'], longitude=poligon[2]['lon']), Point(latitude=poligon[3]['lat'], longitude=poligon[3]['lon'])]), 
 
     @staticmethod
     def throughput(throughputdict: Dict[int, int]):
+        """Returns a `Throughput` instance.
+
+        Assigns the `guaranteed` and `maximum`.
+        #### Args:
+            throughputDict (Dict[int, int]): A Throughput object with `guaranteed` and `maximum` values.
+        """
         return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])

@@ -27,11 +27,12 @@ class Connectivity(Namespace):
         """Create subscription for device connectivity status.
 
         Args:
+            event_type (str): Event type of the subscription.
             max_num_of_reports (str): Number of notifications until the subscription is available
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
-            dnn (optional): Data Network Name, also known as as Access Point Name (APN)
+            subscription_expire_time (Optional[str]): The expiry time of the subscription.
         """
 
         connectivity_subscription = ConnectivitySubscription(
