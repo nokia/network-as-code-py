@@ -68,7 +68,7 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
     
     subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", "my_auth_token", device, subscription_expire_time="2023-08-31")
 
-def test_device_status_creation_with_roaming_typeparameters(httpx_mock, device, client):
+def test_device_status_creation_with_roaming_type(httpx_mock, device, client):
     httpx_mock.add_response(
         method="POST",
         json={
