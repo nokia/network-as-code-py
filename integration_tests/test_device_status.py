@@ -21,6 +21,19 @@ def test_creating_connectivity_subscription_with_notification(client, device):
 
     subscription.delete()
 
+def test_creating_connectivity_subscription_roaming(client, device):
+    subscription = client.connectivity.subscribe(
+        event_type="ROAMING",
+        device=device, 
+        max_num_of_reports=5, 
+        notification_url="http://192.0.2.0:8080/", 
+        notification_auth_token="c8974e592c2fa383d4a3960714",
+    )
+
+    print(subscription)
+
+    subscription.delete()
+
 def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device):
     subscription = client.connectivity.subscribe(
         event_type="CONNECTIVITY",
