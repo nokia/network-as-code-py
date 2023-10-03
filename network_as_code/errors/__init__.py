@@ -42,5 +42,7 @@ def error_handler(response):
             raise NotFound() from e
         elif e.response.status_code == 403 or e.response.status_code == 401:
             raise AuthenticationException() from e
+        elif e.response.status_code >= 400 and e.response.status_code < 500:
+            raise APIError() from e
         elif e.response.status_code >= 500:
             raise ServiceError() from e

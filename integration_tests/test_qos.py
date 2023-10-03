@@ -13,12 +13,12 @@ def test_getting_a_device(client, device):
     assert device.sid == "testuser@open5glab.net"
 
 def test_creating_a_qos_flow(client, device):
-    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L")
+    session = device.create_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
     session.delete()
 
 def test_getting_a_created_qos_session_by_id(client, device):
-    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L")
+    session = device.create_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
 #     assert client.sessions.get(session.id).id == session.id
 
@@ -31,12 +31,12 @@ def test_getting_a_created_qos_session_by_id(client, device):
 #         assert True
 
 def test_creating_a_qos_flow_with_port_info(client, device):
-    session = device.create_session(service_ip="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L")
+    session = device.create_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L")
 
     session.delete()
 
 def test_creating_a_qos_flow_with_service_port_and_device_port(client, device):
-    session = device.create_session(service_ip="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L", device_ports=PortsSpec(ports=[20000]))
+    session = device.create_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L", device_ports=PortsSpec(ports=[20000]))
 
     session.delete()
 
@@ -47,12 +47,12 @@ def test_port_range_field_aliasing():
     assert "to" in port_range.dict(by_alias=True).keys()
 
 def test_creating_a_qos_flow_with_service_port_range(client, device):
-    session = device.create_session(service_ip="5.6.7.8", service_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L")
+    session = device.create_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L")
 
     session.delete()
 
 def test_creating_a_qos_flow_with_duration(client, device):
-    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", duration=60)
+    session = device.create_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=60)
 
     assert session.started_at
     assert session.expires_at
@@ -62,12 +62,12 @@ def test_creating_a_qos_flow_with_duration(client, device):
     session.delete()
 
 def test_creating_a_qos_flow_with_notification_url(client, device):
-    session = device.create_session(service_ip="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714")
+    session = device.create_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714")
 
     session.delete()
 
 def test_clearing_qos_flows(client, device):
-    device.create_session(service_ip="5.6.7.8", profile="QOS_L")
+    device.create_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
     device.clear_sessions()
 

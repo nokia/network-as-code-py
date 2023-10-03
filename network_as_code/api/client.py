@@ -30,11 +30,11 @@ class APIClient:
 
         self.sessions = DeviceAPI(base_url=qos_base_url, rapid_key=token, rapid_host="qos-on-demand.nokia-dev.rapidapi.com")
 
-        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia.rapidapi.com")
+        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia-dev.rapidapi.com")
 
         self.location_verify = LocationVerifyAPI(base_url=location_verify_base_url, rapid_key=token, rapid_host="location-verification.nokia-dev.rapidapi.com")
         self.location_retrieve = LocationRetrievalAPI(base_url=location_retrieve_base_url, rapid_key=token, rapid_host="location-retrieval.nokia-dev.rapidapi.com")
 
-        self.slice = SliceAPI(base_url=slice_base_url, rapid_key=token, rapid_host="network-slicing.nokia.rapidapi.com")
+        self.slice = SliceAPI(base_url=slice_base_url, rapid_key=token, rapid_host="network-slicing.nokia-dev.rapidapi.com")
 
-        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc.nokia.rapidapi.com")
+        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc.nokia-dev.rapidapi.com")
