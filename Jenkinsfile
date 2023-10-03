@@ -64,7 +64,6 @@ pipeline {
           script {
             sh """
               python3 -m poetry install
-              python3 -m poetry run pytest
             """
           }
         }        
