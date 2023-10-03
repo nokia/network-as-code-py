@@ -11,14 +11,14 @@ def device(client) -> Device:
     return device
 
 def test_getting_a_device_location_sends_out_request(client, device):
-    location = device.location()
+    location = device.location(max_age=80)
 
     assert location.longitude
     assert location.latitude
     assert location.civic_address
 
 def test_verifying_a_device_location_sends_out_request(client, device):
-    assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, accuracy="10km")
+    assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, radius=10_000)
 
 def test_verifying_a_device_location_too_returns_false(client, device):
-    assert not device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, accuracy="10km")
+    assert not device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000)
