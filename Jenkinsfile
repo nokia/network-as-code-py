@@ -63,7 +63,8 @@ pipeline {
         container('beluga') {
           script {
             sh """
-              python3 -m poetry install
+              python3 -m poetry --no-cache install
+              python3 -m poetry run pytest --cov=network_as_code
             """
           }
         }        
