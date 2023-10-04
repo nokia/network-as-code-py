@@ -68,6 +68,34 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
     
     subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", "my_auth_token", device, subscription_expire_time="2023-08-31")
 
+def test_device_status_creation_with_roaming_type(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        json={
+            "eventSubscriptionId": "test-subscription",
+        },
+        match_content=to_bytes({
+            "subscriptionDetail": {
+                "device": {
+                    "networkAccessIdentifier": "testuser@open5glab.net",
+                    "ipv4Address": {
+                        "publicAddress": "1.1.1.2",
+                        "privateAddress": "1.1.1.2",
+                        "publicPort": 80
+                    },
+                },
+                "eventType": "ROAMING"
+            },
+            "maxNumberOfReports": 1,
+            "webhook": {
+                "notificationUrl": "https://localhost:9090/notify",
+                "notificationAuthToken": "my_auth_token"
+            }
+        })
+    )
+
+    subscription = client.connectivity.subscribe("ROAMING", 1, "https://localhost:9090/notify", "my_auth_token", device)
+
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
         method="GET",
