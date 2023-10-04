@@ -30,8 +30,8 @@ def test_creating_connectivity_subscription_roaming(client, device):
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
-    print(subscription)
-
+    assert hasattr(subscription, 'ID'), "Subscription does not have an ID"
+    assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
     subscription.delete()
 
 def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device):
