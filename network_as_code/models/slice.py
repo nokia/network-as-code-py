@@ -175,19 +175,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.refresh()
             ```
         """
-        try:
-            if self.name:
-                slice_data = self._api.slice.get(self.name)
-                self.state = slice_data.state
-        except HTTPError as e:
-            if e.code == 403:
-                raise AuthenticationException(e)
-            elif e.code == 404:
-                raise NotFound(e)
-            elif e.code >= 500:
-                raise ServiceError(e)
-        except ValidationError as e:
-            raise InvalidParameter(e)
+        slice_data = self._api.slice.get(self.name)
+        self.state = slice_data.json()["state"]
     
     def attach(self, device: Device, notification_url: str, notification_auth_token: Optional[str] = None) -> None:
         """Attach network slice.

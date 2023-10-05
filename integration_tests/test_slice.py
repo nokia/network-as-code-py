@@ -1,6 +1,8 @@
 
 import pytest
 
+import time
+
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.models.slice import Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point
@@ -93,9 +95,30 @@ def test_deactivating_and_deleting_a_slice(client):
         max_data_connections=12
     )
 
+    while slice.state == "PENDING":
+        slice.refresh()
+        print(slice.state)
+        time.sleep(5)
+
+    assert slice.state == "AVAILABLE"
+
     slice.activate()
+
+    while slice.state == "AVAILABLE":
+        slice.refresh()
+        print(slice.state)
+        time.sleep(5)
+
+    assert slice.state == "OPERATING"
     
     slice.deactivate()
+
+    while slice.state == "OPERATING":
+        slice.refresh()
+        print(slice.state)
+        time.sleep(5)
+
+    assert slice.state == "AVAILABLE"
 
     slice.delete()
 
