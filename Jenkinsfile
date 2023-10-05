@@ -94,6 +94,9 @@ pipeline {
       }
     }
     stage('Deploy') {
+      when {
+        buildingTag()
+      }
       steps {
         container('beluga') {
           script {
