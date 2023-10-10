@@ -68,7 +68,7 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
     
     subscription = client.connectivity.subscribe("CONNECTIVITY", 1, "https://localhost:9090/notify", "my_auth_token", device, subscription_expire_time="2023-08-31")
 
-def test_device_status_creation_with_roaming_type(httpx_mock, device, client):
+def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
     httpx_mock.add_response(
         method="POST",
         json={
@@ -84,7 +84,7 @@ def test_device_status_creation_with_roaming_type(httpx_mock, device, client):
                         "publicPort": 80
                     },
                 },
-                "eventType": "ROAMING"
+                "eventType": "ROAMING_STATUS"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -94,7 +94,7 @@ def test_device_status_creation_with_roaming_type(httpx_mock, device, client):
         })
     )
 
-    subscription = client.connectivity.subscribe("ROAMING", 1, "https://localhost:9090/notify", "my_auth_token", device)
+    subscription = client.connectivity.subscribe("ROAMING_STATUS", 1, "https://localhost:9090/notify", "my_auth_token", device)
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
