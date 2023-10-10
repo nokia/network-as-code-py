@@ -23,7 +23,7 @@ def test_creating_connectivity_subscription_with_notification(client, device):
 
 def test_creating_connectivity_subscription_roaming(client, device):
     subscription = client.connectivity.subscribe(
-        event_type="ROAMING",
+        event_type="ROAMING_STATUS",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
