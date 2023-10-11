@@ -46,7 +46,7 @@ pipeline {
     string(name: 'gitlabSourceBranch', defaultValue: 'master', description: 'Default branch used when built on-demand', trim: true)
   }
   environment {
-    PYPI_REPOSITORY = 'test_pypi_repository'
+    PYPI_REPOSITORY = "${PYPI_REPOSITORY}"
     PYPI_USERNAME = "${PYPI_USERNAME}"
     PYPI_PASSWORD = "${PYPI_PASSWORD}"
   }
@@ -70,12 +70,15 @@ pipeline {
         }        
       }
     }
-    stage('Version bumping') {
+    stage('Integration Test') {
+      when {
+        buildingTag()
+      }
       steps {
         container('beluga') {
           script {
             sh """
-              python3 -m poetry version \$(git describe --tags --abbrev=0)
+              python3 -m poetry run pytest integration_tests/
             """
           }
         }        
