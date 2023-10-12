@@ -1,6 +1,8 @@
 
 import pytest
 
+import time
+
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.models.slice import Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point
@@ -69,28 +71,68 @@ def test_getting_a_slice(client):
 
     new_slice.delete()
 
+def test_get_after_deleting_all_slices_marks_them_as_deleted(client):
+    slice = client.slices.create(
+        name="slicemock27",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="https://notify.me/here",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
 
-# def test_deactivating_and_deleting_a_slice(client):
-#     slice = client.slices.create(
-#         name="slicemock26",
-#         network_id=NetworkIdentifier(mcc="236", mnc="30"),
-#         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-#         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
-#         notification_url="https://notify.me/here",
-#         notification_auth_token= "samplenotificationtoken",
-#         slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
-#         slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
-#         device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
-#         device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
-#         max_devices=3,
-#         max_data_connections=12
-#     )
+    for network_slice in client.slices.getAll():
+        network_slice.delete()
 
-#     slice.activate()
+    for network_slice in client.slices.getAll():
+        assert network_slice.state == "DELETED"
+
+
+def test_deactivating_and_deleting_a_slice(client):
+    slice = client.slices.create(
+        name="slicemock26",
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
+        area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="https://notify.me/here",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+
+    while slice.state == "PENDING":
+        slice.refresh()
+        time.sleep(5)
+
+    assert slice.state == "AVAILABLE"
+
+    slice.activate()
+
+    while slice.state == "AVAILABLE":
+        slice.refresh()
+        time.sleep(5)
+
+    assert slice.state == "OPERATING"
     
-#     slice.deactivate()
+    slice.deactivate()
 
-#     slice.delete()
+    while slice.state == "OPERATING":
+        slice.refresh()
+        time.sleep(5)
+
+    assert slice.state == "AVAILABLE"
+
+    slice.delete()
 
 # def test_attach_device_to_slice_and_detach(client, device):
 #     slice = client.slices.create(
