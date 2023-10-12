@@ -135,11 +135,11 @@ class Device(BaseModel):
     def __convert_session_model(self, session) -> Session:
        return Session.convert_session_model(self._api, self.ipv4_address, session)
 
-    def location(self, max_age: Union[int, None] = None) -> Location:
+    def location(self, max_age: int) -> Location:
         """Returns the location of the device.
 
          #### Args:
-            max_age (int | None): Max acceptable age for location info in seconds
+            max_age : Max acceptable age for location info in seconds
 
         #### Example:
             ```python
