@@ -166,7 +166,7 @@ class Device(BaseModel):
 
         return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
 
-    def verify_location(self, longitude: float, latitude: float, radius: float, max_age: Union[int, None] = None) -> bool:
+    def verify_location(self, longitude: float, latitude: float, radius: float, max_age: int) -> bool:
         """Verifies the location of the device(Returns boolean value).
 
         #### Args:
