@@ -72,7 +72,7 @@ pipeline {
     }
     stage('Integration Test') {
       when {
-        buildingTag()
+        tag "release-*"
       }
       steps {
         container('beluga') {
