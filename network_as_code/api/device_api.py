@@ -25,7 +25,7 @@ class DeviceAPI:
             "X-RapidAPI-Host": rapid_host
         })
 
-    def create_session(self, ipv4_address, phone_number, profile, service_ipv4, sid: Union[None, any] = None, service_ipv6 = None, device_ports: Union[None, any] = None, service_ports: Union[None, any] = None, duration = None, notification_url = None, notification_auth_token = None):
+    def create_session(self, sid, ipv4_address, phone_number, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, any] = None, service_ports: Union[None, any] = None, duration = None, notification_url = None, notification_auth_token = None):
         """Function that hits the create session endpoint with the data
 
         #### Args:
