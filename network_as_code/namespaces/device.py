@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from . import Namespace
 from ..models import Device, DeviceIpv4Addr
 from urllib.error import HTTPError
@@ -11,7 +11,7 @@ class Devices(Namespace):
     subscription can be configured on the network.
     """
 
-    def get(self, id: str, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
+    def get(self, id: Union[None, str] = None, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
         """Get a subscription by its external ID.
 
         Args: 

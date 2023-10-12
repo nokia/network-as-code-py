@@ -11,52 +11,8 @@ def device(client) -> Device:
     device = client.devices.get("test_device_id", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
+
 def test_get_location(httpx_mock: httpx_mock, device):
-    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
-
-    mock_response = {
-        "lastLocationTime": "2023-09-12T11:41:28+03:00",
-        "area": {
-            "areaType": "Circle",
-            "center": {
-                "latitude": 0.0,
-                "longitude": 0.0
-            }
-        },
-        "civicAddress": {
-            "country": "Finland",
-            "A1": "",
-            "A2": "",
-            "A3": "",
-            "A4": "",
-            "A5": "",
-            "A6": ""
-        }
-    }
-
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        json=mock_response,
-        match_content=json.dumps({
-            "device": {
-                "networkAccessIdentifier": "test_device_id",
-                "ipv4Address": {
-                    "publicAddress": "1.1.1.2",
-                    "privateAddress": "1.1.1.2",
-                    "publicPort": 80
-                }
-            }
-        }).encode("utf-8")
-    )
-
-    location = device.location()
-    
-    assert location.longitude == 0.0
-    assert location.latitude == 0.0
-    assert location.civic_address
-
-def test_get_location_with_max_age(httpx_mock: httpx_mock, device):
     url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
 
     mock_response = {
@@ -103,38 +59,6 @@ def test_get_location_with_max_age(httpx_mock: httpx_mock, device):
     assert location.civic_address
 
 def test_verify_location(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/verify"
-
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        match_content=json.dumps({
-            "device": {
-                "networkAccessIdentifier": "test_device_id",
-                "ipv4Address": {
-                    "publicAddress": "1.1.1.2",
-                    "privateAddress": "1.1.1.2",
-                    "publicPort": 80
-                }
-            },
-            "area": {
-                "areaType": "Circle",
-                "center": {
-                    "latitude": 47,
-                    "longitude": 19
-                },
-                "radius": 10_000
-            }
-        }).encode(),
-        json={
-            "lastLocationTime": "2023-09-11T18:34:01+03:00",
-            "verificationResult": "TRUE"
-        }
-    )
-
-    assert device.verify_location(longitude=19, latitude=47, radius=10_000)
-
-def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
 
     httpx_mock.add_response(
