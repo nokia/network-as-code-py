@@ -21,7 +21,8 @@ class Devices(Namespace):
             phone_number (Any | None): phone number of the subscription.
         """
 
-        #Check if ipv4_address is a simple string and convert it into the desired format (DeviceIpv4Addr)
+        assert any([id, ipv4_address, ipv6_address, phone_number]), "At least one parameter must be set."
+
         if ipv4_address and isinstance(ipv4_address, str):
             ipv4_address = DeviceIpv4Addr(public_address=ipv4_address, private_address=None, public_port=None)
 
