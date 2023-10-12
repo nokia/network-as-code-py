@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from . import Namespace
 from ..models import Device, DeviceIpv4Addr
 from urllib.error import HTTPError
