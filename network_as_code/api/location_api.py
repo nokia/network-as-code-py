@@ -32,7 +32,7 @@ class LocationVerifyAPI:
             json=body
         )
 
-        return response.is_success
+        return response.json()["verificationResult"] == "TRUE"
 
 
 class LocationRetrievalAPI:

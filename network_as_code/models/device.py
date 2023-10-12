@@ -156,12 +156,12 @@ class Device(BaseModel):
         if "civicAddress" in body.keys():
             civic_address = CivicAddress(
                 country=body["civicAddress"]["country"],
-                a1=body["civicAddress"]["A1"] if isinstance(body["civicAddress"]["A1"], str) else None,
-                a2=body["civicAddress"]["A2"] if isinstance(body["civicAddress"]["A2"], str) else None,
-                a3=body["civicAddress"]["A3"] if isinstance(body["civicAddress"]["A3"], str) else None,
-                a4=body["civicAddress"]["A4"] if isinstance(body["civicAddress"]["A4"], str) else None,
-                a5=body["civicAddress"]["A5"] if isinstance(body["civicAddress"]["A5"], str) else None,
-                a6=body["civicAddress"]["A6"] if isinstance(body["civicAddress"]["A6"], str) else None
+                a1=body["civicAddress"]["A1"] if "A1" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A1"], str) else None,
+                a2=body["civicAddress"]["A2"] if "A2" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A2"], str) else None,
+                a3=body["civicAddress"]["A3"] if "A3" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A3"], str) else None,
+                a4=body["civicAddress"]["A4"] if "A4" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A4"], str) else None,
+                a5=body["civicAddress"]["A5"] if "A5" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A5"], str) else None,
+                a6=body["civicAddress"]["A6"] if "A6" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A6"], str) else None
             )
 
         return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)

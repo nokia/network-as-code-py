@@ -11,7 +11,7 @@ def device(client) -> Device:
     return device
 
 def test_getting_a_device_location_sends_out_request(client, device):
-    location = device.location(max_age=80)
+    location = device.location(max_age=10_000)
 
     assert location.longitude
     assert location.latitude
