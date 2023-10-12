@@ -78,6 +78,8 @@ pipeline {
         container('beluga') {
           script {
             sh """
+              export http_proxy=http://fihel1d-proxy.emea.nsn-net.net:8080
+              export https_proxy=https://fihel1d-proxy.emea.nsn-net.net:8080
               python3 -m poetry run pytest integration_tests/
             """
           }
