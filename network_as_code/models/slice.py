@@ -59,9 +59,9 @@ class AreaOfService(BaseModel):
     A class representing the `AreaOfService` model.
     
     #### Public Attributes:
-            poligon (List[Point]): the `poligon` value of an area of service object.
+            polygon (List[Point]): the `polygon` value of an area of service object.
     """
-    poligon: List[Point]
+    polygon: List[Point]
 
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
@@ -108,7 +108,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                                 min_length=8, max_length=64, regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
-    area_of_service: AreaOfService
+    area_of_service: Optional[AreaOfService] = Field(None, description="Area which the network slice is intended to serve")
     max_data_connections: Optional[int] = Field(None, description="Maximum number of data connection sessions in the slice.", ge=0)
     max_devices: Optional[int] = Field(None, description="Maximum number of devices using the slice.", ge=0)
     slice_downlink_throughput: Optional[Throughput] = None
@@ -231,12 +231,12 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
         """Returns a `AreaOfService` instance.
 
-        Assigns the `poligon`.
+        Assigns the `polygon`.
         #### Args:
-            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with poligon list value.
+            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with polygon list value.
         """
-        poligon = areaOfServiceDict['poligon']
-        return AreaOfService(poligon=[Point(latitude=poligon[0]['lat'], longitude=poligon[0]['lon']), Point(latitude=poligon[1]['lat'], longitude=poligon[1]['lon']), Point(latitude=poligon[2]['lat'], longitude=poligon[2]['lon']), Point(latitude=poligon[3]['lat'], longitude=poligon[3]['lon'])]), 
+        polygon = areaOfServiceDict['polygon']
+        return AreaOfService(polygon=[Point(latitude=polygon[0]['lat'], longitude=polygon[0]['lon']), Point(latitude=polygon[1]['lat'], longitude=polygon[1]['lon']), Point(latitude=polygon[2]['lat'], longitude=polygon[2]['lon']), Point(latitude=polygon[3]['lat'], longitude=polygon[3]['lon'])]), 
 
     @staticmethod
     def throughput(throughputdict: Dict[int, int]):
