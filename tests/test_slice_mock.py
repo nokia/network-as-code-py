@@ -189,7 +189,7 @@ def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         method="POST",
         match_content=to_bytes(slice_payload),
         json=slice_response,
-        url="https://network-slicing.p-eu.rapidapi.com/slices"
+        url="https://network-slicing2.p-eu.rapidapi.com/slices"
     )
 
     """
@@ -279,7 +279,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices",
+        url="https://network-slicing2.p-eu.rapidapi.com/slices",
         json=slices
     )
     client.slices.getAll()
@@ -288,7 +288,7 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-slicing2.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -297,7 +297,7 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="POST",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/activate"
+        url="https://network-slicing2.p-eu.rapidapi.com/slices/sliceone/activate"
     )
 
     assert client.slices.activate(slice_id="sliceone").status_code == 200
@@ -305,7 +305,7 @@ def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="POST",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/deactivate"
+        url="https://network-slicing2.p-eu.rapidapi.com/slices/sliceone/deactivate"
     )
 
     assert client.slices.deactivate(slice_id="sliceone").status_code == 200
@@ -314,7 +314,7 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="DELETE", 
         status_code=204,
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone"
+        url="https://network-slicing2.p-eu.rapidapi.com/slices/sliceone"
     )
 
     assert client.slices.delete(slice_id="sliceone").status_code == 204
@@ -323,14 +323,14 @@ def test_attach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-slicing2.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        url=f"https://device-attach-norc1.p-eu.rapidapi.com/slice/{slice.name}/attach",
         json={
             "id": "string",
             "phoneNumber": "string",
@@ -350,14 +350,14 @@ def test_attach_device_to_slice_with_optional_params(httpx_mock, client, device)
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-slicing2.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        url=f"https://device-attach-norc1.p-eu.rapidapi.com/slice/{slice.name}/attach",
         json={
             "id": "string",
             "phoneNumber": "string",
@@ -378,14 +378,14 @@ def test_detach_device_from_slice(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-slicing2.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/detach",
+        url=f"https://device-attach-norc1.p-eu.rapidapi.com/slice/{slice.name}/detach",
         json={
             "id": "string",
             "phoneNumber": "string",
