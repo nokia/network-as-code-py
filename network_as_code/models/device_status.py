@@ -7,7 +7,7 @@ from ..models.device import Device
 from typing import Optional
 
 
-class ConnectivitySubscription(BaseModel):
+class EventSubscription(BaseModel):
     """
     A class representing the `ConnectivitySubscription` model.
 
@@ -23,7 +23,7 @@ class ConnectivitySubscription(BaseModel):
 
     id: Optional[str]
     _api: APIClient = PrivateAttr()
-    max_num_of_reports: str
+    max_num_of_reports: int
     notification_url: str 
     notification_auth_token: Optional[str]
     device: Device

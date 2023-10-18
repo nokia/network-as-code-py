@@ -14,17 +14,17 @@ class SliceAPI:
             headers={
             "content-type": "application/json",
             "X-RapidAPI-Key": rapid_key,
-            "X-RapidAPI-Host": "network-slicing.nokia-dev.rapidapi.com"
+            "X-RapidAPI-Host": rapid_host
         })   
 
 
     def create(self,
-               network_id: any, 
-               slice_info: any, 
-               area_of_service: any, 
-               notification_url: str,
+               network_id,
+               slice_info, 
+               notification_url,
                name: Optional[str] = None,
                notification_auth_token: Optional[str] = None,
+               area_of_service: Optional[any] = None, 
                slice_downlink_throughput: Optional[any] = None, 
                slice_uplink_throughput: Optional[any] = None,
                device_downlink_throughput: Optional[any] = None,
@@ -35,12 +35,14 @@ class SliceAPI:
         body = {
                 "networkIdentifier": dict(network_id),
                 "sliceInfo": self.convert_slice_info_obj(slice_info),
-                "areaOfService": self.convert_area_of_service_obj(area_of_service),
                 "notificationUrl": notification_url,
             }
 
         if name:
             body["name"] = name
+
+        if area_of_service:
+            body["areaOfService"] = self.convert_area_of_service_obj(area_of_service)
 
         if notification_auth_token:
             body["notificationAuthToken"] = notification_auth_token
@@ -117,10 +119,10 @@ class SliceAPI:
     def convert_area_of_service_obj(self, areaOfService):
         polygons = []
 
-        for point in areaOfService.poligon:
+        for point in areaOfService.polygon:
             polygons.append({"lat": point.latitude, "lon": point.longitude})
 
-        return {"poligon": polygons}
+        return {"polygon": polygons}
     
     def convert_slice_info_obj(self, sliceInfo):
         return {k: str(v) for k, v in dict(sliceInfo).items()}

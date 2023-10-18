@@ -20,14 +20,14 @@ class Slices(Namespace):
     def create(self,
                network_id: NetworkIdentifier, 
                slice_info: SliceInfo, 
-               area_of_service: AreaOfService, 
                notification_url: str,
+               area_of_service: Optional[AreaOfService] = None, 
                name: Optional[str] = None,
                notification_auth_token: Optional[str] = None,
-               slice_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0), 
-               slice_uplink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
-               device_downlink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
-               device_uplink_throughput: Optional[Throughput] = Throughput(guaranteed=0, maximum=0),
+               slice_downlink_throughput: Optional[Throughput] = None, 
+               slice_uplink_throughput: Optional[Throughput] = None,
+               device_downlink_throughput: Optional[Throughput] = None,
+               device_uplink_throughput: Optional[Throughput] = None,
                max_data_connections: Optional[int] = None,
                max_devices: Optional[int] = None
                ) -> Slice:
@@ -83,18 +83,18 @@ class Slices(Namespace):
         # Error Case: Creating Slice
         try:
             slice_data = self.api.slice.create(
-                network_id,
-                slice_info,
-                area_of_service,
-                notification_url,
-                name,
-                notification_auth_token,
-                slice_downlink_throughput,
-                slice_uplink_throughput,
-                device_downlink_throughput,
-                device_uplink_throughput,
-                max_data_connections,
-                max_devices
+                network_id=network_id,
+                slice_info=slice_info,
+                notification_url=notification_url,
+                area_of_service=area_of_service,
+                name=name,
+                notification_auth_token=notification_auth_token,
+                slice_downlink_throughput=slice_downlink_throughput,
+                slice_uplink_throughput=slice_uplink_throughput,
+                device_downlink_throughput=device_downlink_throughput,
+                device_uplink_throughput=device_uplink_throughput,
+                max_data_connections=max_data_connections,
+                max_devices=max_devices
             )
             slice.sid = slice_data.json()['csi_id']
             slice.state = slice_data.json()['state']

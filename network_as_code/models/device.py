@@ -6,8 +6,7 @@ from typing import List, Union, Optional
 from ..api import APIClient
 from ..models.session import Session, PortsSpec
 from ..models.location import CivicAddress, Location
-from urllib.error import HTTPError
-
+from ..errors import NotFound
 
 class Event(BaseModel):
     """
@@ -124,8 +123,13 @@ class Device(BaseModel):
             sessions = device.sessions()
             ```
         """
-        sessions = self._api.sessions.get_all_sessions({"device-id": self.sid})
-        return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
+        try:
+            sessions = self._api.sessions.get_all_sessions({"device-id": self.sid})
+            return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
+        except NotFound:
+            # API will return 404 for a device which has had all of its sessions deleted
+            # Because this is not an error, we will simply return an empty list here
+            return []
 
     def clear_sessions(self):
         """Clears sessions of the device."""
