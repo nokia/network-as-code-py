@@ -1,6 +1,10 @@
 from pytest_httpx import httpx_mock
 import pytest
 import json
+from httpx import HTTPError
+
+from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
@@ -152,3 +156,64 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
     )
 
     subscription.delete()
+
+
+def test_subscribe_authentication_exception(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=403
+    )
+    
+    with pytest.raises(AuthenticationException):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://localhost:9090/notify", 
+            notification_auth_token="INVALID_TOKEN", 
+        )
+
+def test_subscribe_not_found(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=404
+    )
+    
+    with pytest.raises(NotFound):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device=device,  
+            max_num_of_reports=5, 
+            notification_url="http://localhost:9090/notify", 
+            notification_auth_token="my-token"
+        )
+
+def test_subscribe_service_error(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=500
+    )
+    
+    with pytest.raises(ServiceError):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://localhost:9090/notify", 
+            notification_auth_token="my-token"
+        )
+
+def test_subscribe_api_error(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=400  
+    )
+    
+    with pytest.raises(APIError):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://localhost:9090/notify", 
+            notification_auth_token="my-token"
+        )
