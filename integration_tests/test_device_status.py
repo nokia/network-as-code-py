@@ -2,7 +2,7 @@ from network_as_code.models.device_status import ConnectivitySubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.errors import error_handler
-from your_module_path import AuthenticationException, NotFound, ServiceError, APIError
+from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
 
 
