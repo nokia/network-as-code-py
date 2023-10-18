@@ -2,7 +2,7 @@ from typing import List
 import math
 from . import Namespace
 from ..models.device import Device 
-from ..models.device_status import ConnectivitySubscription
+from ..models.device_status import EventSubscription
 
 from urllib.error import HTTPError
 from pydantic import ValidationError
@@ -23,19 +23,19 @@ class Connectivity(Namespace):
                   notification_auth_token: str,
                   device: Device,
                   subscription_expire_time: Optional[str] = None,
-                  ) -> ConnectivitySubscription:
+                  ) -> EventSubscription:
         """Create subscription for device connectivity status.
 
         Args:
             event_type (str): Event type of the subscription.
-            max_num_of_reports (str): Number of notifications until the subscription is available
+            max_num_of_reports (int): Number of notifications until the subscription is available
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
             subscription_expire_time (Optional[str]): The expiry time of the subscription.
         """
 
-        connectivity_subscription = ConnectivitySubscription(
+        connectivity_subscription = EventSubscription(
             api=self.api, 
             max_num_of_reports = max_num_of_reports, 
             notification_url = notification_url,
@@ -67,7 +67,7 @@ class Connectivity(Namespace):
 
         return connectivity_subscription
 
-    def get_subscription(self, id: str) -> ConnectivitySubscription:
+    def get_subscription(self, id: str) -> EventSubscription:
         """Retrieve device connectivity status data
 
         #### Args:
@@ -87,7 +87,7 @@ class Connectivity(Namespace):
 
         print(device_data)
 
-        return ConnectivitySubscription(
+        return EventSubscription(
             id=connectivity_data["eventSubscriptionId"],
             api=self.api, 
             max_num_of_reports = 0,
