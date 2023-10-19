@@ -63,7 +63,7 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[Session] = PrivateAttr()
-    sid: Union[str, None]
+    network_access_identifier: Union[str, None]
     phone_number: Union[str, None]
     ipv4_address: Union[DeviceIpv4Addr, None]
     ipv6_address: Union[str, None]
@@ -74,8 +74,8 @@ class Device(BaseModel):
         self._sessions = []
 
     @property
-    def network_access_id(self):
-        return str(self.sid)
+    def network_access_id(self) ->  Union[str, None]:
+        return self.network_access_identifier
 
     def create_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> Session:
         """Creates a session for the device.
@@ -98,7 +98,7 @@ class Device(BaseModel):
         
 
         session = self._api.sessions.create_session(
-            self.sid,
+            self.network_access_identifier,
             self.ipv4_address,
             self.phone_number,
             profile,
@@ -124,7 +124,7 @@ class Device(BaseModel):
             ```
         """
         try:
-            sessions = self._api.sessions.get_all_sessions({"device-id": self.sid})
+            sessions = self._api.sessions.get_all_sessions({"device-id": self.network_access_identifier})
             return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
         except NotFound:
             # API will return 404 for a device which has had all of its sessions deleted

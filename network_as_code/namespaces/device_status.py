@@ -20,8 +20,8 @@ class Connectivity(Namespace):
                   event_type: str,
                   max_num_of_reports: int, 
                   notification_url: str,
-                  notification_auth_token: str,
                   device: Device,
+                  notification_auth_token: Optional[str] = None,
                   subscription_expire_time: Optional[str] = None,
                   ) -> EventSubscription:
         """Create subscription for device connectivity status.
