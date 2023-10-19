@@ -70,22 +70,24 @@ pipeline {
         }        
       }
     }
-    stage('Integration Test') {
-      when {
-        tag "release-*"
-      }
-      steps {
-        container('beluga') {
-          script {
-            sh """
-              export http_proxy=http://fihel1d-proxy.emea.nsn-net.net:8080
-              export https_proxy=https://fihel1d-proxy.emea.nsn-net.net:8080
-              python3 -m poetry run pytest integration_tests/
-            """
-          }
-        }        
-      }
-    }
+    // stage('Integration Test') {
+    //   steps {
+    //     container('beluga') {
+    //       script {
+    //         sh """
+    //           env | grep gitlab
+    //         """
+    //         if(env.gitlabTargetBranch.contains("release-") && env.gitlabActionType == "TAG_PUSH") {
+    //           sh """
+    //             export http_proxy=http://fihel1d-proxy.emea.nsn-net.net:8080
+    //             export https_proxy=https://fihel1d-proxy.emea.nsn-net.net:8080
+    //             python3 -m poetry run pytest integration_tests/
+    //           """
+    //         }
+    //       }
+    //     }        
+    //   }
+    // }
     stage('Build') {
       steps {
         container('beluga') {
@@ -99,16 +101,24 @@ pipeline {
       }
     }
     stage('Deploy') {
-      when {
-        buildingTag()
-      }
       steps {
         container('beluga') {
-          script {
-            sh """
-              python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
-              python3 -m poetry publish --build -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
-            """
+          withCredentials([
+            string(credentialsId: "${PYPI_PASSWORD}", variable: 'PYPI_PASSWORD'),
+            string(credentialsId: "${PYPI_USERNAME}", variable: 'PYPI_USERNAME'),
+            string(credentialsId: "${PYPI_REPOSITORY}", variable: 'PYPI_REPOSITORY')
+          ]) {
+            script {
+              sh """
+                env | grep gitlab
+              """
+              if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")){
+                sh """
+                  python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
+                  python3 -m poetry publish --build -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+                """
+              }
+            }
           }
         }
       }
