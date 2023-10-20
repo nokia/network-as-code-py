@@ -35,18 +35,21 @@ class DeviceStatusAPI:
                             notification_auth_token: str,
                             max_number_of_reports: Optional[int] = None,
                             subscription_expire_time: Optional[str] = None):
+
+        assert device.network_access_id is not "None"
+
         res = self.client.post(
             "/event-subscriptions",
             json=delete_none({
                 "subscriptionDetail": {
                     "device": {
                         "phoneNumber": device.phone_number,
-                        "networkAccessIdentifier": device.network_access_id,
+                        "networkAccessIdentifier": device.network_access_identifier,
                         "ipv4Address": {
                             "publicAddress": device.ipv4_address.public_address,
                             "privateAddress": device.ipv4_address.private_address,
                             "publicPort": device.ipv4_address.public_port
-                        },
+                        } if device.ipv4_address else None,
                         "ipv6Address": device.ipv6_address
                     },
                     "eventType": event_type

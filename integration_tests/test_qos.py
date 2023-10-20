@@ -10,7 +10,7 @@ def device(client) -> Device:
     return device
 
 def test_getting_a_device(client, device):
-    assert device.sid == "testuser@testcsp.net"
+    assert device.network_access_identifier == "testuser@testcsp.net"
 
 def test_creating_a_qos_flow(client, device):
     session = device.create_session(service_ipv4="5.6.7.8", profile="QOS_L")
