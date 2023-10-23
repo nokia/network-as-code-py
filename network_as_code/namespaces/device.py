@@ -11,7 +11,7 @@ class Devices(Namespace):
     subscription can be configured on the network.
     """
 
-    def get(self, id: Union[None, str] = None, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
+    def get(self, network_access_identifier: Union[None, str] = None, ipv4_address = None, ipv6_address = None, phone_number = None) -> Device:
         """Get a subscription by its external ID.
 
         Args: 
@@ -26,6 +26,6 @@ class Devices(Namespace):
         if ipv4_address and isinstance(ipv4_address, str):
             ipv4_address = DeviceIpv4Addr(public_address=ipv4_address, private_address=None, public_port=None)
 
-        ret_device = Device(api=self.api, sid = id, ipv4_address = ipv4_address, ipv6_address = ipv6_address, phone_number = phone_number)
+        ret_device = Device(api=self.api, network_access_identifier = network_access_identifier, ipv4_address = ipv4_address, ipv6_address = ipv6_address, phone_number = phone_number)
         return ret_device
 

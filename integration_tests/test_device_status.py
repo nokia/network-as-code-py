@@ -1,4 +1,4 @@
-from network_as_code.models.device_status import ConnectivitySubscription
+from network_as_code.models.device_status import EventSubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.errors import error_handler
@@ -10,7 +10,7 @@ import pytest
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("device@bestcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+    device = client.devices.get("sdk-integration@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
 def test_creating_connectivity_subscription_with_notification(client, device):
@@ -35,7 +35,7 @@ def test_creating_connectivity_subscription_roaming(client, device):
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
-    assert hasattr(subscription, 'ID'), "Subscription does not have an ID"
+    assert subscription.id is not None
     assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
     subscription.delete()
 
