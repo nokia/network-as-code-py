@@ -6,6 +6,11 @@ from network_as_code.models.slice import NetworkIdentifier, Slice, SliceInfo, Ar
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
+from network_as_code.errors import error_handler
+from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+
+
+
 MOCK_SLICE = {
     "slice": {
             "name": "sliceone",
@@ -353,3 +358,113 @@ def test_detach_device_from_slice(httpx_mock, client, device):
     )
 
     slice.detach(device, "https://notify.me/here")
+
+
+def test_HTTPError_404_raises_NotFound(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=404
+    )
+    with pytest.raises(NotFound):
+        client.slices.create(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+
+
+def test_HTTPError_403_raises_AuthenticationException(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=403
+    )
+    with pytest.raises(AuthenticationException):
+        client.slices.create(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+
+def test_HTTPError_401_raises_AuthenticationException(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=401
+    )
+    with pytest.raises(AuthenticationException):
+        client.slices.create(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+
+
+def test_HTTPError_4XX_raises_APIError(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=400  # Can be any 4XX error code other than 401, 403, and 404.
+    )
+    with pytest.raises(APIError):
+        client.slices.create(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+
+
+def test_HTTPError_500_raises_ServiceError(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="POST",
+        status_code=500
+    )
+    with pytest.raises(ServiceError):
+        client.slices.create(
+        name="slicefour",
+        network_id=NetworkIdentifier(mcc='236', mnc='30'),
+        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+        area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+        notification_url="",
+        notification_auth_token= "samplenotificationtoken",
+        slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        slice_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_downlink_throughput=Throughput(guaranteed=0, maximum=0),
+        device_uplink_throughput=Throughput(guaranteed=0, maximum=0),
+        max_devices=3,
+        max_data_connections=12
+    )
+

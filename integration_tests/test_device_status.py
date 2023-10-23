@@ -1,6 +1,11 @@
 from network_as_code.models.device_status import EventSubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
+from network_as_code.errors import error_handler
+from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+
+
+
 import pytest
 
 @pytest.fixture
@@ -78,3 +83,42 @@ def test_delete_connectivity(client, device):
         # We expect 404
         assert True
 
+def test_subscribe_authentication_exception(client, device):
+    with pytest.raises(AuthenticationException):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://192.0.2.0:8080/",  
+            notification_auth_token="INVALID_TOKEN",  # Supply an invalid token here to trigger a 403
+        )
+
+def test_subscribe_device_not_found(client, device):
+    with pytest.raises(DeviceNotFound):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY",
+            device="INVALID_DEVICE_ID",  # Supply an invalid device ID to trigger a 404
+            max_num_of_reports=5, 
+            notification_url="http://192.0.2.0:8080/", 
+            notification_auth_token="c8974e592c2fa383d4a3960714",
+        )
+
+def test_subscribe_service_error(client, device):
+    with pytest.raises(ServiceError):
+        client.connectivity.subscribe(
+            event_type="CONNECTIVITY_TRIGGER_500_ERROR",  # Make sure this event type triggers a 500 error from your server
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://192.0.2.0:8080/", 
+            notification_auth_token="c8974e592c2fa383d4a3960714",
+        )
+
+def test_subscribe_invalid_parameter(client, device):
+    with pytest.raises(InvalidParameter):
+        client.connectivity.subscribe(
+            event_type="",  # An empty event type might trigger a validation error.
+            device=device, 
+            max_num_of_reports=5, 
+            notification_url="http://192.0.2.0:8080/", 
+            notification_auth_token="c8974e592c2fa383d4a3960714",
+        )
