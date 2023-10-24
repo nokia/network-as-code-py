@@ -129,7 +129,7 @@ class Slices(Namespace):
             name = slice_data['slice']['name'], 
             network_identifier = Slice.network_identifier(slice_data['slice']['networkIdentifier']),
             slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
-            area_of_service = Slice.area_of_service(slice_data['slice']['areaOfService']), 
+            area_of_service = Slice.area_of_service(slice_data['slice'].get('areaOfService')), 
             max_data_connections = slice_data['slice']['maxDataConnections'],
             max_devices = slice_data['slice']['maxDevices'], 
             slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
@@ -155,18 +155,17 @@ class Slices(Namespace):
 
         slices = [Slice(
             api=self.api,
-            sid=slice['csi_id'],
             state = slice['state'],
             name = slice['slice']['name'], 
             network_identifier = Slice.network_identifier(slice['slice']['networkIdentifier']),
             slice_info = Slice.slice_info(slice['slice']['sliceInfo']), 
-            area_of_service = Slice.area_of_service(slice['slice']['areaOfService']), 
-            max_data_connections = slice['slice']['maxDataConnections'],
-            max_devices = slice['slice']['maxDevices'],
-            slice_downlink_throughput = Slice.throughput(slice['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = Slice.throughput(slice['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = Slice.throughput(slice['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = Slice.throughput(slice['slice']['deviceUplinkThroughput'])
+            area_of_service = Slice.area_of_service(slice['slice'].get('areaOfService')), 
+            max_data_connections = slice['slice'].get('maxDataConnections'),
+            max_devices = slice['slice'].get('maxDevices'),
+            slice_downlink_throughput = Slice.throughput(slice['slice'].get('sliceDownlinkThroughput')), 
+            slice_uplink_throughput = Slice.throughput(slice['slice'].get('sliceUplinkThroughput')),
+            device_downlink_throughput = Slice.throughput(slice['slice'].get('deviceDownlinkThroughput')),
+            device_uplink_throughput = Slice.throughput(slice['slice'].get('deviceUplinkThroughput'))
         ) for slice in slice_data.json()]
         
         return slices

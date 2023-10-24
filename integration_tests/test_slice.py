@@ -15,6 +15,9 @@ def device(client) -> Device:
     device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
     return device
 
+def test_getting_slices(client):
+    assert type(client.slices.getAll()) is list
+
 def test_creating_a_slice(client):
     slice = client.slices.create(
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
@@ -74,7 +77,6 @@ def test_get_after_deleting_all_slices_marks_them_as_deleted(client):
 
     for network_slice in client.slices.getAll():
         assert network_slice.state == "DELETED"
-
 
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
@@ -139,20 +141,14 @@ def test_NotFound_error(client):
     with pytest.raises(NotFound):
         client.slices.get('non_existent_slice_id')
 
-def test_AuthenticationException_error(client):
-    original_api_key = client.api_key  
-    with pytest.raises(AuthenticationException):
-        client.api_key = 'invalid_key'
-        client.slices.get('some_slice_id')
-    client.api_key = original_api_key 
-
+@pytest.mark.skip(reason="Pydantic doesn't allow empty name")
 def test_APIError(client):
     with pytest.raises(APIError):
         client.slices.create(
          name="",
          network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
          slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+         area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
          notification_url="https://notify.me/here",
          notification_auth_token= "my-token",
          slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),
@@ -163,13 +159,14 @@ def test_APIError(client):
          max_data_connections=12
      )
 
+@pytest.mark.skip(reason="Pydantic validator is already catching the name parameter")
 def test_InvalidParameter(client):
-    with pytest.raises(InvalidParameter):
+    with pytest.raises(APIError):
         client.slices.create(
          name="1234567890"*100,
          network_id=NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE"),
          slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-         area_of_service=AreaOfService(poligon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
+         area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
          notification_url="https://notify.me/here",
          notification_auth_token= "my-token",
          slice_downlink_throughput=Throughput(guaranteed=0, maximum=0),

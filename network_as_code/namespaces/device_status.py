@@ -1,7 +1,7 @@
 from typing import List
 import math
 from . import Namespace
-from ..models.device import Device 
+from ..models.device import Device, DeviceIpv4Addr 
 from ..models.device_status import EventSubscription
 
 from urllib.error import HTTPError
@@ -85,7 +85,21 @@ class Connectivity(Namespace):
 
         device_data = connectivity_data["subscriptionDetail"]["device"]
 
-        print(device_data)
+        device = Device(api=self.api)
+
+        if "networkAccessIdentifier" in device_data.keys():
+            device.network_access_identifier = device_data["networkAccessIdentifier"]
+
+        if "phoneNumber" in device_data.keys():
+            device.phone_number = device_data["phoneNumber"]
+
+        if "ipv6Address" in device_data.keys():
+            device.ipv6_address = device_data["ipv6Address"]
+
+        if "ipv4Address" in device_data:
+            device.ipv4_address = DeviceIpv4Addr(public_address=device_data["ipv4Address"]["publicAddress"] if "publicAddress" in device_data["ipv4Address"].keys() else None,
+                                                    private_address=device_data["ipv4Address"]["privateAddress"] if "privateAddress" in device_data["ipv4Address"].keys() else None,
+                                                    public_port=device_data["ipv4Address"]["publicPort"]if "publicPort" in device_data["ipv4Address"].keys() else None)
 
         return EventSubscription(
             id=connectivity_data["eventSubscriptionId"],
@@ -93,5 +107,4 @@ class Connectivity(Namespace):
             max_num_of_reports = 0,
             notification_url = connectivity_data["webhook"]["notificationUrl"],
             notification_auth_token = connectivity_data["webhook"]["notificationAuthToken"],
-            device = Device(api=self.api, sid=connectivity_data["subscriptionDetail"]["device"]["networkAccessIdentifier"], ip="127.0.0.1")
-        )
+            device = device)
