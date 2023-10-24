@@ -40,8 +40,8 @@ class Throughput(BaseModel):
             guaranteed (int): the guaranteed throughput amount in integer
             maximum (int): the maximum throughput amount in integer
     """
-    guaranteed: int
-    maximum: int
+    guaranteed: Optional[int]
+    maximum: Optional[int]
 
 class Point(BaseModel):
     """
@@ -105,7 +105,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     sid: Optional[str]
     state: str
     name: Optional[str] = Field(None, description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
-                                min_length=8, max_length=64, regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
+                                min_length=4, max_length=64, regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
     area_of_service: Optional[AreaOfService] = Field(None, description="Area which the network slice is intended to serve")
@@ -208,42 +208,54 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self._api.slice_attach.detach(device, self.name, notification_url, notification_auth_token)
 
     @staticmethod
-    def network_identifier(networkIdentifierDict: Dict[str, str]):
+    def network_identifier(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
 
         Assigns the `mcc` and `mnc`.
         #### Args:
             networkIdentifierDict (Dict[str, str]): A Network Identifier object with `mcc` and `mnc` values.
         """
-        return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
+        if networkIdentifierDict:
+            return NetworkIdentifier(mcc=networkIdentifierDict['mcc'], mnc=networkIdentifierDict['mnc'])
+        else:
+            return None
     
     @staticmethod
-    def slice_info(sliceInfoDict: Dict[str, str]):
+    def slice_info(sliceInfoDict: Optional[Dict[str, str]]):
         """Returns a `SliceInfo` instance.
 
         Assigns the `service_type` and `differentiator`.
         #### Args:
             sliceInfoDict (Dict[str, str]): A Slice Info object with `service_type` and `differentiator` values.
         """
-        return SliceInfo(service_type=sliceInfoDict['service_type'], differentiator=sliceInfoDict['differentiator'])
+        if sliceInfoDict:
+            return SliceInfo(service_type=sliceInfoDict['service_type'], differentiator=sliceInfoDict['differentiator'])
+        else:
+            return None
     
     @staticmethod
-    def area_of_service(areaOfServiceDict: Dict[str, List[Dict[str, int]]]):
+    def area_of_service(areaOfServiceDict: Optional[Dict[str, List[Dict[str, int]]]]):
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
         #### Args:
             areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with polygon list value.
         """
-        polygon = areaOfServiceDict['polygon']
-        return AreaOfService(polygon=[Point(latitude=polygon[0]['lat'], longitude=polygon[0]['lon']), Point(latitude=polygon[1]['lat'], longitude=polygon[1]['lon']), Point(latitude=polygon[2]['lat'], longitude=polygon[2]['lon']), Point(latitude=polygon[3]['lat'], longitude=polygon[3]['lon'])]), 
+        if areaOfServiceDict:
+            polygon = areaOfServiceDict['polygon']
+            return AreaOfService(polygon=[Point(latitude=polygon[0]['lat'], longitude=polygon[0]['lon']), Point(latitude=polygon[1]['lat'], longitude=polygon[1]['lon']), Point(latitude=polygon[2]['lat'], longitude=polygon[2]['lon']), Point(latitude=polygon[3]['lat'], longitude=polygon[3]['lon'])]), 
+        else:
+            return None
 
     @staticmethod
-    def throughput(throughputdict: Dict[int, int]):
+    def throughput(throughputdict: Optional[Dict[int, int]]):
         """Returns a `Throughput` instance.
 
         Assigns the `guaranteed` and `maximum`.
         #### Args:
             throughputDict (Dict[int, int]): A Throughput object with `guaranteed` and `maximum` values.
         """
-        return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])
+        if throughputdict:
+            return Throughput(guaranteed=throughputdict.get('guaranteed'), maximum=throughputdict.get('maximum'))
+        else:
+            return None
