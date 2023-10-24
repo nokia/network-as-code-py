@@ -125,4 +125,12 @@ pipeline {
       }
     }
   }
+  post {
+    success{
+      updateGitlabCommitStatus name: 'build', state: 'success'
+    }
+    failure{
+      updateGitlabCommitStatus name: 'build', state: 'failed'
+    }
+  }
 }
