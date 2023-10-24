@@ -199,5 +199,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         return AreaOfService(poligon=[Point(latitude=poligon[0]['lat'], longitude=poligon[0]['lon']), Point(latitude=poligon[1]['lat'], longitude=poligon[1]['lon']), Point(latitude=poligon[2]['lat'], longitude=poligon[2]['lon']), Point(latitude=poligon[3]['lat'], longitude=poligon[3]['lon'])]), 
 
     @staticmethod
-    def throughput(throughputdict: Dict[int, int]):
-        return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])
+    def throughput(throughputdict: Optional[Dict[int, int]]):
+        if throughputdict:
+            return Throughput(guaranteed=throughputdict['guaranteed'], maximum=throughputdict['maximum'])
+        else:
+            return None

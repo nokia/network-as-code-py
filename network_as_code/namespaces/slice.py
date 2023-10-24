@@ -263,10 +263,10 @@ class Slices(Namespace):
             slice_info = Slice.slice_info(slice_data['slice']['sliceInfo']), 
             max_data_connections = slice_data['slice']['maxDataConnections'],
             max_devices = slice_data['slice']['maxDevices'], 
-            slice_downlink_throughput = Slice.throughput(slice_data['slice']['sliceDownlinkThroughput']), 
-            slice_uplink_throughput = Slice.throughput(slice_data['slice']['sliceUplinkThroughput']),
-            device_downlink_throughput = Slice.throughput(slice_data['slice']['deviceDownlinkThroughput']),
-            device_uplink_throughput = Slice.throughput(slice_data['slice']['deviceUplinkThroughput'])
+            slice_downlink_throughput = Slice.throughput(slice_data['slice'].get('sliceDownlinkThroughput')), 
+            slice_uplink_throughput = Slice.throughput(slice_data['slice'].get('sliceUplinkThroughput')),
+            device_downlink_throughput = Slice.throughput(slice_data['slice'].get('deviceDownlinkThroughput')),
+            device_uplink_throughput = Slice.throughput(slice_data['slice'].get('deviceUplinkThroughput'))
         )
 
         return slice
