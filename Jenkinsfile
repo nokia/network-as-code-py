@@ -46,10 +46,10 @@ pipeline {
     string(name: 'gitlabSourceBranch', defaultValue: 'master', description: 'Default branch used when built on-demand', trim: true)
   }
   environment {
-    PYPI_REPOSITORY = "${PYPI_REPOSITORY}"
-    PYPI_USERNAME = "${PYPI_USERNAME}"
-    PYPI_PASSWORD = "${PYPI_PASSWORD}"
-    NAC_TOKEN = "${NAC_TOKEN}"
+    PYPI_REPOSITORY = credentials('PYPI_REPOSITORY')
+    PYPI_USERNAME = credentials('PYPI_USERNAME')
+    PYPI_PASSWORD = credentials('PYPI_PASSWORD')
+    NAC_TOKEN = credentials('NAC_TOKEN')
   }
   options {
     gitLabConnection('gitlab-ee2')  // the GitLab connection name defined in Jenkins, check the value from pipeline configure UI
@@ -81,7 +81,6 @@ pipeline {
             """
             if(env.gitlabTargetBranch.contains("release-") && env.gitlabActionType == "TAG_PUSH") {
               sh """
-                echo ${NAC_TOKEN}
                 python3 -m poetry run pytest integration_tests/
               """
             }
