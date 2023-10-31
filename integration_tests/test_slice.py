@@ -63,8 +63,7 @@ def test_getting_a_slice(client):
 
     new_slice.delete()
 
-@pytest.mark.xfail
-def test_get_after_deleting_all_slices_marks_them_as_deleted(client):
+def test_deleting_a_slice_marks_it_as_deleted(client):
     slice = client.slices.create(
         name="slicemock27",
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
@@ -73,11 +72,11 @@ def test_get_after_deleting_all_slices_marks_them_as_deleted(client):
         notification_auth_token= "samplenotificationtoken",
     )
 
-    for network_slice in client.slices.getAll():
-        network_slice.delete()
+    slice.delete()
 
-    for network_slice in client.slices.getAll():
-        assert network_slice.state == "DELETED"
+    slice.refresh()
+
+    assert slice.state == "DELETED"
 
 @pytest.mark.xfail
 def test_deactivating_and_deleting_a_slice(client):
