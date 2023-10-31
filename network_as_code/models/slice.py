@@ -134,7 +134,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slice.activate(self.name)
+            self._api.slicing.activate(self.name)
     
     def deactivate(self) -> None:
         """Deactivate network slice.
@@ -148,7 +148,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slice.deactivate(self.name)
+            self._api.slicing.deactivate(self.name)
     
     def delete(self) -> None:
         """Delete network slice.
@@ -162,7 +162,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slice.delete(self.name)
+            self._api.slicing.delete(self.name)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.
@@ -175,7 +175,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.refresh()
             ```
         """
-        slice_data = self._api.slice.get(self.name)
+        slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
     
     def attach(self, device: Device, notification_url: str, notification_auth_token: Optional[str] = None) -> None:

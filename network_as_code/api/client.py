@@ -19,22 +19,22 @@ class APIClient:
         self,
         token: str,
         testmode: bool = False,
-        qos_base_url: str = "https://qos-on-demand2.p-eu.rapidapi.com",
-        location_verify_base_url: str = "https://location-verification5.p-eu.rapidapi.com",
-        location_retrieve_base_url: str = "https://location-retrieval3.p-eu.rapidapi.com",
-        slice_base_url: str = "https://network-slicing2.p-eu.rapidapi.com",
-        slice_attach_base_url: str = "https://device-attach-norc1.p-eu.rapidapi.com",
-        devicestatus_base_url: str = "https://device-status1.p-eu.rapidapi.com",
+        qos_base_url: str = "https://quality-of-service-on-demand.p-eu.rapidapi.com",
+        location_verify_base_url: str = "https://location-verification.p-eu.rapidapi.com",
+        location_retrieve_base_url: str = "https://location-retrieval.p-eu.rapidapi.com",
+        slice_base_url: str = "https://network-slicing.p-eu.rapidapi.com",
+        slice_attach_base_url: str = "https://network-slice-device-attach-norc.p-eu.rapidapi.com",
+        devicestatus_base_url: str = "https://device-status.p-eu.rapidapi.com",
         **kwargs,
     ):
 
-        self.sessions = DeviceAPI(base_url=qos_base_url, rapid_key=token, rapid_host="qos-on-demand2.nokia-dev.rapidapi.com")
+        self.sessions = DeviceAPI(base_url=qos_base_url, rapid_key=token, rapid_host="quality-of-service-on-demand.nokia.rapidapi.com")
 
-        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status1.nokia-dev.rapidapi.com")
+        self.devicestatus = DeviceStatusAPI(base_url=devicestatus_base_url, rapid_key=token, rapid_host="device-status.nokia.rapidapi.com")
 
-        self.location_verify = LocationVerifyAPI(base_url=location_verify_base_url, rapid_key=token, rapid_host="location-verification5.nokia-dev.rapidapi.com")
-        self.location_retrieve = LocationRetrievalAPI(base_url=location_retrieve_base_url, rapid_key=token, rapid_host="location-retrieval3.nokia-dev.rapidapi.com")
+        self.location_verify = LocationVerifyAPI(base_url=location_verify_base_url, rapid_key=token, rapid_host="location-verification.nokia.rapidapi.com")
+        self.location_retrieve = LocationRetrievalAPI(base_url=location_retrieve_base_url, rapid_key=token, rapid_host="location-retrieval.nokia.rapidapi.com")
 
-        self.slice = SliceAPI(base_url=slice_base_url, rapid_key=token, rapid_host="network-slicing2.nokia-dev.rapidapi.com")
+        self.slicing = SliceAPI(base_url=slice_base_url, rapid_key=token, rapid_host="network-slicing.nokia.rapidapi.com")
 
-        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="device-attach-norc1.nokia-dev.rapidapi.com")
+        self.slice_attach = AttachAPI(base_url=slice_attach_base_url, rapid_key=token, rapid_host="network-slice-device-attach-norc.nokia.rapidapi.com")

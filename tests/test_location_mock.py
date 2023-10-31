@@ -13,7 +13,7 @@ def device(client) -> Device:
 
 
 def test_get_location(httpx_mock: httpx_mock, device):
-    url = "https://location-retrieval3.p-eu.rapidapi.com/retrieve"
+    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
 
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
@@ -59,7 +59,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
     assert location.civic_address
 
 def test_verify_location(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification5.p-eu.rapidapi.com/verify"
+    url = f"https://location-verification.p-eu.rapidapi.com/verify"
 
     httpx_mock.add_response(
         url=url, 
