@@ -104,11 +104,6 @@ pipeline {
       when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")} }
       steps {
         container('beluga') {
-          withCredentials([
-            string(credentialsId: "${PYPI_PASSWORD}", variable: 'PYPI_PASSWORD'),
-            string(credentialsId: "${PYPI_USERNAME}", variable: 'PYPI_USERNAME'),
-            string(credentialsId: "${PYPI_REPOSITORY}", variable: 'PYPI_REPOSITORY')
-          ]) {
             script {
               sh """
                 env | grep gitlab
@@ -116,11 +111,11 @@ pipeline {
               if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")){
                 sh '''
                   python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
-                  python3 -m poetry publish --build -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+                  python3 -m poetry build
+                  python3 -m poetry publish --no-interaction -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
                 '''
               }
             }
-          }
         }
       }
     }
