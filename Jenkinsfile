@@ -72,17 +72,13 @@ pipeline {
       }
     }
     stage('Integration Test') {
-      when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")} }
       steps {
         container('beluga') {
           script {
             sh """
               env | grep gitlab
+              python3 -m poetry run pytest integration_tests/
             """
-            if(env.gitlabTargetBranch.contains("release-") && env.gitlabActionType == "TAG_PUSH") {
-              sh """
-                python3 -m poetry run pytest integration_tests/
-              """
             }
           }
         }        

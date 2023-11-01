@@ -47,12 +47,12 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-# addopts = "--ignore=tests/test_qos.py"
-# asyncio_mode = "auto"
 norecursedirs = "binding_generation"
 testpaths = [
     "tests",
-#    "integration",
+    #"integration_tests"
 ]
+xfail_strict = true
+
 
 
