@@ -79,7 +79,6 @@ pipeline {
               env | grep gitlab
               python3 -m poetry run pytest integration_tests/
             """
-            }
           }
         }        
       }
