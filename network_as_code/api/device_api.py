@@ -89,7 +89,7 @@ class DeviceAPI:
 
         return response
 
-    def get_all_sessions(self, device_id:dict) -> list:
+    def get_all_sessions(self, device) -> list:
         """This function retrieves all sessions given a device_id 
 
         Args:
@@ -98,8 +98,15 @@ class DeviceAPI:
         Returns:
             list: returns list of session
         """
+        url = ""
+
+        if device.network_access_identifier:
+            url= f'/sessions?networkAccessIdentifier={device.network_access_identifier}'
+        elif device.phone_number:
+            url= f'/sessions?phoneNumber={device.phone_number}'
+
         response = self.client.get(
-            url= f'/sessions?device-id={device_id.get("device-id")}'
+            url=url
         )
 
         errors.error_handler(response)

@@ -29,3 +29,32 @@ location = device.location()
 print(location.longitude)
 print(location.latitude)
 print(location.civic_address)
+
+import network_as_code as nac
+ 
+from network_as_code.models.location import CivicAddress, Location
+ 
+from network_as_code.models.device import Device, DeviceIpv4Addr
+ 
+# Give the device identifier and SDK token
+client = nac.NetworkAsCodeClient(
+    token="<your-application-key-here>",
+)
+ 
+device = client.devices.get("device@testcsp.net",
+                            ipv4_address = DeviceIpv4Addr(public_address="233.252.0.2",
+                                                          private_address="192.0.2.25",
+                                                          public_port=80)
+)
+ 
+# max_age is a mandatory parameter
+# The location object contains fields for longitude and latitude
+location = device.location(max_age=60)
+ 
+longitude = location.longitude
+latitude = location.latitude
+ 
+ 
+print(longitude)
+print(latitude)
+print(location.civic_address)
