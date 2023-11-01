@@ -124,7 +124,7 @@ class Device(BaseModel):
             ```
         """
         try:
-            sessions = self._api.sessions.get_all_sessions({"device-id": self.network_access_identifier})
+            sessions = self._api.sessions.get_all_sessions(self)
             return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
         except NotFound:
             # API will return 404 for a device which has had all of its sessions deleted

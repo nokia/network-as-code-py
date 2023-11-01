@@ -85,7 +85,28 @@ def test_getting_all_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='GET',
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=testuser@open5glab.net',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
+        json=mock_response
+    )
+
+    session = device.sessions()
+
+    assert session[0].id == "testuser@open5Glab.ne"
+
+def test_getting_all_sessions_phone_number(httpx_mock, client):
+    device = client.devices.get(phone_number="1234567890", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+
+    mock_response = [{
+        "id": "testuser@open5Glab.ne",
+        "qosProfile": "QOS_L",
+        "qosStatus": "BLA",
+        "expiresAt": 1641494400,
+        "startedAt": 0,
+    }]
+
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?phoneNumber=1234567890',
         json=mock_response
     )
 
@@ -118,7 +139,7 @@ def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
 
     httpx_mock.add_response(
         method="GET",
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=not-my-device@open5glab.net',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=not-my-device@open5glab.net',
         status_code=403,
         json={
             "message":"Invalid API key."
