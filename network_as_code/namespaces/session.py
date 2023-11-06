@@ -1,6 +1,6 @@
 
 from . import Namespace
-from ..models import Session
+from ..models import QoDSession
 from ..errors import error_handler
 
 class Sessions(Namespace):
@@ -10,7 +10,7 @@ class Sessions(Namespace):
     subscription can be configured on the network.
     """
 
-    def get(self, id: str) -> Session:
+    def get(self, id: str) -> QoDSession:
         """Get a QoS Session by its ID.
 
         Args:
@@ -18,4 +18,4 @@ class Sessions(Namespace):
         """
         session_object = self.api.sessions.get_session(id)
 
-        return Session.convert_session_model(self.api, "",  session_object.json())
+        return QoDSession.convert_session_model(self.api, "",  session_object.json())

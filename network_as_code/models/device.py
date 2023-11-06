@@ -4,7 +4,7 @@ from typing import List, Union, Optional
 
 
 from ..api import APIClient
-from ..models.session import Session, PortsSpec
+from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
 from ..errors import NotFound
 
@@ -62,7 +62,7 @@ class Device(BaseModel):
     """
 
     _api: APIClient = PrivateAttr()
-    _sessions: List[Session] = PrivateAttr()
+    _sessions: List[QoDSession] = PrivateAttr()
     network_access_identifier: Union[str, None]
     phone_number: Union[str, None]
     ipv4_address: Union[DeviceIpv4Addr, None]
@@ -77,7 +77,7 @@ class Device(BaseModel):
     def network_access_id(self) ->  Union[str, None]:
         return self.network_access_identifier
 
-    def create_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> Session:
+    def create_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> QoDSession:
         """Creates a session for the device.
 
         #### Args:
@@ -113,9 +113,9 @@ class Device(BaseModel):
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-        return Session.convert_session_model(self._api, self.ipv4_address, session.json())
+        return QoDSession.convert_session_model(self._api, self.ipv4_address, session.json())
 
-    def sessions(self) -> List[Session]:
+    def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
 
         #### Example:
@@ -136,8 +136,8 @@ class Device(BaseModel):
         for session in self.sessions():
             session.delete()
 
-    def __convert_session_model(self, session) -> Session:
-       return Session.convert_session_model(self._api, self.ipv4_address, session)
+    def __convert_session_model(self, session) -> QoDSession:
+       return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
 
     def location(self, max_age: int) -> Location:
         """Returns the location of the device.

@@ -5,7 +5,7 @@ from typing import Dict, List, Union, Optional
 from enum import Enum
 
 from ..api import APIClient
-from ..models.session import Session
+from ..models.session import QoDSession
 from ..models.location import CivicAddress, Location
 from ..models.device import Device
 from ..errors import NotFound, InvalidParameter, NotFound, AuthenticationException, ServiceError, error_handler
@@ -101,7 +101,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     """
 
     _api: APIClient = PrivateAttr()
-    _sessions: List[Session] = PrivateAttr()
+    _sessions: List[QoDSession] = PrivateAttr()
     sid: Optional[str]
     state: str
     name: Optional[str] = Field(None, description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
