@@ -77,7 +77,7 @@ class Device(BaseModel):
     def network_access_id(self) ->  Union[str, None]:
         return self.network_access_identifier
 
-    def create_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> QoDSession:
+    def create_qod_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> QoDSession:
         """Creates a session for the device.
 
         #### Args:
