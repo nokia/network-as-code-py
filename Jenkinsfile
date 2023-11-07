@@ -120,6 +120,7 @@ pipeline {
       updateGitlabCommitStatus name: 'build', state: 'success'
     }
     failure{
+      postToTeams("Jenkins build failed see ${env.BUILD_URL} for more.", 'https://nokia.webhook.office.com/webhookb2/aa652e35-891b-4c8d-890b-fac0296cc4d1@5d471751-9675-428d-917b-70f44f9630b0/IncomingWebhook/81dabf069f9d4e63af24a0a66b0d2fd4/9c73183b-22f9-4e0e-91c3-bd336ea99d77')
       updateGitlabCommitStatus name: 'build', state: 'failed'
     }
   }
