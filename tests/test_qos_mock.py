@@ -44,7 +44,7 @@ def test_creating_a_session_mock(httpx_mock, client):
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_session(service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", profile="QOS_L")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", profile="QOS_L")
     assert session.status == mock_response["qosStatus"]
     
     httpx_mock.add_response(
