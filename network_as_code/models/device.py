@@ -8,14 +8,16 @@ from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
 from ..errors import NotFound
 
+
 class Event(BaseModel):
     """
     A class representing the `Event` model.
-    
+
     #### Public Attributes:
             target (float): the `target` of an event object.
             atUnix (float): the `atUnix` of an event object.
     """
+
     target: str
     atUnix: int
 
@@ -23,16 +25,16 @@ class Event(BaseModel):
 class DeviceIpv4Addr(BaseModel):
     """
     A class representing the `DeviceIpv4Addr` model.
-    
+
     #### Public Attributes:
             public_address (float): the `public_address` of a device IPv4 address object.
             private_address (float): the `private_address` of a device IPv4 address object.
             public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
     """
+
     public_address: Optional[str]
     private_address: Optional[str]
     public_port: Optional[int]
-
 
 
 class Device(BaseModel):
@@ -74,10 +76,20 @@ class Device(BaseModel):
         self._sessions = []
 
     @property
-    def network_access_id(self) ->  Union[str, None]:
+    def network_access_id(self) -> Union[str, None]:
         return self.network_access_identifier
 
-    def create_qod_session(self, profile, service_ipv4, service_ipv6 = None, device_ports: Union[None, PortsSpec] = None, service_ports: Union[None, PortsSpec] = None, duration = None, notification_url = None, notification_auth_token = None) -> QoDSession:
+    def create_qod_session(
+        self,
+        profile,
+        service_ipv4,
+        service_ipv6=None,
+        device_ports: Union[None, PortsSpec] = None,
+        service_ports: Union[None, PortsSpec] = None,
+        duration=None,
+        notification_url=None,
+        notification_auth_token=None,
+    ) -> QoDSession:
         """Creates a session for the device.
 
         #### Args:
@@ -95,7 +107,6 @@ class Device(BaseModel):
             session = device.create_session(profile="QOS_L", service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
-        
 
         session = self._api.sessions.create_session(
             self.network_access_identifier,
@@ -108,12 +119,14 @@ class Device(BaseModel):
             service_ports,
             duration,
             notification_url,
-            notification_auth_token
+            notification_auth_token,
         )
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-        return QoDSession.convert_session_model(self._api, self.ipv4_address, session.json())
+        return QoDSession.convert_session_model(
+            self._api, self.ipv4_address, session.json()
+        )
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -125,7 +138,12 @@ class Device(BaseModel):
         """
         try:
             sessions = self._api.sessions.get_all_sessions(self)
-            return list(map(lambda session : self.__convert_session_model(session), sessions.json()))
+            return list(
+                map(
+                    lambda session: self.__convert_session_model(session),
+                    sessions.json(),
+                )
+            )
         except NotFound:
             # API will return 404 for a device which has had all of its sessions deleted
             # Because this is not an error, we will simply return an empty list here
@@ -137,7 +155,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> QoDSession:
-       return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
+        return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
 
     def location(self, max_age: int) -> Location:
         """Returns the location of the device.
@@ -160,17 +178,39 @@ class Device(BaseModel):
         if "civicAddress" in body.keys():
             civic_address = CivicAddress(
                 country=body["civicAddress"]["country"],
-                a1=body["civicAddress"]["A1"] if "A1" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A1"], str) else None,
-                a2=body["civicAddress"]["A2"] if "A2" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A2"], str) else None,
-                a3=body["civicAddress"]["A3"] if "A3" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A3"], str) else None,
-                a4=body["civicAddress"]["A4"] if "A4" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A4"], str) else None,
-                a5=body["civicAddress"]["A5"] if "A5" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A5"], str) else None,
-                a6=body["civicAddress"]["A6"] if "A6" in body["civicAddress"].keys() and isinstance(body["civicAddress"]["A6"], str) else None
+                a1=body["civicAddress"]["A1"]
+                if "A1" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A1"], str)
+                else None,
+                a2=body["civicAddress"]["A2"]
+                if "A2" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A2"], str)
+                else None,
+                a3=body["civicAddress"]["A3"]
+                if "A3" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A3"], str)
+                else None,
+                a4=body["civicAddress"]["A4"]
+                if "A4" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A4"], str)
+                else None,
+                a5=body["civicAddress"]["A5"]
+                if "A5" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A5"], str)
+                else None,
+                a6=body["civicAddress"]["A6"]
+                if "A6" in body["civicAddress"].keys()
+                and isinstance(body["civicAddress"]["A6"], str)
+                else None,
             )
 
-        return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
+        return Location(
+            longitude=longitude, latitude=latitude, civic_address=civic_address
+        )
 
-    def verify_location(self, longitude: float, latitude: float, radius: float, max_age: int) -> bool:
+    def verify_location(
+        self, longitude: float, latitude: float, radius: float, max_age: int
+    ) -> bool:
         """Verifies the location of the device(Returns boolean value).
 
         #### Args:
@@ -178,16 +218,18 @@ class Device(BaseModel):
             latitude (float): longitude of the device.
             radius (float): radius of the area in meters.
             max_age (int | None): Max acceptable age for location info in seconds
-            
+
         #### Example:
             ```python
             located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
-        return self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
-        
+        return self._api.location_verify.verify_location(
+            latitude, longitude, self, radius, max_age
+        )
+
     def to_json_dict(self):
-        json_dict = { "networkAccessIdentifier": self.network_access_id }
+        json_dict = {"networkAccessIdentifier": self.network_access_id}
 
         if self.ipv4_address:
             ipv4_address = {}

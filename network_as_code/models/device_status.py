@@ -24,7 +24,7 @@ class EventSubscription(BaseModel):
     id: Optional[str]
     _api: APIClient = PrivateAttr()
     max_num_of_reports: int
-    notification_url: str 
+    notification_url: str
     notification_auth_token: Optional[str]
     device: Device
 
@@ -46,5 +46,3 @@ class EventSubscription(BaseModel):
 
         # Error Case: Delete connectivity status
         self._api.devicestatus.delete_subscription(self.id)
-
-

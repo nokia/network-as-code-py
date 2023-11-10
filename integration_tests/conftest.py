@@ -12,4 +12,4 @@ from network_as_code import NetworkAsCodeClient
 def client() -> NetworkAsCodeClient:
     load_dotenv()
     token = os.environ["NAC_TOKEN"]
-    return NetworkAsCodeClient(token=token)
+    return NetworkAsCodeClient(token=token, dev_mode=False)

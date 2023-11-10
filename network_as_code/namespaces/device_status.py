@@ -1,7 +1,7 @@
 from typing import List
 import math
 from . import Namespace
-from ..models.device import Device, DeviceIpv4Addr 
+from ..models.device import Device, DeviceIpv4Addr
 from ..models.device_status import EventSubscription
 
 from urllib.error import HTTPError
@@ -16,14 +16,15 @@ class Connectivity(Namespace):
     device status can be configured and managed.
     """
 
-    def subscribe(self, 
-                  event_type: str,
-                  max_num_of_reports: int, 
-                  notification_url: str,
-                  device: Device,
-                  notification_auth_token: Optional[str] = None,
-                  subscription_expire_time: Optional[str] = None,
-                  ) -> EventSubscription:
+    def subscribe(
+        self,
+        event_type: str,
+        max_num_of_reports: int,
+        notification_url: str,
+        device: Device,
+        notification_auth_token: Optional[str] = None,
+        subscription_expire_time: Optional[str] = None,
+    ) -> EventSubscription:
         """Create subscription for device connectivity status.
 
         Args:
@@ -36,11 +37,11 @@ class Connectivity(Namespace):
         """
 
         connectivity_subscription = EventSubscription(
-            api=self.api, 
-            max_num_of_reports = max_num_of_reports, 
-            notification_url = notification_url,
-            notification_auth_token = notification_auth_token,
-            device = device 
+            api=self.api,
+            max_num_of_reports=max_num_of_reports,
+            notification_url=notification_url,
+            notification_auth_token=notification_auth_token,
+            device=device,
         )
 
         # Error Case: Creating Connectivity Subscription
@@ -51,7 +52,7 @@ class Connectivity(Namespace):
                 notification_url,
                 notification_auth_token,
                 max_num_of_reports,
-                subscription_expire_time
+                subscription_expire_time,
             )
             connectivity_subscription.id = connectivity_data["eventSubscriptionId"]
 
@@ -97,14 +98,25 @@ class Connectivity(Namespace):
             device.ipv6_address = device_data["ipv6Address"]
 
         if "ipv4Address" in device_data:
-            device.ipv4_address = DeviceIpv4Addr(public_address=device_data["ipv4Address"]["publicAddress"] if "publicAddress" in device_data["ipv4Address"].keys() else None,
-                                                    private_address=device_data["ipv4Address"]["privateAddress"] if "privateAddress" in device_data["ipv4Address"].keys() else None,
-                                                    public_port=device_data["ipv4Address"]["publicPort"]if "publicPort" in device_data["ipv4Address"].keys() else None)
+            device.ipv4_address = DeviceIpv4Addr(
+                public_address=device_data["ipv4Address"]["publicAddress"]
+                if "publicAddress" in device_data["ipv4Address"].keys()
+                else None,
+                private_address=device_data["ipv4Address"]["privateAddress"]
+                if "privateAddress" in device_data["ipv4Address"].keys()
+                else None,
+                public_port=device_data["ipv4Address"]["publicPort"]
+                if "publicPort" in device_data["ipv4Address"].keys()
+                else None,
+            )
 
         return EventSubscription(
             id=connectivity_data["eventSubscriptionId"],
-            api=self.api, 
-            max_num_of_reports = 0,
-            notification_url = connectivity_data["webhook"]["notificationUrl"],
-            notification_auth_token = connectivity_data["webhook"]["notificationAuthToken"],
-            device = device)
+            api=self.api,
+            max_num_of_reports=0,
+            notification_url=connectivity_data["webhook"]["notificationUrl"],
+            notification_auth_token=connectivity_data["webhook"][
+                "notificationAuthToken"
+            ],
+            device=device,
+        )

@@ -4,6 +4,7 @@ from .namespaces import Sessions
 from .namespaces import Slices
 from .namespaces import Connectivity
 
+
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
 
