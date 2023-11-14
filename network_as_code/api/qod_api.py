@@ -5,9 +5,9 @@ import httpx
 from .. import errors
 
 
-class DeviceAPI:
+class QodAPI:
     """
-    Device API, that sends requests to the API via httpx calls
+    Qod API, that sends requests to the API via httpx calls
     """
 
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
