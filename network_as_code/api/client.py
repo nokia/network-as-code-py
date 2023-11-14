@@ -1,7 +1,7 @@
 import sys
 from ..api.slice_api import AttachAPI, SliceAPI
 
-from network_as_code.api.device_api import DeviceAPI
+from network_as_code.api.qod_api import QodAPI
 
 from .location_api import LocationVerifyAPI, LocationRetrievalAPI
 from .device_status_api import DeviceStatusAPI
@@ -72,7 +72,7 @@ class APIClient:
         if dev_mode and device_status_base_url == DEVICE_STATUS_BASE_URL_PROD:
             device_status_base_url = DEVICE_STATUS_BASE_URL_DEV
 
-        self.sessions = DeviceAPI(
+        self.sessions = QodAPI(
             base_url=qos_base_url,
             rapid_key=token,
             rapid_host=qos_base_url.replace("https://", "").replace("p-eu", "nokia")
