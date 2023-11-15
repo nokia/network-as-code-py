@@ -163,8 +163,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slicing.activate(self.name)
-
+            return self._api.slicing.activate(self.name)
+    
     def deactivate(self) -> None:
         """Deactivate network slice.
 
@@ -177,8 +177,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slicing.deactivate(self.name)
-
+            return self._api.slicing.deactivate(self.name)
+    
     def delete(self) -> None:
         """Delete network slice.
 
@@ -191,7 +191,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            self._api.slicing.delete(self.name)
+            return self._api.slicing.delete(self.name)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.
