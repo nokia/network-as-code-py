@@ -257,16 +257,30 @@ def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         method="POST",
         url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/activate"
     )
-
-    assert client.slices.activate(slice_id="sliceone").status_code == 200
+    slice = Slice(
+            api=client._api,
+            state = "NOT_SUBMITTED",
+            name = "sliceone",
+            network_identifier=NetworkIdentifier(mcc='236', mnc='30'),
+            slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+            notification_url="https://example.com/notify"
+    )
+    assert slice.activate().status_code == 200
 
 def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="POST",
         url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/deactivate"
     )
-
-    assert client.slices.deactivate(slice_id="sliceone").status_code == 200
+    slice = Slice(
+            api=client._api,
+            state = "OPERATING",
+            name = "sliceone",
+            network_identifier=NetworkIdentifier(mcc='236', mnc='30'),
+            slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+            notification_url="https://example.com/notify"
+    )
+    assert slice.deactivate().status_code == 200
 
 def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
@@ -274,8 +288,15 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         status_code=204,
         url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone"
     )
-
-    assert client.slices.delete(slice_id="sliceone").status_code == 204
+    slice = Slice(
+            api=client._api,
+            state = "DELETED",
+            name = "sliceone",
+            network_identifier=NetworkIdentifier(mcc='236', mnc='30'),
+            slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+            notification_url="https://example.com/notify"
+    )
+    assert slice.delete().status_code == 204
 
 def test_attach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
