@@ -151,3 +151,11 @@ def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
         assert False
     except AuthenticationException as e:
         assert True
+
+def test_create_qod_session_requires_ip(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="9382948473")
+    
+    with pytest.raises(ValueError) as excinfo:
+        session = device.create_qod_session(profile="QOS_L")
+
+    assert "At least one of IP parameters must be provided" in str(excinfo.value)
