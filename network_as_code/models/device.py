@@ -82,7 +82,7 @@ class Device(BaseModel):
     def create_qod_session(
         self,
         profile,
-        service_ipv4,
+        service_ipv4=None,
         service_ipv6=None,
         device_ports: Union[None, PortsSpec] = None,
         service_ports: Union[None, PortsSpec] = None,
@@ -107,6 +107,10 @@ class Device(BaseModel):
             session = device.create_session(profile="QOS_L", service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
+        # Checks if at least one parameter is set
+        if not service_ipv4 and not service_ipv6:
+            raise ValueError("At least one of IP parameters must be provided")
+
 
         session = self._api.sessions.create_session(
             self.network_access_identifier,
