@@ -6,6 +6,7 @@ authors = ["Sami Lahtinen <sami.lahtinen@nokia.com>", "Pavel Garmuyev <pavel.gar
 packages = [
     { include = "network_as_code" },
 ]
+license = "Apache-2.0"
 
 [[tool.poetry.source]]
 name = "internal"
