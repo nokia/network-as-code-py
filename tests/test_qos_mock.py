@@ -14,7 +14,7 @@ def test_getting_a_device(httpx_mock, client):
 def test_creating_a_session_mock(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number = "9382948473")
     mock_response = {
-        "id": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
         "startedAt": 1691671102,
@@ -56,7 +56,7 @@ def test_creating_a_session_mock(httpx_mock, client):
 def test_getting_one_session(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     mock_response = {
-        "id": "1234",
+        "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
         "startedAt": 1691671102,
@@ -69,14 +69,14 @@ def test_getting_one_session(httpx_mock, client):
         json=mock_response
     )
     session = client.sessions.get("1234")
-    assert session.id == mock_response['id']
+    assert session.id == mock_response['sessionId']
 
 
 def test_getting_all_sessions(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
 
     mock_response = [{
-        "id": "testuser@open5Glab.ne",
+        "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "BLA",
         "expiresAt": 1641494400,
@@ -91,13 +91,13 @@ def test_getting_all_sessions(httpx_mock, client):
 
     session = device.sessions()
 
-    assert session[0].id == "testuser@open5Glab.ne"
+    assert session[0].id == "1234"
 
 def test_getting_all_sessions_phone_number(httpx_mock, client):
     device = client.devices.get(phone_number="1234567890", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
 
     mock_response = [{
-        "id": "testuser@open5Glab.ne",
+        "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "BLA",
         "expiresAt": 1641494400,
@@ -112,7 +112,7 @@ def test_getting_all_sessions_phone_number(httpx_mock, client):
 
     session = device.sessions()
 
-    assert session[0].id == "testuser@open5Glab.ne"
+    assert session[0].id == "1234"
 
 @pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
 def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
