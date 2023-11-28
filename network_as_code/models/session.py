@@ -109,7 +109,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         )
         return QoDSession(
             api=api,
-            id=session["id"],
+            id=session["sessionId"],
             device_ip=ip,
             device_ports=None,
             service_ip="",
