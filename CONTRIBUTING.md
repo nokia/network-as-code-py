@@ -2,29 +2,78 @@
 
 ## Architecture
 
-The SDK is split into two parts: an automatically generated layer of
-API bindings and the high-level abstractions built on top. The goal of
-this architecture is to reduce the amount of low-level detail stored
-in the hand-written code, since this detail is hard to keep in sync
-with the API evolution. By automatically generating the bindings
-from up-to-date API specs the underlying low-level bindings can be
-reasonably expected to be compatible and incompatibilities in the
-calls to those bindings can be caught with Pydantic type checking
-and linting.
+The SDK is based on a layered approach of API bindings and the abstractions
+built on top of them. The basic idea is that the API bindings only focus on
+transformations between the API calls and the higher-level, abstracted
+models.
 
-Therefore API compatibility is reduced to code-level detail as much
-as possible, with the low-level compatibility being handled by
-[OpenAPI Generator](https://openapi-generator.tech/). All code
-related to the API bindings is under the `bindings` folder. The code
-stored in there should not be touched, modifications should be
-carried out by replacing or modifying the OpenAPI specification
-files (e.g. `qos-api.json` or `location-api.json`) stored in there
-and regenerating the code using `generate-bindings.sh`.
+The API bindings live in `network_as_code/api/` and each API "product" has
+its own API implementation in its own file. These API bindings are not
+exposed as a public interface and developers shouldn't call them directly
+from applications.
 
-The resulting code in the `bindings` directory is imported as
-libraries by the high-level abstractions in the `network_as_code`
-module. Note that when adding a new API, you need to add it as
-a vendored dependency in `pyproject.toml`.
+The abstractions are further split into three categories:
+- Namespaces (inside `network_as_code/namespaces`)
+- Models (inside `network_as_code/models`)
+- Errors (inside `network_as_code/errors`)
+
+### Namespaces
+
+Namespaces are a way to group functions in a particular area together. These
+namespaces are imported in `network_as_code/client.py` and exposed as properties
+of the client object, allowing them to be accessed like this:
+
+```py
+client = NetworkAsCodeClient(...)
+
+client.<namespace>.<method>(...)
+```
+
+Namespaces generally call into the API bindings to query or modify Network as Code
+resources.
+
+### Models
+
+Models, as the name implies, are representations of resources, events or
+equipment. They should be represented as classes with methods for actions
+that modify or query information related to a specific instance of the
+resource being modeled.
+
+Generally, Namespaces provide functions for producing Model objects, 
+such as retrieving one/many instances of a particular resource type.
+
+Models can also call into the API bindings for actions affecting the
+individual instance of a resource. Sometimes Models can also provide
+functionality which relates to other types of Models if those instances
+are related to the Model. An example of this would be the `Device`
+model providing methods to create or delete `QoDSession` objects:
+
+```py
+device = client.devices.get(...)
+
+session = device.create_qod_session(...)
+
+device.clear_sessions()
+```
+
+Models form the main core of the SDK and typically any type of data that
+the API deals with has an associated Model in the SDK. The SDK can also
+provide its own Models which have no direct equivalent in the API if that
+improves the abstractions.
+
+### Errors
+
+Errors are representations of different kinds of failures and exceptions
+and are typically mappings to different error codes and messages produced
+by the API.
+
+Different Error types are derived from the `NaCError` base class and they
+are raised from `httpx` error types. This way we can carry information
+from the original error in the API bindings into the `NaCErrors`.
+
+Currently the Error types exposed by the NaC SDK are generic and essentially
+just a one-to-one mapping to a particular HTTP error code. However, in the
+future these can be extended to cover more situational exceptions as needed.
 
 ## Design thinking
 
@@ -52,125 +101,86 @@ Requirements: [python-poetry](https://python-poetry.org/docs/)
 
 ### End-to-end development process
 
-Since the SDK is split into code-generated and handwritten parts,
-depending on what you are working on the workflow may be different.
+For SDK development, a Test-Driven Development methodology is highly recommended
+and at the very least test should be created immediately after a new feature or
+a modification of an existing one has been completed. This way mistakes can be
+caught earlier and refactoring of the code can be performed with less fear about
+introducing compatibility problems with the API.
 
-This section aims to clarify how to perform typical changes in
-the SDK. It also clarifies which steps can be performed in which
-order in order to maximize development efficiency.
+Tests are split into two categories: unit tests in the `tests` folder and integration
+tests in the `integration_tests` folder.
 
-In general, the SDK is always downstream of specification and
-often downstream of API implementation. This means that the
-process usually goes like this:
+Unit tests use the old definition of "unit", meaning that the intention is not to
+tests single functions or classes in isolation, but execute test cases which can
+be run independently of external systems and in parallel (no dependency between
+test runs). Therefore our unit tests often look like full scenario tests, except
+they are run against a mocked API.
 
-```
-+---------------------+
-|                     |
-|  High-level spec    |
-|                     |
-+---------+-----------+
-          |
-          |
-          |
-+---------+-----------+
-|                     |
-|  API implementation |
-|                     |
-+---------+-----------+
-          |
-          |
-          |
-+---------+-----------+
-|                     |
-|   OAS generation    |
-|                     |
-+---------------------+
-          |
-          |
-          |
-+---------+-----------+
-|                     |
-|   Code generation   |
-|                     |
-+---------+-----------+
-          |
-          |
-          |
-+---------+-----------+
-|                     |
-|    Abstraction      |
-|                     |
-+---------------------+
-```
+Integration tests often look similar to the unit tests, but they are executed against
+an actual API instance. From the SDK point of view it doesn't matter whether the
+API calls are actually executed against a simulator environment, since the main
+aim of the SDK integration tests is to verify that the API bindings are compatible
+with the API.
 
-Essentially, features are outlined in a high-level specification,
-which is used to inform the API implementation. The OAS spec is
-then derived from the API implementation and code generation used
-to integrate the API into the SDK. Abstractions are then built
-on top of the generated code to expose a nicer interface.
+Development usually starts with an OpenAPI specification for a new API feature.
+The API implementation may not be ready or deployed yet, so the first part of
+development will likely take place against mocks. 
 
-However, an alternative workflow can be followed for more
-developer efficiency without being blocked by API implementation
-as much:
+The developer should create new tests in the `tests` folder (should
+use existing files, if the API product already has some tests or
+create a new file for an entirely new API product).  These mocked
+tests use `pytest_httpx` as the mock library. The tests should
+construct mock objects to represent different scenarios as accurately
+as possible based on the API behavior in the OpenAPI specification.
+Then the SDK code should be modified to make these tests pass.
 
-```
-+---------------------+
-|                     |
-|  High-level spec    +--------------------
-|                     |                   |
-+---------+-----------+                   |
-          |                               |
-          |                               |
-          |                               |
-+---------+-----------+       +-----------+------------+
-|                     |       |                        |
-|  API implementation |       |   Abstraction w/ stubs |
-|                     |       |                        |
-+---------+-----------+       +-----------+------------+
-          |                               |
-          |                               |
-          |                               |
-+---------+-----------+                   |
-|                     |                   |
-|   OAS generation    |                   |
-|                     |                   |
-+---------------------+                   |
-          |                               |
-          |                               |
-          |                               |
-+---------+-----------+      +------------+-------------+
-|                     |      |                          |
-|   Code generation   +------+ Connect API+abstractions |
-|                     |      |                          |
-+---------+-----------+      +--------------------------+
-```
+Developers can either write one test at a time and make the test pass
+(traditional TDD style) or write a larger number of tests up-front and
+make these tests pass in one go. However, unless the developer has a
+particular preference, the first option is recommended.
 
-This approach allows you to create the high-level interfaces concurrent
-to the actual API implementation, assuming that the high-level spec
-is sufficiently clear about how the abstractions may look like.
+A feature can already be merged when only the unit tests have passed,
+but if API has already been deployed then integration tests should be
+included in the merge request. Otherwise integration tests should be
+provided as an additional MR.
 
-The abstractions in this case would need to be coded against mocks and
-stubs pending the actual implementation. However, this should only
-leave the final integration of generated code as the last necessary
-step towards integrating a change.
+For integration testing more or less the same scenarios should be
+considered as with unit tests. However, it's worth noting that
+integration tests will run slower than unit tests, so some minor
+scenarios may be omitted. In general it is best to be thorough though.
+Integration tests __never__ run against mocks, so the use of
+`pytest_httpx` is entirely forbidden in integration tests.
 
-#### Integrating new / changed APIs
+A feature which passes all of its unit tests and integration tests
+can be considered complete.
 
-The workflow of integrating new or changed APIs mostly requires work
-in the code generation and OAS specification massaging, the high-level
-abstraction work is typically very light.
+### Dealing with API issues, flaky tests, untestable scenarios - xfails and skips
 
-Assuming process workflow 1 (no high-level abstractions up-front),
-the process for this consists of these steps:
+Sometimes the API may introduce bugs which break existing tests or
+make it impossible for some new tests to succeed. These should be
+reported to the API team for proper correction.
 
-1. Acquire new OAS specification file containing the change
-2. Massage the OAS specification to include security headers and necessary changes
-3. Run code generation to create a client library
-4. Include generated client library as a vendored dependency of the project
-5. Import client library under  `network_as_code/api/client.py` and initialize it inside `APIClient`
-6. Create high-level abstractions, hook up calls from models to the `APIClient`
+However, there may be situations when a correction cannot be issued
+in time and the SDK must release with failing tests. For this,
+the [Pytest xfail functionality can be used](https://docs.pytest.org/en/6.2.x/skipping.html).
+The SDK configures xfail to be strict, meaning that a successful
+xfailed test is a test failure. If an xfailed test starts working
+correctly, the xfail should be removed.
 
-##### Acquiring new OAS specification
+Skips should only be used if a particular functionality is not
+expected to be delivered or if a particular scenario can never
+actually happen. Skips should be used sparingly otherwise or
+preferably not at all.
+
+Flaky tests, ones that sometimes work and sometimes don't,
+are an indication of a bug and therefore should be corrected.
+Tests should always be written in a way that they deterministically
+succeed or fail and API behavior should also match this expectation.
+Our expectation is that the API team provides a predictable
+environment to be tested against and deviations from this
+expectation should be considered issues to be fixed.
+
+### Acquiring new OAS specification from API implementation
 
 The API service implementations use FastAPI and are developed at https://gitlabe2.ext.net.nokia.com/nwac/api
 It is possible to launch the individual services using `uvicorn` like so:
@@ -190,145 +200,6 @@ FastAPI specification view, which matches that of Swagger. It also has a link
 to http://localhost:8000/openapi.json which contains the generated OAS spec.
 
 You can then just download that into any directory you want.
-
-##### Massaging the OAS specification
-
-By default, the OAS specification lacks information about security keys
-and may require further changes.
-
-One example of necessary changes arises when a field sometimes returns
-null values. By default FastAPI doesn't reflect this change in the spec,
-so you may have to add this information yourself. To do this, just add
-`"nullable": true` to the specification file in the required schema
-field:
-
-```json
-"country": {
-    "title": "Country",
-    "type": "string",
-    "nullable": true
-}
-```
-
-For authentication options, you should include the following under `components`:
-
-```json
-    "securitySchemes": {
-      "RapidApiKey": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-RapidAPI-Key"
-      }
-    },
-```
-
-And add the following field to the specification:
-
-```json
-  "security": [
-    {
-       "RapidApiKey": []
-    }
-  ]
-```
-
-##### Code generation using OpenAPI-Generator
-
-**NOTE**: OpenAPI-Generator requires Java. It is recommended to use OpenJDK 11, newer or older versions may not work correctly.
-
-A script for code generation is included in `binding_generation/generate-binding.sh`.
-To generate new API bindings, copy OAS specs into `binding_generation` and modify
-the script and then run it. To regenerate bindings for changed APIs, replace the existing
-OAS specification file and rerun the script.
-
-##### Vendoring generated code as dependencies
-
-In order for the project to use the generated code, it must be included as a vendored
-dependency of the project.
-
-To do this, open `pyproject.toml` and check the `packages` section:
-
-```toml
-packages = [
-    { include = "network_as_code" },
-    { include = "qos_client", from = "binding_generation"},
-    { include = "location_client", from = "binding_generation"}
-]
-```
-
-You must modify this to include the generated client library from `binding_generation`.
-Otherwise the package may work locally but it won't install correctly on other systems.
-
-After that, add the client library as a dependency:
-
-```toml
-[tool.poetry.dependencies]
-...
-location_client = {path = "./binding_generation/location_client", develop = true}
-```
-
-This ensures that the library can be imported.
-
-##### Importing generated code in APIClient
-
-The `network_as_code/api/client.py` file contains the linkages to generated code.
-
-First import the API from the generated client library:
-
-```python
-import location_client.api_client as location_api_client
-
-from location_client.apis.tags import location_api
-```
-
-Then inside the `__init__()` method include a base_url parameter for the API
-and initialize the client library as a member of the `APIClient` object:
-
-```python
-class APIClient:
-    # ...
-    def __init__(
-        self,
-        token: str,
-        # ...
-        location_base_url: str = "https://location-verification.p-eu.rapidapi.com",
-        **kwargs,
-    ):
-        # ...
-        location_config = location_api_client.Configuration(
-            host=location_base_url,
-            api_key={
-                "RapidApiKey": token
-            }
-        )
-
-        self._location_client = location_api_client.ApiClient(
-            location_config,
-            header_name="X-RapidAPI-Host",
-            header_value="location-verification.nokia-dev.rapidapi.com"
-        )
-
-        self.location = location_api.LocationApi(self._location_client)
-```
-
-##### Create high-level abstractions
-
-Abstractions should be created in the `network_as_code` folder, split
-into `models`, `errors` and `namespaces`. 
-
-Models represent concepts and group functionality that is specific to
-a specific instance of data returned from the API, or an abstract concept
-around the APIs, such as a specific Device.
-
-Errors provide exception types that are context-specific and informative
-to the third-party developers. High-level abstractions should aim to use
-high-level exception types rather than relying on HTTPExceptions if
-possible.
-
-Namespaces are used to group functionality together and to provide the
-initial path from the `NetworkAsCodeClient` to the functionality. Their
-main purpose is to make functionality discoverable using code completion
-frameworks.
 
 ### Branch workflow
 
@@ -353,7 +224,7 @@ are. Make the functionality discoverable using auto-completion. If
 two features function similarly, make sure they have a consistent
 appearance to the developer.
 
-## Testing
+## Testing and test coverage
 
 Using [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/config.html) for reporting line coverage,
 which is a wrapper for the [`coverage`](https://coverage.readthedocs.io/en/6.2/index.html) library.
