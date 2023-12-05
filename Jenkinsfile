@@ -19,6 +19,12 @@ pipeline {
             tty: true
             command:
             - cat
+          - name: sonar
+            image: registry1-docker-io.repo.cci.nokia.net/sonarsource/sonar-scanner-cli:5.0.1
+            workingDir: /home/jenkins
+            tty: true
+            command:
+            - cat
       """
     }
   }
@@ -50,6 +56,8 @@ pipeline {
     PYPI_USERNAME = credentials('PYPI_USERNAME')
     PYPI_PASSWORD = credentials('PYPI_PASSWORD')
     NAC_TOKEN = credentials('NAC_TOKEN')
+    SONAR_PATH = "/opt/sonar-scanner/bin"
+    SONAR_TOKEN = "sonar-token"
   }
   options {
     gitLabConnection('gitlab-ee2')  // the GitLab connection name defined in Jenkins, check the value from pipeline configure UI
@@ -59,6 +67,24 @@ pipeline {
     timestamps()
   }
   stages {
+    stage('Sonar Scan') {
+      steps {
+        withCredentials([string(credentialsId: "${SONAR_TOKEN}", variable: 'sonar_login')]) {
+          container('sonar') {
+            script {
+              sh """
+                export PATH=$PATH:${SONAR_PATH}
+                sonar-scanner \
+                  -Dsonar.projectKey=nac-sdk-py \
+                  -Dsonar.sources=. \
+                  -Dsonar.host.url=${SONARQUBE_HTTPS_URL} \
+                  -Dsonar.login=${sonar_login} \
+              """
+            }
+          }
+        }
+      }
+    }
     stage('Test') {
       steps {
         container('beluga') {
