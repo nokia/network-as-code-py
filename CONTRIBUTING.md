@@ -209,13 +209,7 @@ You can then just download that into any directory you want.
 4. Commit and push your branch
 5. Submit merge request
 
-If your change involves integrating a new or changed API, you should
-include the OpenAPI spec in the `bindings` folder and generate
-API bindings from it. Your high-level abstractions should only call
-the API through these bindings and you should always expose
-functionality to the developers through the high-level abstractions.
-
-The key part of designing and implementing the high-level abstractions
+The key part of designing and implementing high-level abstractions
 is to consider the third-party developer perspective. Consider if the
 terminology and wording in your function names or parameters is
 understandable. Consider in what context a particular functionality
