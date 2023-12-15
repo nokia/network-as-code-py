@@ -66,32 +66,15 @@ pipeline {
     disableConcurrentBuilds()
     timestamps()
   }
+
   stages {
-    stage('Sonar Scan') {
-      steps {
-        withCredentials([string(credentialsId: "${SONAR_TOKEN}", variable: 'sonar_login')]) {
-          container('sonar') {
-            script {
-              sh """
-                export PATH=$PATH:${SONAR_PATH}
-                sonar-scanner \
-                  -Dsonar.projectKey=nac-sdk-py \
-                  -Dsonar.sources=. \
-                  -Dsonar.host.url=${SONARQUBE_HTTPS_URL} \
-                  -Dsonar.login=${sonar_login} \
-              """
-            }
-          }
-        }
-      }
-    }
     stage('Test') {
       steps {
         container('beluga') {
           script {
             sh """
               python3 -m poetry --no-cache install
-              python3 -m poetry run pytest --cov=network_as_code
+              poetry run pytest --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
             """
           }
         }        
@@ -107,6 +90,26 @@ pipeline {
             """
           }
         }        
+      }
+    }
+    stage('Sonar Scan') {
+      steps {
+        withCredentials([string(credentialsId: "${SONAR_TOKEN}", variable: 'sonar_login')]) {
+          container('sonar') {
+            script {
+              sh """
+                export PATH=$PATH:${SONAR_PATH}
+                sonar-scanner \
+                  -Dsonar.projectKey=nac-sdk-py \
+                  -Dsonar.sources=./network_as_code \
+                  -Dsonar.tests=./tests \
+                  -Dsonar.host.url=${SONARQUBE_HTTPS_URL} \
+                  -Dsonar.login=${sonar_login} \
+                  -Dsonar.python.coverage.reportPaths=coverage.xml
+              """
+            }
+          }
+        }
       }
     }
     stage('Build') {
