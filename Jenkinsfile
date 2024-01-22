@@ -55,6 +55,7 @@ pipeline {
         PYPI_REPOSITORY = credentials('PYPI_REPOSITORY')
         PYPI_USERNAME = credentials('PYPI_USERNAME')
         PYPI_PASSWORD = credentials('PYPI_PASSWORD')
+        PYPI_TOKEN = credentials('PYPI_TOKEN')
         NAC_TOKEN = credentials('NAC_TOKEN')
         SONAR_PATH = "/opt/sonar-scanner/bin"
         SONAR_TOKEN = "sonar-token"
