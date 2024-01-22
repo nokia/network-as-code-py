@@ -155,7 +155,7 @@ pipeline {
                             sh '''
                                 python3 -m poetry config pypi-token.pypi ${PYPI_TOKEN}
                                 python3 -m poetry build
-                                python3 -m poetry publish --no-interaction
+                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry publish --no-interaction
                             '''
                         }
                     }
