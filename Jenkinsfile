@@ -113,6 +113,17 @@ pipeline {
                 }
             }
         }
+        stage('Audit') {
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                            python3 -m poetry run pip-audit
+                        """
+                    }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 container('beluga') {
