@@ -45,6 +45,7 @@ class QodAPI:
         self,
         sid,
         ipv4_address,
+        ipv6_address,
         phone_number,
         profile,
         service_ipv4,
@@ -99,6 +100,9 @@ class QodAPI:
                 session_resource["device"]["ipv4Address"][
                     "publicPort"
                 ] = ipv4_address.public_port
+
+        if ipv6_address:
+            session_resource["device"]["ipv6Address"] = ipv6_address
 
         if phone_number:
             session_resource["device"]["phoneNumber"] = phone_number
