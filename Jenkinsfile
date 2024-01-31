@@ -113,6 +113,17 @@ pipeline {
                 }
             }
         }
+        stage('Audit') {
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pip-audit
+                        """
+                    }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 container('beluga') {
