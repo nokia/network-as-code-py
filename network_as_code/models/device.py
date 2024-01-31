@@ -129,6 +129,7 @@ class Device(BaseModel):
         session = self._api.sessions.create_session(
             self.network_access_identifier,
             self.ipv4_address,
+            self.ipv6_address,
             self.phone_number,
             profile,
             service_ipv4,

@@ -37,14 +37,13 @@ def test_creating_a_session_mock(httpx_mock, client):
             },
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
-                "ipv6Address": "2041:0000:140F::875B:131B"
             },
             "devicePorts": None,
             "applicationServerPorts": None
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", profile="QOS_L")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
     assert session.status == mock_response["qosStatus"]
     
     httpx_mock.add_response(
@@ -52,6 +51,54 @@ def test_creating_a_session_mock(httpx_mock, client):
     )
     session.delete()
 
+
+def test_creating_a_session_with_ipv6(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), ipv6_address = "2266:25::12:0:ad12", phone_number = "9382948473")
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                    "privateAddress": "1.1.1.2",
+                    "publicPort": 80
+                },
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv6Address": "2266:25::12:0:ad12",
+                "phoneNumber": "9382948473"
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8",
+                "ipv6Address": "2266:25::12:0:ad12"
+            },
+            "devicePorts": None,
+            "applicationServerPorts": None
+        }).encode('utf-8'),
+        json=mock_response)
+
+    """
+
+'{"qosProfile": "QOS_L", "device": {"ipv4Address": {"publicAddress": "1.1.1.2", "privateAddress": "1.1.1.2", "publicPort": 80}, "networkAccessIdentifier": "testuser@open5glab.net", "ipv6Address": "2266:25::12:0:ad12", "phoneNumber": "9382948473"}, "applicationServer": {"ipv4Address": "5.6.7.8", "ipv6Address": "2266:25::12:0:ad12"}, "devicePorts": null, "applicationServerPorts": null}' body amongst:
+'{"qosProfile": "QOS_L", "device": {"ipv4Address": {"publicAddress": "1.1.1.2", "privateAddress": "1.1.1.2", "publicPort": 80}, "ipv6Address": "2266:25::12:0:ad12", "networkAccessIdentifier": "testuser@open5glab.net", "phoneNumber": "9382948473"}, "applicationServer": {"ipv4Address": "5.6.7.8", "ipv6Address": "2266:25::12:0:ad12"}, "devicePorts": null, "applicationServerPorts": null}' body
+    """
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2266:25::12:0:ad12", profile="QOS_L")
+    assert session.status == mock_response["qosStatus"]
+    
+    httpx_mock.add_response(
+        json={}
+    )
+    session.delete()
 
 def test_getting_one_session(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
