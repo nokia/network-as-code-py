@@ -20,6 +20,8 @@ from network_as_code.api.client import APIClient
 
 from ..errors import error_handler
 
+from datetime import datetime
+
 ALIASES = {"start": "from", "end": "to"}
 
 
@@ -68,11 +70,11 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         service_ports (Union[PortsSpec, None]): List of ports for a service.
         profile (str): Name of the requested QoS profile.
         status(str): Status of the requested QoS.
-        started_at (Union[int, None]): Starting time of the session.
-        expires_at (Union[int, None]): Expiry time of the session.
+        started_at (Union[datetime, None]): Starting time of the session.
+        expires_at (Union[datetime, None]): Expiry time of the session.
     #### Public Methods:
         delete (None): Deletes a given session.
-        duration (int | None): Returns the duration of a given session.
+        duration (timedelta | None): Returns the duration of a given session.
     #### Static Methods:
         convert_session_model (Session): Returns A `Session` instance.
     """
@@ -85,8 +87,8 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     # service_ports: Union[PortsSpec, None]
     profile: str
     status: str
-    started_at: Union[int, None]
-    expires_at: Union[int, None]
+    started_at: Union[datetime, None]
+    expires_at: Union[datetime, None]
     # notification_url: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:
@@ -102,7 +104,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     def duration(self):
         """Returns the duration of a given session."""
         if self.started_at and self.expires_at:
-            return self.expires_at - self.started_at
+            return  self.expires_at - self.started_at
         else:
             return None
 
@@ -116,10 +118,10 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (
-            int(session["startedAt"]) if session.get("startedAt", False) else None
+            datetime.fromtimestamp(session["startedAt"]) if session.get("startedAt", False) else None
         )
         expires_at = (
-            int(session["expiresAt"]) if session.get("expiresAt", False) else None
+            datetime.fromtimestamp(session["expiresAt"]) if session.get("expiresAt", False) else None
         )
         return QoDSession(
             api=api,
