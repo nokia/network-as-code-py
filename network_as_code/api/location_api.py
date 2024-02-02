@@ -41,6 +41,8 @@ class LocationVerifyAPI:
 
         response = self.client.post(url="/verify", json=body)
 
+        error_handler(response)
+
         return response.json()["verificationResult"] == "TRUE"
 
 
