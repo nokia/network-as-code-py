@@ -1,4 +1,6 @@
 
+from datetime import datetime, timedelta
+import pdb
 import pytest
 
 import os
@@ -93,6 +95,9 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
     """
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2266:25::12:0:ad12", profile="QOS_L")
+    assert type(session.started_at) == datetime
+    assert type(session.expires_at) == datetime
+    assert type(session.duration()) == timedelta
     assert session.status == mock_response["qosStatus"]
     
     httpx_mock.add_response(
