@@ -57,7 +57,7 @@ def test_creating_a_qos_flow_with_duration(client, device):
     assert session.started_at
     assert session.expires_at
 
-    assert session.duration() == 60
+    assert session.duration().seconds == 60
 
     session.delete()
 
