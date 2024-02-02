@@ -87,7 +87,7 @@ pipeline {
                     script {
                         sh """
                             env | grep gitlab
-                            python3 -m poetry run pytest integration_tests/
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest integration_tests/
                         """
                     }
                 }        
