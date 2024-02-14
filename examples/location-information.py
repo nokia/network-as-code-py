@@ -47,9 +47,9 @@ device = client.devices.get("device@testcsp.net",
                                                           public_port=80)
 )
  
-# max_age is a mandatory parameter
+# The default value for max_age parameter is 60
 # The location object contains fields for longitude and latitude
-location = device.location(max_age=60)
+location = device.location()
  
 longitude = location.longitude
 latitude = location.latitude

@@ -53,7 +53,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
         }).encode("utf-8")
     )
 
-    location = device.location(max_age=60)
+    location = device.location()
     
     assert location.longitude == 0.0
     assert location.latitude == 0.0
@@ -90,7 +90,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
         }
     )
 
-    assert device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=60)
+    assert device.verify_location(longitude=19, latitude=47, radius=10_000)
 
 def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
@@ -124,7 +124,7 @@ def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_m
     )
 
     with pytest.raises(AuthenticationException):
-        device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=60)
+        device.verify_location(longitude=19, latitude=47, radius=10_000)
 
 def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
@@ -158,4 +158,4 @@ def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock
     )
 
     with pytest.raises(ServiceError):
-        device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=60)
+        device.verify_location(longitude=19, latitude=47, radius=10_000)

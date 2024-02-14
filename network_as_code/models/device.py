@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from os import access
+import pdb
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union, Optional
 
@@ -176,7 +177,7 @@ class Device(BaseModel):
     def __convert_session_model(self, session) -> QoDSession:
         return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
 
-    def location(self, max_age: int) -> Location:
+    def location(self, max_age: int=60) -> Location:
         """Returns the location of the device.
 
          #### Args:
@@ -228,7 +229,7 @@ class Device(BaseModel):
         )
 
     def verify_location(
-        self, longitude: float, latitude: float, radius: float, max_age: int
+        self, longitude: float, latitude: float, radius: float, max_age: int=60
     ) -> bool:
         """Verifies the location of the device(Returns boolean value).
 
@@ -236,7 +237,7 @@ class Device(BaseModel):
             longitude (float): longitude of the device.
             latitude (float): longitude of the device.
             radius (float): radius of the area in meters.
-            max_age (int | None): Max acceptable age for location info in seconds
+            max_age (int | None): Max acceptable age for location info in seconds, Default=60s
 
         #### Example:
             ```python
@@ -244,7 +245,7 @@ class Device(BaseModel):
             ```
         """
         return self._api.location_verify.verify_location(
-            latitude, longitude, self, radius, max_age
+            latitude, longitude, self, radius
         )
 
     def to_json_dict(self):

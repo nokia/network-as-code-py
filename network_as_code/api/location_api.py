@@ -26,7 +26,7 @@ class LocationVerifyAPI:
             headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
         )
 
-    def verify_location(self, latitude, longitude, device, radius, max_age):
+    def verify_location(self, latitude, longitude, device, radius, max_age=60):
         body = {
             "device": device.to_json_dict(),
             "area": {
@@ -53,7 +53,7 @@ class LocationRetrievalAPI:
             headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
         )
 
-    def get_location(self, device, max_age):
+    def get_location(self, device, max_age=60):
         body = {"device": device.to_json_dict()}
 
         if max_age:
