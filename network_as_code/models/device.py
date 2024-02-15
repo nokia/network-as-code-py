@@ -245,7 +245,7 @@ class Device(BaseModel):
             ```
         """
         return self._api.location_verify.verify_location(
-            latitude, longitude, self, radius
+            latitude, longitude, self, radius, max_age
         )
 
     def to_json_dict(self):
