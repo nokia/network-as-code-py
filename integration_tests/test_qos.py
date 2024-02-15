@@ -6,11 +6,11 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+    device = client.devices.get("test-device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
 def test_getting_a_device(client, device):
-    assert device.network_access_identifier == "testuser@testcsp.net"
+    assert device.network_access_identifier == "test-device@testcsp.net"
 
 def test_creating_a_qos_flow(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
