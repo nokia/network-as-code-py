@@ -88,12 +88,6 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
         }).encode('utf-8'),
         json=mock_response)
 
-    """
-
-'{"qosProfile": "QOS_L", "device": {"ipv4Address": {"publicAddress": "1.1.1.2", "privateAddress": "1.1.1.2", "publicPort": 80}, "networkAccessIdentifier": "testuser@open5glab.net", "ipv6Address": "2266:25::12:0:ad12", "phoneNumber": "9382948473"}, "applicationServer": {"ipv4Address": "5.6.7.8", "ipv6Address": "2266:25::12:0:ad12"}, "devicePorts": null, "applicationServerPorts": null}' body amongst:
-'{"qosProfile": "QOS_L", "device": {"ipv4Address": {"publicAddress": "1.1.1.2", "privateAddress": "1.1.1.2", "publicPort": 80}, "ipv6Address": "2266:25::12:0:ad12", "networkAccessIdentifier": "testuser@open5glab.net", "phoneNumber": "9382948473"}, "applicationServer": {"ipv4Address": "5.6.7.8", "ipv6Address": "2266:25::12:0:ad12"}, "devicePorts": null, "applicationServerPorts": null}' body
-    """
-
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2266:25::12:0:ad12", profile="QOS_L")
     assert type(session.started_at) == datetime
     assert type(session.expires_at) == datetime
