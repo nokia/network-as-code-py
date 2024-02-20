@@ -338,24 +338,22 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, int]]]]):
+    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> AreaOfService | None:
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
         #### Args:
-            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with polygon list value.
+            areaOfServiceDict (Dict[str, List[Dict[str, float]]]): An Area Of Service object with polygon list value.
         """
         if areaOfServiceDict:
             polygon = areaOfServiceDict["polygon"]
-            return (
-                AreaOfService(
+            return AreaOfService(
                     polygon=[
                         Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
                         Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
                         Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
                         Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
                     ]
-                ),
             )
         else:
             return None
