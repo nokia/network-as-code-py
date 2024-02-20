@@ -78,5 +78,5 @@ class Notification(BaseModel):
 def receive_notification(notification: Notification):
     if notification.event.eventDetail.deviceStatus == "REACHABLE":
         print("Device is available")
-    else if notification.event.eventDetail.deviceStatus == "UNREACHABLE":
+    elif notification.event.eventDetail.deviceStatus == "UNREACHABLE":
         print("Device is not available")
