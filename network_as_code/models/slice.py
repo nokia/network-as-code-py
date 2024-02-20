@@ -14,6 +14,7 @@
 
 from os import access
 from urllib.error import HTTPError
+from httpx import Response
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
 from enum import Enum
@@ -169,7 +170,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self._api = api
         self._sessions = []
 
-    def activate(self) -> None:
+    def activate(self) -> Response | None:
         """Activate network slice.
 
         #### Args:
