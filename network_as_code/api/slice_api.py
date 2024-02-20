@@ -48,6 +48,7 @@ class SliceAPI:
 
     def create(
         self,
+        modify: bool,
         network_id,
         slice_info,
         notification_url,
@@ -102,7 +103,12 @@ class SliceAPI:
                 device_downlink_throughput
             )
 
-        response = self.client.post(url="/slices", json=body)
+        if modify:
+            if name is None:
+                raise ValueError('Name is mandatory for modify')
+            response = self.client.put(url=f"/slices/{name}", json=body)
+        else:
+            response = self.client.post(url="/slices", json=body)
 
         error_handler(response)
 

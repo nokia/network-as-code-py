@@ -97,7 +97,9 @@ class Slices(Namespace):
             api=self.api,
             sid=None,
             state="NOT_SUBMITTED",
+            notification_url=notification_url,
             name=name,
+            notification_auth_token=notification_auth_token,
             network_identifier=network_id,
             slice_info=slice_info,
             area_of_service=area_of_service,
@@ -112,6 +114,7 @@ class Slices(Namespace):
         # Error Case: Creating Slice
         try:
             slice_data = self.api.slicing.create(
+                modify = False,
                 network_id=network_id,
                 slice_info=slice_info,
                 notification_url=notification_url,
@@ -156,6 +159,7 @@ class Slices(Namespace):
             sid=slice_data["csi_id"],
             state=slice_data["state"],
             name=slice_data["slice"]["name"],
+            notification_url=slice_data["slice"]["notificationUrl"],
             network_identifier=Slice.network_identifier_from_dict(
                 slice_data["slice"]["networkIdentifier"]
             ),
@@ -199,6 +203,7 @@ class Slices(Namespace):
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
+                notification_url=slice["slice"]["notificationUrl"],
                 network_identifier=Slice.network_identifier_from_dict(
                     slice["slice"]["networkIdentifier"]
                 ),
