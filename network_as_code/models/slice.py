@@ -63,12 +63,12 @@ class Throughput(BaseModel):
     A class representing the `Throughput` model.
 
     #### Public Attributes:
-            guaranteed (int): the guaranteed throughput amount in integer
-            maximum (int): the maximum throughput amount in integer
+            guaranteed (float): the guaranteed throughput in kbps
+            maximum (float): the maximum throughput in kbps
     """
 
-    guaranteed: Optional[int]
-    maximum: Optional[int]
+    guaranteed: Optional[float]
+    maximum: Optional[float]
 
 
 class Point(BaseModel):
@@ -319,12 +319,12 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def throughput(throughputdict: Optional[Dict[int, int]]):
+    def throughput(throughputdict: Optional[Dict[str, float]]):
         """Returns a `Throughput` instance.
 
         Assigns the `guaranteed` and `maximum`.
         #### Args:
-            throughputDict (Dict[int, int]): A Throughput object with `guaranteed` and `maximum` values.
+            throughputDict (Dict[str, float]): A Throughput object with `guaranteed` and `maximum` values.
         """
         if throughputdict:
             return Throughput(
