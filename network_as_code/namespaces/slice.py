@@ -149,11 +149,11 @@ class Slices(Namespace):
             sid=slice_data["csi_id"],
             state=slice_data["state"],
             name=slice_data["slice"]["name"],
-            network_identifier=Slice.network_identifier(
+            network_identifier=Slice.network_identifier_from_dict(
                 slice_data["slice"]["networkIdentifier"]
             ),
-            slice_info=Slice.slice_info(slice_data["slice"]["sliceInfo"]),
-            area_of_service=Slice.area_of_service(
+            slice_info=Slice.slice_info_from_dict(slice_data["slice"]["sliceInfo"]),
+            area_of_service=Slice.area_of_service_from_dict(
                 slice_data["slice"].get("areaOfService")
             ),
             max_data_connections=slice_data["slice"].get("maxDataConnections"),
@@ -192,11 +192,11 @@ class Slices(Namespace):
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
-                network_identifier=Slice.network_identifier(
+                network_identifier=Slice.network_identifier_from_dict(
                     slice["slice"]["networkIdentifier"]
                 ),
-                slice_info=Slice.slice_info(slice["slice"]["sliceInfo"]),
-                area_of_service=Slice.area_of_service(
+                slice_info=Slice.slice_info_from_dict(slice["slice"]["sliceInfo"]),
+                area_of_service=Slice.area_of_service_from_dict(
                     slice["slice"].get("areaOfService")
                 ),
                 max_data_connections=slice["slice"].get("maxDataConnections"),

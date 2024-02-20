@@ -265,7 +265,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         )
 
     @staticmethod
-    def network_identifier(networkIdentifierDict: Optional[Dict[str, str]]):
+    def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
 
         Assigns the `mcc` and `mnc`.
@@ -280,7 +280,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def slice_info(sliceInfoDict: Optional[Dict[str, str]]):
+    def slice_info_from_dict(sliceInfoDict: Optional[Dict[str, str]]):
         """Returns a `SliceInfo` instance.
 
         Assigns the `service_type` and `differentiator`.
@@ -296,7 +296,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service(areaOfServiceDict: Optional[Dict[str, List[Dict[str, int]]]]):
+    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, int]]]]):
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
