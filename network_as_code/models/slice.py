@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 from os import access
+import datetime
 from urllib.error import HTTPError
 from httpx import Response
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
@@ -127,6 +129,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         deactivate (None): Deactivate a network slice. The slice state must be active to be able to perform this operation.
         delete (None): Delete network slice. The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
+        wait_done (str): Wait till state of the network slice is not "PENDING", anymore. Returns new state.
 
     #### Callback Functions:
         on_creation ():
@@ -263,6 +266,27 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
+
+    async def wait_done(self, timeout: datetime.timedelta = datetime.timedelta(seconds=3600), poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10)) -> str:
+        """Wait for an ongoing order to complete.
+           I.e. not being in "PENDING" state.
+           Returns new state.
+
+        #### Args:
+            timeout (datetime.timedelta): Timeout of waiting. Default is 1h.
+            poll_backoff (datetime.timedelta): Backoff time between polling.
+
+        #### Example:
+            ```python
+            new_state = slice.wait_done()
+            ```
+        """
+        poll_backoff_seconds = float(poll_backoff.total_seconds())
+        end = datetime.datetime.now() + timeout
+        while self.state == "PENDING" and datetime.datetime.now() < end:
+            await asyncio.sleep(poll_backoff_seconds)
+            self.refresh()
+        return self.state
 
     def attach(
         self,
