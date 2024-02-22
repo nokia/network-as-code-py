@@ -14,7 +14,7 @@ from network_as_code.errors import AuthenticationException, NotFound, ServiceErr
 MOCK_SLICE = {
     "slice": {
             "name": "sliceone",
-            "notificationUrl": "https://me",
+            "notificationUrl": "",
             "notificationAuthToken": "samplenotificationtoken",
             "networkIdentifier": {
                 "mcc": "236",
@@ -250,39 +250,7 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
-    assert response is not None
     assert response.sid == MOCK_SLICE['csi_id']
-    assert response.notification_url == MOCK_SLICE['slice']['notificationUrl']
-
-def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
-    mock_slice_no_csi = MOCK_SLICE
-    del mock_slice_no_csi['csi_id']
-    httpx_mock.add_response(
-        method="GET",
-        json=mock_slice_no_csi,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{mock_slice_no_csi['slice']['name']}"
-    )
-
-    response = client.slices.get(MOCK_SLICE['slice']['name'])
-    assert response is not None
-    assert response.sid is None
-
-def test_modify_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
-    httpx_mock.add_response(
-        method="GET",
-        json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
-    )
-    httpx_mock.add_response(
-        method="PUT",
-        json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
-    )
-
-    slice = client.slices.get(MOCK_SLICE['slice']['name'])
-    assert slice is not None
-
-    slice.modify(Throughput(guaranteed=10, maximum=1000), None, None, None, 100, 100)
 
 def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(

@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
 from os import access
-import datetime
 from urllib.error import HTTPError
-from httpx import Response
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
 from enum import Enum
 
-from ..api import APIClient, Throughput as ApiThroughput
+from ..api import APIClient
 from ..models.session import QoDSession
 from ..models.location import CivicAddress, Location
 from ..models.device import Device
@@ -66,12 +63,12 @@ class Throughput(BaseModel):
     A class representing the `Throughput` model.
 
     #### Public Attributes:
-            guaranteed (float): the guaranteed throughput in kbps
-            maximum (float): the maximum throughput in kbps
+            guaranteed (int): the guaranteed throughput amount in integer
+            maximum (int): the maximum throughput amount in integer
     """
 
-    guaranteed: Optional[float]
-    maximum: Optional[float]
+    guaranteed: Optional[int]
+    maximum: Optional[int]
 
 
 class Point(BaseModel):
@@ -110,8 +107,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         sid (optional): String ID of the slice
         state (str): State of the slice (ie. NOT_SUBMITTED)
         name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
-        notification_url: Destination URL of notifications
-        notification_auth_token: Authorization token for notifications
         networkIdentifier (NetworkIdentifier): Name of the network
         sliceInfo (SliceInfo): Purpose of this slice
         areaOfService (AreaOfService): Location of the slice
@@ -129,7 +124,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         deactivate (None): Deactivate a network slice. The slice state must be active to be able to perform this operation.
         delete (None): Delete network slice. The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
-        wait_done (str): Wait till state of the network slice is not "PENDING", anymore. Returns new state.
 
     #### Callback Functions:
         on_creation ():
@@ -148,8 +142,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         max_length=64,
         regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$",
     )
-    notification_url: str
-    notification_auth_token: Optional[str]
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
     area_of_service: Optional[AreaOfService] = Field(
@@ -173,7 +165,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self._api = api
         self._sessions = []
 
-    def activate(self) -> Response | None:
+    def activate(self) -> None:
         """Activate network slice.
 
         #### Args:
@@ -200,45 +192,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if self.name:
             return self._api.slicing.deactivate(self.name)
-
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
-        if throughput is not None:
-            return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
-        return None
-
-    def modify(
-            self,
-            slice_downlink_throughput: Optional[Throughput] = None,
-            slice_uplink_throughput: Optional[Throughput] = None,
-            device_downlink_throughput: Optional[Throughput] = None,
-            device_uplink_throughput: Optional[Throughput] = None,
-            max_data_connections: Optional[int] = None,
-            max_devices: Optional[int] = None,
-        ):
-        self._api.slicing.create(
-            modify = True,
-            network_id=self.network_identifier,
-            slice_info=self.slice_info,
-            notification_url=self.notification_url,
-            notification_auth_token=self.notification_auth_token,
-            name=self.name,
-            area_of_service=self.area_of_service,
-            slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
-            slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-            device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
-            device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
-            max_data_connections = max_data_connections,
-            max_devices=max_devices
-        )
-
-        # Update model (if no exception on modify)
-        self.slice_downlink_throughput = slice_downlink_throughput
-        self.slice_uplink_throughput = slice_uplink_throughput
-        self.device_downlink_throughput = device_downlink_throughput
-        self.device_uplink_throughput = device_uplink_throughput
-        self.max_data_connections = max_data_connections
-        self.max_devices = max_devices
-
+    
     def delete(self) -> None:
         """Delete network slice.
 
@@ -266,27 +220,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
-
-    async def wait_done(self, timeout: datetime.timedelta = datetime.timedelta(seconds=3600), poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10)) -> str:
-        """Wait for an ongoing order to complete.
-           I.e. not being in "PENDING" state.
-           Returns new state.
-
-        #### Args:
-            timeout (datetime.timedelta): Timeout of waiting. Default is 1h.
-            poll_backoff (datetime.timedelta): Backoff time between polling.
-
-        #### Example:
-            ```python
-            new_state = slice.wait_done()
-            ```
-        """
-        poll_backoff_seconds = float(poll_backoff.total_seconds())
-        end = datetime.datetime.now() + timeout
-        while self.state == "PENDING" and datetime.datetime.now() < end:
-            await asyncio.sleep(poll_backoff_seconds)
-            self.refresh()
-        return self.state
 
     def attach(
         self,
@@ -332,7 +265,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         )
 
     @staticmethod
-    def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
+    def network_identifier(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
 
         Assigns the `mcc` and `mnc`.
@@ -347,7 +280,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def slice_info_from_dict(sliceInfoDict: Optional[Dict[str, str]]):
+    def slice_info(sliceInfoDict: Optional[Dict[str, str]]):
         """Returns a `SliceInfo` instance.
 
         Assigns the `service_type` and `differentiator`.
@@ -363,33 +296,35 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> AreaOfService | None:
+    def area_of_service(areaOfServiceDict: Optional[Dict[str, List[Dict[str, int]]]]):
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
         #### Args:
-            areaOfServiceDict (Dict[str, List[Dict[str, float]]]): An Area Of Service object with polygon list value.
+            areaOfServiceDict (Dict[str, List[Dict[str, int]]]): An Area Of Service object with polygon list value.
         """
         if areaOfServiceDict:
             polygon = areaOfServiceDict["polygon"]
-            return AreaOfService(
+            return (
+                AreaOfService(
                     polygon=[
                         Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
                         Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
                         Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
                         Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
                     ]
+                ),
             )
         else:
             return None
 
     @staticmethod
-    def throughput(throughputdict: Optional[Dict[str, float]]):
+    def throughput(throughputdict: Optional[Dict[int, int]]):
         """Returns a `Throughput` instance.
 
         Assigns the `guaranteed` and `maximum`.
         #### Args:
-            throughputDict (Dict[str, float]): A Throughput object with `guaranteed` and `maximum` values.
+            throughputDict (Dict[int, int]): A Throughput object with `guaranteed` and `maximum` values.
         """
         if throughputdict:
             return Throughput(

@@ -53,12 +53,6 @@ pip install --extra-index-url=https://pypi.dynamic.nsn-net.net/nac/nacpy/+simple
 ```
 > **NOTE:** The SDK is currently hosted on Nokia's [pypi repository](https://pypi.dynamic.nsn-net.net/nac/nacpy) and requires **VPN** to be properly configured. 
 
-```sh
-if ! [ -d .venv ]; then python -m venv .venv; fi
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
 ## Examples
 
 We have put some self-explanatory examples in the [examples](./examples) directory, 
