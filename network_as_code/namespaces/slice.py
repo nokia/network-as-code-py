@@ -30,8 +30,6 @@ from ..errors import NotFound, AuthenticationException, ServiceError, InvalidPar
 from urllib.error import HTTPError
 from pydantic import ValidationError
 
-from ..api import Throughput as ApiThroughput
-
 
 class Slices(Namespace):
     """Representation of a 5G network slice.
@@ -39,11 +37,6 @@ class Slices(Namespace):
     Through this class many of the parameters of a
     network slice can be configured and managed.
     """
-
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
-        if throughput is None:
-            return None
-        return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
 
     def create(
         self,
@@ -97,9 +90,7 @@ class Slices(Namespace):
             api=self.api,
             sid=None,
             state="NOT_SUBMITTED",
-            notification_url=notification_url,
             name=name,
-            notification_auth_token=notification_auth_token,
             network_identifier=network_id,
             slice_info=slice_info,
             area_of_service=area_of_service,
@@ -114,21 +105,20 @@ class Slices(Namespace):
         # Error Case: Creating Slice
         try:
             slice_data = self.api.slicing.create(
-                modify = False,
                 network_id=network_id,
                 slice_info=slice_info,
                 notification_url=notification_url,
                 area_of_service=area_of_service,
                 name=name,
                 notification_auth_token=notification_auth_token,
-                slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
-                slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-                device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
-                device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
+                slice_downlink_throughput=slice_downlink_throughput,
+                slice_uplink_throughput=slice_uplink_throughput,
+                device_downlink_throughput=device_downlink_throughput,
+                device_uplink_throughput=device_uplink_throughput,
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
-            slice.sid = slice_data.json().get("csi_id")
+            slice.sid = slice_data.json()["csi_id"]
             slice.state = slice_data.json()["state"]
         except HTTPError as e:
             if e.code == 403:
@@ -156,15 +146,14 @@ class Slices(Namespace):
         slice_data = self.api.slicing.get(id).json()
         slice = Slice(
             api=self.api,
-            sid=slice_data.get("csi_id"),
+            sid=slice_data["csi_id"],
             state=slice_data["state"],
             name=slice_data["slice"]["name"],
-            notification_url=slice_data["slice"].get("notificationUrl"),
-            network_identifier=Slice.network_identifier_from_dict(
+            network_identifier=Slice.network_identifier(
                 slice_data["slice"]["networkIdentifier"]
             ),
-            slice_info=Slice.slice_info_from_dict(slice_data["slice"]["sliceInfo"]),
-            area_of_service=Slice.area_of_service_from_dict(
+            slice_info=Slice.slice_info(slice_data["slice"]["sliceInfo"]),
+            area_of_service=Slice.area_of_service(
                 slice_data["slice"].get("areaOfService")
             ),
             max_data_connections=slice_data["slice"].get("maxDataConnections"),
@@ -203,12 +192,11 @@ class Slices(Namespace):
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
-                notification_url=slice["slice"]["notificationUrl"],
-                network_identifier=Slice.network_identifier_from_dict(
+                network_identifier=Slice.network_identifier(
                     slice["slice"]["networkIdentifier"]
                 ),
-                slice_info=Slice.slice_info_from_dict(slice["slice"]["sliceInfo"]),
-                area_of_service=Slice.area_of_service_from_dict(
+                slice_info=Slice.slice_info(slice["slice"]["sliceInfo"]),
+                area_of_service=Slice.area_of_service(
                     slice["slice"].get("areaOfService")
                 ),
                 max_data_connections=slice["slice"].get("maxDataConnections"),

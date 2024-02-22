@@ -17,22 +17,9 @@ import os
 import pdb
 import httpx
 
-from typing import Optional, Any
-from pydantic import BaseModel
+from typing import Optional
 
 from ..errors import error_handler
-
-class Throughput(BaseModel):
-    """
-    A class representing the `Throughput` API field.
-
-    #### Public Attributes:
-            guaranteed (float): the guaranteed throughput in kbps
-            maximum (float): the maximum throughput in kbps
-    """
-
-    guaranteed: Optional[float]
-    maximum: Optional[float]
 
 
 class SliceAPI:
@@ -48,17 +35,16 @@ class SliceAPI:
 
     def create(
         self,
-        modify: bool,
         network_id,
         slice_info,
         notification_url,
         name: Optional[str] = None,
         notification_auth_token: Optional[str] = None,
-        area_of_service: Optional[Any] = None,
-        slice_downlink_throughput: Optional[Throughput] = None,
-        slice_uplink_throughput: Optional[Throughput] = None,
-        device_downlink_throughput: Optional[Throughput] = None,
-        device_uplink_throughput: Optional[Throughput] = None,
+        area_of_service: Optional[any] = None,
+        slice_downlink_throughput: Optional[any] = None,
+        slice_uplink_throughput: Optional[any] = None,
+        device_downlink_throughput: Optional[any] = None,
+        device_uplink_throughput: Optional[any] = None,
         max_data_connections: Optional[int] = None,
         max_devices: Optional[int] = None,
     ):
@@ -103,12 +89,7 @@ class SliceAPI:
                 device_downlink_throughput
             )
 
-        if modify:
-            if name is None:
-                raise ValueError('Name is mandatory for modify')
-            response = self.client.put(url=f"/slices/{name}", json=body)
-        else:
-            response = self.client.post(url="/slices", json=body)
+        response = self.client.post(url="/slices", json=body)
 
         error_handler(response)
 
@@ -166,7 +147,7 @@ class SliceAPI:
     def convert_slice_info_obj(self, sliceInfo):
         return {k: str(v) for k, v in dict(sliceInfo).items()}
 
-    def convert_throughput_obj(self, throughput: Throughput):
+    def convert_throughput_obj(self, throughput):
         return {k: float(v) for k, v in dict(throughput).items()}
 
 
