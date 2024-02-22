@@ -196,18 +196,26 @@ class AttachAPI:
         self,
         device,
         slice_id: str,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
+        traffic_categories: str = []
     ):
+        payload = {
+                "device": {
+                        "phoneNumber": device.phone_number,
+                        "networkAccessIdentifier": device.network_access_identifier,
+                        "ipv4Address": {
+                            "publicAddress": device.ipv4_address.public_address,
+                            "privateAddress": device.ipv4_address.private_address,
+                            "publicPort": device.ipv4_address.public_port,
+                        },
+                        "ipv6Address": device.ipv6_address
+                    },
+                    "sliceID": slice_id,
+                    "trafficCategory": traffic_categories
+        }
+        
         res = self.client.post(
-            url=f"/slice/{slice_id}/attach",
-            json=delete_none(
-                {
-                    "phoneNumber": device.phone_number,
-                    "notificationUrl": notification_url,
-                    "notificationAuthToken": notification_auth_token,
-                }
-            ),
+            url=f"/device/slice",
+            json=delete_none(payload),
         )
 
         error_handler(res)

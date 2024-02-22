@@ -292,8 +292,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     def attach(
         self,
         device: Device,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
+        traffic_categories: List[str] = [],
     ) -> None:
         """Attach network slice.
 
@@ -303,11 +302,11 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         #### Example:
             ```python
             device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
-            slice.attach(device)
+            slice.attach(device, traffic_categories = [])
             ```
         """
         self._api.slice_attach.attach(
-            device, self.name, notification_url, notification_auth_token
+            device, self.name, traffic_categories
         )
 
     def detach(

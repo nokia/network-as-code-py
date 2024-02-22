@@ -1,6 +1,7 @@
 
 # device-status.py
 
+from typing import List
 import network_as_code as nac
 
 from network_as_code.models.device import Device, DeviceIpv4Addr

@@ -451,7 +451,7 @@ def test_attach_device_to_slice(httpx_mock, client, device):
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/device/slice",
         json={
             "id": "string",
             "phoneNumber": "string",
@@ -460,40 +460,21 @@ def test_attach_device_to_slice(httpx_mock, client, device):
             "slice_id": "string"
         },
         match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here"
+            "device": {
+                        "phoneNumber": device.phone_number,
+                        "networkAccessIdentifier": device.network_access_identifier,
+                        "ipv4Address": {
+                            "publicAddress": device.ipv4_address.public_address,
+                            "privateAddress": device.ipv4_address.private_address,
+                            "publicPort": device.ipv4_address.public_port,
+                        },
+                    },
+            "sliceID": MOCK_SLICE['slice']['name'],
+            "trafficCategory": ["ANDROID/PRIORITIZE_BANDWIDTH"]
         })
     )
 
-    slice.attach(device, "https://notify.me/here")
-
-def test_attach_device_to_slice_with_optional_params(httpx_mock, client, device):
-    httpx_mock.add_response(
-        method="GET",
-        json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
-    )
-    
-    slice = client.slices.get(MOCK_SLICE['slice']['name'])
-
-    httpx_mock.add_response(
-        method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
-        json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
-        },
-        match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here",
-            "notificationAuthToken": "my_auth_token"
-        })
-    )
-
-    slice.attach(device, "https://notify.me/here", notification_auth_token="my_auth_token")
+    slice.attach(device, ["ANDROID/PRIORITIZE_BANDWIDTH"])
 
 def test_detach_device_from_slice(httpx_mock, client, device):
     httpx_mock.add_response(
@@ -506,7 +487,7 @@ def test_detach_device_from_slice(httpx_mock, client, device):
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/detach",
+        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/slice/{slice.name}/detach",
         json={
             "id": "string",
             "phoneNumber": "string",
