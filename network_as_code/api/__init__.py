@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .client import APIClient
+from .slice_api import Throughput
