@@ -125,7 +125,7 @@ class Slices(Namespace):
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
-            slice.sid = slice_data.json()["csi_id"]
+            slice.sid = slice_data.json().get("csi_id")
             slice.state = slice_data.json()["state"]
         except HTTPError as e:
             if e.code == 403:
@@ -153,7 +153,7 @@ class Slices(Namespace):
         slice_data = self.api.slicing.get(id).json()
         slice = Slice(
             api=self.api,
-            sid=slice_data["csi_id"],
+            sid=slice_data.get("csi_id"),
             state=slice_data["state"],
             name=slice_data["slice"]["name"],
             network_identifier=Slice.network_identifier_from_dict(
@@ -199,6 +199,7 @@ class Slices(Namespace):
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
+                sid=slice.get("csi_id"),
                 network_identifier=Slice.network_identifier_from_dict(
                     slice["slice"]["networkIdentifier"]
                 ),

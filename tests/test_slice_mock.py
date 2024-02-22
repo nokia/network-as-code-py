@@ -489,3 +489,15 @@ def test_HTTPError_500_raises_ServiceError(httpx_mock: HTTPXMock, client: Networ
         max_data_connections=12
     )
 
+def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    mock_slice_no_csi = MOCK_SLICE
+    del mock_slice_no_csi['csi_id']
+    httpx_mock.add_response(
+        method="GET",
+        json=mock_slice_no_csi,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{mock_slice_no_csi['slice']['name']}"
+    )
+
+    response = client.slices.get(MOCK_SLICE['slice']['name'])
+    assert response is not None
+    assert response.sid is None
