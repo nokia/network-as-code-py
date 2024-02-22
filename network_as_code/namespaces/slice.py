@@ -30,6 +30,8 @@ from ..errors import NotFound, AuthenticationException, ServiceError, InvalidPar
 from urllib.error import HTTPError
 from pydantic import ValidationError
 
+from ..api import Throughput as ApiThroughput
+
 
 class Slices(Namespace):
     """Representation of a 5G network slice.
@@ -37,6 +39,11 @@ class Slices(Namespace):
     Through this class many of the parameters of a
     network slice can be configured and managed.
     """
+
+    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+        if throughput is None:
+            return None
+        return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
 
     def create(
         self,
@@ -111,10 +118,10 @@ class Slices(Namespace):
                 area_of_service=area_of_service,
                 name=name,
                 notification_auth_token=notification_auth_token,
-                slice_downlink_throughput=slice_downlink_throughput,
-                slice_uplink_throughput=slice_uplink_throughput,
-                device_downlink_throughput=device_downlink_throughput,
-                device_uplink_throughput=device_uplink_throughput,
+                slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+                slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
+                device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+                device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
