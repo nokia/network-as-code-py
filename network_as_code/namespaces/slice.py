@@ -100,6 +100,8 @@ class Slices(Namespace):
             name=name,
             network_identifier=network_id,
             slice_info=slice_info,
+            notification_url=notification_url,
+            notification_auth_token=notification_auth_token,
             area_of_service=area_of_service,
             max_data_connections=max_data_connections,
             max_devices=max_devices,
@@ -159,6 +161,8 @@ class Slices(Namespace):
             network_identifier=Slice.network_identifier_from_dict(
                 slice_data["slice"]["networkIdentifier"]
             ),
+            notification_url=slice_data["slice"]["notificationUrl"],
+
             slice_info=Slice.slice_info_from_dict(slice_data["slice"]["sliceInfo"]),
             area_of_service=Slice.area_of_service_from_dict(
                 slice_data["slice"].get("areaOfService")
@@ -204,6 +208,7 @@ class Slices(Namespace):
                     slice["slice"]["networkIdentifier"]
                 ),
                 slice_info=Slice.slice_info_from_dict(slice["slice"]["sliceInfo"]),
+                notification_url=slice["slice"]["notificationUrl"],
                 area_of_service=Slice.area_of_service_from_dict(
                     slice["slice"].get("areaOfService")
                 ),
