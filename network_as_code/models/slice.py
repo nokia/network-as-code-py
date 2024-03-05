@@ -21,6 +21,7 @@ from typing import Dict, List, Union, Optional
 from enum import Enum
 
 from ..api import APIClient
+from ..api.slice_api import Throughput as ApiThroughput
 from ..models.session import QoDSession
 from ..models.location import CivicAddress, Location
 from ..models.device import Device
@@ -111,6 +112,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
         networkIdentifier (NetworkIdentifier): Name of the network
         sliceInfo (SliceInfo): Purpose of this slice
+        notification_url: Destination URL of notifications
+        notification_auth_token: Authorization token for notifications
         areaOfService (AreaOfService): Location of the slice
         maxDataConnections (optional): Optional maximum number of data connection sessions in the slice.
         maxDevices (optional): Optional maximum number of devices using the slice.
@@ -147,6 +150,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     )
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
+    notification_url: str
+    notification_auth_token: Optional[str]
     area_of_service: Optional[AreaOfService] = Field(
         None, description="Area which the network slice is intended to serve"
     )
@@ -196,6 +201,45 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         if self.name:
             return self._api.slicing.deactivate(self.name)
     
+    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+        if throughput is not None:
+            return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
+        return None
+
+    def modify(
+            self,
+            slice_downlink_throughput: Optional[Throughput] = None,
+            slice_uplink_throughput: Optional[Throughput] = None,
+            device_downlink_throughput: Optional[Throughput] = None,
+            device_uplink_throughput: Optional[Throughput] = None,
+            max_data_connections: Optional[int] = None,
+            max_devices: Optional[int] = None,
+    ):
+        self._api.slicing.create(
+            modify = True,
+            network_id=self.network_identifier,
+            slice_info=self.slice_info,
+            notification_url=self.notification_url,
+            notification_auth_token=self.notification_auth_token,
+            name=self.name,
+            area_of_service=self.area_of_service,
+            slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+            slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
+            device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+            device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
+            max_data_connections = max_data_connections,
+            max_devices=max_devices
+        )
+
+        # Update model (if no exception on modify)
+        self.slice_downlink_throughput = slice_downlink_throughput
+        self.slice_uplink_throughput = slice_uplink_throughput
+        self.device_downlink_throughput = device_downlink_throughput
+        self.device_uplink_throughput = device_uplink_throughput
+        self.max_data_connections = max_data_connections
+        self.max_devices = max_devices
+
+
     def delete(self) -> None:
         """Delete network slice.
 

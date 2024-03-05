@@ -47,19 +47,20 @@ class SliceAPI:
         )
 
     def create(
-        self,
-        network_id,
-        slice_info,
-        notification_url,
-        name: Optional[str] = None,
-        notification_auth_token: Optional[str] = None,
-        area_of_service: Optional[Any] = None,
-        slice_downlink_throughput: Optional[Throughput] = None,
-        slice_uplink_throughput: Optional[Throughput] = None,
-        device_downlink_throughput: Optional[Throughput] = None,
-        device_uplink_throughput: Optional[Throughput] = None,
-        max_data_connections: Optional[int] = None,
-        max_devices: Optional[int] = None,
+            self,
+            network_id,
+            slice_info,
+            notification_url,
+            modify: bool = False,
+            name: Optional[str] = None,
+            notification_auth_token: Optional[str] = None,
+            area_of_service: Optional[Any] = None,
+            slice_downlink_throughput: Optional[Throughput] = None,
+            slice_uplink_throughput: Optional[Throughput] = None,
+            device_downlink_throughput: Optional[Throughput] = None,
+            device_uplink_throughput: Optional[Throughput] = None,
+            max_data_connections: Optional[int] = None,
+            max_devices: Optional[int] = None,
     ):
         body = {
             "networkIdentifier": dict(network_id),
@@ -102,7 +103,12 @@ class SliceAPI:
                 device_downlink_throughput
             )
 
-        response = self.client.post(url="/slices", json=body)
+        if modify:
+            if name is None:
+                raise ValueError('Name is mandatory for modify')
+            response = self.client.put(url=f"/slices/{name}", json=body)
+        else:
+            response = self.client.post(url="/slices", json=body)
 
         error_handler(response)
 
