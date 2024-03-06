@@ -32,6 +32,26 @@ def test_creating_a_slice(client):
     slice.delete()
 
 @pytest.mark.xfail
+def test_modifying_a_slice(client):
+    my_slice = client.slices.create(
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
+        notification_url="https://notify.me/here",
+        notification_auth_token="my-token",
+        name="sdk-integration-slice-1"
+    )
+
+    my_slice.modify(
+        max_devices=10,
+        max_data_connections=20
+    )
+
+    assert my_slice.max_devices == 10
+    assert my_slice.max_data_connections == 20
+
+    my_slice.delete()
+
+@pytest.mark.xfail
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
         name="slicemock24",
