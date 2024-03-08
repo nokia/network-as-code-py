@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Union
 import json
 import os
-import pdb
 import httpx
 
 from typing import Optional, Any
 from pydantic import BaseModel
 
 from ..errors import error_handler
+
+
 
 class Throughput(BaseModel):
     """
@@ -196,8 +198,9 @@ class AttachAPI:
         self,
         device,
         slice_id: str,
-        traffic_categories: str = []
+        traffic_categories: Union[any, None]
     ):
+        
         payload = {
                 "device": {
                         "phoneNumber": device.phone_number,
@@ -210,15 +213,20 @@ class AttachAPI:
                         "ipv6Address": device.ipv6_address
                     },
                     "sliceID": slice_id,
-                    "trafficCategory": traffic_categories
         }
+
+        if traffic_categories:
+            payload['osId'] = traffic_categories.apps.os
+            payload['appIds'] = traffic_categories.apps.apps
+        
         
         res = self.client.post(
-            url=f"/device/slice",
+            url=f"/attachments",
             json=delete_none(payload),
         )
-
         error_handler(res)
+        return res
+        
 
     def detach(
         self,

@@ -98,6 +98,17 @@ class AreaOfService(BaseModel):
     polygon: List[Point]
 
 
+class Apps(BaseModel):
+    os: str
+    apps: List[str]
+
+class TrafficCategories(BaseModel):
+    apps: Apps
+
+class DeviceAttachment(BaseModel):
+    device_id: str
+    attachment_id: str
+
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
     A class representing the `Slice` model.
@@ -167,11 +178,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     slice_uplink_throughput: Optional[Throughput] = None
     device_downlink_throughput: Optional[Throughput] = None
     device_uplink_throughput: Optional[Throughput] = None
+    _attachments: List[DeviceAttachment] = PrivateAttr()
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
         self._sessions = []
+        self._attachments = []
 
     def activate(self) -> None:
         """Activate network slice.
@@ -292,7 +305,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     def attach(
         self,
         device: Device,
-        traffic_categories: List[str] = [],
+        traffic_categories: Union[TrafficCategories, None],
     ) -> None:
         """Attach network slice.
 
@@ -302,12 +315,19 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         #### Example:
             ```python
             device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
-            slice.attach(device, traffic_categories = [])
+            slice.attach(device, traffic_categories = TrafficCategories(
+                apps=Apps(
+                    os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+                    apps=["ENTERPRISE", "ENTERPRISE2"]
+                )
+            )
+        )
             ```
         """
-        self._api.slice_attach.attach(
+        res = self._api.slice_attach.attach(
             device, self.name, traffic_categories
         )
+        self._attachments.append(DeviceAttachment(device_id=device.network_access_id, attachment_id=res.json()['id']))
 
     def detach(
         self,

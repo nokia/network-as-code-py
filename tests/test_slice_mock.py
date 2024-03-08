@@ -2,7 +2,7 @@ import json
 import pytest
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
-from network_as_code.models.slice import NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput
+from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput, TrafficCategories
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
@@ -451,13 +451,12 @@ def test_attach_device_to_slice(httpx_mock, client, device):
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/device/slice",
+        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
+            "id": "attachment-1",
+            "device": {
+                "networkAccessIdentifier": "test_device_id"
+            }
         },
         match_content=to_bytes({
             "device": {
@@ -470,11 +469,15 @@ def test_attach_device_to_slice(httpx_mock, client, device):
                         },
                     },
             "sliceID": MOCK_SLICE['slice']['name'],
-            "trafficCategory": ["ANDROID/PRIORITIZE_BANDWIDTH"]
+            "osId": "97a498e3-fc92-5c94-8986-0333d06e4e47",
+            "appIds": ["ENTERPRISE", "ENTERPRISE2"]
         })
     )
 
-    slice.attach(device, ["ANDROID/PRIORITIZE_BANDWIDTH"])
+    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+        os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+        apps=["ENTERPRISE", "ENTERPRISE2"]
+    )))
 
 def test_detach_device_from_slice(httpx_mock, client, device):
     httpx_mock.add_response(
