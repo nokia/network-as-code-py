@@ -201,7 +201,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         if self.name:
             return self._api.slicing.deactivate(self.name)
     
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+    def _to_api_throughput(self, throughput: Optional[Throughput] = None) -> Optional[ApiThroughput]:
         if throughput is not None:
             return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
         return None
@@ -363,7 +363,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> AreaOfService | None:
+    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> Optional[AreaOfService]:
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.

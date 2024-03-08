@@ -40,7 +40,7 @@ class Slices(Namespace):
     network slice can be configured and managed.
     """
 
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+    def _to_api_throughput(self, throughput: Optional[Throughput]) -> Optional[ApiThroughput]:
         if throughput is None:
             return None
         return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
