@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 from typing import Union
 import json
 import os
@@ -228,22 +229,8 @@ class AttachAPI:
         return res
         
 
-    def detach(
-        self,
-        device,
-        slice_id: str,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
-    ):
-        res = self.client.post(
-            url=f"/slice/{slice_id}/detach",
-            json=delete_none(
-                {
-                    "phoneNumber": device.phone_number,
-                    "notificationUrl": notification_url,
-                    "notificationAuthToken": notification_auth_token,
-                }
-            ),
+    def detach(self, id):
+        res = self.client.delete(
+            url=f"/attachments/{id}"
         )
-
         error_handler(res)

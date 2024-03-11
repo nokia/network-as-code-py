@@ -479,7 +479,7 @@ def test_attach_device_to_slice(httpx_mock, client, device):
         apps=["ENTERPRISE", "ENTERPRISE2"]
     )))
 
-def test_detach_device_from_slice(httpx_mock, client, device):
+def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
@@ -490,21 +490,54 @@ def test_detach_device_from_slice(httpx_mock, client, device):
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/slice/{slice.name}/detach",
+        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
+            "id": "attachment-1",
+            "device": {
+                "networkAccessIdentifier": "test_device_id"
+            }
         },
         match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here"
+            "device": {
+                        "phoneNumber": device.phone_number,
+                        "networkAccessIdentifier": device.network_access_identifier,
+                        "ipv4Address": {
+                            "publicAddress": device.ipv4_address.public_address,
+                            "privateAddress": device.ipv4_address.private_address,
+                            "publicPort": device.ipv4_address.public_port,
+                        },
+                    },
+            "sliceID": MOCK_SLICE['slice']['name'],
+            "osId": "97a498e3-fc92-5c94-8986-0333d06e4e47",
+            "appIds": ["ENTERPRISE", "ENTERPRISE2"]
         })
     )
 
-    slice.detach(device, "https://notify.me/here")
+    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+        os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+        apps=["ENTERPRISE", "ENTERPRISE2"]
+    )))
+
+    httpx_mock.add_response(
+        method="DELETE",
+        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/attachments/attachment-1"
+    )
+
+    slice.detach(device)
+
+def test_detach_device_from_slice_not_found(httpx_mock, client, device):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+    
+    slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    # If the attachement id is not found in local storage, NotFound error will be thrown
+
+    with pytest.raises(NotFound):
+        slice.detach(device)
 
 
 def test_HTTPError_404_raises_NotFound(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):

@@ -15,6 +15,7 @@
 import asyncio
 from os import access
 import datetime
+import pdb
 from urllib.error import HTTPError
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
@@ -106,8 +107,17 @@ class TrafficCategories(BaseModel):
     apps: Apps
 
 class DeviceAttachment(BaseModel):
-    device_id: str
+    network_access_identifier: Optional[str]
+    phone_number: Optional[str]
     attachment_id: str
+
+def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
+    for i, attachment in enumerate(slice_attachments):
+        if attachment.network_access_identifier == device.network_access_id or attachment.phone_number == device.phone_number:
+            attachment_id = attachment.attachment_id
+            del slice_attachments[i]
+            return attachment_id
+    return None
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
@@ -327,13 +337,14 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         res = self._api.slice_attach.attach(
             device, self.name, traffic_categories
         )
-        self._attachments.append(DeviceAttachment(device_id=device.network_access_id, attachment_id=res.json()['id']))
+        self._attachments.append(DeviceAttachment(
+            network_access_identifier=device.network_access_id, 
+            phone_number=device.phone_number, 
+            attachment_id=res.json()['id']))
 
     def detach(
         self,
         device: Device,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
     ) -> None:
         """Detach network slice.
 
@@ -347,9 +358,14 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.detach()
             ```
         """
-        self._api.slice_attach.detach(
-            device, self.name, notification_url, notification_auth_token
-        )
+        attachment_id = fetch_and_remove(self._attachments, device)
+        if attachment_id:
+            self._api.slice_attach.detach(
+                attachment_id
+            )
+        else:
+            raise NotFound("Attachment not found")
+
 
     @staticmethod
     def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
