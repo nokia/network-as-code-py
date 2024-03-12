@@ -183,6 +183,11 @@ class Slices(Namespace):
             ),
         )
 
+        # Fetch Attachments of Slice and Set the local attachments store
+        attachments = self.api.slicing.get_attachments(slice_id=slice.name).json()
+        # Format the attachments data and save it
+        slice.set_attachments(attachments)
+
         return slice
 
     def getAll(self) -> List[Slice]:
@@ -198,8 +203,17 @@ class Slices(Namespace):
         """
         slice_data = self.api.slicing.getAll()
 
+        
         slices = [
-            Slice(
+            self._convert_to_slice_model(slice)
+            for slice in slice_data.json()
+        ]
+
+        return slices
+
+
+    def _convert_to_slice_model(self, slice):
+        slice_instance = Slice(
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
@@ -227,7 +241,10 @@ class Slices(Namespace):
                     slice["slice"].get("deviceUplinkThroughput")
                 ),
             )
-            for slice in slice_data.json()
-        ]
-
-        return slices
+        attachments = self.api.slicing.get_attachments(slice_id=slice_instance.name).json()
+        
+        slice_instance.set_attachments(attachments)
+        
+        return slice_instance
+        
+        

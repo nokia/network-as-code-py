@@ -135,6 +135,16 @@ class SliceAPI:
 
         return res
 
+    def get_attachments(self, slice_id: str):
+        # Assume there is an endpoint that returns attachments of a slice
+        res = self.client.get(
+            url=f"slices/{slice_id}/attachments"
+        )
+        
+        error_handler(res)
+
+        return res
+
     def activate(self, slice_id: str):
         res = self.client.post(
             url=f"/slices/{slice_id}/activate",

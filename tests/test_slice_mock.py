@@ -376,6 +376,21 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         }
     ]
 
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
+    )
     
     httpx_mock.add_response(
         method="GET",
@@ -383,12 +398,29 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         json=slices
     )
     client.slices.getAll()
+    
 
 def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
     )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -447,6 +479,22 @@ def test_attach_device_to_slice(httpx_mock, client, device):
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
+    )
+
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
@@ -486,6 +534,22 @@ def test_detach_device_to_slice(httpx_mock, client, device):
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
+    )
+
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
@@ -494,6 +558,7 @@ def test_detach_device_to_slice(httpx_mock, client, device):
         json={
             "id": "attachment-1",
             "device": {
+                "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
             }
         },
@@ -532,6 +597,22 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
     
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
+    )
+
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     # If the attachement id is not found in local storage, NotFound error will be thrown
@@ -655,6 +736,22 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
         method="GET",
         json=mock_slice_no_csi,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{mock_slice_no_csi['slice']['name']}"
+    )
+
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        json=[{
+            "id": "attachment-1",
+            "device": {
+                "phoneNumber": "+0234345543",
+                "networkAccessIdentifier": "test_device_id"
+            }
+        }, {"id": "attachment-2",
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "phoneNumber": "+0234345543",
+            }}]
     )
 
     response = client.slices.get(MOCK_SLICE['slice']['name'])

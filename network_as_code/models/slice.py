@@ -112,11 +112,12 @@ class DeviceAttachment(BaseModel):
     attachment_id: str
 
 def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
-    for i, attachment in enumerate(slice_attachments):
-        if attachment.network_access_identifier == device.network_access_id or attachment.phone_number == device.phone_number:
-            attachment_id = attachment.attachment_id
-            del slice_attachments[i]
-            return attachment_id
+    if slice_attachments:
+        for i, attachment in enumerate(slice_attachments):
+            if attachment.network_access_identifier == device.network_access_id or attachment.phone_number == device.phone_number:
+                attachment_id = attachment.attachment_id
+                del slice_attachments[i]
+                return attachment_id
     return None
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
@@ -311,6 +312,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             await asyncio.sleep(poll_backoff_seconds)
             self.refresh()
         return self.state
+
+    def set_attachments(self, attachments):
+        self._attachments = [
+            DeviceAttachment(network_access_identifier=attachment['device']['networkAccessIdentifier'],
+                             phone_number=attachment['device']['phoneNumber'],
+                             attachment_id=attachment['id']) for attachment in attachments
+        ]
 
     def attach(
         self,
