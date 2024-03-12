@@ -7,8 +7,8 @@ client = nac.NetworkAsCodeClient(
 )
 
 # We get the device by querying subscriptions with the UE's external identifer
-device = client.devices.get("testuser@open5glab.net", "127.0.0.1")
+device = client.devices.get("testuser@testcsp.net", ipv4_address="127.0.0.1")
 
-session = device.create_session(service_ip="1.1.1.1", profile="DOWNLINK_L_UPLINK_L", notification_url="https://notify.me/here", notification_auth_token="my_auth_token")
+session = device.create_qod_session(service_ipv4="1.1.1.1", profile="DOWNLINK_L_UPLINK_L", notification_url="https://notify.me/here", notification_auth_token="my_auth_token")
 
 session.delete()

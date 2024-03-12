@@ -1,98 +1,103 @@
 # NaC-py - Python SDK for controlling 5G network through code
 
-This repository contains the Python client for the Network as Code REST API. 
-It allows Python-based applications to alter the network profiles and query device information such as location data. 
-The library will grow over time to include more functionality as well.
+This repository contains the Python library for Nokia's Network as Code platform,
+allowing Python programs to easily call network APIs to query information or to
+manage mobile network elements.
 
-## Why Network as Code?
+## What is Network as Code?
 
-So far mobile network configurations from customer's point of view have been fairly immutable. 
-The customer purchases a network connection with a specified download and upload speed for their device and the network supplies a bandwidth as close to those specifications as possible,
-although congestion or distance to base stations may lead to high variance. 
-The customer's applications are also generally not aware of the network conditions and their ability to react to poor network quality are limited. 
-If the customer wants to modify their network configuration, 
-they must contact the service provider and order a different network subscription. 
-The new network connection will be available typically in a matter of days.
+Network as Code is a network API aggregator platform developed by Nokia to expose
+network capabilities of mobile networks to applications. It provides numerous
+capabilities ranging from quality-of-service to network-based location services
+and analytics.
 
-Network as Code is an initiative to create APIs, 
-software libraries and developer portals that make mobile networks configurable by third-party software developers. 
-The aim is to allow application software to be more aware of the mobile network and better leverage its dynamic properties. 
-One of the central ideas is for developers to be able to adjust various network properties on the fly at a seconds' notice to react changing conditions in either the network or the application domain.
-
-You can read more about Network as Code concept on the [ATG Confluence page](https://confluence.ext.net.nokia.com/display/ATG/ATS+-+Network+as+Code).
+You can find more information over [at the Nokia home page](https://www.nokia.com/networks/network-as-code/) 
+or by going directly to the developer portal: https://developer.networkascode.nokia.io/
 
 ## Getting started
 
-> **NOTE:** Below is a quick-start guide. More detailed instructions are available on our [wiki](https://gitlabe2.ext.net.nokia.com/atg/network-as-code/nac-py/-/wikis/home#getting-access-to-the-apis).
+You can find a full Getting Started guide on the developer portal: https://developer.networkascode.nokia.io/docs/getting-started
 
-### Requirements
-
-* [Sign up](https://cns-apigee-test-6559-nacpoc.apigee.io/) for a Network as Code account
-* Create a new [App registration](https://cns-apigee-test-6559-nacpoc.apigee.io/my-apps/new-app). **Enable** the Network as Code API.
-* Create a test device (fill in you API key, and come up with an email address, IMSI and MSISDN numbers):  
-  Remember the email address you give as it will be used as your device ID.
-  ```bash
-  curl --request PUT \
-  'https://apigee-api-test.nokia-solution.com/nac/v2/subscriber/testuser' \
-  --header 'x-testmode: true' \
-  --header 'x-apikey: [YOUR_API_KEY]' \
-  --header 'Accept: application/json' \
-  --header 'Content-Type: application/json' \
-  --data '{"id":"[SOME EMAIL ADRRESS]","imsi":"[UNIQUE IMSI]","msisdn":"[UNIQUE MSISDN]"}' \
-  --compressed
-
-  ```
-
-After these steps you're ready to begin building something awesome with Network as Code!
-
-### Installation
-
-Install the Network as Code package:
+If you just want to install the Python library, you can install it with Pip:
 ```bash
-pip install --extra-index-url=https://pypi.dynamic.nsn-net.net/nac/nacpy/+simple/ network_as_code
+pip install network_as_code
 ```
-> **NOTE:** The SDK is currently hosted on Nokia's [pypi repository](https://pypi.dynamic.nsn-net.net/nac/nacpy) and requires **VPN** to be properly configured. 
 
-## Examples
-
-We have put some self-explanatory examples in the [examples](./examples) directory, 
-but here is a quick example on how to get started. 
-Assuming the installation was successful, you can import the Network as Code package like this:
+Do note that use of Network as Code capabilities requires an API token to be provided:
 
 ```python
 import network_as_code as nac
+
+client = nac.NetworkAsCodeClient(
+    token="<MY-TOKEN>",
+)
 ```
 
-Then, create an instance of **nac.Device**.
+You can get your API tokens by registering on the developer portal and accessing them on
+the developer dashboard.
 
-The `DEVICE_ID` is the email address you gave during setup.
-Meanwhile, the `API_TOKEN` can be found on your [Apps page](https://cns-apigee-test-6559-nacpoc.apigee.io/my-apps) in the API portal.
+## Documentation and Examples
 
-```python
-device = nac.Device(DEVICE_ID, API_TOKEN)
-```
+Full documentation is available on the developer portal: https://developer.networkascode.nokia.io/docs
 
-Now you can query the API for information and send requests. 
-For example, to test that you're able to contact the API, try the following:
+We also provide some basic usage examples in the [examples](./examples) directory. 
 
-```python
-print("API connection established: ", device.check_api_connection())
-```
+## License
 
-If the program prints `API connection established: True`, you've successfully connected to the Network as Code API through the Python library.
+The Network as Code Python SDK is open source software available under the Apache 2.0 license.
 
-In order to start executing other API calls for self-registered devices, you **must** enable test-mode, since self-registered devices
-are entirely virtual. You can do so by setting the `TESTMODE` environment variable separately or with the following Python code:
+## Development
 
-``` python
-import os
+### Commands
 
-os.environ["TESTMODE"] = "1"
-```
+- `poetry install` - install project dependencies
+- `poetry run pytest` - run unit tests against mocks
+- `poetry run pytest integration_tests` - run integration tests against development APIs
 
-That will cause the SDK to issue requests with a test-mode header to inform the API that the device being queried or altered is a virtual device.
+### Architecture
 
-## Documentation
+This project is structured into `models`, `api` and `namespaces`
+modules. The `models` and `namespaces` modules represent the public
+API of the SDK and provide abstractions that allow data to be queried
+and modified on the Network as Code platform. The `api` module implements
+the communication layer that will actually talk to the NaC web APIs and
+handle transmission and receipt of data to and from the platform.
 
-- More in-depth getting-started guide available on the Wiki pages (left sidebar)
-- Reference documentation is available [here](https://atg.gitlabe2-pages.ext.net.nokia.com/network-as-code/nac-py/network_as_code/index.html).
+The basic design principle is that functionality should be discoverable
+and logically organized. To achieve that, most actions are carried out
+through the `NetworkAsCodeClient` object, which provides access to the
+namespaces in the `namespaces` module. These namespaces typically provide
+ways to query and create different types of data objects in the NaC
+platform. The data objects themselves have representations in the `models`
+module, and are enriched with methods that operate on the individual
+data object.
+
+New features typically require modifications to at least the `models`
+and `api` modules. New namespaces are introduced as required, typically
+when a new API product is launched. However, the namespaces are intended
+to be an organizational tool and as such should be used whenever a concept
+falls into a new kind of category and to avoid clutter.
+
+### Development process
+
+This project is developed using principles from Test-Driven Development.
+This means that for new bugs fixed and features implemented, there should
+be matching test cases written.
+
+Tests split into `tests` which are test cases against mocks and intended
+to work offline and without need to actually connect to an external system.
+We also have `integration-tests` which use a development version of the APIs
+to track compatibility. Both test suites are run in CI/CD and failures are
+considered blocking.
+
+Test cases should be added to as part of regular development activity and
+old test cases should be kept up-to-date. 
+
+New features and changes to old ones should also be documented as soon
+as possible. This means that developers ought to be in contact with the
+technical writers whenever a change is introduced. It is also recommended
+to add an example or update old examples in the `examples` folder to help
+communicate functionality and changes to the documentation writers. If
+no technical writer is present then the responsibility of writing documentation 
+falls on the developers. Developers also need to be able to provide input
+to the technical writers to ensure accurate and high-quality documentation.
