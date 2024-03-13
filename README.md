@@ -44,7 +44,7 @@ We also provide some basic usage examples in the [examples](./examples) director
 
 ## License
 
-The Network as Code Python SDK is open source software available under the Apache 2.0 license.
+The Network as Code Python SDK is open-source software available under the Apache 2.0 license.
 
 ## Development
 
@@ -84,11 +84,11 @@ This project is developed using principles from Test-Driven Development.
 This means that for new bugs fixed and features implemented, there should
 be matching test cases written.
 
-Tests split into `tests` which are test cases against mocks and intended
-to work offline and without need to actually connect to an external system.
-We also have `integration-tests` which use a development version of the APIs
-to track compatibility. Both test suites are run in CI/CD and failures are
-considered blocking.
+Main chunk of tests are located under `tests` and are run against
+mocks and intended to work offline and without need to actually
+connect to an external system.  We also have `integration-tests` which
+use a development version of the APIs to track compatibility. Both
+test suites are run in CI/CD and failures are considered blocking.
 
 Test cases should be added to as part of regular development activity and
 old test cases should be kept up-to-date. 
