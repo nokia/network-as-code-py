@@ -295,7 +295,7 @@ def test_modifying_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         method="PUT",
         match_content=to_bytes(slice_modification_payload),
         json=slice_response_modified,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices"
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/slicefour"
     )
 
     slice.modify(
