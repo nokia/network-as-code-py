@@ -163,8 +163,8 @@ class SliceAPI:
 
         return {"polygon": polygons}
 
-    def convert_slice_info_obj(self, sliceInfo):
-        return {k: str(v) for k, v in dict(sliceInfo).items()}
+    def convert_slice_info_obj(self, slice_info):
+        return { "serviceType": slice_info.service_type, "differentiator": slice_info.differentiator}
 
     def convert_throughput_obj(self, throughput: Throughput):
         return {k: float(v) for k, v in dict(throughput).items()}

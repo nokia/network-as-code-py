@@ -357,7 +357,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if sliceInfoDict:
             return SliceInfo(
-                service_type=sliceInfoDict["service_type"],
+                service_type=sliceInfoDict["serviceType"],
                 differentiator=sliceInfoDict["differentiator"],
             )
         else:
