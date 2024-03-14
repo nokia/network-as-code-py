@@ -106,7 +106,7 @@ class SliceAPI:
         if modify:
             if name is None:
                 raise ValueError('Name is mandatory for modify')
-            response = self.client.put(url=f"/slices", json=body)
+            response = self.client.put(url=f"/slices/{name}", json=body)
         else:
             response = self.client.post(url="/slices", json=body)
 

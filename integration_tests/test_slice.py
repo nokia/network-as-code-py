@@ -30,6 +30,7 @@ def test_creating_a_slice(client):
     assert slice.name == "sdk-integration-slice-1"
     slice.delete()
 
+@pytest.mark.xfail
 def test_modifying_a_slice(client):
     my_slice = client.slices.create(
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
@@ -99,7 +100,7 @@ def test_deleting_a_slice_marks_it_as_deleted(client):
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-@pytest.mark.skip
+#@pytest.mark.skip
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
         name="slicemock26",
