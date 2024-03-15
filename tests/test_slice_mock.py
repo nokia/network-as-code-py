@@ -1,4 +1,5 @@
 import json
+import pdb
 import pytest
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
@@ -430,12 +431,19 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             "device": {
                 "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -502,12 +510,19 @@ def test_attach_device_to_slice(httpx_mock, client, device):
             "device": {
                 "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
 
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -555,48 +570,24 @@ def test_detach_device_to_slice(httpx_mock, client, device):
         json=[{
             "id": "attachment-1",
             "device": {
-                "phoneNumber": "+0234345543",
-                "networkAccessIdentifier": "test_device_id"
+                "phoneNumber": device.phone_number,
+                "networkAccessIdentifier": device.network_access_identifier
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
 
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
-
-    httpx_mock.add_response(
-        method="POST",
-        url=f"https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
-        json={
-            "id": "attachment-1",
-            "device": {
-                "phoneNumber": "+0234345543",
-                "networkAccessIdentifier": "test_device_id"
-            }
-        },
-        match_content=to_bytes({
-            "device": {
-                        "phoneNumber": device.phone_number,
-                        "networkAccessIdentifier": device.network_access_identifier,
-                        "ipv4Address": {
-                            "publicAddress": device.ipv4_address.public_address,
-                            "privateAddress": device.ipv4_address.private_address,
-                            "publicPort": device.ipv4_address.public_port,
-                        },
-                    },
-            "sliceID": MOCK_SLICE['slice']['name'],
-            "osId": "97a498e3-fc92-5c94-8986-0333d06e4e47",
-            "appIds": ["ENTERPRISE", "ENTERPRISE2"]
-        })
-    )
-
-    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
-        os="97a498e3-fc92-5c94-8986-0333d06e4e47",
-        apps=["ENTERPRISE", "ENTERPRISE2"]
-    )))
 
     httpx_mock.add_response(
         method="DELETE",
@@ -620,12 +611,19 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
             "device": {
                 "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
 
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -761,12 +759,19 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
             "device": {
                 "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
 
     response = client.slices.get(MOCK_SLICE['slice']['name'])
