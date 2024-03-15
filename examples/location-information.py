@@ -1,15 +1,4 @@
-
-import network_as_code as nac
-
-SDK_TOKEN = "<replace-me>" 
-DEVICE_ID = "testuser@testcsp.net"
-
-# Give the device the device identifier and SDK token
-client = nac.NetworkAsCodeClient(
-    token=SDK_TOKEN
-)
-
-device = client.devices.get(DEVICE_ID)
+# location-information.py
 
 """
 NaC-py and Network as Code also provide access to location information exposed by
@@ -21,40 +10,40 @@ This data is more accurate in areas with a dense concentration of base stations
 and less accurate in more sparse areas.
 """
 
+import network_as_code as nac
+
+from network_as_code.models.location import CivicAddress, Location
+
+from network_as_code.models.device import Device, DeviceIpv4Addr
+
+SDK_TOKEN = "<replace-me>"
+DEVICE_ID = "device@testcsp.net"
+
+# Give the device the device identifier and SDK token
+client = nac.NetworkAsCodeClient(
+    token=SDK_TOKEN
+)
+
+device = client.devices.get(DEVICE_ID)
+
 # Getting the device location is quite simple
-location = device.location()
+# The default value for max_age parameter is 60
+location = device.location(max_age=60)
 
 # The location object contains fields for longitude, latitude and also elevation
+longitude = location.longitude
+latitude = location.latitude
 
 print(location.longitude)
 print(location.latitude)
 print(location.civic_address)
 
-import network_as_code as nac
- 
-from network_as_code.models.location import CivicAddress, Location
- 
-from network_as_code.models.device import Device, DeviceIpv4Addr
- 
-# Give the device identifier and SDK token
-client = nac.NetworkAsCodeClient(
-    token="<your-application-key-here>",
+# Or for estimations, use the is_there object
+# followed by the `verify_location()` method
+# with the geo-coordinates and maximum age in seconds:
+is_there = device.verify_location(
+    longitude=19,
+    latitude=47,
+    radius=10_000,
+    max_age=3600
 )
- 
-device = client.devices.get("device@testcsp.net",
-                            ipv4_address = DeviceIpv4Addr(public_address="233.252.0.2",
-                                                          private_address="192.0.2.25",
-                                                          public_port=80)
-)
- 
-# The default value for max_age parameter is 60
-# The location object contains fields for longitude and latitude
-location = device.location()
- 
-longitude = location.longitude
-latitude = location.latitude
- 
- 
-print(longitude)
-print(latitude)
-print(location.civic_address)

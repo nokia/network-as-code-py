@@ -1,14 +1,79 @@
+import time
+
+from fastapi import FastAPI, Header
+
+from pydantic import BaseModel
+
+from typing_extensions import Annotated
+from typing import Union
 
 import network_as_code as nac
 
-# We begin by creating a client for Network as Code
-client = nac.NetworkAsCodeClient(
-    token="<MY-TOKEN>",
+from network_as_code.models.device import DeviceIpv4Addr
+
+client = nac.NetworkAsCodeClient(...)
+
+# Identify the device with its ID,
+# IP address(es) and optionally, a phone number
+device = client.devices.get(
+    "device@testcsp.net",
+    ipv4_address = DeviceIpv4Addr(
+        public_address="233.252.0.2",
+        private_address="192.0.2.25",
+        public_port=80),
+    ipv6_address = "2001:db8:1234:5678:9abc:def0:fedc:ba98",
+    # The phone number accepts the "+" sign, but not spaces or "()" marks
+    phone_number = "36721601234567"
 )
 
-# We get the device by querying subscriptions with the UE's external identifer
-device = client.devices.get("testuser@testcsp.net", ipv4_address="127.0.0.1")
+# Create a QoD session with QOS_L (large bandwidth) that lasts for 3,600 seconds (1 hour):
+my_session = device.create_qod_session(
+    service_ipv4="233.252.0.2",
+    service_ipv6="2001:db8:1234:5678:9abc:def0:fedc:ba98",
+    profile="QOS_L",
+    duration=3600
+)
 
-session = device.create_qod_session(service_ipv4="1.1.1.1", profile="DOWNLINK_L_UPLINK_L", notification_url="https://notify.me/here", notification_auth_token="my_auth_token")
+# Show a list of all of the QoD sessions associated with a device
+print(device.sessions())
+# You can also show the duration of a given sssion
+print(my_session.duration())
+# Or use these to check when your session started/expires:
+print(my_session.started_at)
+print(my_session.expires_at)
 
-session.delete()
+# Get a session by its ID
+session = client.sessions.get(my_session.id)
+
+# Delete a session
+my_session.delete()
+
+# Delete all QoD sessions associated with a particular device
+device.clear_sessions()
+
+# Our web server for receiving QoD notifications
+
+app = FastAPI()
+
+class EventDetail(BaseModel):
+    sessionId: str
+    qosStatus: str
+    statusInfo: str
+
+class Event(BaseModel):
+    eventType: str
+    eventTime: str
+    eventDetail: EventDetail
+
+class QoDNotification(BaseModel):
+    event: Event
+
+@app.post("/qod")
+def receive_notification(
+    notification: QoDNotification,
+    authorization: Annotated[Union[str, None], Header]
+):
+    if authorization == "Bearer my-token":
+        # We can now react to the notifications
+        # based on the Notification object
+        print(notification)
