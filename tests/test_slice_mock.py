@@ -384,12 +384,27 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             "device": {
                 "phoneNumber": "+0234345543",
                 "networkAccessIdentifier": "test_device_id"
+            },
+            "slice": {
+                'name': 'sliceone'
             }
         }, {"id": "attachment-2",
             "device": {
                 "networkAccessIdentifier": "test_device_id",
-                "phoneNumber": "+0234345543",
-            }}]
+                "phoneNumber": "+023434554",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }, {"id": "attachment-3",
+            "device": {
+                "networkAccessIdentifier": "test_device_id_2",
+                "phoneNumber": "+021234556",
+            },
+            "slice": {
+                'name': 'slicetwo'
+            },
+        }]
     )
     
     httpx_mock.add_response(

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import pdb
 from typing import List, Optional, Union
 import math
 
@@ -185,10 +186,11 @@ class Slices(Namespace):
 
         # Fetch Attachments of Slice and Set the local attachments store
         attachments = self.api.slice_attach.get_attachments().json()
-        # Filter the attachments based on the slice
         
+        slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice['slice']['name']]
+
         # Format the attachments data and save it
-        slice.set_attachments(attachments)
+        slice.set_attachments(slice_attachments)
 
         return slice
 
@@ -246,8 +248,9 @@ class Slices(Namespace):
         attachments = self.api.slice_attach.get_attachments().json()
         
         # Filter the attachments by the slice
+        slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice['slice']['name']]
 
-        slice_instance.set_attachments(attachments)
+        slice_instance.set_attachments(slice_attachments)
         
         return slice_instance
         
