@@ -184,7 +184,9 @@ class Slices(Namespace):
         )
 
         # Fetch Attachments of Slice and Set the local attachments store
-        attachments = self.api.slicing.get_attachments(slice_id=slice.name).json()
+        attachments = self.api.slice_attach.get_attachments().json()
+        # Filter the attachments based on the slice
+        
         # Format the attachments data and save it
         slice.set_attachments(attachments)
 
@@ -241,8 +243,10 @@ class Slices(Namespace):
                     slice["slice"].get("deviceUplinkThroughput")
                 ),
             )
-        attachments = self.api.slicing.get_attachments(slice_id=slice_instance.name).json()
+        attachments = self.api.slice_attach.get_attachments().json()
         
+        # Filter the attachments by the slice
+
         slice_instance.set_attachments(attachments)
         
         return slice_instance

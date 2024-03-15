@@ -378,7 +378,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
@@ -409,7 +409,7 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
@@ -481,7 +481,7 @@ def test_attach_device_to_slice(httpx_mock, client, device):
     
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
@@ -536,7 +536,7 @@ def test_detach_device_to_slice(httpx_mock, client, device):
     
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
@@ -599,7 +599,7 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
     
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
@@ -740,7 +740,7 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
 
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/attachments",
+        url="https://device-attach-ursp1.p-eu.rapidapi.com/attachments",
         json=[{
             "id": "attachment-1",
             "device": {
