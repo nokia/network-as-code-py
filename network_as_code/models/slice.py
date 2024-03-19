@@ -322,6 +322,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self,
         device: Device,
         traffic_categories: Union[TrafficCategories, None],
+        notificationUrl: Union[str, None],
+        notificationAuthToken: str
     ) -> None:
         """Attach network slice.
 
@@ -341,7 +343,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         res = self._api.slice_attach.attach(
-            device, self.name, traffic_categories
+            device, self.name, traffic_categories, notificationUrl, notificationAuthToken
         )
         
         self._attachments.append(DeviceAttachment(

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 from typing import Union
 import json
 import os
@@ -198,15 +199,27 @@ class AttachAPI:
         self,
         device,
         slice_id: str,
-        traffic_categories: Union[any, None]
+        traffic_categories: Union[any, None],
+        notificationUrl: Union[str,None],
+        notificationAuthToken: str
     ):
         payload = {
                 "device": {
                         "phoneNumber": device.phone_number,
+                        "ipv4Address": {
+                            "publicAddress": device.ipv4_address.public_address,
+                            "privateAddress": device.ipv4_address.private_address,
+                            "publicPort": device.ipv4_address.public_port
+                        },
+                        "ipv6Address": device.ipv6_address
                     },
                 "sliceId": slice_id,
                 "traffic_categories": {
                     "apps": traffic_categories.apps.__dict__
+                },
+                "webhook": {
+                    "notificationUrl": notificationUrl,
+                    "notificationAuthToken": notificationAuthToken
                 }
         }
 

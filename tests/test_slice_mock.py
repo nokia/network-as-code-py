@@ -527,14 +527,23 @@ def test_attach_device_to_slice(httpx_mock, client, device):
         },
         match_content=to_bytes({
             "device": {
-                        "phoneNumber": device.phone_number,
-                    },
-            "sliceId": MOCK_SLICE['slice']['name'],
+                "phoneNumber": device.phone_number,
+                "ipv4Address": {
+                    "publicAddress": device.ipv4_address.public_address,
+                    "privateAddress": device.ipv4_address.private_address,
+                    "publicPort": device.ipv4_address.public_port
+                },
+            },
+            "sliceId": "sliceone",
             "traffic_categories": {
                 "apps": {
                     "os": "97a498e3-fc92-5c94-8986-0333d06e4e47",
                     "apps": ["ENTERPRISE"]
                 }
+            },
+            "webhook": {
+                "notificationUrl": "https://example.com/notifications",
+                "notificationAuthToken": "c8974e592c2fa383d4a3960714"
             }
         })
     )
@@ -542,7 +551,8 @@ def test_attach_device_to_slice(httpx_mock, client, device):
     slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
-    )))
+    )), notificationUrl="https://example.com/notifications",
+    notificationAuthToken="c8974e592c2fa383d4a3960714")
 
 def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
@@ -561,14 +571,23 @@ def test_detach_device_to_slice(httpx_mock, client, device):
         },
         match_content=to_bytes({
             "device": {
-                        "phoneNumber": device.phone_number,
-                    },
-            "sliceId": MOCK_SLICE['slice']['name'],
+                "phoneNumber": device.phone_number,
+                "ipv4Address": {
+                    "publicAddress": device.ipv4_address.public_address,
+                    "privateAddress": device.ipv4_address.private_address,
+                    "publicPort": device.ipv4_address.public_port
+                },
+            },
+            "sliceId": "sliceone",
             "traffic_categories": {
                 "apps": {
                     "os": "97a498e3-fc92-5c94-8986-0333d06e4e47",
                     "apps": ["ENTERPRISE"]
                 }
+            },
+            "webhook": {
+                "notificationUrl": "https://example.com/notifications",
+                "notificationAuthToken": "c8974e592c2fa383d4a3960714"
             }
         })
     )
@@ -576,7 +595,8 @@ def test_detach_device_to_slice(httpx_mock, client, device):
     slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
-    )))
+    )), notificationUrl="https://example.com/notifications",
+    notificationAuthToken="c8974e592c2fa383d4a3960714")
     
 
     httpx_mock.add_response(
