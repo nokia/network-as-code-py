@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pdb
 from typing import Union
 import json
 import os
@@ -201,36 +200,26 @@ class AttachAPI:
         slice_id: str,
         traffic_categories: Union[any, None]
     ):
-        
         payload = {
                 "device": {
                         "phoneNumber": device.phone_number,
-                        "networkAccessIdentifier": device.network_access_identifier,
-                        "ipv4Address": {
-                            "publicAddress": device.ipv4_address.public_address,
-                            "privateAddress": device.ipv4_address.private_address,
-                            "publicPort": device.ipv4_address.public_port,
-                        },
-                        "ipv6Address": device.ipv6_address
                     },
-                    "sliceID": slice_id,
+                "sliceId": slice_id,
+                "traffic_categories": {
+                    "apps": traffic_categories.apps.__dict__
+                }
         }
 
-        if traffic_categories:
-            payload['osId'] = traffic_categories.apps.os
-            payload['appIds'] = traffic_categories.apps.apps
-        
-        
         res = self.client.post(
             url=f"/attachments",
             json=delete_none(payload),
         )
+        
         error_handler(res)
         return res
         
 
     def get_attachments(self):
-        # Assume there is an endpoint that returns attachments of a slice
         res = self.client.get(
             url=f"/attachments"
         )

@@ -15,7 +15,6 @@
 import asyncio
 from os import access
 import datetime
-import pdb
 from urllib.error import HTTPError
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
@@ -315,8 +314,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
     def set_attachments(self, attachments):
         self._attachments = [
-            DeviceAttachment(network_access_identifier=attachment['device']['networkAccessIdentifier'],
-                             phone_number=attachment['device']['phoneNumber'],
+            DeviceAttachment(phone_number=attachment['device']['phoneNumber'],
                              attachment_id=attachment['id']) for attachment in attachments
         ]
 
@@ -345,10 +343,11 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         res = self._api.slice_attach.attach(
             device, self.name, traffic_categories
         )
+        
         self._attachments.append(DeviceAttachment(
             network_access_identifier=device.network_access_id, 
             phone_number=device.phone_number, 
-            attachment_id=res.json()['id']))
+            attachment_id=res.json()['nac_resource_id']))
 
     def detach(
         self,

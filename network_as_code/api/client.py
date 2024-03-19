@@ -37,17 +37,14 @@ SLICE_RAPID_HOST_PROD = "network-slicing.nokia.rapidapi.com"
 SLICE_BASE_URL_DEV = "https://network-slicing2.p-eu.rapidapi.com"
 
 SLICE_ATTACH_BASE_URL_PROD = (
-    "https://network-slice-device-attach-norc.p-eu.rapidapi.com"
+    "https://device-application-attach.p-eu.rapidapi.com"
 )
-SLICE_ATTACH_RAPID_HOST_PROD = "network-slice-device-attach-norc.nokia.rapidapi.com"
-SLICE_ATTACH_BASE_URL_DEV = "https://device-attach-norc1.p-eu.rapidapi.com"
+SLICE_ATTACH_RAPID_HOST_PROD = "device-application-attach.nokia.rapidapi.com"
+SLICE_ATTACH_BASE_URL_DEV = "https://device-application-attach.p-eu.rapidapi.com"
 
 DEVICE_STATUS_BASE_URL_PROD = "https://device-status.p-eu.rapidapi.com"
 DEVICE_STATUS_RAPID_HOST_PROD = "device-status.nokia.rapidapi.com"
 DEVICE_STATUS_BASE_URL_DEV = "https://device-status1.p-eu.rapidapi.com"
-
-SLICE_ATTACH_URSP_BASE_URL_PROD = "https://device-attach-ursp1.p-eu.rapidapi.com"
-SLICE_ATTACH_URSP_BASE_URL_DEV = "https://device-attach-ursp1.p-eu.rapidapi.com"
     
 
 class APIClient:
@@ -66,7 +63,7 @@ class APIClient:
         location_verify_base_url: str = LOCATION_VERIFY_BASE_URL_PROD,
         location_retrieve_base_url: str = LOCATION_RETRIEVE_BASE_URL_PROD,
         slice_base_url: str = SLICE_BASE_URL_PROD,
-        slice_attach_base_url: str = SLICE_ATTACH_URSP_BASE_URL_PROD,
+        slice_attach_base_url: str = SLICE_ATTACH_BASE_URL_PROD,
         device_status_base_url: str = DEVICE_STATUS_BASE_URL_PROD,
         dev_mode: bool = False,
         **kwargs,
@@ -83,8 +80,8 @@ class APIClient:
         if dev_mode and slice_base_url == SLICE_BASE_URL_PROD:
             slice_base_url = SLICE_BASE_URL_DEV
 
-        if dev_mode and slice_attach_base_url == SLICE_ATTACH_URSP_BASE_URL_PROD:
-            slice_attach_base_url = SLICE_ATTACH_URSP_BASE_URL_DEV
+        if dev_mode and slice_attach_base_url == SLICE_ATTACH_BASE_URL_PROD:
+            slice_attach_base_url = SLICE_ATTACH_BASE_URL_DEV
 
         if dev_mode and device_status_base_url == DEVICE_STATUS_BASE_URL_PROD:
             device_status_base_url = DEVICE_STATUS_BASE_URL_DEV

@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import json
-import pdb
 from typing import List, Optional, Union
 import math
 
@@ -184,13 +183,13 @@ class Slices(Namespace):
             ),
         )
 
-        # Fetch Attachments of Slice and Set the local attachments store
-        attachments = self.api.slice_attach.get_attachments().json()
+        # # Fetch Attachments of Slice and Set the local attachments store
+        # attachments = self.api.slice_attach.get_attachments().json()
         
-        slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice.name]
+        # slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice.name]
 
-        # Format the attachments data and save it
-        slice.set_attachments(slice_attachments)
+        # # Format the attachments data and save it
+        # slice.set_attachments(slice_attachments)
 
         return slice
 
@@ -245,12 +244,13 @@ class Slices(Namespace):
                     slice["slice"].get("deviceUplinkThroughput")
                 ),
             )
-        attachments = self.api.slice_attach.get_attachments().json()
         
-        # Filter the attachments by the slice
-        slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice_instance.name]
+        # attachments = self.api.slice_attach.get_attachments().json()
+        
+        # # Filter the attachments by the slice
+        # slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice_instance.name]
 
-        slice_instance.set_attachments(slice_attachments)
+        # slice_instance.set_attachments(slice_attachments)
         
         return slice_instance
         
