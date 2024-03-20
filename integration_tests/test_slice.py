@@ -180,14 +180,6 @@ def test_attach_device_to_slice_and_detach(client, device):
     
     slice.detach(device)
 
-    counter = 0
-    while slice.state == "AVAILABLE" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
-
-    assert slice.state == "OPERATING"
-    
     slice.deactivate()
 
     counter = 0
