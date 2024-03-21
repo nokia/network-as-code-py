@@ -15,6 +15,7 @@
 import asyncio
 from os import access
 import datetime
+import pdb
 from urllib.error import HTTPError
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
@@ -106,18 +107,19 @@ class TrafficCategories(BaseModel):
     apps: Apps
 
 class DeviceAttachment(BaseModel):
-    network_access_identifier: Optional[str]
-    phone_number: Optional[str]
-    attachment_id: str
+    id: str
+    device_phone_number: str
+    _api: APIClient = PrivateAttr()
 
-def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
-    if slice_attachments:
-        for i, attachment in enumerate(slice_attachments):
-            if attachment.network_access_identifier == device.network_access_id or attachment.phone_number == device.phone_number:
-                attachment_id = attachment.attachment_id
-                del slice_attachments[i]
-                return attachment_id
-    return None
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+        
+    
+    def delete(self):
+        if self.id:
+            return self._api.slice_attach.detach(self.id)
+
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
@@ -312,12 +314,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
-    def set_attachments(self, attachments):
-        self._attachments = [
-            DeviceAttachment(phone_number=attachment['device']['phoneNumber'],
-                             attachment_id=attachment['id']) for attachment in attachments
-        ]
-
     def attach(
         self,
         device: Device,
@@ -342,14 +338,17 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         )
             ```
         """
-        res = self._api.slice_attach.attach(
+        new_attachment = self._api.slice_attach.attach(
             device, self.name, traffic_categories, notificationUrl, notificationAuthToken
-        )
+        ).json()
+
         
-        self._attachments.append(DeviceAttachment(
-            network_access_identifier=device.network_access_id, 
-            phone_number=device.phone_number, 
-            attachment_id=res.json()['nac_resource_id']))
+        self._attachments.append(
+            DeviceAttachment(self._api, id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
+        )
+
+        return new_attachment
+
 
     def detach(
         self,
@@ -367,11 +366,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.detach()
             ```
         """
-        attachment_id = fetch_and_remove(self._attachments, device)
-        if attachment_id:
-            self._api.slice_attach.detach(
-                attachment_id
-            )
+        attachment = [attachment for attachment in self._attachments if attachment.device_phone_number == device.phone_number]
+        if len(attachment) > 0:
+            attachment[0].delete()
         else:
             raise NotFound("Attachment not found")
 
