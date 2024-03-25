@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import pdb
 from typing import List, Optional, Union
 import math
 
@@ -183,6 +184,13 @@ class Slices(Namespace):
             ),
         )
 
+        # attachments = self.api.slice_attach.get_attachments().json()
+
+        # # # Filter the attachments by the slice
+        # slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice.name]
+
+        # slice.set_attachments(slice_attachments)
+        
         return slice
 
     def getAll(self) -> List[Slice]:
@@ -206,6 +214,22 @@ class Slices(Namespace):
 
         return slices
 
+
+    def get_attachment(
+        self,
+        id: str
+    ) -> None:
+        """Get Application Attachment Instance
+
+        #### Args:
+            id (str): Application Attachment Id
+
+        #### Example:
+            ```python
+            attachment = slice.get_attachment(id)
+            ```
+        """
+        return self.api.slice_attach.get(id).json()
 
     def _convert_to_slice_model(self, slice):
         slice_instance = Slice(
@@ -237,6 +261,14 @@ class Slices(Namespace):
                 ),
             )
         
+        # attachments = self.api.slice_attach.get_attachments().json()
+        
+        # # # Filter the attachments by the slice
+        # slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice_instance.name]
+
+        # slice_instance.set_attachments(slice_attachments)
+
         return slice_instance
+        
         
         

@@ -314,6 +314,14 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
+    def set_attachments(self, attachments):
+        if(len(attachments) > 0):
+            self._attachments = [
+                DeviceAttachment(phone_number=attachment['device']['phoneNumber'],
+                                attachment_id=attachment['id']) for attachment in attachments
+            ]
+
+
     def attach(
         self,
         device: Device,
@@ -372,24 +380,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         else:
             raise NotFound("Attachment not found")
         
-
-    def get_attachment(
-        self,
-        id: str
-    ) -> None:
-        """Get Application Attachment Instance
-
-        #### Args:
-            id (str): Application Attachment Id
-
-        #### Example:
-            ```python
-            attachment = slice.get_attachment(id)
-            ```
-        """
-        return self._api.slice_attach.get(id).json()
-        
-
+    
     @staticmethod
     def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.

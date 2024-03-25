@@ -390,6 +390,36 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
+
+    # httpx_mock.add_response(
+    #     method="GET",
+    #     url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+    #     json=[{
+    #         "nac_resource_id": "attachment-1",
+    #         "resource": {
+    #             "device": {
+    #                 "phoneNumber": "12065550100"
+    #             },
+    #             "sliceId": "sliceone"
+    #         },
+    #     }, {
+    #         "nac_resource_id": "attachment-2",
+    #         "resource": {
+    #             "device": {
+    #                 "phoneNumber": "09213284343"
+    #             },
+    #             "sliceId": "sliceone"
+    #         },
+    #     }, {
+    #         "nac_resource_id": "attachment-3",
+    #         "resource": {
+    #             "device": {
+    #                 "phoneNumber": "12065550100"
+    #             },
+    #             "sliceId": "sdk-integration-slice-5"
+    #         },
+    #     }]
+    # )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
     assert response.sid == MOCK_SLICE['csi_id']
@@ -557,18 +587,10 @@ def test_get_atttachment(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         },
         url=f"https://device-application-attach.p-eu.rapidapi.com/attachments/4f11d02d-e661-4e4b-b623-55292a431c60"
     )
-
-    slice = Slice(
-            api=client._api,
-            state = "NOT_SUBMITTED",
-            name = "sliceone",
-            network_identifier=NetworkIdentifier(mcc='236', mnc='30'),
-            slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
-            notification_url="https://example.com/notify"
-    )
     
-    response = slice.get_attachment("4f11d02d-e661-4e4b-b623-55292a431c60")
+    response = client.slices.get_attachment("4f11d02d-e661-4e4b-b623-55292a431c60")
     assert response['nac_resource_id'] == "4f11d02d-e661-4e4b-b623-55292a431c60"
+
 
 
 def test_HTTPError_404_raises_NotFound(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
