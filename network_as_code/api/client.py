@@ -37,15 +37,15 @@ SLICE_RAPID_HOST_PROD = "network-slicing.nokia.rapidapi.com"
 SLICE_BASE_URL_DEV = "https://network-slicing2.p-eu.rapidapi.com"
 
 SLICE_ATTACH_BASE_URL_PROD = (
-    "https://network-slice-device-attach-norc.p-eu.rapidapi.com"
+    "https://device-application-attach.p-eu.rapidapi.com"
 )
-SLICE_ATTACH_RAPID_HOST_PROD = "network-slice-device-attach-norc.nokia.rapidapi.com"
-SLICE_ATTACH_BASE_URL_DEV = "https://device-attach-norc1.p-eu.rapidapi.com"
+SLICE_ATTACH_RAPID_HOST_PROD = "device-application-attach.nokia.rapidapi.com"
+SLICE_ATTACH_BASE_URL_DEV = "https://device-application-attach.p-eu.rapidapi.com"
 
 DEVICE_STATUS_BASE_URL_PROD = "https://device-status.p-eu.rapidapi.com"
 DEVICE_STATUS_RAPID_HOST_PROD = "device-status.nokia.rapidapi.com"
 DEVICE_STATUS_BASE_URL_DEV = "https://device-status1.p-eu.rapidapi.com"
-
+    
 
 class APIClient:
     """A client for communicating with Network as Code APIs.

@@ -2,7 +2,7 @@ import json
 import pytest
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
-from network_as_code.models.slice import NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput
+from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput, TrafficCategories
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
@@ -376,19 +376,78 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         }
     ]
 
-    
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }]
+    )
+
     httpx_mock.add_response(
         method="GET",
         url="https://network-slicing.p-eu.rapidapi.com/slices",
         json=slices
     )
     client.slices.getAll()
+    
 
 def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }]
     )
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -446,81 +505,210 @@ def test_attach_device_to_slice(httpx_mock, client, device):
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }],
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments"
+    )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments",
         json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
+            "nac_resource_id": "attachment-1"
         },
         match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here"
+            "device": {
+                "phoneNumber": device.phone_number,
+                "ipv4Address": {
+                    "publicAddress": device.ipv4_address.public_address,
+                    "privateAddress": device.ipv4_address.private_address,
+                    "publicPort": device.ipv4_address.public_port
+                },
+            },
+            "sliceId": "sliceone",
+            "traffic_categories": {
+                "apps": {
+                    "os": "97a498e3-fc92-5c94-8986-0333d06e4e47",
+                    "apps": ["ENTERPRISE"]
+                }
+            },
+            "webhook": {
+                "notificationUrl": "https://example.com/notifications",
+                "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+            }
         })
     )
 
-    slice.attach(device, "https://notify.me/here")
+    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+        os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+        apps=["ENTERPRISE"]
+    )), notificationUrl="https://example.com/notifications",
+    notificationAuthToken="c8974e592c2fa383d4a3960714")
 
-def test_attach_device_to_slice_with_optional_params(httpx_mock, client, device):
+def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "+12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "+12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }],
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments"
+    )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
-        method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/attach",
-        json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
-        },
-        match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here",
-            "notificationAuthToken": "my_auth_token"
-        })
+        method="DELETE",
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments/attachment-1"
     )
 
-    slice.attach(device, "https://notify.me/here", notification_auth_token="my_auth_token")
+    slice.detach(device)
+    
 
-def test_detach_device_from_slice(httpx_mock, client, device):
+def test_detach_device_from_slice_not_found(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }],
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments"
+    )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
-    httpx_mock.add_response(
-        method="POST",
-        url=f"https://network-slice-device-attach-norc.p-eu.rapidapi.com/slice/{slice.name}/detach",
-        json={
-            "id": "string",
-            "phoneNumber": "string",
-            "deviceStatus": "ATTACHED",
-            "progress": "INPROGRESS",
-            "slice_id": "string"
-        },
-        match_content=to_bytes({
-            "phoneNumber": "+12065550100",
-            "notificationUrl": "https://notify.me/here"
-        })
-    )
+    # If the attachement id is not found in local storage, NotFound error will be thrown
 
-    slice.detach(device, "https://notify.me/here")
+    with pytest.raises(NotFound):
+        slice.detach(device)
+
+def test_get_atttachment(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json={
+            "nac_resource_id":"4f11d02d-e661-4e4b-b623-55292a431c60"
+        },
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments/4f11d02d-e661-4e4b-b623-55292a431c60"
+    )
+    
+    response = client.slices.get_attachment("4f11d02d-e661-4e4b-b623-55292a431c60")
+    assert response['nac_resource_id'] == "4f11d02d-e661-4e4b-b623-55292a431c60"
+
+def test_get_all_atttachments(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }],
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments"
+    )
+    
+    response = client.slices.get_all_attachments()
+    assert len(response) == 3
 
 
 def test_HTTPError_404_raises_NotFound(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
@@ -638,6 +826,36 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
         method="GET",
         json=mock_slice_no_csi,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{mock_slice_no_csi['slice']['name']}"
+    )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }],
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments"
     )
 
     response = client.slices.get(MOCK_SLICE['slice']['name'])

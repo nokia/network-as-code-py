@@ -15,6 +15,7 @@
 import asyncio
 from os import access
 import datetime
+import pdb
 from urllib.error import HTTPError
 from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
@@ -98,6 +99,25 @@ class AreaOfService(BaseModel):
     polygon: List[Point]
 
 
+class Apps(BaseModel):
+    os: str
+    apps: List[str]
+
+class TrafficCategories(BaseModel):
+    apps: Apps
+
+class DeviceAttachment(BaseModel):
+    device_phone_number: str
+    attachment_id: str
+
+def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
+    for i, attachment in enumerate(slice_attachments):
+        if attachment.device_phone_number == device.phone_number:
+            attachment_id = attachment.attachment_id
+            del slice_attachments[i]
+            return attachment_id
+    return None
+
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
     A class representing the `Slice` model.
@@ -167,11 +187,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     slice_uplink_throughput: Optional[Throughput] = None
     device_downlink_throughput: Optional[Throughput] = None
     device_uplink_throughput: Optional[Throughput] = None
+    _attachments: List[DeviceAttachment] = PrivateAttr()
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
         self._sessions = []
+        self._attachments = []
 
     def activate(self) -> None:
         """Activate network slice.
@@ -201,7 +223,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         if self.name:
             return self._api.slicing.deactivate(self.name)
     
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+    def _to_api_throughput(self, throughput: Optional[Throughput] = None) -> Optional[ApiThroughput]:
         if throughput is not None:
             return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
         return None
@@ -289,11 +311,20 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
+
+    def set_attachments(self, attachments):
+        if(len(attachments) > 0):
+            self._attachments = [
+                DeviceAttachment(device_phone_number=attachment['resource']['device']['phoneNumber'],
+                                attachment_id=attachment['nac_resource_id']) for attachment in attachments
+            ]
+
     def attach(
         self,
         device: Device,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
+        traffic_categories: Union[TrafficCategories, None],
+        notificationUrl: Union[str, None],
+        notificationAuthToken: str
     ) -> None:
         """Attach network slice.
 
@@ -303,18 +334,31 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         #### Example:
             ```python
             device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
-            slice.attach(device)
+            slice.attach(device, traffic_categories = TrafficCategories(
+                apps=Apps(
+                    os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+                    apps=["ENTERPRISE", "ENTERPRISE2"]
+                )
+            )
+        )
             ```
         """
-        self._api.slice_attach.attach(
-            device, self.name, notification_url, notification_auth_token
+
+        new_attachment = self._api.slice_attach.attach(
+            device, self.name, traffic_categories, notificationUrl, notificationAuthToken
+        ).json()
+
+        
+        self._attachments.append(
+            DeviceAttachment(attachment_id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
         )
+
+        return new_attachment
+
 
     def detach(
         self,
         device: Device,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
     ) -> None:
         """Detach network slice.
 
@@ -328,10 +372,16 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.detach()
             ```
         """
-        self._api.slice_attach.detach(
-            device, self.name, notification_url, notification_auth_token
-        )
-
+        attachment_id = fetch_and_remove(self._attachments, device)
+        
+        if attachment_id:
+            self._api.slice_attach.detach(
+                attachment_id
+            )
+        else:
+            raise NotFound("Attachment not found")
+        
+    
     @staticmethod
     def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
@@ -364,7 +414,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> AreaOfService | None:
+    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> Optional[AreaOfService]:
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.

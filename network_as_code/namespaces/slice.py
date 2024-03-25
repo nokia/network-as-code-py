@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import pdb
 from typing import List, Optional, Union
 import math
 
@@ -40,7 +41,7 @@ class Slices(Namespace):
     network slice can be configured and managed.
     """
 
-    def _to_api_throughput(self, throughput: Throughput | None) -> ApiThroughput | None:
+    def _to_api_throughput(self, throughput: Optional[Throughput]) -> Optional[ApiThroughput]:
         if throughput is None:
             return None
         return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
@@ -183,6 +184,12 @@ class Slices(Namespace):
             ),
         )
 
+        attachments = self.api.slice_attach.get_attachments().json()
+
+        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice.name]
+
+        slice.set_attachments(slice_attachments)
+        
         return slice
 
     def getAll(self) -> List[Slice]:
@@ -198,8 +205,48 @@ class Slices(Namespace):
         """
         slice_data = self.api.slicing.getAll()
 
+        
         slices = [
-            Slice(
+            self._convert_to_slice_model(slice)
+            for slice in slice_data.json()
+        ]
+
+        return slices
+
+
+    def get_attachment(
+        self,
+        id: str
+    ) -> None:
+        """Get Application Attachment Instance
+
+        #### Args:
+            id (str): Application Attachment Id
+
+        #### Example:
+            ```python
+            attachment = nac_client.slices.get_attachment(id)
+            ```
+        """
+        return self.api.slice_attach.get(id).json()
+    
+    def get_all_attachments(
+        self
+    ) -> None:
+        """Get All Application Attachments
+
+        #### Args:
+            None
+
+        #### Example:
+            ```python
+            nac_client.slices.get_all_attachments()
+            ```
+        """
+        return self.api.slice_attach.get_attachments().json()
+
+    def _convert_to_slice_model(self, slice):
+        slice_instance = Slice(
                 api=self.api,
                 state=slice["state"],
                 name=slice["slice"]["name"],
@@ -227,7 +274,14 @@ class Slices(Namespace):
                     slice["slice"].get("deviceUplinkThroughput")
                 ),
             )
-            for slice in slice_data.json()
-        ]
+        
+        attachments = self.api.slice_attach.get_attachments().json()
+        
+        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice_instance.name]
 
-        return slices
+        slice_instance.set_attachments(slice_attachments)
+
+        return slice_instance
+        
+        
+        

@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
+from typing import Union
 import json
 import os
-import pdb
 import httpx
 
 from typing import Optional, Any
 from pydantic import BaseModel
 
 from ..errors import error_handler
+
+
 
 class Throughput(BaseModel):
     """
@@ -196,38 +199,61 @@ class AttachAPI:
         self,
         device,
         slice_id: str,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
+        traffic_categories: Union[any, None],
+        notificationUrl: Union[str,None],
+        notificationAuthToken: str
     ):
-        res = self.client.post(
-            url=f"/slice/{slice_id}/attach",
-            json=delete_none(
-                {
-                    "phoneNumber": device.phone_number,
-                    "notificationUrl": notification_url,
-                    "notificationAuthToken": notification_auth_token,
+        payload = {
+                "device": {
+                        "phoneNumber": device.phone_number,
+                        "ipv4Address": {
+                            "publicAddress": device.ipv4_address.public_address,
+                            "privateAddress": device.ipv4_address.private_address,
+                            "publicPort": device.ipv4_address.public_port
+                        },
+                        "ipv6Address": device.ipv6_address
+                    },
+                "sliceId": slice_id,
+                "traffic_categories": {
+                    "apps": traffic_categories.apps.__dict__
+                },
+                "webhook": {
+                    "notificationUrl": notificationUrl,
+                    "notificationAuthToken": notificationAuthToken
                 }
-            ),
+        }
+
+        res = self.client.post(
+            url=f"/attachments",
+            json=delete_none(payload),
+        )
+        
+        error_handler(res)
+        return res
+        
+
+    def get_attachments(self):
+        res = self.client.get(
+            url=f"/attachments"
+        )
+        
+        error_handler(res)
+        
+        return res    
+
+    def get(self, id: str):
+        res = self.client.get(
+            url=f"/attachments/{id}",
         )
 
         error_handler(res)
+        
+        return res
 
-    def detach(
-        self,
-        device,
-        slice_id: str,
-        notification_url: str,
-        notification_auth_token: Optional[str] = None,
-    ):
-        res = self.client.post(
-            url=f"/slice/{slice_id}/detach",
-            json=delete_none(
-                {
-                    "phoneNumber": device.phone_number,
-                    "notificationUrl": notification_url,
-                    "notificationAuthToken": notification_auth_token,
-                }
-            ),
+    def detach(self, id):
+        res = self.client.delete(
+            url=f"/attachments/{id}"
         )
-
         error_handler(res)
+
+  
