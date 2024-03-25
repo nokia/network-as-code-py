@@ -107,19 +107,16 @@ class TrafficCategories(BaseModel):
     apps: Apps
 
 class DeviceAttachment(BaseModel):
-    id: str
     device_phone_number: str
-    _api: APIClient = PrivateAttr()
+    attachment_id: str
 
-    def __init__(self, api: APIClient, **data) -> None:
-        super().__init__(**data)
-        self._api = api
-        
-    
-    def delete(self):
-        if self.id:
-            return self._api.slice_attach.detach(self.id)
-
+def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
+    for i, attachment in enumerate(slice_attachments):
+        if attachment.device_phone_number == device.phone_number:
+            attachment_id = attachment.attachment_id
+            del slice_attachments[i]
+            return attachment_id
+    return None
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
@@ -314,13 +311,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
+
     def set_attachments(self, attachments):
         if(len(attachments) > 0):
             self._attachments = [
-                DeviceAttachment(phone_number=attachment['device']['phoneNumber'],
-                                attachment_id=attachment['id']) for attachment in attachments
+                DeviceAttachment(device_phone_number=attachment['resource']['device']['phoneNumber'],
+                                attachment_id=attachment['nac_resource_id']) for attachment in attachments
             ]
-
 
     def attach(
         self,
@@ -346,13 +343,14 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         )
             ```
         """
+
         new_attachment = self._api.slice_attach.attach(
             device, self.name, traffic_categories, notificationUrl, notificationAuthToken
         ).json()
 
         
         self._attachments.append(
-            DeviceAttachment(self._api, id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
+            DeviceAttachment(attachment_id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
         )
 
         return new_attachment
@@ -374,9 +372,12 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.detach()
             ```
         """
-        attachment = [attachment for attachment in self._attachments if attachment.device_phone_number == device.phone_number]
-        if len(attachment) > 0:
-            attachment[0].delete()
+        attachment_id = fetch_and_remove(self._attachments, device)
+        
+        if attachment_id:
+            self._api.slice_attach.detach(
+                attachment_id
+            )
         else:
             raise NotFound("Attachment not found")
         

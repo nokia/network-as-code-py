@@ -184,12 +184,11 @@ class Slices(Namespace):
             ),
         )
 
-        # attachments = self.api.slice_attach.get_attachments().json()
+        attachments = self.api.slice_attach.get_attachments().json()
 
-        # # # Filter the attachments by the slice
-        # slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice.name]
+        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice.name]
 
-        # slice.set_attachments(slice_attachments)
+        slice.set_attachments(slice_attachments)
         
         return slice
 
@@ -226,10 +225,25 @@ class Slices(Namespace):
 
         #### Example:
             ```python
-            attachment = slice.get_attachment(id)
+            attachment = nac_client.slices.get_attachment(id)
             ```
         """
         return self.api.slice_attach.get(id).json()
+    
+    def get_all_attachments(
+        self
+    ) -> None:
+        """Get All Application Attachments
+
+        #### Args:
+            None
+
+        #### Example:
+            ```python
+            nac_client.slices.get_all_attachments()
+            ```
+        """
+        return self.api.slice_attach.get_attachments().json()
 
     def _convert_to_slice_model(self, slice):
         slice_instance = Slice(
@@ -261,12 +275,11 @@ class Slices(Namespace):
                 ),
             )
         
-        # attachments = self.api.slice_attach.get_attachments().json()
+        attachments = self.api.slice_attach.get_attachments().json()
         
-        # # # Filter the attachments by the slice
-        # slice_attachments = [attachment for attachment in attachments if attachment['slice']['name'] == slice_instance.name]
+        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice_instance.name]
 
-        # slice_instance.set_attachments(slice_attachments)
+        slice_instance.set_attachments(slice_attachments)
 
         return slice_instance
         

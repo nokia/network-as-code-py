@@ -98,6 +98,11 @@ def test_deleting_a_slice_marks_it_as_deleted(client):
 
     assert slice.state == "DELETED"
 
+def test_getting_attachments(client):
+    assert type(client.slices.get_all_attachments()) is list
+
+
+
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
@@ -178,7 +183,7 @@ def test_attach_device_to_slice_and_detach(client, device):
     
     time.sleep(30)
 
-    attachment = slice.get_attachment(new_attachment['nac_resource_id'])
+    attachment = client.slices.get_attachment(new_attachment['nac_resource_id'])
 
     assert attachment['nac_resource_id'] == new_attachment['nac_resource_id']
 
