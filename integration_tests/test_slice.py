@@ -170,14 +170,18 @@ def test_attach_device_to_slice_and_detach(client, device):
 
     assert slice.state == "OPERATING"
 
-    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+    new_attachment = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
     )), notificationUrl="https://example.com/notifications",
     notificationAuthToken="c8974e592c2fa383d4a3960714")
-
-    time.sleep(30)
     
+    time.sleep(30)
+
+    attachment = slice.get_attachment(new_attachment['nac_resource_id'])
+
+    assert attachment['nac_resource_id'] == new_attachment['nac_resource_id']
+
     slice.detach(device)
 
     slice.deactivate()

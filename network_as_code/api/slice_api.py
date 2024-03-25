@@ -241,8 +241,19 @@ class AttachAPI:
 
         return res    
 
+    def get(self, id: str):
+        res = self.client.get(
+            url=f"/attachments/{id}",
+        )
+
+        error_handler(res)
+        
+        return res
+
     def detach(self, id):
         res = self.client.delete(
             url=f"/attachments/{id}"
         )
         error_handler(res)
+
+  

@@ -522,12 +522,11 @@ def test_detach_device_to_slice(httpx_mock, client, device):
         })
     )
 
-    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+    res = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
     )), notificationUrl="https://example.com/notifications",
     notificationAuthToken="c8974e592c2fa383d4a3960714")
-    
 
     httpx_mock.add_response(
         method="DELETE",
@@ -549,6 +548,27 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
 
     with pytest.raises(NotFound):
         slice.detach(device)
+
+def test_get_atttachment(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json={
+            "nac_resource_id":"4f11d02d-e661-4e4b-b623-55292a431c60"
+        },
+        url=f"https://device-application-attach.p-eu.rapidapi.com/attachments/4f11d02d-e661-4e4b-b623-55292a431c60"
+    )
+
+    slice = Slice(
+            api=client._api,
+            state = "NOT_SUBMITTED",
+            name = "sliceone",
+            network_identifier=NetworkIdentifier(mcc='236', mnc='30'),
+            slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
+            notification_url="https://example.com/notify"
+    )
+    
+    response = slice.get_attachment("4f11d02d-e661-4e4b-b623-55292a431c60")
+    assert response['nac_resource_id'] == "4f11d02d-e661-4e4b-b623-55292a431c60"
 
 
 def test_HTTPError_404_raises_NotFound(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
