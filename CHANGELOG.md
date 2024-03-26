@@ -1,6 +1,20 @@
 
 # Changelog
 
+## Version 2.1
+
+Breaking changes:
+- None!
+
+Changes:
+- Introduced Slice Application Attachment for performing granular, URSP-based application slicing
+  - Uses the same `slice.attach()` method, but with optional `traffic_categories` parameter, performs full slice attachment without it
+- Created a async function `wait_done()` for awaiting slice order completion for slice management
+- Introduced slice modification functionality for changing the parameters of created slices
+
+Fixes:
+- Miscellaneous fixes to unit and integration tests
+
 ## Version 2.0
 
 Breaking changes:
