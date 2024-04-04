@@ -33,9 +33,9 @@ class Connectivity(Namespace):
     def subscribe(
         self,
         event_type: str,
-        max_num_of_reports: int,
         notification_url: str,
         device: Device,
+        max_num_of_reports: Optional[int] = None,
         notification_auth_token: Optional[str] = None,
         subscription_expire_time: Optional[str] = None,
     ) -> EventSubscription:
@@ -68,7 +68,7 @@ class Connectivity(Namespace):
                 max_num_of_reports,
                 subscription_expire_time,
             )
-            connectivity_subscription.id = connectivity_data["eventSubscriptionId"]
+            connectivity_subscription.id = connectivity_data["subscriptionId"]
 
         except HTTPError as e:
             if e.code == 403:
@@ -125,7 +125,7 @@ class Connectivity(Namespace):
             )
 
         return EventSubscription(
-            id=connectivity_data["eventSubscriptionId"],
+            id=connectivity_data["subscriptionId"],
             api=self.api,
             max_num_of_reports=0,
             notification_url=connectivity_data["webhook"]["notificationUrl"],

@@ -74,7 +74,7 @@ class DeviceStatusAPI:
                             else None,
                             "ipv6Address": device.ipv6_address,
                         },
-                        "eventType": event_type,
+                        "type": event_type,
                     },
                     "maxNumberOfReports": max_number_of_reports,
                     "subscriptionExpireTime": subscription_expire_time,
