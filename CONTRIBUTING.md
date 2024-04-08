@@ -207,7 +207,7 @@ You can then just download that into any directory you want.
 2. Make changes (remember to document your code using docstrings)
 3. Write tests and run them locally. Make sure they all pass!
 4. Commit and push your branch
-5. Submit merge request
+5. Submit merge request (either to main or a release branch)
 
 The key part of designing and implementing high-level abstractions
 is to consider the third-party developer perspective. Consider if the
@@ -217,6 +217,30 @@ should live and what its relationships to other features or concepts
 are. Make the functionality discoverable using auto-completion. If
 two features function similarly, make sure they have a consistent
 appearance to the developer.
+
+The branching strategy is based on a split between new releases and
+bug fixes. The main branch should contain functionality that either
+has been released or will be released shortly + bug fixes. For
+unreleased features a specific release branch for that release will be
+used and merged to main on release. This way the main branch can be
+kept in sync between GitHub and internal GitLab without worrying about
+unreleased content.
+
+The overall workflow for a release content is like so:
+
+1. When new release is started, a release-YY.M branch is created from main
+2. All planned features will be created on feature branches and MR'd towards the release branch
+3. Bug fixes affecting existing releases will be MR'd towards main branch and release branch rebased on main
+4. Bug fix releases can be tagged from main, these bug fixes should also be pushed to GitHub
+5. Once release content is ready, the release branch is MR'd to main
+6. Main should be synchronized with GitHub
+7. New release is tagged from main
+
+Bug fixes and new features originating from GitHub should follow the same
+process, except the GitHub release branch will not contain internal, unfinished
+code. This branch should be created when a PR is first created for the
+GitHub repository and will be merged with main after step 6. Bug fixes can
+be merged directly to main and synchronized with internal GitLab.
 
 ## Testing and test coverage
 
