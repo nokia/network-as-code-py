@@ -219,7 +219,7 @@ two features function similarly, make sure they have a consistent
 appearance to the developer.
 
 The branching strategy is based on a split between new releases and
-bug fixes. The main branch is should contain functionality that either
+bug fixes. The main branch should contain functionality that either
 has been released or will be released shortly + bug fixes. For
 unreleased features a specific release branch for that release will be
 used and merged to main on release. This way the main branch can be
