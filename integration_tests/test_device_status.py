@@ -48,6 +48,17 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
 
     subscription.delete()
 
+def test_creating_connectivity_subscription_with_expiration(client, device):
+    subscription = client.connectivity.subscribe(
+        event_type="CONNECTIVITY",
+        device=device, 
+        subscription_expire_time="2025-04-08T14:13:29.766268",
+        notification_url="http://192.0.2.0:8080/", 
+        notification_auth_token="c8974e592c2fa383d4a3960714",
+    )
+
+    subscription.delete()
+
 def test_getting_connectivity(client, device):
     connectivity_subscription = client.connectivity.subscribe(
         event_type="CONNECTIVITY",
