@@ -23,6 +23,10 @@ from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
 from ..errors import NotFound
 
+class RoamingStatus(BaseModel):
+    roaming: bool
+    country_code: Optional[int]
+    country_name: Optional[List[str]]
 
 class Event(BaseModel):
     """
@@ -246,6 +250,20 @@ class Device(BaseModel):
         """
         return self._api.location_verify.verify_location(
             latitude, longitude, self, radius, max_age
+        )
+
+    def get_connectivity(self):
+        status = self._api.devicestatus.get_connectivity(self.to_json_dict())["connectivityStatus"]
+
+        return status
+
+    def get_roaming(self) -> RoamingStatus:
+        status = self._api.devicestatus.get_roaming(self.to_json_dict())
+
+        return RoamingStatus(
+            roaming=status["roaming"],
+            country_code=status.get("countryCode"),
+            country_name=status.get("countryName")
         )
 
     def to_json_dict(self):

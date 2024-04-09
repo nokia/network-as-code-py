@@ -28,6 +28,7 @@ def to_bytes(json_content: dict) -> bytes:
 
 def test_updated_device_status_subscription_creation(httpx_mock, client):
     httpx_mock.add_response(
+        url="https://device-status.p-eu.rapidapi.com/subscriptions",
         method="POST",
         json={
             "subscriptionDetail": {
@@ -102,7 +103,6 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
                 },
                 "type": "CONNECTIVITY"
             },
-            "maxNumberOfReports": 1,
             "webhook": {
                 "notificationUrl": "https://localhost:9090/notify",
                 "notificationAuthToken": "my_auth_token"
@@ -110,7 +110,7 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
         })
     )
 
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token")
 
 def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, device_with_just_public_ipv4, client):
     httpx_mock.add_response(
@@ -219,6 +219,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
+        url="https://device-status.p-eu.rapidapi.com/subscriptions/test-subscription",
         method="GET",
         json={
             "subscriptionId": "test-subscription",
@@ -269,11 +270,153 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
     subscription = client.connectivity.get_subscription("test-subscription")
 
     httpx_mock.add_response(
+        url="https://device-status.p-eu.rapidapi.com/subscriptions/test-subscription",
         method="DELETE",
     )
 
     subscription.delete()
 
+def test_get_subscriptions(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-status.p-eu.rapidapi.com/subscriptions",
+        json=[
+            {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "testuser@testcsp.net"
+                    },
+                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                },
+                "maxNumberOfReports": 1,
+                "webhook": {
+                    "notificationUrl": "https://example.com"
+                },
+                "subscriptionId": "34e9e3ee-e281-4f47-bbc2-2431e6abbef0",
+                "eventSubscriptionId": "34e9e3ee-e281-4f47-bbc2-2431e6abbef0",
+                "startsAt": "2024-04-09T11:14:50.254312Z",
+                "expiresAt": "2024-04-10T14:13:29.766268"
+            },
+            {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "testuser@testcsp.net"
+                    },
+                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                },
+                "maxNumberOfReports": 1,
+                "webhook": {
+                    "notificationUrl": "https://example.com"
+                },
+                "subscriptionId": "51b24d1a-26ae-4c9d-b114-2086da958c50",
+                "eventSubscriptionId": "51b24d1a-26ae-4c9d-b114-2086da958c50",
+                "startsAt": "2024-04-09T11:21:22.871187Z",
+                "expiresAt": "2024-04-10T14:13:29Z"
+            },
+            {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "sdk-integration@testcsp.net",
+                        "ipv4Address": {
+                            "publicAddress": "1.1.1.2",
+                            "privateAddress": "1.1.1.2",
+                            "publicPort": 80
+                        }
+                    },
+                    "type": "org.camaraproject.device-status.v0.roaming-status",
+                    "eventType": "ROAMING_STATUS"
+                },
+                "maxNumberOfReports": 1,
+                "webhook": {
+                    "notificationUrl": "http://192.0.2.0:8080/",
+                    "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+                },
+                "subscriptionId": "815e6da4-813d-4111-987d-5e6036aaa410",
+                "eventSubscriptionId": "815e6da4-813d-4111-987d-5e6036aaa410",
+                "startsAt": "2024-04-05T14:29:56.792078Z"
+            },
+            {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "sdk-integration@testcsp.net",
+                        "ipv4Address": {
+                            "publicAddress": "1.1.1.2",
+                            "privateAddress": "1.1.1.2",
+                            "publicPort": 80
+                        }
+                    },
+                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                },
+                "maxNumberOfReports": 1,
+                "webhook": {
+                    "notificationUrl": "http://192.0.2.0:8080/",
+                    "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+                },
+                "subscriptionId": "f6b03776-5e0f-4dbc-abce-30a916f94ad0",
+                "eventSubscriptionId": "f6b03776-5e0f-4dbc-abce-30a916f94ad0",
+                "startsAt": "2024-04-09T11:11:27.052869Z",
+                "expiresAt": "2025-04-08T14:13:29.766268"
+            }
+        ]
+    )
+
+    subscriptions = client.connectivity.get_subscriptions()
+
+    assert len(subscriptions) > 0
+
+    for subscription in subscriptions:
+        assert subscription.id
+        assert subscription.device
+
+def test_poll_connectivity(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        url="https://device-status.p-eu.rapidapi.com/connectivity",
+        json={
+            "connectivityStatus": "CONNECTED_DATA"
+        },
+        match_content=to_bytes({
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                    "privateAddress": "1.1.1.2",
+                    "publicPort": 80
+                }
+            }
+        })
+    )
+
+    status = device.get_connectivity()
+
+    assert status == "CONNECTED_DATA"
+
+def test_poll_roaming(httpx_mock, device, client):
+    httpx_mock.add_response(
+        method="POST",
+        url="https://device-status.p-eu.rapidapi.com/roaming",
+        json={
+            "roaming": True,
+            "countryCode": 358,
+            "countryName": ["Finland"]
+        },
+        match_content=to_bytes({
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                    "privateAddress": "1.1.1.2",
+                    "publicPort": 80
+                }
+            }
+        })
+    )
+
+    status = device.get_roaming()
+
+    assert status.roaming
+    assert status.country_code == 358
+    assert status.country_name == ["Finland"]
 
 def test_subscribe_authentication_exception(httpx_mock, device, client):
     httpx_mock.add_response(

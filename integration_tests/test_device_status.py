@@ -13,7 +13,7 @@ def device(client) -> Device:
 
 def test_creating_connectivity_subscription_with_notification(client, device):
     subscription = client.connectivity.subscribe(
-        event_type="CONNECTIVITY",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -26,7 +26,7 @@ def test_creating_connectivity_subscription_with_notification(client, device):
 
 def test_creating_connectivity_subscription_roaming(client, device):
     subscription = client.connectivity.subscribe(
-        event_type="ROAMING_STATUS",
+        event_type="org.camaraproject.device-status.v0.roaming-status",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -39,7 +39,7 @@ def test_creating_connectivity_subscription_roaming(client, device):
 
 def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device):
     subscription = client.connectivity.subscribe(
-        event_type="CONNECTIVITY",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -50,9 +50,9 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
 
 def test_creating_connectivity_subscription_with_expiration(client, device):
     subscription = client.connectivity.subscribe(
-        event_type="CONNECTIVITY",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
-        subscription_expire_time="2025-04-08T14:13:29.766268",
+        subscription_expire_time="2024-04-10T14:13:29Z",
         notification_url="http://192.0.2.0:8080/", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
@@ -61,7 +61,7 @@ def test_creating_connectivity_subscription_with_expiration(client, device):
 
 def test_getting_connectivity(client, device):
     connectivity_subscription = client.connectivity.subscribe(
-        event_type="CONNECTIVITY",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -76,7 +76,7 @@ def test_getting_connectivity(client, device):
 
 def test_delete_connectivity(client, device):
     connectivity_subscription = client.connectivity.subscribe(
-        event_type="CONNECTIVITY",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -92,13 +92,29 @@ def test_delete_connectivity(client, device):
         # We expect 404
         assert True
 
+def test_get_subscriptions(client, device):
+    subscriptions = client.connectivity.get_subscriptions()
+
+    assert isinstance(subscriptions, list)
+
+def test_get_connectivity_status(client, device):
+    status = device.get_connectivity()
+
+    assert status == "CONNECTED_DATA"
+
+def test_get_roaming_status(client, device):
+    status = device.get_roaming()
+
+    assert status.roaming()
+    assert status.
+
 @pytest.mark.skip(reason="the API currently gives a 400 error for this")
 def test_subscribe_device_not_found(client):
     device = client.devices.get("non-existent@device.net")
 
     with pytest.raises(NotFound):
         client.connectivity.subscribe(
-            event_type="CONNECTIVITY",
+            event_type="org.camaraproject.device-status.v0.connectivity-data",
             device=device,
             max_num_of_reports=5, 
             notification_url="http://192.0.2.0:8080/", 

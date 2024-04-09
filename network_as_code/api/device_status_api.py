@@ -58,7 +58,7 @@ class DeviceStatusAPI:
         assert device.network_access_id != "None"
 
         res = self.client.post(
-            "/event-subscriptions",
+            "/subscriptions",
             json=delete_none(
                 {
                     "subscriptionDetail": {
@@ -91,13 +91,38 @@ class DeviceStatusAPI:
         return res.json()
 
     def get_subscription(self, id: str):
-        res = self.client.get(f"/event-subscriptions/{id}")
+        res = self.client.get(f"/subscriptions/{id}")
+
+        error_handler(res)
+
+        return res.json()
+
+    def get_subscriptions(self):
+        res = self.client.get(f"/subscriptions")
 
         error_handler(res)
 
         return res.json()
 
     def delete_subscription(self, id: str):
-        res = self.client.delete(f"/event-subscriptions/{id}")
+        res = self.client.delete(f"/subscriptions/{id}")
 
         error_handler(res)
+
+    def get_connectivity(self, device: dict):
+        res = self.client.post("/connectivity", json={
+            "device": device
+        })
+
+        error_handler(res)
+
+        return res.json()
+
+    def get_roaming(self, device: dict):
+        res = self.client.post("/roaming", json={
+            "device": device
+        })
+
+        error_handler(res)
+
+        return res.json()
