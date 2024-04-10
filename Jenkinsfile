@@ -181,7 +181,7 @@ pipeline {
             updateGitlabCommitStatus name: 'build', state: 'success'
         }
         failure{
-            postToTeams("Jenkins build failed see ${env.BUILD_URL} for more.", '${TEAMS_WEBHOOK}')
+            postToTeams("Jenkins build failed see ${env.BUILD_URL} for more.", "${TEAMS_WEBHOOK}")
             updateGitlabCommitStatus name: 'build', state: 'failed'
         }
     }
