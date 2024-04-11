@@ -140,7 +140,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
     subscription = client.connectivity.subscribe(
         device=device,
         event_type="org.camaraproject.device-status.v0.roaming-status",
-        subscription_expire_time=datetime.fromisoformat("2023-01-17T13:18:23.682Z"),
+        subscription_expire_time=datetime.fromisoformat("2023-01-17T13:18:23.682+00:00"),
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
     )
