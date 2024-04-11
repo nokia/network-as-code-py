@@ -57,6 +57,7 @@ pipeline {
         PYPI_PASSWORD = credentials('PYPI_PASSWORD')
         PYPI_TOKEN = credentials('PYPI_TOKEN')
         NAC_TOKEN = credentials('NAC_TOKEN')
+        TEAMS_WEBHOOK = credentials('TEAMS_WEBHOOK')
         SONAR_PATH = "/opt/sonar-scanner/bin"
         SONAR_TOKEN = "sonar-token"
     }
@@ -180,6 +181,7 @@ pipeline {
             updateGitlabCommitStatus name: 'build', state: 'success'
         }
         failure{
+            postToTeams("Jenkins build failed see ${env.BUILD_URL} for more.", "${TEAMS_WEBHOOK}")
             updateGitlabCommitStatus name: 'build', state: 'failed'
         }
     }
