@@ -105,8 +105,7 @@ def test_get_connectivity_status(client, device):
 def test_get_roaming_status(client, device):
     status = device.get_roaming()
 
-    assert status.roaming()
-    assert status.
+    assert status.roaming
 
 @pytest.mark.skip(reason="the API currently gives a 400 error for this")
 def test_subscribe_device_not_found(client):
