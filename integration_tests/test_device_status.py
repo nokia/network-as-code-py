@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from network_as_code.models.device_status import EventSubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
@@ -52,7 +53,7 @@ def test_creating_connectivity_subscription_with_expiration(client, device):
     subscription = client.connectivity.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
-        subscription_expire_time="2024-04-10T14:13:29Z",
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_url="http://192.0.2.0:8080/", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
