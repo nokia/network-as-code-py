@@ -51,7 +51,7 @@ class DeviceStatusAPI:
         device,
         event_type: str,
         notification_url: str,
-        notification_auth_token: str,
+        notification_auth_token: Optional[str],
         max_number_of_reports: Optional[int] = None,
         subscription_expire_time: Optional[str] = None,
     ):

@@ -43,10 +43,10 @@ class Connectivity(Namespace):
 
         Args:
             event_type (str): Event type of the subscription.
-            max_num_of_reports (int): Number of notifications until the subscription is available
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
+            max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
             subscription_expire_time (Optional[str]): The expiry time of the subscription.
         """
 
@@ -58,27 +58,16 @@ class Connectivity(Namespace):
             device=device,
         )
 
-        # Error Case: Creating Connectivity Subscription
-        try:
-            connectivity_data = self.api.devicestatus.create_subscription(
-                device,
-                event_type,
-                notification_url,
-                notification_auth_token,
-                max_num_of_reports,
-                subscription_expire_time,
-            )
-            connectivity_subscription.id = connectivity_data["subscriptionId"]
+        connectivity_data = self.api.devicestatus.create_subscription(
+            device,
+            event_type,
+            notification_url,
+            notification_auth_token,
+            max_num_of_reports,
+            subscription_expire_time,
+        )
 
-        except HTTPError as e:
-            if e.code == 403:
-                raise AuthenticationException(e)
-            elif e.code == 404:
-                raise DeviceNotFound(e)
-            elif e.code >= 500:
-                raise ServiceError(e)
-        except ValidationError as e:
-            raise InvalidParameter(e)
+        connectivity_subscription.id = connectivity_data["subscriptionId"]
 
         return connectivity_subscription
 

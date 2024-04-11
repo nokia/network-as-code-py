@@ -235,7 +235,7 @@ class Device(BaseModel):
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int=60
     ) -> bool:
-        """Verifies the location of the device(Returns boolean value).
+        """Verifies the location of the device (Returns boolean value).
 
         #### Args:
             longitude (float): longitude of the device.
@@ -253,11 +253,17 @@ class Device(BaseModel):
         )
 
     def get_connectivity(self):
+        """Get the connectivity status for the device as a string"""
         status = self._api.devicestatus.get_connectivity(self.to_json_dict())["connectivityStatus"]
 
         return status
 
     def get_roaming(self) -> RoamingStatus:
+        """Get the roaming status for the device
+
+        #### Returns
+        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        """
         status = self._api.devicestatus.get_roaming(self.to_json_dict())
 
         return RoamingStatus(
