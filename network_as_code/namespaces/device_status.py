@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from datetime import datetime
+from typing import List, Union
 import math
 from . import Namespace
 from ..models.device import Device, DeviceIpv4Addr
@@ -37,7 +38,7 @@ class Connectivity(Namespace):
         device: Device,
         max_num_of_reports: Optional[int] = None,
         notification_auth_token: Optional[str] = None,
-        subscription_expire_time: Optional[str] = None,
+        subscription_expire_time: Union[datetime, str, None] = None,
     ) -> EventSubscription:
         """Create subscription for device connectivity status.
 
@@ -47,7 +48,7 @@ class Connectivity(Namespace):
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
             max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
-            subscription_expire_time (Optional[str]): The expiry time of the subscription.
+            subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. Either a datetime object or ISO formatted date string
         """
 
         connectivity_subscription = EventSubscription(
@@ -57,6 +58,10 @@ class Connectivity(Namespace):
             notification_auth_token=notification_auth_token,
             device=device,
         )
+
+        # Handle conversion
+        if isinstance(subscription_expire_time, datetime):
+            subscription_expire_time = subscription_expire_time.isoformat()
 
         connectivity_data = self.api.devicestatus.create_subscription(
             device,

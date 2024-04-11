@@ -1,6 +1,7 @@
 from pytest_httpx import httpx_mock
 import pytest
 import json
+from datetime import datetime
 from httpx import HTTPError
 
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
@@ -81,6 +82,65 @@ def test_updated_device_status_subscription_creation(httpx_mock, client):
         device=device,
         event_type="org.camaraproject.device-status.v0.roaming-status",
         subscription_expire_time="2023-01-17T13:18:23.682Z",
+        notification_url="https://application-server.com",
+        notification_auth_token="c8974e592c2fa383d4a3960714"
+    )
+
+def test_subscribing_using_datetime(httpx_mock, client):
+    httpx_mock.add_response(
+        url="https://device-status.p-eu.rapidapi.com/subscriptions",
+        method="POST",
+        json={
+            "subscriptionDetail": {
+                "device": {
+                    "phoneNumber": "123456789",
+                    "networkAccessIdentifier": "123456789@domain.com",
+                    "ipv4Address": {
+                        "publicAddress": "84.125.93.10",
+                        "publicPort": 59765
+                    },
+                    "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                },
+                "type": "org.camaraproject.device-status.v0.roaming-status"
+            },
+            "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
+            "webhook": {
+                "notificationUrl": "https://application-server.com",
+                "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+            },
+            "subscriptionId": "qs15-h556-rt89-1298",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
+        },
+        match_content=to_bytes(
+            {
+                "subscriptionDetail": {
+                    "device": {
+                        "phoneNumber": "123456789",
+                        "networkAccessIdentifier": "123456789@domain.com",
+                        "ipv4Address": {
+                            "publicAddress": "84.125.93.10",
+                            "publicPort": 59765
+                        },
+                        "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                    },
+                    "type": "org.camaraproject.device-status.v0.roaming-status"
+                },
+                "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
+                "webhook": {
+                    "notificationUrl": "https://application-server.com",
+                    "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+                }
+            }
+        )
+    )
+
+    device = client.devices.get("123456789@domain.com", phone_number="123456789", ipv4_address=DeviceIpv4Addr(public_address="84.125.93.10", public_port=59765), ipv6_address="2001:db8:85a3:8d3:1319:8a2e:370:7344")
+
+    subscription = client.connectivity.subscribe(
+        device=device,
+        event_type="org.camaraproject.device-status.v0.roaming-status",
+        subscription_expire_time=datetime.fromisoformat("2023-01-17T13:18:23.682Z"),
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
     )
