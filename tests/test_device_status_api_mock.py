@@ -8,6 +8,7 @@ from network_as_code.errors import AuthenticationException, NotFound, ServiceErr
 
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
+from tests.conftest import to_bytes
 
 @pytest.fixture
 def device(client) -> Device:
@@ -23,9 +24,6 @@ def device_with_just_public_ipv4(client) -> Device:
 def device_with_just_phone_number(client) -> Device:
     device = client.devices.get(phone_number="7777777777")
     return device
-
-def to_bytes(json_content: dict) -> bytes:
-    return json.dumps(json_content).encode()
 
 def test_updated_device_status_subscription_creation(httpx_mock, client):
     httpx_mock.add_response(

@@ -17,7 +17,7 @@ from .namespaces import Devices
 from .namespaces import Sessions
 from .namespaces import Slices
 from .namespaces import Connectivity
-
+from .namespaces import NetworkInsights
 
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
@@ -42,6 +42,7 @@ class NetworkAsCodeClient:
         self._sessions = Sessions(self._api)
         self._slices = Slices(self._api)
         self._connectivity = Connectivity(self._api)
+        self._insights = NetworkInsights(self._api)
 
     #### NAMESPACES
 
@@ -68,3 +69,7 @@ class NetworkAsCodeClient:
     @property
     def connectivity(self):
         return self._connectivity
+
+    @property
+    def insights(self):
+        return self._insights

@@ -272,8 +272,19 @@ class Device(BaseModel):
             country_name=status.get("countryName")
         )
 
+    def get_congestion(self) -> str:
+        """Get the congestion level this device is experiencing
+
+        #### Returns
+        String describing congestion level ("low", "medium", "high")
+        """
+        return self._api.congestion.fetchCongestion(self)
+
     def to_json_dict(self):
-        json_dict = {"networkAccessIdentifier": self.network_access_id}
+        json_dict = {}
+
+        if self.network_access_identifier:
+            json_dict["networkAccessIdentifier"] = self.network_access_identifier
 
         if self.ipv4_address:
             ipv4_address = {}
