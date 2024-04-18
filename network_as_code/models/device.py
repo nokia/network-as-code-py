@@ -278,7 +278,7 @@ class Device(BaseModel):
         #### Returns
         String describing congestion level ("low", "medium", "high")
         """
-        return self._api.congestion.fetchCongestion(self)
+        return self._api.congestion.fetch_congestion(self)
 
     def to_json_dict(self):
         json_dict = {}
