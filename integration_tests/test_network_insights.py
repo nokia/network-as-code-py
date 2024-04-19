@@ -33,7 +33,7 @@ def test_can_query_congestion_level_from_nef_device(nef_device):
     assert congestion in ["none", "low", "medium", "high"]
 
 def test_can_query_within_time_range(camara_device: Device):
-    congestion = camara_device.get_congestion(start=datetime.now(UTC), end=datetime.now(UTC) + timedelta(hours=3))
+    congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
 
     assert congestion in ["none", "low", "medium", "high"]
 
@@ -41,7 +41,7 @@ def test_can_subscribe_for_congestion_info(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
         notification_url="https://example.com",
-        subscription_expire_time=datetime.now(UTC) + timedelta(days=1)
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1)
     )
 
     assert subscription.id
@@ -52,7 +52,7 @@ def test_can_subscribe_for_congestion_info(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
         notification_url="https://example.com",
-        subscription_expire_time=datetime.now(UTC) + timedelta(days=1)
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1)
     )
 
     assert subscription.id
@@ -63,7 +63,7 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, camara_device
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
         notification_url="https://example.com",
-        subscription_expire_time=datetime.now(UTC) + timedelta(days=1),
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_auth_token="my-auth-token"
     )
 
@@ -90,7 +90,7 @@ def test_can_get_list_of_subscriptions(client, camara_device: Device):
         client.insights.subscribe_to_congestion_info(
             camara_device,
             notification_url="https://example.com",
-            subscription_expire_time=datetime.now(UTC) + timedelta(days=1),
+            subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
             notification_auth_token="my-auth-token"
         )
 
