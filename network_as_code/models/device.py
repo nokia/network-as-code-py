@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from os import access
 import pdb
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union, Optional
+from datetime import datetime
 
 
 from ..api import APIClient
@@ -272,13 +272,19 @@ class Device(BaseModel):
             country_name=status.get("countryName")
         )
 
-    def get_congestion(self) -> str:
+    def get_congestion(self, start: Union[datetime, str, None] = None, end: Union[datetime, str, None] = None) -> str:
         """Get the congestion level this device is experiencing
 
+        #### Args:
+             start (Union[datetime, str]): Beginning of the time range to access historical or predicted congestion
+             end (Union[datetime, str]): End of the time range to access historical or predicted congestion
         #### Returns
-        String describing congestion level ("low", "medium", "high")
+             String describing congestion level ("low", "medium", "high")
         """
-        return self._api.congestion.fetch_congestion(self)
+        start = start.isoformat() if isinstance(start, datetime) else start
+        end = end.isoformat() if isinstance(end, datetime) else end
+
+        return self._api.congestion.fetch_congestion(self, start=start, end=end)
 
     def to_json_dict(self):
         json_dict = {}

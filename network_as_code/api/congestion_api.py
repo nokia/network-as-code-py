@@ -42,13 +42,17 @@ class CongestionAPI:
 
         return response.json().get("level")
 
-    def subscribe(self, device, notification_url: str) -> dict:
+    def subscribe(self, device, notification_url: str, subscription_expire_time: str, notification_auth_token: Optional[str] = None) -> dict:
         body = {
             "device": device.to_json_dict(),
             "webhook": {
                 "notificationUrl": notification_url
-            }
+            },
+            "subscriptionExpireTime": subscription_expire_time
         }
+
+        if notification_auth_token:
+            body["webhook"]["notificationAuthToken"] = notification_auth_token
 
         response = self.client.post(url="/subscriptions", json=body)
 
