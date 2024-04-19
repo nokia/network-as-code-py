@@ -1,7 +1,7 @@
 
 import pytest
 
-from datetime import datetime, UTC, timedelta
+from datetime import datetime, timezone, timedelta
 
 from network_as_code.models.device import Device
 from network_as_code.namespaces import insights
@@ -75,7 +75,7 @@ def test_can_get_subscription_by_id(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
         notification_url="https://example.com",
-        subscription_expire_time=datetime.now(UTC) + timedelta(days=1),
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_auth_token="my-auth-token"
     )
 
