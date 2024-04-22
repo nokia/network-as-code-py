@@ -21,6 +21,7 @@ from datetime import datetime
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
+from ..models.congestion import Congestion
 from ..errors import NotFound
 
 class RoamingStatus(BaseModel):
@@ -272,19 +273,21 @@ class Device(BaseModel):
             country_name=status.get("countryName")
         )
 
-    def get_congestion(self, start: Union[datetime, str, None] = None, end: Union[datetime, str, None] = None) -> str:
+    def get_congestion(self, start: Union[datetime, str, None] = None, end: Union[datetime, str, None] = None) -> Congestion:
         """Get the congestion level this device is experiencing
 
         #### Args:
              start (Union[datetime, str]): Beginning of the time range to access historical or predicted congestion
              end (Union[datetime, str]): End of the time range to access historical or predicted congestion
         #### Returns
-             String describing congestion level ("low", "medium", "high")
+             Congestion object containing congestion level ("low", "medium", "high")
         """
         start = start.isoformat() if isinstance(start, datetime) else start
         end = end.isoformat() if isinstance(end, datetime) else end
 
-        return self._api.congestion.fetch_congestion(self, start=start, end=end)
+        json = self._api.congestion.fetch_congestion(self, start=start, end=end)
+
+        return Congestion(level=json["level"])
 
     def to_json_dict(self):
         json_dict = {}

@@ -33,9 +33,9 @@ def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client,
         )
     )
 
-    congestion_level = camara_device.get_congestion()
+    congestion = camara_device.get_congestion()
 
-    assert congestion_level == "medium"
+    assert congestion.level == "medium"
 
 def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
     httpx_mock.add_response(
@@ -55,12 +55,12 @@ def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
         )
     )
 
-    congestion_level = camara_device.get_congestion(
+    congestion= camara_device.get_congestion(
         start=datetime.fromisoformat("2024-04-15T08:17:16.664106+00:00"),
         end=datetime.fromisoformat("2024-04-16T08:18:01.773761+00:00")
     )
 
-    assert congestion_level == "medium"
+    assert congestion.level == "medium"
 
 def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
     httpx_mock.add_response(

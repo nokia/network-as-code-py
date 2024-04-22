@@ -25,7 +25,7 @@ class CongestionAPI:
             headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
         )
 
-    def fetch_congestion(self, device, start: Optional[str] = None, end: Optional[str] = None) -> str:
+    def fetch_congestion(self, device, start: Optional[str] = None, end: Optional[str] = None) -> dict:
         body = {
             "device": device.to_json_dict()
         }
@@ -40,7 +40,7 @@ class CongestionAPI:
 
         error_handler(response)
 
-        return response.json().get("level")
+        return response.json()
 
     def subscribe(self, device, notification_url: str, subscription_expire_time: str, notification_auth_token: Optional[str] = None) -> dict:
         body = {

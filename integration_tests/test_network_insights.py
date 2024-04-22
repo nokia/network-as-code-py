@@ -2,6 +2,7 @@
 import pytest
 
 from datetime import datetime, timezone, timedelta
+from network_as_code.models.congestion import Congestion
 
 from network_as_code.models.device import Device
 from network_as_code.namespaces import insights
@@ -20,22 +21,22 @@ def camara_device(client) -> Device:
 def test_can_query_congestion_level_from_camara_device(camara_device):
     congestion = camara_device.get_congestion()
 
-    assert isinstance(congestion, str)
+    assert isinstance(congestion, Congestion)
 
-    assert congestion in ["none", "low", "medium", "high"]
+    assert congestion.level in ["none", "low", "medium", "high"]
 
 
 def test_can_query_congestion_level_from_nef_device(nef_device):
     congestion = nef_device.get_congestion()
 
-    assert isinstance(congestion, str)
+    assert isinstance(congestion, Congestion)
 
-    assert congestion in ["none", "low", "medium", "high"]
+    assert congestion.level in ["none", "low", "medium", "high"]
 
 def test_can_query_within_time_range(camara_device: Device):
     congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
 
-    assert congestion in ["none", "low", "medium", "high"]
+    assert congestion.level in ["none", "low", "medium", "high"]
 
 def test_can_subscribe_for_congestion_info(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
