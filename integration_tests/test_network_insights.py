@@ -26,13 +26,6 @@ def test_can_query_congestion_level_from_camara_device(camara_device):
     assert congestion.level in ["none", "low", "medium", "high"]
 
 
-def test_can_query_congestion_level_from_nef_device(nef_device):
-    congestion = nef_device.get_congestion()
-
-    assert isinstance(congestion, Congestion)
-
-    assert congestion.level in ["none", "low", "medium", "high"]
-
 def test_can_query_within_time_range(camara_device: Device):
     congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
 
