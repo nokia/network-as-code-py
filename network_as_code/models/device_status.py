@@ -37,7 +37,7 @@ class EventSubscription(BaseModel):
 
     id: Optional[str]
     _api: APIClient = PrivateAttr()
-    max_num_of_reports: int
+    max_num_of_reports: Optional[int]
     notification_url: str
     notification_auth_token: Optional[str]
     device: Device

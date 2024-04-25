@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from os import access
 import pdb
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union, Optional
+from datetime import datetime
 
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
+from ..models.congestion import Congestion
 from ..errors import NotFound
 
+class RoamingStatus(BaseModel):
+    roaming: bool
+    country_code: Optional[int]
+    country_name: Optional[List[str]]
 
 class Event(BaseModel):
     """
@@ -231,7 +236,7 @@ class Device(BaseModel):
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int=60
     ) -> bool:
-        """Verifies the location of the device(Returns boolean value).
+        """Verifies the location of the device (Returns boolean value).
 
         #### Args:
             longitude (float): longitude of the device.
@@ -248,8 +253,47 @@ class Device(BaseModel):
             latitude, longitude, self, radius, max_age
         )
 
+    def get_connectivity(self):
+        """Get the connectivity status for the device as a string"""
+        status = self._api.devicestatus.get_connectivity(self.to_json_dict())["connectivityStatus"]
+
+        return status
+
+    def get_roaming(self) -> RoamingStatus:
+        """Get the roaming status for the device
+
+        #### Returns
+        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        """
+        status = self._api.devicestatus.get_roaming(self.to_json_dict())
+
+        return RoamingStatus(
+            roaming=status["roaming"],
+            country_code=status.get("countryCode"),
+            country_name=status.get("countryName")
+        )
+
+    def get_congestion(self, start: Union[datetime, str, None] = None, end: Union[datetime, str, None] = None) -> Congestion:
+        """Get the congestion level this device is experiencing
+
+        #### Args:
+             start (Union[datetime, str]): Beginning of the time range to access historical or predicted congestion
+             end (Union[datetime, str]): End of the time range to access historical or predicted congestion
+        #### Returns
+             Congestion object containing congestion level ("low", "medium", "high")
+        """
+        start = start.isoformat() if isinstance(start, datetime) else start
+        end = end.isoformat() if isinstance(end, datetime) else end
+
+        json = self._api.congestion.fetch_congestion(self, start=start, end=end)
+
+        return Congestion(level=json["level"])
+
     def to_json_dict(self):
-        json_dict = {"networkAccessIdentifier": self.network_access_id}
+        json_dict = {}
+
+        if self.network_access_identifier:
+            json_dict["networkAccessIdentifier"] = self.network_access_identifier
 
         if self.ipv4_address:
             ipv4_address = {}

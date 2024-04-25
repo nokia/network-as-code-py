@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from datetime import datetime
+from typing import List, Union
 import math
 from . import Namespace
 from ..models.device import Device, DeviceIpv4Addr
@@ -33,21 +34,21 @@ class Connectivity(Namespace):
     def subscribe(
         self,
         event_type: str,
-        max_num_of_reports: int,
         notification_url: str,
         device: Device,
+        max_num_of_reports: Optional[int] = None,
         notification_auth_token: Optional[str] = None,
-        subscription_expire_time: Optional[str] = None,
+        subscription_expire_time: Union[datetime, str, None] = None,
     ) -> EventSubscription:
         """Create subscription for device connectivity status.
 
         Args:
             event_type (str): Event type of the subscription.
-            max_num_of_reports (int): Number of notifications until the subscription is available
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
-            subscription_expire_time (Optional[str]): The expiry time of the subscription.
+            max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
+            subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. Either a datetime object or ISO formatted date string
         """
 
         connectivity_subscription = EventSubscription(
@@ -58,79 +59,74 @@ class Connectivity(Namespace):
             device=device,
         )
 
-        # Error Case: Creating Connectivity Subscription
-        try:
-            connectivity_data = self.api.devicestatus.create_subscription(
-                device,
-                event_type,
-                notification_url,
-                notification_auth_token,
-                max_num_of_reports,
-                subscription_expire_time,
-            )
-            connectivity_subscription.id = connectivity_data["eventSubscriptionId"]
+        # Handle conversion
+        if isinstance(subscription_expire_time, datetime):
+            subscription_expire_time = subscription_expire_time.isoformat()
 
-        except HTTPError as e:
-            if e.code == 403:
-                raise AuthenticationException(e)
-            elif e.code == 404:
-                raise DeviceNotFound(e)
-            elif e.code >= 500:
-                raise ServiceError(e)
-        except ValidationError as e:
-            raise InvalidParameter(e)
+        connectivity_data = self.api.devicestatus.create_subscription(
+            device,
+            event_type,
+            notification_url,
+            notification_auth_token,
+            max_num_of_reports,
+            subscription_expire_time,
+        )
+
+        connectivity_subscription.id = connectivity_data["subscriptionId"]
 
         return connectivity_subscription
 
     def get_subscription(self, id: str) -> EventSubscription:
-        """Retrieve device connectivity status data
+        """Retrieve a single Device Status event subscription by ID
 
         #### Args:
             id (str): Resource ID
 
         #### Example:
             ```python
-            connectivity_data = device.get_connectivity(id="hadsghsio")
+            subscription = client.connectivity.get_subscription(id="some-subscription-id")
             ```
         """
 
-        # Error Case: Getting connectivity status data
-        global connectivity_data
         connectivity_data = self.api.devicestatus.get_subscription(id)
 
-        device_data = connectivity_data["subscriptionDetail"]["device"]
+        return self.__parse_event_subscription(connectivity_data)
+
+    def get_subscriptions(self) -> List[EventSubscription]:
+        """Retrieve list of active Device Status subscriptions
+
+        #### Example:
+             '''python
+             subscriptions = client.connectivity.get_subscriptions()
+             '''
+        """
+        json = self.api.devicestatus.get_subscriptions()
+
+        return list(map(lambda subscription: self.__parse_event_subscription(subscription), json))
+
+    def __parse_event_subscription(self, data: dict) -> EventSubscription:
+        device_data = data["subscriptionDetail"]["device"]
 
         device = Device(api=self.api)
 
-        if "networkAccessIdentifier" in device_data.keys():
-            device.network_access_identifier = device_data["networkAccessIdentifier"]
+        device.network_access_identifier = device_data.get("networkAccessIdentifier")
 
-        if "phoneNumber" in device_data.keys():
-            device.phone_number = device_data["phoneNumber"]
+        device.phone_number = device_data.get("phoneNumber")
 
-        if "ipv6Address" in device_data.keys():
-            device.ipv6_address = device_data["ipv6Address"]
+        device.ipv6_address = device_data.get("ipv6Address")
 
         if "ipv4Address" in device_data:
             device.ipv4_address = DeviceIpv4Addr(
-                public_address=device_data["ipv4Address"]["publicAddress"]
-                if "publicAddress" in device_data["ipv4Address"].keys()
-                else None,
-                private_address=device_data["ipv4Address"]["privateAddress"]
-                if "privateAddress" in device_data["ipv4Address"].keys()
-                else None,
-                public_port=device_data["ipv4Address"]["publicPort"]
-                if "publicPort" in device_data["ipv4Address"].keys()
-                else None,
+                public_address=device_data["ipv4Address"].get("publicAddress"),
+                private_address=device_data["ipv4Address"].get("privateAddress"),
+                public_port=device_data["ipv4Address"].get("publicPort")
             )
 
         return EventSubscription(
-            id=connectivity_data["eventSubscriptionId"],
+            id=data["subscriptionId"],
             api=self.api,
-            max_num_of_reports=0,
-            notification_url=connectivity_data["webhook"]["notificationUrl"],
-            notification_auth_token=connectivity_data["webhook"][
-                "notificationAuthToken"
-            ],
+            max_num_of_reports=data.get("maxNumberOfReports"),
+            notification_url=data["webhook"].get("notificationUrl"),
+            notification_auth_token=data["webhook"].get("notificationAuthToken"),
             device=device,
         )
