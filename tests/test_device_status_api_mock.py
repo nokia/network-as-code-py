@@ -148,6 +148,8 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
         method="POST",
         json={
             "subscriptionId": "test-subscription",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
         },
         match_content=to_bytes({
             "subscriptionDetail": {
@@ -175,6 +177,8 @@ def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, devi
         method="POST",
         json={
             "subscriptionId": "test-subscription",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
         },
         match_content=to_bytes({
             "subscriptionDetail": {
@@ -201,6 +205,8 @@ def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock,
         method="POST",
         json={
             "subscriptionId": "test-subscription",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
         },
         match_content=to_bytes({
             "subscriptionDetail": {
@@ -223,6 +229,8 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
     httpx_mock.add_response(
         json={
             "subscriptionId": "test-subscription",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
         },
         match_content=to_bytes({
             "subscriptionDetail": {
@@ -252,6 +260,8 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
         method="POST",
         json={
             "subscriptionId": "test-subscription",
+            "startsAt": "2024-03-28T12:40:20.398Z",
+            "expiresAt": "2024-03-28T12:40:20.398Z"
         },
         match_content=to_bytes({
             "subscriptionDetail": {

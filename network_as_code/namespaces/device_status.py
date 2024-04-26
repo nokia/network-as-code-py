@@ -51,14 +51,6 @@ class Connectivity(Namespace):
             subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. Either a datetime object or ISO formatted date string
         """
 
-        connectivity_subscription = EventSubscription(
-            api=self.api,
-            max_num_of_reports=max_num_of_reports,
-            notification_url=notification_url,
-            notification_auth_token=notification_auth_token,
-            device=device,
-        )
-
         # Handle conversion
         if isinstance(subscription_expire_time, datetime):
             subscription_expire_time = subscription_expire_time.isoformat()
@@ -70,6 +62,16 @@ class Connectivity(Namespace):
             notification_auth_token,
             max_num_of_reports,
             subscription_expire_time,
+        )
+
+        connectivity_subscription = EventSubscription(
+            api=self.api,
+            max_num_of_reports=max_num_of_reports,
+            notification_url=notification_url,
+            notification_auth_token=notification_auth_token,
+            device=device,
+            starts_at=connectivity_data["startsAt"],
+            expires_at=connectivity_data["expiresAt"],
         )
 
         connectivity_subscription.id = connectivity_data["subscriptionId"]
