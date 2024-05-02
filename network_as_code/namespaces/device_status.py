@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from datetime import datetime
+import pdb
 from typing import List, Union
 import math
 from . import Namespace
@@ -63,15 +64,14 @@ class Connectivity(Namespace):
             max_num_of_reports,
             subscription_expire_time,
         )
-
         connectivity_subscription = EventSubscription(
             api=self.api,
             max_num_of_reports=max_num_of_reports,
             notification_url=notification_url,
             notification_auth_token=notification_auth_token,
             device=device,
-            starts_at=connectivity_data["startsAt"],
-            expires_at=connectivity_data["expiresAt"],
+            starts_at=connectivity_data["startsAt"] if "startsAt" in connectivity_data else None,
+            expires_at= connectivity_data["expiresAt"] if "expiresAt" in connectivity_data  else None,
         )
 
         connectivity_subscription.id = connectivity_data["subscriptionId"]
