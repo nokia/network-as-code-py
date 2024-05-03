@@ -105,6 +105,43 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
     assert location.latitude == 0.0
     assert location.civic_address
 
+def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
+    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
+
+    mock_response = {
+        "lastLocationTime": "2023-09-12T11:41:28+03:00",
+        "area": {
+            "areaType": "Circle",
+            "center": {
+                "latitude": 0.0,
+                "longitude": 0.0
+            }
+        }
+    }
+
+    httpx_mock.add_response(
+        url=url, 
+        method='POST', 
+        json=mock_response,
+        match_content=json.dumps({
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                    "privateAddress": "1.1.1.2",
+                    "publicPort": 80
+                }
+            },
+            "maxAge": 60
+        }).encode("utf-8")
+    )
+
+    location = device.location()
+    
+    assert location.longitude == 0.0
+    assert location.latitude == 0.0
+    assert not location.civic_address
+
 def test_verify_location(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
 
