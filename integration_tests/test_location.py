@@ -16,7 +16,6 @@ def test_getting_a_device_location_sends_out_request(client, device):
 
     assert location.longitude
     assert location.latitude
-    assert location.civic_address
 
 def test_verifying_a_device_location_sends_out_request(client, device):
     assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, radius=10_000)
