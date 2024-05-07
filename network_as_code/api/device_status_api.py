@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 import httpx
 
 from typing import Optional
@@ -85,7 +86,6 @@ class DeviceStatusAPI:
                 }
             ),
         )
-
         error_handler(res)
 
         return res.json()
