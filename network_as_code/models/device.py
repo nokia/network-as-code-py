@@ -26,8 +26,8 @@ from ..errors import NotFound
 
 class RoamingStatus(BaseModel):
     roaming: bool
-    country_code: Optional[int]
-    country_name: Optional[List[str]]
+    country_code: Optional[int] = None
+    country_name: Optional[List[str]] = None
 
 class Event(BaseModel):
     """
@@ -52,9 +52,9 @@ class DeviceIpv4Addr(BaseModel):
             public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
     """
 
-    public_address: Optional[str]
-    private_address: Optional[str]
-    public_port: Optional[int]
+    public_address: Optional[str] = None
+    private_address: Optional[str] = None
+    public_port: Optional[int] = None
 
 
 class Device(BaseModel):
@@ -85,10 +85,10 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[QoDSession] = PrivateAttr()
-    network_access_identifier: Union[str, None]
-    phone_number: Union[str, None]
-    ipv4_address: Union[DeviceIpv4Addr, None]
-    ipv6_address: Union[str, None]
+    network_access_identifier: Union[str, None] = None
+    phone_number: Union[str, None] = None
+    ipv4_address: Union[DeviceIpv4Addr, None] = None
+    ipv6_address: Union[str, None] = None
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)

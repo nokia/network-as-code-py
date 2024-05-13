@@ -17,13 +17,13 @@ from typing import Optional
 
 
 class CivicAddress(BaseModel):
-    country: Optional[str]
-    a1: Optional[str]
-    a2: Optional[str]
-    a3: Optional[str]
-    a4: Optional[str]
-    a5: Optional[str]
-    a6: Optional[str]
+    country: Optional[str] = None
+    a1: Optional[str] = None
+    a2: Optional[str] = None
+    a3: Optional[str] = None
+    a4: Optional[str] = None
+    a5: Optional[str] = None
+    a6: Optional[str] = None
 
 
 class Location(BaseModel):
@@ -38,4 +38,4 @@ class Location(BaseModel):
 
     longitude: float
     latitude: float
-    civic_address: Optional[CivicAddress]
+    civic_address: Optional[CivicAddress] = None
