@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pydantic import BaseModel, PrivateAttr, Field
+from pydantic import ConfigDict, BaseModel, PrivateAttr, Field
 
 from typing import Union, List
 
@@ -29,9 +29,8 @@ def alias_generator(name: str) -> str:
     return ALIASES.get(name, name)
 
 
-class PortRange(
-    BaseModel, allow_population_by_field_name=True, alias_generator=alias_generator
-):
+class PortRange(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, alias_generator=alias_generator)
     """
     A class representing the `PortRange` model.
 
@@ -87,8 +86,8 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     # service_ports: Union[PortsSpec, None]
     profile: str
     status: str
-    started_at: Union[datetime, None]
-    expires_at: Union[datetime, None]
+    started_at: Union[datetime, None] = None
+    expires_at: Union[datetime, None] = None
     # notification_url: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:

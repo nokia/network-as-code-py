@@ -34,8 +34,8 @@ class Throughput(BaseModel):
             maximum (float): the maximum throughput in kbps
     """
 
-    guaranteed: Optional[float]
-    maximum: Optional[float]
+    guaranteed: Optional[float] = None
+    maximum: Optional[float] = None
 
 
 class SliceAPI:
@@ -255,5 +255,4 @@ class AttachAPI:
             url=f"/attachments/{id}"
         )
         error_handler(res)
-
   
