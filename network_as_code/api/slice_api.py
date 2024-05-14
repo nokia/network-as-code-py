@@ -117,7 +117,7 @@ class SliceAPI:
 
         return response
 
-    def getAll(self):
+    def get_all(self):
         res = self.client.get(
             url="/slices",
         )
@@ -158,10 +158,10 @@ class SliceAPI:
 
         return res
 
-    def convert_area_of_service_obj(self, areaOfService):
+    def convert_area_of_service_obj(self, area_of_service):
         polygons = []
 
-        for point in areaOfService.polygon:
+        for point in area_of_service.polygon:
             polygons.append({"lat": point.latitude, "lon": point.longitude})
 
         return {"polygon": polygons}
@@ -200,8 +200,8 @@ class AttachAPI:
         device,
         slice_id: str,
         traffic_categories: Union[any, None],
-        notificationUrl: Union[str,None],
-        notificationAuthToken: str
+        notification_url: Union[str,None],
+        notification_auth_token: str
     ):
         payload = {
                 "device": {
@@ -218,8 +218,8 @@ class AttachAPI:
                     "apps": traffic_categories.apps.__dict__
                 },
                 "webhook": {
-                    "notificationUrl": notificationUrl,
-                    "notificationAuthToken": notificationAuthToken
+                    "notificationUrl": notification_url,
+                    "notificationAuthToken": notification_auth_token
                 }
         }
 
@@ -255,4 +255,3 @@ class AttachAPI:
             url=f"/attachments/{id}"
         )
         error_handler(res)
-  

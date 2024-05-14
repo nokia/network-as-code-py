@@ -80,15 +80,10 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
 
     _api: APIClient = PrivateAttr()
     id: str
-    # device_ip: str
-    # device_ports: Union[PortsSpec, None]
-    # service_ip: str
-    # service_ports: Union[PortsSpec, None]
     profile: str
     status: str
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
-    # notification_url: Union[str, None]
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)

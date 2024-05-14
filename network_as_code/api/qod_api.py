@@ -151,7 +151,7 @@ class QodAPI:
 
         return response
 
-    def get_session(self, sessionId: str):
+    def get_session(self, session_id: str):
         """Returns a session given session ID
 
         Args:
@@ -160,7 +160,7 @@ class QodAPI:
         Returns:
             Session: the session object
         """
-        response = self.client.get(url=f"/sessions/{sessionId}")
+        response = self.client.get(url=f"/sessions/{session_id}")
 
         errors.error_handler(response)
 
