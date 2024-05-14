@@ -94,7 +94,7 @@ class Slices(Namespace):
 
         """
 
-        slice = Slice(
+        new_slice = Slice(
             api=self.api,
             sid=None,
             state="NOT_SUBMITTED",
@@ -128,8 +128,8 @@ class Slices(Namespace):
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
-            slice.sid = slice_data.json().get("csi_id")
-            slice.state = slice_data.json()["state"]
+            new_slice.sid = slice_data.json().get("csi_id")
+            new_slice.state = slice_data.json()["state"]
         except HTTPError as e:
             if e.code == 403:
                 raise AuthenticationException(e)
@@ -140,7 +140,7 @@ class Slices(Namespace):
         except ValidationError as e:
             raise InvalidParameter(e)
 
-        return slice
+        return new_slice
 
     def get(self, id: str) -> Union[Slice, None]:
         """Get network slice by id.
@@ -154,7 +154,7 @@ class Slices(Namespace):
             ```
         """
         slice_data = self.api.slicing.get(id).json()
-        slice = Slice(
+        existing_slice = Slice(
             api=self.api,
             sid=slice_data.get("csi_id"),
             state=slice_data["state"],
@@ -186,11 +186,11 @@ class Slices(Namespace):
 
         attachments = self.api.slice_attach.get_attachments().json()
 
-        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice.name]
+        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == existing_slice.name]
 
-        slice.set_attachments(slice_attachments)
+        existing_slice.set_attachments(slice_attachments)
         
-        return slice
+        return existing_slice
 
     def getAll(self) -> List[Slice]:
         """Get All slices by id.
@@ -203,12 +203,12 @@ class Slices(Namespace):
             fetched_slices = nac_client.slices.getAll()
             ```
         """
-        slice_data = self.api.slicing.getAll()
+        slice_data = self.api.slicing.get_all()
 
         
         slices = [
-            self._convert_to_slice_model(slice)
-            for slice in slice_data.json()
+            self._convert_to_slice_model(slice_json)
+            for slice_json in slice_data.json()
         ]
 
         return slices
@@ -245,33 +245,33 @@ class Slices(Namespace):
         """
         return self.api.slice_attach.get_attachments().json()
 
-    def _convert_to_slice_model(self, slice):
+    def _convert_to_slice_model(self, slice_json):
         slice_instance = Slice(
                 api=self.api,
-                state=slice["state"],
-                name=slice["slice"]["name"],
-                sid=slice.get("csi_id"),
+                state=slice_json["state"],
+                name=slice_json["slice"]["name"],
+                sid=slice_json.get("csi_id"),
                 network_identifier=Slice.network_identifier_from_dict(
-                    slice["slice"]["networkIdentifier"]
+                    slice_json["slice"]["networkIdentifier"]
                 ),
-                slice_info=Slice.slice_info_from_dict(slice["slice"]["sliceInfo"]),
-                notification_url=slice["slice"]["notificationUrl"],
+                slice_info=Slice.slice_info_from_dict(slice_json["slice"]["sliceInfo"]),
+                notification_url=slice_json["slice"]["notificationUrl"],
                 area_of_service=Slice.area_of_service_from_dict(
-                    slice["slice"].get("areaOfService")
+                    slice_json["slice"].get("areaOfService")
                 ),
-                max_data_connections=slice["slice"].get("maxDataConnections"),
-                max_devices=slice["slice"].get("maxDevices"),
+                max_data_connections=slice_json["slice"].get("maxDataConnections"),
+                max_devices=slice_json["slice"].get("maxDevices"),
                 slice_downlink_throughput=Slice.throughput(
-                    slice["slice"].get("sliceDownlinkThroughput")
+                    slice_json["slice"].get("sliceDownlinkThroughput")
                 ),
                 slice_uplink_throughput=Slice.throughput(
-                    slice["slice"].get("sliceUplinkThroughput")
+                    slice_json["slice"].get("sliceUplinkThroughput")
                 ),
                 device_downlink_throughput=Slice.throughput(
-                    slice["slice"].get("deviceDownlinkThroughput")
+                    slice_json["slice"].get("deviceDownlinkThroughput")
                 ),
                 device_uplink_throughput=Slice.throughput(
-                    slice["slice"].get("deviceUplinkThroughput")
+                    slice_json["slice"].get("deviceUplinkThroughput")
                 ),
             )
         
