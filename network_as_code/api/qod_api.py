@@ -43,10 +43,7 @@ class QodAPI:
 
     def create_session(
         self,
-        sid,
-        ipv4_address,
-        ipv6_address,
-        phone_number,
+        device,
         profile,
         service_ipv4,
         service_ipv6=None,
@@ -71,10 +68,9 @@ class QodAPI:
         Returns:
             Session: response of the endpoint, ideally a Session
         """
-
         session_resource = {
             "qosProfile": profile,
-            "device": {"ipv4Address": {}},
+            "device": device.model_dump(mode='json', by_alias=True),
             "applicationServer": {"ipv4Address": service_ipv4},
             "devicePorts": device_ports.dict(by_alias=True)
             if device_ports is not None
@@ -83,30 +79,7 @@ class QodAPI:
             if service_ports is not None
             else None,
         }
-
-        if sid:
-            session_resource["device"]["networkAccessIdentifier"] = sid
-
-        if ipv4_address:
-            if ipv4_address.public_address:
-                session_resource["device"]["ipv4Address"][
-                    "publicAddress"
-                ] = ipv4_address.public_address
-            if ipv4_address.private_address:
-                session_resource["device"]["ipv4Address"][
-                    "privateAddress"
-                ] = ipv4_address.private_address
-            if ipv4_address.public_port:
-                session_resource["device"]["ipv4Address"][
-                    "publicPort"
-                ] = ipv4_address.public_port
-
-        if ipv6_address:
-            session_resource["device"]["ipv6Address"] = ipv6_address
-
-        if phone_number:
-            session_resource["device"]["phoneNumber"] = phone_number
-
+        
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
 
@@ -120,7 +93,7 @@ class QodAPI:
             session_resource["notificationAuthToken"] = (
                 "Bearer " + notification_auth_token
             )
-
+        
         response = self.client.post(url="/sessions", json=session_resource)
 
         errors.error_handler(response)

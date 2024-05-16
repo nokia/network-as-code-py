@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import pdb
-from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
+from pydantic import BaseModel, EmailStr, Field, PrivateAttr, ValidationError
 from typing import List, Union, Optional
 from datetime import datetime
 
@@ -52,9 +52,9 @@ class DeviceIpv4Addr(BaseModel):
             public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
     """
 
-    public_address: Optional[str] = None
-    private_address: Optional[str] = None
-    public_port: Optional[int] = None
+    public_address: Optional[str] = Field(None, serialization_alias="publicAddress")
+    private_address: Optional[str] = Field(None, serialization_alias="privateAddress")
+    public_port: Optional[int] = Field(None, serialization_alias="publicPort")
 
 
 class Device(BaseModel):
@@ -85,10 +85,10 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[QoDSession] = PrivateAttr()
-    network_access_identifier: Union[str, None] = None
-    phone_number: Union[str, None] = None
-    ipv4_address: Union[DeviceIpv4Addr, None] = None
-    ipv6_address: Union[str, None] = None
+    network_access_identifier: Union[str, None] = Field(None, serialization_alias='networkAccessIdentifier')
+    phone_number: Union[str, None] = Field(None, serialization_alias='phoneNumber')
+    ipv4_address: Union[DeviceIpv4Addr, None] = Field(None, serialization_alias='ipv4Address')
+    ipv6_address: Union[str, None] = Field(None, serialization_alias='ipv6Address')
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -133,10 +133,7 @@ class Device(BaseModel):
 
 
         session = self._api.sessions.create_session(
-            self.network_access_identifier,
-            self.ipv4_address,
-            self.ipv6_address,
-            self.phone_number,
+            self,
             profile,
             service_ipv4,
             service_ipv6,
