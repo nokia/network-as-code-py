@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import pdb
-from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
+from pydantic import BaseModel, EmailStr, Field, PrivateAttr, ValidationError
 from typing import List, Union, Optional
 from datetime import datetime
 
@@ -52,9 +52,9 @@ class DeviceIpv4Addr(BaseModel):
             public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
     """
 
-    public_address: Optional[str] = None
-    private_address: Optional[str] = None
-    public_port: Optional[int] = None
+    public_address: Optional[str] = Field(None, serialization_alias="publicAddress")
+    private_address: Optional[str] = Field(None, serialization_alias="privateAddress")
+    public_port: Optional[int] = Field(None, serialization_alias="publicPort")
 
 
 class Device(BaseModel):
@@ -85,10 +85,10 @@ class Device(BaseModel):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[QoDSession] = PrivateAttr()
-    network_access_identifier: Union[str, None] = None
-    phone_number: Union[str, None] = None
-    ipv4_address: Union[DeviceIpv4Addr, None] = None
-    ipv6_address: Union[str, None] = None
+    network_access_identifier: Union[str, None] = Field(None, serialization_alias='networkAccessIdentifier')
+    phone_number: Union[str, None] = Field(None, serialization_alias='phoneNumber')
+    ipv4_address: Union[DeviceIpv4Addr, None] = Field(None, serialization_alias='ipv4Address')
+    ipv6_address: Union[str, None] = Field(None, serialization_alias='ipv6Address')
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -133,10 +133,7 @@ class Device(BaseModel):
 
 
         session = self._api.sessions.create_session(
-            self.network_access_identifier,
-            self.ipv4_address,
-            self.ipv6_address,
-            self.phone_number,
+            self,
             profile,
             service_ipv4,
             service_ipv6,
@@ -255,7 +252,7 @@ class Device(BaseModel):
 
     def get_connectivity(self):
         """Get the connectivity status for the device as a string"""
-        status = self._api.devicestatus.get_connectivity(self.to_json_dict())["connectivityStatus"]
+        status = self._api.devicestatus.get_connectivity(self.model_dump(mode='json', by_alias=True, exclude_none=True))["connectivityStatus"]
 
         return status
 
@@ -265,7 +262,7 @@ class Device(BaseModel):
         #### Returns
         Object of RoamingStatus class, which contains the roaming status, country code and country name
         """
-        status = self._api.devicestatus.get_roaming(self.to_json_dict())
+        status = self._api.devicestatus.get_roaming(self.model_dump(mode='json', by_alias=True, exclude_none=True))
 
         return RoamingStatus(
             roaming=status["roaming"],
@@ -289,26 +286,3 @@ class Device(BaseModel):
 
         return Congestion(level=json["level"])
 
-    def to_json_dict(self):
-        json_dict = {}
-
-        if self.network_access_identifier:
-            json_dict["networkAccessIdentifier"] = self.network_access_identifier
-
-        if self.ipv4_address:
-            ipv4_address = {}
-            if self.ipv4_address.public_address:
-                ipv4_address["publicAddress"] = self.ipv4_address.public_address
-            if self.ipv4_address.private_address:
-                ipv4_address["privateAddress"] = self.ipv4_address.private_address
-            if self.ipv4_address.public_port:
-                ipv4_address["publicPort"] = self.ipv4_address.public_port
-            json_dict["ipv4Address"] = ipv4_address
-
-        if self.ipv6_address:
-            json_dict["ipv6Address"] = self.ipv6_address
-
-        if self.phone_number:
-            json_dict["phoneNumber"] = self.phone_number
-
-        return json_dict

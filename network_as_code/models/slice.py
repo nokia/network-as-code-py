@@ -58,7 +58,7 @@ class SliceInfo(BaseModel):
             differentiator (Optional[str]): the differentiator of a slice object.
     """
 
-    service_type: str
+    service_type: str = Field(serialization_alias="serviceType")
     differentiator: Optional[str] = None
 
 
