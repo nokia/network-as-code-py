@@ -72,10 +72,10 @@ class QodAPI:
             "qosProfile": profile,
             "device": device.model_dump(mode='json', by_alias=True),
             "applicationServer": {"ipv4Address": service_ipv4},
-            "devicePorts": device_ports.dict(by_alias=True)
+            "devicePorts": device_ports.model_dump(by_alias=True)
             if device_ports is not None
             else None,
-            "applicationServerPorts": service_ports.dict(by_alias=True)
+            "applicationServerPorts": service_ports.model_dump(by_alias=True)
             if service_ports is not None
             else None,
         }
