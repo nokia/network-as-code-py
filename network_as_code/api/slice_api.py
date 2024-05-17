@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pdb
 from typing import Union
-import json
-import os
 import httpx
 
 from typing import Optional, Any
@@ -67,7 +64,7 @@ class SliceAPI:
     ):
         body = {
             "networkIdentifier": dict(network_id),
-            "sliceInfo": self.convert_slice_info_obj(slice_info),
+            "sliceInfo": slice_info.model_dump(mode='json', by_alias=True, exclude_none=True),
             "notificationUrl": notification_url,
         }
 
@@ -87,24 +84,16 @@ class SliceAPI:
             body["maxDevices"] = max_devices
 
         if slice_downlink_throughput:
-            body["sliceDownlinkThroughput"] = self.convert_throughput_obj(
-                slice_downlink_throughput
-            )
+            body["sliceDownlinkThroughput"] = slice_downlink_throughput.model_dump(mode='json')
 
         if slice_uplink_throughput:
-            body["sliceUplinkThroughput"] = self.convert_throughput_obj(
-                slice_uplink_throughput
-            )
+            body["sliceUplinkThroughput"] = slice_uplink_throughput.model_dump(mode='json')
 
         if device_uplink_throughput:
-            body["deviceUplinkThroughput"] = self.convert_throughput_obj(
-                device_uplink_throughput
-            )
+            body["deviceUplinkThroughput"] = device_uplink_throughput.model_dump(mode='json')
 
         if device_downlink_throughput:
-            body["deviceDownlinkThroughput"] = self.convert_throughput_obj(
-                device_downlink_throughput
-            )
+            body["deviceDownlinkThroughput"] = device_downlink_throughput.model_dump(mode='json')
 
         if modify:
             if name is None:
@@ -165,12 +154,6 @@ class SliceAPI:
             polygons.append({"lat": point.latitude, "lon": point.longitude})
 
         return {"polygon": polygons}
-
-    def convert_slice_info_obj(self, slice_info):
-        return { "serviceType": slice_info.service_type, "differentiator": slice_info.differentiator}
-
-    def convert_throughput_obj(self, throughput: Throughput):
-        return {k: float(v) for k, v in dict(throughput).items()}
 
 
 def delete_none(_dict):

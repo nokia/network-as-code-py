@@ -252,7 +252,7 @@ class Device(BaseModel):
 
     def get_connectivity(self):
         """Get the connectivity status for the device as a string"""
-        status = self._api.devicestatus.get_connectivity(self.to_json_dict())["connectivityStatus"]
+        status = self._api.devicestatus.get_connectivity(self.model_dump(mode='json', by_alias=True, exclude_none=True))["connectivityStatus"]
 
         return status
 
@@ -262,7 +262,7 @@ class Device(BaseModel):
         #### Returns
         Object of RoamingStatus class, which contains the roaming status, country code and country name
         """
-        status = self._api.devicestatus.get_roaming(self.to_json_dict())
+        status = self._api.devicestatus.get_roaming(self.model_dump(mode='json', by_alias=True, exclude_none=True))
 
         return RoamingStatus(
             roaming=status["roaming"],
@@ -286,26 +286,3 @@ class Device(BaseModel):
 
         return Congestion(level=json["level"])
 
-    def to_json_dict(self):
-        json_dict = {}
-
-        if self.network_access_identifier:
-            json_dict["networkAccessIdentifier"] = self.network_access_identifier
-
-        if self.ipv4_address:
-            ipv4_address = {}
-            if self.ipv4_address.public_address:
-                ipv4_address["publicAddress"] = self.ipv4_address.public_address
-            if self.ipv4_address.private_address:
-                ipv4_address["privateAddress"] = self.ipv4_address.private_address
-            if self.ipv4_address.public_port:
-                ipv4_address["publicPort"] = self.ipv4_address.public_port
-            json_dict["ipv4Address"] = ipv4_address
-
-        if self.ipv6_address:
-            json_dict["ipv6Address"] = self.ipv6_address
-
-        if self.phone_number:
-            json_dict["phoneNumber"] = self.phone_number
-
-        return json_dict

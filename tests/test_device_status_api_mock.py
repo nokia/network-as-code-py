@@ -55,8 +55,8 @@ def test_updated_device_status_subscription_creation(httpx_mock, client):
             {
                 "subscriptionDetail": {
                     "device": {
-                        "phoneNumber": "123456789",
                         "networkAccessIdentifier": "123456789@domain.com",
+                        "phoneNumber": "123456789",
                         "ipv4Address": {
                             "publicAddress": "84.125.93.10",
                             "publicPort": 59765
@@ -114,8 +114,8 @@ def test_subscribing_using_datetime(httpx_mock, client):
             {
                 "subscriptionDetail": {
                     "device": {
-                        "phoneNumber": "123456789",
                         "networkAccessIdentifier": "123456789@domain.com",
+                        "phoneNumber": "123456789",
                         "ipv4Address": {
                             "publicAddress": "84.125.93.10",
                             "publicPort": 59765

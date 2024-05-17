@@ -28,7 +28,7 @@ class LocationVerifyAPI:
 
     def verify_location(self, latitude, longitude, device, radius, max_age=60):
         body = {
-            "device": device.to_json_dict(),
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "area": {
                 "areaType": "Circle",
                 "center": {"latitude": latitude, "longitude": longitude},
@@ -54,7 +54,7 @@ class LocationRetrievalAPI:
         )
 
     def get_location(self, device, max_age=60):
-        body = {"device": device.to_json_dict()}
+        body = {"device": device.model_dump(mode='json', by_alias=True, exclude_none=True)}
 
         if max_age:
             body["maxAge"] = cast(int, max_age)

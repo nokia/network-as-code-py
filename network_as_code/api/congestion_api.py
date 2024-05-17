@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import pdb
 from typing import Optional
 import httpx
 
@@ -27,7 +28,7 @@ class CongestionAPI:
 
     def fetch_congestion(self, device, start: Optional[str] = None, end: Optional[str] = None) -> dict:
         body = {
-            "device": device.to_json_dict()
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True)
         }
 
         if start:
@@ -44,7 +45,7 @@ class CongestionAPI:
 
     def subscribe(self, device, notification_url: str, subscription_expire_time: str, notification_auth_token: Optional[str] = None) -> dict:
         body = {
-            "device": device.to_json_dict(),
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "webhook": {
                 "notificationUrl": notification_url
             },
