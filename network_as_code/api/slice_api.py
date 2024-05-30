@@ -21,7 +21,6 @@ from pydantic import BaseModel
 from ..errors import error_handler
 
 
-
 class Throughput(BaseModel):
     """
     A class representing the `Throughput` API field.
@@ -47,20 +46,20 @@ class SliceAPI:
         )
 
     def create(
-            self,
-            network_id,
-            slice_info,
-            notification_url,
-            modify: bool = False,
-            name: Optional[str] = None,
-            notification_auth_token: Optional[str] = None,
-            area_of_service: Optional[Any] = None,
-            slice_downlink_throughput: Optional[Throughput] = None,
-            slice_uplink_throughput: Optional[Throughput] = None,
-            device_downlink_throughput: Optional[Throughput] = None,
-            device_uplink_throughput: Optional[Throughput] = None,
-            max_data_connections: Optional[int] = None,
-            max_devices: Optional[int] = None,
+        self,
+        network_id,
+        slice_info,
+        notification_url,
+        modify: bool = False,
+        name: Optional[str] = None,
+        notification_auth_token: Optional[str] = None,
+        area_of_service: Optional[Any] = None,
+        slice_downlink_throughput: Optional[Throughput] = None,
+        slice_uplink_throughput: Optional[Throughput] = None,
+        device_downlink_throughput: Optional[Throughput] = None,
+        device_uplink_throughput: Optional[Throughput] = None,
+        max_data_connections: Optional[int] = None,
+        max_devices: Optional[int] = None,
     ):
         body = {
             "networkIdentifier": dict(network_id),
@@ -97,7 +96,7 @@ class SliceAPI:
 
         if modify:
             if name is None:
-                raise ValueError('Name is mandatory for modify')
+                raise ValueError("Name is mandatory for modify")
             response = self.client.put(url=f"/slices/{name}", json=body)
         else:
             response = self.client.post(url="/slices", json=body)
@@ -183,46 +182,41 @@ class AttachAPI:
         device,
         slice_id: str,
         traffic_categories: Union[any, None],
-        notification_url: Union[str,None],
-        notification_auth_token: str
+        notification_url: Union[str, None],
+        notification_auth_token: str,
     ):
         payload = {
-                "device": {
-                        "phoneNumber": device.phone_number,
-                        "ipv4Address": {
-                            "publicAddress": device.ipv4_address.public_address,
-                            "privateAddress": device.ipv4_address.private_address,
-                            "publicPort": device.ipv4_address.public_port
-                        },
-                        "ipv6Address": device.ipv6_address
-                    },
-                "sliceId": slice_id,
-                "traffic_categories": {
-                    "apps": traffic_categories.apps.__dict__
+            "device": {
+                "phoneNumber": device.phone_number,
+                "ipv4Address": {
+                    "publicAddress": device.ipv4_address.public_address,
+                    "privateAddress": device.ipv4_address.private_address,
+                    "publicPort": device.ipv4_address.public_port,
                 },
-                "webhook": {
-                    "notificationUrl": notification_url,
-                    "notificationAuthToken": notification_auth_token
-                }
+                "ipv6Address": device.ipv6_address,
+            },
+            "sliceId": slice_id,
+            "traffic_categories": {"apps": traffic_categories.apps.__dict__},
+            "webhook": {
+                "notificationUrl": notification_url,
+                "notificationAuthToken": notification_auth_token,
+            },
         }
 
         res = self.client.post(
             url=f"/attachments",
             json=delete_none(payload),
         )
-        
+
         error_handler(res)
         return res
-        
 
     def get_attachments(self):
-        res = self.client.get(
-            url=f"/attachments"
-        )
-        
+        res = self.client.get(url=f"/attachments")
+
         error_handler(res)
-        
-        return res    
+
+        return res
 
     def get(self, id: str):
         res = self.client.get(
@@ -230,11 +224,9 @@ class AttachAPI:
         )
 
         error_handler(res)
-        
+
         return res
 
     def detach(self, id):
-        res = self.client.delete(
-            url=f"/attachments/{id}"
-        )
+        res = self.client.delete(url=f"/attachments/{id}")
         error_handler(res)

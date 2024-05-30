@@ -41,10 +41,14 @@ class Slices(Namespace):
     network slice can be configured and managed.
     """
 
-    def _to_api_throughput(self, throughput: Optional[Throughput]) -> Optional[ApiThroughput]:
+    def _to_api_throughput(
+        self, throughput: Optional[Throughput]
+    ) -> Optional[ApiThroughput]:
         if throughput is None:
             return None
-        return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
+        return ApiThroughput(
+            guaranteed=throughput.guaranteed, maximum=throughput.maximum
+        )
 
     def create(
         self,
@@ -121,10 +125,18 @@ class Slices(Namespace):
                 area_of_service=area_of_service,
                 name=name,
                 notification_auth_token=notification_auth_token,
-                slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
-                slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-                device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
-                device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
+                slice_downlink_throughput=self._to_api_throughput(
+                    slice_downlink_throughput
+                ),
+                slice_uplink_throughput=self._to_api_throughput(
+                    slice_uplink_throughput
+                ),
+                device_downlink_throughput=self._to_api_throughput(
+                    device_downlink_throughput
+                ),
+                device_uplink_throughput=self._to_api_throughput(
+                    device_uplink_throughput
+                ),
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
@@ -163,7 +175,6 @@ class Slices(Namespace):
                 slice_data["slice"]["networkIdentifier"]
             ),
             notification_url=slice_data["slice"]["notificationUrl"],
-
             slice_info=Slice.slice_info_from_dict(slice_data["slice"]["sliceInfo"]),
             area_of_service=Slice.area_of_service_from_dict(
                 slice_data["slice"].get("areaOfService")
@@ -186,10 +197,14 @@ class Slices(Namespace):
 
         attachments = self.api.slice_attach.get_attachments().json()
 
-        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == existing_slice.name]
+        slice_attachments = [
+            attachment
+            for attachment in attachments
+            if attachment["resource"]["sliceId"] == existing_slice.name
+        ]
 
         existing_slice.set_attachments(slice_attachments)
-        
+
         return existing_slice
 
     def getAll(self) -> List[Slice]:
@@ -205,19 +220,13 @@ class Slices(Namespace):
         """
         slice_data = self.api.slicing.get_all()
 
-        
         slices = [
-            self._convert_to_slice_model(slice_json)
-            for slice_json in slice_data.json()
+            self._convert_to_slice_model(slice_json) for slice_json in slice_data.json()
         ]
 
         return slices
 
-
-    def get_attachment(
-        self,
-        id: str
-    ) -> None:
+    def get_attachment(self, id: str) -> None:
         """Get Application Attachment Instance
 
         #### Args:
@@ -229,10 +238,8 @@ class Slices(Namespace):
             ```
         """
         return self.api.slice_attach.get(id).json()
-    
-    def get_all_attachments(
-        self
-    ) -> None:
+
+    def get_all_attachments(self) -> None:
         """Get All Application Attachments
 
         #### Args:
@@ -247,41 +254,42 @@ class Slices(Namespace):
 
     def _convert_to_slice_model(self, slice_json):
         slice_instance = Slice(
-                api=self.api,
-                state=slice_json["state"],
-                name=slice_json["slice"]["name"],
-                sid=slice_json.get("csi_id"),
-                network_identifier=Slice.network_identifier_from_dict(
-                    slice_json["slice"]["networkIdentifier"]
-                ),
-                slice_info=Slice.slice_info_from_dict(slice_json["slice"]["sliceInfo"]),
-                notification_url=slice_json["slice"]["notificationUrl"],
-                area_of_service=Slice.area_of_service_from_dict(
-                    slice_json["slice"].get("areaOfService")
-                ),
-                max_data_connections=slice_json["slice"].get("maxDataConnections"),
-                max_devices=slice_json["slice"].get("maxDevices"),
-                slice_downlink_throughput=Slice.throughput(
-                    slice_json["slice"].get("sliceDownlinkThroughput")
-                ),
-                slice_uplink_throughput=Slice.throughput(
-                    slice_json["slice"].get("sliceUplinkThroughput")
-                ),
-                device_downlink_throughput=Slice.throughput(
-                    slice_json["slice"].get("deviceDownlinkThroughput")
-                ),
-                device_uplink_throughput=Slice.throughput(
-                    slice_json["slice"].get("deviceUplinkThroughput")
-                ),
-            )
-        
+            api=self.api,
+            state=slice_json["state"],
+            name=slice_json["slice"]["name"],
+            sid=slice_json.get("csi_id"),
+            network_identifier=Slice.network_identifier_from_dict(
+                slice_json["slice"]["networkIdentifier"]
+            ),
+            slice_info=Slice.slice_info_from_dict(slice_json["slice"]["sliceInfo"]),
+            notification_url=slice_json["slice"]["notificationUrl"],
+            area_of_service=Slice.area_of_service_from_dict(
+                slice_json["slice"].get("areaOfService")
+            ),
+            max_data_connections=slice_json["slice"].get("maxDataConnections"),
+            max_devices=slice_json["slice"].get("maxDevices"),
+            slice_downlink_throughput=Slice.throughput(
+                slice_json["slice"].get("sliceDownlinkThroughput")
+            ),
+            slice_uplink_throughput=Slice.throughput(
+                slice_json["slice"].get("sliceUplinkThroughput")
+            ),
+            device_downlink_throughput=Slice.throughput(
+                slice_json["slice"].get("deviceDownlinkThroughput")
+            ),
+            device_uplink_throughput=Slice.throughput(
+                slice_json["slice"].get("deviceUplinkThroughput")
+            ),
+        )
+
         attachments = self.api.slice_attach.get_attachments().json()
-        
-        slice_attachments = [attachment for attachment in attachments if attachment['resource']['sliceId'] == slice_instance.name]
+
+        slice_attachments = [
+            attachment
+            for attachment in attachments
+            if attachment["resource"]["sliceId"] == slice_instance.name
+        ]
 
         slice_instance.set_attachments(slice_attachments)
 
         return slice_instance
-        
-        
-        

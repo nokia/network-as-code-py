@@ -98,7 +98,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     def duration(self):
         """Returns the duration of a given session."""
         if self.started_at and self.expires_at:
-            return  self.expires_at - self.started_at
+            return self.expires_at - self.started_at
         else:
             return None
 
@@ -112,10 +112,14 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (
-            datetime.fromtimestamp(session["startedAt"]) if session.get("startedAt", False) else None
+            datetime.fromtimestamp(session["startedAt"])
+            if session.get("startedAt", False)
+            else None
         )
         expires_at = (
-            datetime.fromtimestamp(session["expiresAt"]) if session.get("expiresAt", False) else None
+            datetime.fromtimestamp(session["expiresAt"])
+            if session.get("expiresAt", False)
+            else None
         )
         return QoDSession(
             api=api,

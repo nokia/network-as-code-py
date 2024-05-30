@@ -70,8 +70,16 @@ class Connectivity(Namespace):
             notification_url=notification_url,
             notification_auth_token=notification_auth_token,
             device=device,
-            starts_at=connectivity_data["startsAt"] if "startsAt" in connectivity_data else None,
-            expires_at= connectivity_data["expiresAt"] if "expiresAt" in connectivity_data  else None,
+            starts_at=(
+                connectivity_data["startsAt"]
+                if "startsAt" in connectivity_data
+                else None
+            ),
+            expires_at=(
+                connectivity_data["expiresAt"]
+                if "expiresAt" in connectivity_data
+                else None
+            ),
         )
 
         connectivity_subscription.id = connectivity_data["subscriptionId"]
@@ -104,7 +112,11 @@ class Connectivity(Namespace):
         """
         json = self.api.devicestatus.get_subscriptions()
 
-        return list(map(lambda subscription: self.__parse_event_subscription(subscription), json))
+        return list(
+            map(
+                lambda subscription: self.__parse_event_subscription(subscription), json
+            )
+        )
 
     def __parse_event_subscription(self, data: dict) -> EventSubscription:
         device_data = data["subscriptionDetail"]["device"]
@@ -121,7 +133,7 @@ class Connectivity(Namespace):
             device.ipv4_address = DeviceIpv4Addr(
                 public_address=device_data["ipv4Address"].get("publicAddress"),
                 private_address=device_data["ipv4Address"].get("privateAddress"),
-                public_port=device_data["ipv4Address"].get("publicPort")
+                public_port=device_data["ipv4Address"].get("publicPort"),
             )
 
         return EventSubscription(

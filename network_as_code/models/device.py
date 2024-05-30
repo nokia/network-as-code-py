@@ -24,10 +24,12 @@ from ..models.location import CivicAddress, Location
 from ..models.congestion import Congestion
 from ..errors import NotFound
 
+
 class RoamingStatus(BaseModel):
     roaming: bool
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
+
 
 class Event(BaseModel):
     """
@@ -131,7 +133,6 @@ class Device(BaseModel):
         if not service_ipv4 and not service_ipv6:
             raise ValueError("At least one of IP parameters must be provided")
 
-
         session = self._api.sessions.create_session(
             self,
             profile,
@@ -179,7 +180,7 @@ class Device(BaseModel):
     def __convert_session_model(self, session) -> QoDSession:
         return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
 
-    def location(self, max_age: int=60) -> Location:
+    def location(self, max_age: int = 60) -> Location:
         """Returns the location of the device.
 
          #### Args:
@@ -200,30 +201,42 @@ class Device(BaseModel):
         if "civicAddress" in body.keys():
             civic_address = CivicAddress(
                 country=body["civicAddress"]["country"],
-                a1=body["civicAddress"]["A1"]
-                if "A1" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A1"], str)
-                else None,
-                a2=body["civicAddress"]["A2"]
-                if "A2" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A2"], str)
-                else None,
-                a3=body["civicAddress"]["A3"]
-                if "A3" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A3"], str)
-                else None,
-                a4=body["civicAddress"]["A4"]
-                if "A4" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A4"], str)
-                else None,
-                a5=body["civicAddress"]["A5"]
-                if "A5" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A5"], str)
-                else None,
-                a6=body["civicAddress"]["A6"]
-                if "A6" in body["civicAddress"].keys()
-                and isinstance(body["civicAddress"]["A6"], str)
-                else None,
+                a1=(
+                    body["civicAddress"]["A1"]
+                    if "A1" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A1"], str)
+                    else None
+                ),
+                a2=(
+                    body["civicAddress"]["A2"]
+                    if "A2" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A2"], str)
+                    else None
+                ),
+                a3=(
+                    body["civicAddress"]["A3"]
+                    if "A3" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A3"], str)
+                    else None
+                ),
+                a4=(
+                    body["civicAddress"]["A4"]
+                    if "A4" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A4"], str)
+                    else None
+                ),
+                a5=(
+                    body["civicAddress"]["A5"]
+                    if "A5" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A5"], str)
+                    else None
+                ),
+                a6=(
+                    body["civicAddress"]["A6"]
+                    if "A6" in body["civicAddress"].keys()
+                    and isinstance(body["civicAddress"]["A6"], str)
+                    else None
+                ),
             )
 
         return Location(
@@ -231,7 +244,7 @@ class Device(BaseModel):
         )
 
     def verify_location(
-        self, longitude: float, latitude: float, radius: float, max_age: int=60
+        self, longitude: float, latitude: float, radius: float, max_age: int = 60
     ) -> bool:
         """Verifies the location of the device (Returns boolean value).
 
@@ -267,10 +280,14 @@ class Device(BaseModel):
         return RoamingStatus(
             roaming=status["roaming"],
             country_code=status.get("countryCode"),
-            country_name=status.get("countryName")
+            country_name=status.get("countryName"),
         )
 
-    def get_congestion(self, start: Union[datetime, str, None] = None, end: Union[datetime, str, None] = None) -> Congestion:
+    def get_congestion(
+        self,
+        start: Union[datetime, str, None] = None,
+        end: Union[datetime, str, None] = None,
+    ) -> Congestion:
         """Get the congestion level this device is experiencing
 
         #### Args:

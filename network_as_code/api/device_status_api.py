@@ -97,18 +97,14 @@ class DeviceStatusAPI:
         error_handler(res)
 
     def get_connectivity(self, device: dict):
-        res = self.client.post("/connectivity", json={
-            "device": device
-        })
+        res = self.client.post("/connectivity", json={"device": device})
 
         error_handler(res)
 
         return res.json()
 
     def get_roaming(self, device: dict):
-        res = self.client.post("/roaming", json={
-            "device": device
-        })
+        res = self.client.post("/roaming", json={"device": device})
 
         error_handler(res)
 

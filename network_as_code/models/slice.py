@@ -103,12 +103,15 @@ class Apps(BaseModel):
     os: str
     apps: List[str]
 
+
 class TrafficCategories(BaseModel):
     apps: Apps
+
 
 class DeviceAttachment(BaseModel):
     device_phone_number: str
     attachment_id: str
+
 
 def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
     for i, attachment in enumerate(slice_attachments):
@@ -117,6 +120,7 @@ def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
             del slice_attachments[i]
             return attachment_id
     return None
+
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
@@ -208,7 +212,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if self.name:
             return self._api.slicing.activate(self.name)
-    
+
     def deactivate(self) -> None:
         """Deactivate network slice.
 
@@ -222,35 +226,43 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if self.name:
             return self._api.slicing.deactivate(self.name)
-    
-    def _to_api_throughput(self, throughput: Optional[Throughput] = None) -> Optional[ApiThroughput]:
+
+    def _to_api_throughput(
+        self, throughput: Optional[Throughput] = None
+    ) -> Optional[ApiThroughput]:
         if throughput is not None:
-            return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
+            return ApiThroughput(
+                guaranteed=throughput.guaranteed, maximum=throughput.maximum
+            )
         return None
 
     def modify(
-            self,
-            slice_downlink_throughput: Optional[Throughput] = None,
-            slice_uplink_throughput: Optional[Throughput] = None,
-            device_downlink_throughput: Optional[Throughput] = None,
-            device_uplink_throughput: Optional[Throughput] = None,
-            max_data_connections: Optional[int] = None,
-            max_devices: Optional[int] = None,
+        self,
+        slice_downlink_throughput: Optional[Throughput] = None,
+        slice_uplink_throughput: Optional[Throughput] = None,
+        device_downlink_throughput: Optional[Throughput] = None,
+        device_uplink_throughput: Optional[Throughput] = None,
+        max_data_connections: Optional[int] = None,
+        max_devices: Optional[int] = None,
     ):
         self._api.slicing.create(
-            modify = True,
+            modify=True,
             network_id=self.network_identifier,
             slice_info=self.slice_info,
             notification_url=self.notification_url,
             notification_auth_token=self.notification_auth_token,
             name=self.name,
             area_of_service=self.area_of_service,
-            slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+            slice_downlink_throughput=self._to_api_throughput(
+                slice_downlink_throughput
+            ),
             slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-            device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+            device_downlink_throughput=self._to_api_throughput(
+                device_downlink_throughput
+            ),
             device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
-            max_data_connections = max_data_connections,
-            max_devices=max_devices
+            max_data_connections=max_data_connections,
+            max_devices=max_devices,
         )
 
         # Update model (if no exception on modify)
@@ -260,7 +272,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self.device_uplink_throughput = device_uplink_throughput
         self.max_data_connections = max_data_connections
         self.max_devices = max_devices
-
 
     def delete(self) -> None:
         """Delete network slice.
@@ -290,7 +301,11 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
 
-    async def wait_done(self, timeout: datetime.timedelta = datetime.timedelta(seconds=3600), poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10)) -> str:
+    async def wait_done(
+        self,
+        timeout: datetime.timedelta = datetime.timedelta(seconds=3600),
+        poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10),
+    ) -> str:
         """Wait for an ongoing order to complete.
            I.e. not being in "PENDING" state.
            Returns new state.
@@ -311,12 +326,14 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
-
     def set_attachments(self, attachments):
-        if(len(attachments) > 0):
+        if len(attachments) > 0:
             self._attachments = [
-                DeviceAttachment(device_phone_number=attachment['resource']['device']['phoneNumber'],
-                                attachment_id=attachment['nac_resource_id']) for attachment in attachments
+                DeviceAttachment(
+                    device_phone_number=attachment["resource"]["device"]["phoneNumber"],
+                    attachment_id=attachment["nac_resource_id"],
+                )
+                for attachment in attachments
             ]
 
     def attach(
@@ -324,7 +341,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         device: Device,
         traffic_categories: Union[TrafficCategories, None],
         notificationUrl: Union[str, None],
-        notificationAuthToken: str
+        notificationAuthToken: str,
     ) -> None:
         """Attach network slice.
 
@@ -345,16 +362,21 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
 
         new_attachment = self._api.slice_attach.attach(
-            device, self.name, traffic_categories, notificationUrl, notificationAuthToken
+            device,
+            self.name,
+            traffic_categories,
+            notificationUrl,
+            notificationAuthToken,
         ).json()
 
-        
         self._attachments.append(
-            DeviceAttachment(attachment_id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
+            DeviceAttachment(
+                attachment_id=new_attachment["nac_resource_id"],
+                device_phone_number=device.phone_number,
+            )
         )
 
         return new_attachment
-
 
     def detach(
         self,
@@ -373,15 +395,12 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         attachment_id = fetch_and_remove(self._attachments, device)
-        
+
         if attachment_id:
-            self._api.slice_attach.detach(
-                attachment_id
-            )
+            self._api.slice_attach.detach(attachment_id)
         else:
             raise NotFound("Attachment not found")
-        
-    
+
     @staticmethod
     def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
@@ -414,7 +433,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> Optional[AreaOfService]:
+    def area_of_service_from_dict(
+        areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]
+    ) -> Optional[AreaOfService]:
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
@@ -424,12 +445,12 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         if areaOfServiceDict:
             polygon = areaOfServiceDict["polygon"]
             return AreaOfService(
-                    polygon=[
-                        Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
-                        Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
-                        Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
-                        Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
-                    ]
+                polygon=[
+                    Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
+                    Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
+                    Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
+                    Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
+                ]
             )
         else:
             return None
