@@ -1,6 +1,14 @@
 
 # Changelog
 
+## Version 2.2.1
+
+Breaking changes:
+- None!
+
+Changes:
+- Minor refactors and bug fixes
+
 ## Version 2.2
 
 Breaking changes:
