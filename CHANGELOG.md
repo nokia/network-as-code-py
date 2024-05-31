@@ -7,6 +7,8 @@ Breaking changes:
 - None!
 
 Changes:
+- Migrated from Pydantic 1.x to 2.x
+- Updated dependencies
 - Minor refactors and bug fixes
 
 ## Version 2.2
