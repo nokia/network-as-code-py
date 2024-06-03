@@ -1,6 +1,5 @@
 
 from datetime import datetime, timedelta
-import pdb
 import pytest
 
 import os
@@ -29,13 +28,14 @@ def test_creating_a_session_mock(httpx_mock, client):
         match_content = json.dumps({
             "qosProfile": "QOS_L",
             "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "phoneNumber": "9382948473",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
                     "privateAddress": "1.1.1.2",
                     "publicPort": 80
                 },
-                "networkAccessIdentifier": "testuser@open5glab.net",
-                "phoneNumber": "9382948473"
+                "ipv6Address": None,
             },
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
@@ -70,14 +70,14 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
         match_content = json.dumps({
             "qosProfile": "QOS_L",
             "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "phoneNumber": "9382948473",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
                     "privateAddress": "1.1.1.2",
                     "publicPort": 80
                 },
-                "networkAccessIdentifier": "testuser@open5glab.net",
                 "ipv6Address": "2266:25::12:0:ad12",
-                "phoneNumber": "9382948473"
             },
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
@@ -173,12 +173,8 @@ def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
         }
     )
 
-    try:
+    with pytest.raises(NotFound):
         device.sessions()
-        assert False
-    except NotFound as e:
-        assert True
-
 
 def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
     device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
@@ -192,11 +188,8 @@ def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
         }
     )
 
-    try:
+    with pytest.raises(AuthenticationException):
         device.sessions()
-        assert False
-    except AuthenticationException as e:
-        assert True
 
 def test_create_qod_session_requires_ip(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="9382948473")

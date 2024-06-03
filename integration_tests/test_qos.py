@@ -1,4 +1,5 @@
 
+import pdb
 import pytest
 
 from network_as_code.models.session import PortsSpec, PortRange
@@ -42,9 +43,9 @@ def test_creating_a_qos_flow_with_service_port_and_device_port(client, device):
 
 def test_port_range_field_aliasing():
     port_range = PortRange(start=80, end=499)
-
-    assert "from" in port_range.dict(by_alias=True).keys()
-    assert "to" in port_range.dict(by_alias=True).keys()
+    
+    assert "from" in port_range.model_dump(by_alias=True).keys()
+    assert "to" in port_range.model_dump(by_alias=True).keys()
 
 def test_creating_a_qos_flow_with_service_port_range(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L")

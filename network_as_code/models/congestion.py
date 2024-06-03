@@ -18,10 +18,10 @@ from typing import Optional
 from network_as_code.api.client import APIClient
 
 class CongestionSubscription(BaseModel):
-    id: Optional[str]
+    id: Optional[str] = None
     _api: APIClient = PrivateAttr()
-    starts_at: Optional[datetime]
-    expires_at: Optional[datetime]
+    starts_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
 
     def __init__(self, api: APIClient, **data):
         super().__init__(**data)

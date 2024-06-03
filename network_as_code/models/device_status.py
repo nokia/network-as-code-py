@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 from os import access
 from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
 from typing import List, Union
@@ -35,12 +36,14 @@ class EventSubscription(BaseModel):
         device (Device): Identifier of the device
     """
 
-    id: Optional[str]
+    id: Optional[str] = None
     _api: APIClient = PrivateAttr()
-    max_num_of_reports: Optional[int]
+    max_num_of_reports: Optional[int] = None
     notification_url: str
-    notification_auth_token: Optional[str]
+    notification_auth_token: Optional[str] = None
     device: Device
+    starts_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)

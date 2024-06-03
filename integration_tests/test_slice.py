@@ -1,4 +1,5 @@
 
+import pdb
 import pytest
 
 import time
@@ -76,6 +77,7 @@ def test_getting_a_slice(client):
         notification_url="https://notify.me/here",
         notification_auth_token="my-token",
     )
+    
 
     fetched_slice = client.slices.get(new_slice.name)
 

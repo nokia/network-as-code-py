@@ -21,7 +21,7 @@ MOCK_SLICE = {
                 "mnc": "30"
             },
             "sliceInfo": {
-                "serviceType": 1,
+                "serviceType": '1',
                 "differentiator": "AAABBB"
             },
             "areaOfService": {
@@ -326,7 +326,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
                 "mnc": "30"
             },
             "sliceInfo": {
-                "serviceType": 1,
+                "serviceType": '1',
                 "differentiator": "AAABBB"
             },
             "areaOfService": {

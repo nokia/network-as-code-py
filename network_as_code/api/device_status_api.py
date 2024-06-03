@@ -15,7 +15,6 @@
 import httpx
 
 from typing import Optional
-import datetime
 
 from ..errors import error_handler
 
@@ -62,18 +61,7 @@ class DeviceStatusAPI:
             json=delete_none(
                 {
                     "subscriptionDetail": {
-                        "device": {
-                            "phoneNumber": device.phone_number,
-                            "networkAccessIdentifier": device.network_access_identifier,
-                            "ipv4Address": {
-                                "publicAddress": device.ipv4_address.public_address,
-                                "privateAddress": device.ipv4_address.private_address,
-                                "publicPort": device.ipv4_address.public_port,
-                            }
-                            if device.ipv4_address
-                            else None,
-                            "ipv6Address": device.ipv6_address,
-                        },
+                        "device": device.model_dump(mode='json', by_alias=True),
                         "type": event_type,
                     },
                     "maxNumberOfReports": max_number_of_reports,
@@ -85,7 +73,6 @@ class DeviceStatusAPI:
                 }
             ),
         )
-
         error_handler(res)
 
         return res.json()

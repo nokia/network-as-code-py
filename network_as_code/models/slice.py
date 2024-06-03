@@ -58,8 +58,8 @@ class SliceInfo(BaseModel):
             differentiator (Optional[str]): the differentiator of a slice object.
     """
 
-    service_type: str
-    differentiator: Optional[str]
+    service_type: str = Field(serialization_alias="serviceType")
+    differentiator: Optional[str] = None
 
 
 class Throughput(BaseModel):
@@ -71,8 +71,8 @@ class Throughput(BaseModel):
             maximum (float): the maximum throughput in kbps
     """
 
-    guaranteed: Optional[float]
-    maximum: Optional[float]
+    guaranteed: Optional[float] = None
+    maximum: Optional[float] = None
 
 
 class Point(BaseModel):
@@ -159,19 +159,19 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
     _api: APIClient = PrivateAttr()
     _sessions: List[QoDSession] = PrivateAttr()
-    sid: Optional[str]
+    sid: Optional[str] = None
     state: str
     name: Optional[str] = Field(
         None,
         description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
         min_length=4,
         max_length=64,
-        regex="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$",
+        pattern="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$",
     )
     network_identifier: NetworkIdentifier
     slice_info: SliceInfo
     notification_url: str
-    notification_auth_token: Optional[str]
+    notification_auth_token: Optional[str] = None
     area_of_service: Optional[AreaOfService] = Field(
         None, description="Area which the network slice is intended to serve"
     )
@@ -407,7 +407,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if sliceInfoDict:
             return SliceInfo(
-                service_type=sliceInfoDict["serviceType"],
+                service_type=str(sliceInfoDict["serviceType"]),
                 differentiator=sliceInfoDict["differentiator"],
             )
         else:
