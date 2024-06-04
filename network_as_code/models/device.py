@@ -147,9 +147,7 @@ class Device(BaseModel):
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-        return QoDSession.convert_session_model(
-            self._api, self.ipv4_address, session.json()
-        )
+        return QoDSession.convert_session_model(self._api, self.ipv4_address, session.json())
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -239,9 +237,7 @@ class Device(BaseModel):
                 ),
             )
 
-        return Location(
-            longitude=longitude, latitude=latitude, civic_address=civic_address
-        )
+        return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
 
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int = 60
@@ -259,9 +255,7 @@ class Device(BaseModel):
             located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
-        return self._api.location_verify.verify_location(
-            latitude, longitude, self, radius, max_age
-        )
+        return self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
 
     def get_connectivity(self):
         """Get the connectivity status for the device as a string"""

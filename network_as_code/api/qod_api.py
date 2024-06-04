@@ -90,9 +90,7 @@ class QodAPI:
             session_resource["notificationUrl"] = notification_url
 
         if notification_auth_token:
-            session_resource["notificationAuthToken"] = (
-                "Bearer " + notification_auth_token
-            )
+            session_resource["notificationAuthToken"] = "Bearer " + notification_auth_token
 
         response = self.client.post(url="/sessions", json=session_resource)
 
@@ -112,9 +110,7 @@ class QodAPI:
         url = ""
 
         if device.network_access_identifier:
-            url = (
-                f"/sessions?networkAccessIdentifier={device.network_access_identifier}"
-            )
+            url = f"/sessions?networkAccessIdentifier={device.network_access_identifier}"
         elif device.phone_number:
             url = f"/sessions?phoneNumber={device.phone_number}"
 

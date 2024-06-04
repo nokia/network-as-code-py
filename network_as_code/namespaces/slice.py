@@ -41,14 +41,10 @@ class Slices(Namespace):
     network slice can be configured and managed.
     """
 
-    def _to_api_throughput(
-        self, throughput: Optional[Throughput]
-    ) -> Optional[ApiThroughput]:
+    def _to_api_throughput(self, throughput: Optional[Throughput]) -> Optional[ApiThroughput]:
         if throughput is None:
             return None
-        return ApiThroughput(
-            guaranteed=throughput.guaranteed, maximum=throughput.maximum
-        )
+        return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
 
     def create(
         self,
@@ -125,18 +121,10 @@ class Slices(Namespace):
                 area_of_service=area_of_service,
                 name=name,
                 notification_auth_token=notification_auth_token,
-                slice_downlink_throughput=self._to_api_throughput(
-                    slice_downlink_throughput
-                ),
-                slice_uplink_throughput=self._to_api_throughput(
-                    slice_uplink_throughput
-                ),
-                device_downlink_throughput=self._to_api_throughput(
-                    device_downlink_throughput
-                ),
-                device_uplink_throughput=self._to_api_throughput(
-                    device_uplink_throughput
-                ),
+                slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+                slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
+                device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+                device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
                 max_data_connections=max_data_connections,
                 max_devices=max_devices,
             )
@@ -220,9 +208,7 @@ class Slices(Namespace):
         """
         slice_data = self.api.slicing.get_all()
 
-        slices = [
-            self._convert_to_slice_model(slice_json) for slice_json in slice_data.json()
-        ]
+        slices = [self._convert_to_slice_model(slice_json) for slice_json in slice_data.json()]
 
         return slices
 

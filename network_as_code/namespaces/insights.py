@@ -50,9 +50,7 @@ class NetworkInsights(Namespace):
 
         return self._parse_congestion_subscription(json_data)
 
-    def get_congestion_subscription(
-        self, subscription_id: str
-    ) -> CongestionSubscription:
+    def get_congestion_subscription(self, subscription_id: str) -> CongestionSubscription:
         """Retrieve an active congestion subscription by id
 
         #### Args:
@@ -71,9 +69,7 @@ class NetworkInsights(Namespace):
 
         json_data = self.api.congestion.get_subscriptions()
 
-        return list(
-            map(lambda entry: self._parse_congestion_subscription(entry), json_data)
-        )
+        return list(map(lambda entry: self._parse_congestion_subscription(entry), json_data))
 
     def _parse_congestion_subscription(self, json_data) -> CongestionSubscription:
         return CongestionSubscription(
@@ -85,9 +81,7 @@ class NetworkInsights(Namespace):
                 else None
             ),  # How did Python developers ever think this hack made sense?
             expires_at=(
-                datetime.fromisoformat(
-                    json_data.get("expiresAt").replace("Z", "+00:00")
-                )
+                datetime.fromisoformat(json_data.get("expiresAt").replace("Z", "+00:00"))
                 if json_data.get("expiresAt")
                 else None
             ),  # Poor timezone handling makes me very sad

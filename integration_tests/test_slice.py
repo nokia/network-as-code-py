@@ -107,7 +107,7 @@ def test_getting_attachments(client):
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
         name="slicemock26",
@@ -180,8 +180,8 @@ def test_attach_device_to_slice_and_detach(client, device):
     new_attachment = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
-    )), notificationUrl="https://example.com/notifications",
-    notificationAuthToken="c8974e592c2fa383d4a3960714")
+    )), notification_url="https://example.com/notifications",
+    notification_auth_token="c8974e592c2fa383d4a3960714")
     
     time.sleep(30)
 

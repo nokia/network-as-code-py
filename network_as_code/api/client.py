@@ -107,9 +107,7 @@ class APIClient:
             rapid_host=(
                 device_status_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
-                else device_status_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia-dev"
-                )
+                else device_status_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )
 
@@ -117,26 +115,18 @@ class APIClient:
             base_url=location_verify_base_url,
             rapid_key=token,
             rapid_host=(
-                location_verify_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia"
-                )
+                location_verify_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
-                else location_verify_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia-dev"
-                )
+                else location_verify_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )
         self.location_retrieve = LocationRetrievalAPI(
             base_url=location_retrieve_base_url,
             rapid_key=token,
             rapid_host=(
-                location_retrieve_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia"
-                )
+                location_retrieve_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
-                else location_retrieve_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia-dev"
-                )
+                else location_retrieve_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )
 
@@ -156,9 +146,7 @@ class APIClient:
             rapid_host=(
                 slice_attach_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
-                else slice_attach_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia-dev"
-                )
+                else slice_attach_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )
 
@@ -168,8 +156,6 @@ class APIClient:
             rapid_host=(
                 congestion_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
-                else congestion_base_url.replace("https://", "").replace(
-                    "p-eu", "nokia-dev"
-                )
+                else congestion_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )
