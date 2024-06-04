@@ -70,15 +70,15 @@ class QodAPI:
         """
         session_resource = {
             "qosProfile": profile,
-            "device": device.model_dump(mode='json', by_alias=True),
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "applicationServer": {"ipv4Address": service_ipv4},
-            "devicePorts": device_ports.model_dump(by_alias=True)
-            if device_ports is not None
-            else None,
-            "applicationServerPorts": service_ports.model_dump(by_alias=True)
-            if service_ports is not None
-            else None,
         }
+
+        if device_ports:
+            session_resource["devicePorts"] = device_ports.model_dump(by_alias=True, exclude_none=True)
+
+        if service_ports:
+            session_resource["applicationServerPorts"] = service_ports.model_dump(by_alias=True, exclude_none=True)
         
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
@@ -93,7 +93,7 @@ class QodAPI:
             session_resource["notificationAuthToken"] = (
                 "Bearer " + notification_auth_token
             )
-        
+
         response = self.client.post(url="/sessions", json=session_resource)
 
         errors.error_handler(response)
