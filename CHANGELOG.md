@@ -1,6 +1,14 @@
 
 # Changelog
 
+## Version 2.2.2
+
+Breaking changes:
+- None!
+
+Fixes
+- Fixed a bug that caused invalid QoD requests to be made when some fields were unset
+
 ## Version 2.2.1
 
 Breaking changes:
