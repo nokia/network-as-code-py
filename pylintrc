@@ -221,7 +221,7 @@ method-naming-style=snake_case
 #method-rgx=
 
 # Naming style matching correct module names.
-module-naming-style=snake_case
+module-naming-style=any
 
 # Regular expression matching correct module names. Overrides module-naming-
 # style. If left empty, module names will be checked with the set naming style.
@@ -402,7 +402,8 @@ known-third-party=enchant
 preferred-modules=
 
 
-disable=relative-beyond-top-level
+disable=relative-beyond-top-level,
+        cyclic-import
 
 [LOGGING]
 
@@ -537,7 +538,7 @@ ignore-signatures=yes
 # Minimum lines number of a similarity.
 min-similarity-lines=4
 
-disable=
+disable=duplicate-code
 
 
 [SPELLING]

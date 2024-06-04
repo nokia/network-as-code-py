@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional
 import httpx
 
-from typing import Optional
 
 from ..errors import error_handler
 from .utils import delete_none

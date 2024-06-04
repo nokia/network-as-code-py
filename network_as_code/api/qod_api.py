@@ -79,7 +79,7 @@ class QodAPI:
 
         if service_ports:
             session_resource["applicationServerPorts"] = service_ports.model_dump(by_alias=True, exclude_none=True)
-        
+
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
 

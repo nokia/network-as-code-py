@@ -13,9 +13,8 @@
 # limitations under the License.
 
 from typing import List, Union, Optional
-from pydantic import BaseModel, Field, PrivateAttr
 from datetime import datetime
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr
 
 
 from ..api import APIClient
@@ -263,7 +262,8 @@ class Device(BaseModel):
 
     def get_connectivity(self):
         """Get the connectivity status for the device as a string"""
-        status = self._api.devicestatus.get_connectivity(self.model_dump(mode='json', by_alias=True, exclude_none=True))["connectivityStatus"]
+        status = self._api.devicestatus.get_connectivity(
+            self.model_dump(mode='json', by_alias=True, exclude_none=True))["connectivityStatus"]
 
         return status
 
@@ -300,4 +300,3 @@ class Device(BaseModel):
         json = self._api.congestion.fetch_congestion(self, start=start, end=end)
 
         return Congestion(level=json["level"])
-
