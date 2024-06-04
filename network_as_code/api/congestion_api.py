@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-import pdb
 from typing import Optional
 import httpx
 
 from ..errors import error_handler
+
 
 class CongestionAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
@@ -43,7 +43,13 @@ class CongestionAPI:
 
         return response.json()
 
-    def subscribe(self, device, notification_url: str, subscription_expire_time: str, notification_auth_token: Optional[str] = None) -> dict:
+    def subscribe(
+        self,
+        device,
+        notification_url: str,
+        subscription_expire_time: str,
+        notification_auth_token: Optional[str] = None,
+    ) -> dict:
         body = {
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "webhook": {
@@ -74,7 +80,7 @@ class CongestionAPI:
         return response.json()
 
     def get_subscriptions(self):
-        response = self.client.get(url=f"/subscriptions")
+        response = self.client.get(url="/subscriptions")
 
         error_handler(response)
 

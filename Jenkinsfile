@@ -70,12 +70,23 @@ pipeline {
     }
 
     stages {
+        stage('Linting') {
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                        python3 -m poetry --no-cache install
+                        poetry run pylint network_as_code
+                        """
+                    }
+                }        
+            }
+        }
         stage('Test') {
             steps {
                 container('beluga') {
                     script {
                         sh """
-                            python3 -m poetry --no-cache install
                             poetry run pytest --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
                         """
                     }

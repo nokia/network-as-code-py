@@ -411,7 +411,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         url="https://network-slicing.p-eu.rapidapi.com/slices",
         json=slices
     )
-    client.slices.getAll()
+    client.slices.get_all()
     
 
 def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
@@ -570,8 +570,8 @@ def test_attach_device_to_slice(httpx_mock, client, device):
     slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
-    )), notificationUrl="https://example.com/notifications",
-    notificationAuthToken="c8974e592c2fa383d4a3960714")
+    )), notification_url="https://example.com/notifications",
+    notification_auth_token="c8974e592c2fa383d4a3960714")
 
 def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(

@@ -13,27 +13,15 @@
 # limitations under the License.
 
 import asyncio
-from os import access
 import datetime
-import pdb
-from urllib.error import HTTPError
-from pydantic import BaseModel, EmailStr, PrivateAttr, Field, ValidationError
 from typing import Dict, List, Union, Optional
-from enum import Enum
+from pydantic import BaseModel, PrivateAttr, Field
 
 from ..api import APIClient
 from ..api.slice_api import Throughput as ApiThroughput
 from ..models.session import QoDSession
-from ..models.location import CivicAddress, Location
 from ..models.device import Device
-from ..errors import (
-    NotFound,
-    InvalidParameter,
-    NotFound,
-    AuthenticationException,
-    ServiceError,
-    error_handler,
-)
+from ..errors import NotFound
 
 
 class NetworkIdentifier(BaseModel):
@@ -103,12 +91,15 @@ class Apps(BaseModel):
     os: str
     apps: List[str]
 
+
 class TrafficCategories(BaseModel):
     apps: Apps
+
 
 class DeviceAttachment(BaseModel):
     device_phone_number: str
     attachment_id: str
+
 
 def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
     for i, attachment in enumerate(slice_attachments):
@@ -117,6 +108,7 @@ def fetch_and_remove(slice_attachments: List[DeviceAttachment], device: Device):
             del slice_attachments[i]
             return attachment_id
     return None
+
 
 class Slice(BaseModel, arbitrary_types_allowed=True):
     """
@@ -129,13 +121,16 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     #### Public Attributes:
         sid (optional): String ID of the slice
         state (str): State of the slice (ie. NOT_SUBMITTED)
-        name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
+        name (optional): Optional short name for the slice.
+        Must be ASCII characters, digits and dash.
+        Like name of an event, such as "Concert-2029-Big-Arena".
         networkIdentifier (NetworkIdentifier): Name of the network
         sliceInfo (SliceInfo): Purpose of this slice
         notification_url: Destination URL of notifications
         notification_auth_token: Authorization token for notifications
         areaOfService (AreaOfService): Location of the slice
-        maxDataConnections (optional): Optional maximum number of data connection sessions in the slice.
+        maxDataConnections (optional): Optional maximum number of data
+        connection sessions in the slice.
         maxDevices (optional): Optional maximum number of devices using the slice.
         sliceDownlinkThroughput (optional): Optional throughput object
         sliceUplinkThroughput (optional): Optional throughput object
@@ -146,10 +141,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     #### Public Methods:
         activate (None): Activate a network slice.
         attach (): Attach a network slice to a device.
-        deactivate (None): Deactivate a network slice. The slice state must be active to be able to perform this operation.
-        delete (None): Delete network slice. The slice state must not be active to perform this operation.
+        deactivate (None): Deactivate a network slice.
+        The slice state must be active to be able to perform this operation.
+        delete (None): Delete network slice.
+        The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
-        wait_done (str): Wait till state of the network slice is not "PENDING", anymore. Returns new state.
+        wait_done (str): Wait till state of the network slice is not "PENDING",
+          anymore. Returns new state.
 
     #### Callback Functions:
         on_creation ():
@@ -163,7 +161,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     state: str
     name: Optional[str] = Field(
         None,
-        description='Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".',
+        description="""Optional short name for the slice.
+        Must be ASCII characters, digits and dash. 
+        Like name of an event, such as "Concert-2029-Big-Arena".""",
         min_length=4,
         max_length=64,
         pattern="^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$",
@@ -208,7 +208,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if self.name:
             return self._api.slicing.activate(self.name)
-    
+
     def deactivate(self) -> None:
         """Deactivate network slice.
 
@@ -222,35 +222,43 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
         if self.name:
             return self._api.slicing.deactivate(self.name)
-    
-    def _to_api_throughput(self, throughput: Optional[Throughput] = None) -> Optional[ApiThroughput]:
+
+    def _to_api_throughput(
+        self, throughput: Optional[Throughput] = None
+    ) -> Optional[ApiThroughput]:
         if throughput is not None:
-            return ApiThroughput(guaranteed=throughput.guaranteed, maximum=throughput.maximum)
+            return ApiThroughput(
+                guaranteed=throughput.guaranteed, maximum=throughput.maximum
+            )
         return None
 
     def modify(
-            self,
-            slice_downlink_throughput: Optional[Throughput] = None,
-            slice_uplink_throughput: Optional[Throughput] = None,
-            device_downlink_throughput: Optional[Throughput] = None,
-            device_uplink_throughput: Optional[Throughput] = None,
-            max_data_connections: Optional[int] = None,
-            max_devices: Optional[int] = None,
+        self,
+        slice_downlink_throughput: Optional[Throughput] = None,
+        slice_uplink_throughput: Optional[Throughput] = None,
+        device_downlink_throughput: Optional[Throughput] = None,
+        device_uplink_throughput: Optional[Throughput] = None,
+        max_data_connections: Optional[int] = None,
+        max_devices: Optional[int] = None,
     ):
         self._api.slicing.create(
-            modify = True,
+            modify=True,
             network_id=self.network_identifier,
             slice_info=self.slice_info,
             notification_url=self.notification_url,
             notification_auth_token=self.notification_auth_token,
             name=self.name,
             area_of_service=self.area_of_service,
-            slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+            slice_downlink_throughput=self._to_api_throughput(
+                slice_downlink_throughput
+            ),
             slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-            device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+            device_downlink_throughput=self._to_api_throughput(
+                device_downlink_throughput
+            ),
             device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
-            max_data_connections = max_data_connections,
-            max_devices=max_devices
+            max_data_connections=max_data_connections,
+            max_devices=max_devices,
         )
 
         # Update model (if no exception on modify)
@@ -260,7 +268,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         self.device_uplink_throughput = device_uplink_throughput
         self.max_data_connections = max_data_connections
         self.max_devices = max_devices
-
 
     def delete(self) -> None:
         """Delete network slice.
@@ -290,7 +297,11 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
 
-    async def wait_done(self, timeout: datetime.timedelta = datetime.timedelta(seconds=3600), poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10)) -> str:
+    async def wait_done(
+        self,
+        timeout: datetime.timedelta = datetime.timedelta(seconds=3600),
+        poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10),
+    ) -> str:
         """Wait for an ongoing order to complete.
            I.e. not being in "PENDING" state.
            Returns new state.
@@ -311,20 +322,22 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             self.refresh()
         return self.state
 
-
     def set_attachments(self, attachments):
-        if(len(attachments) > 0):
+        if len(attachments) > 0:
             self._attachments = [
-                DeviceAttachment(device_phone_number=attachment['resource']['device']['phoneNumber'],
-                                attachment_id=attachment['nac_resource_id']) for attachment in attachments
+                DeviceAttachment(
+                    device_phone_number=attachment["resource"]["device"]["phoneNumber"],
+                    attachment_id=attachment["nac_resource_id"],
+                )
+                for attachment in attachments
             ]
 
     def attach(
         self,
         device: Device,
         traffic_categories: Union[TrafficCategories, None],
-        notificationUrl: Union[str, None],
-        notificationAuthToken: str
+        notification_url: Union[str, None],
+        notification_auth_token: str,
     ) -> None:
         """Attach network slice.
 
@@ -333,7 +346,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
         #### Example:
             ```python
-            device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+            device = client.devices.get("testuser@open5glab.net", 
+            ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
+            private_address="1.1.1.2", public_port=80))
             slice.attach(device, traffic_categories = TrafficCategories(
                 apps=Apps(
                     os="97a498e3-fc92-5c94-8986-0333d06e4e47",
@@ -345,16 +360,21 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """
 
         new_attachment = self._api.slice_attach.attach(
-            device, self.name, traffic_categories, notificationUrl, notificationAuthToken
+            device,
+            self.name,
+            traffic_categories,
+            notification_url,
+            notification_auth_token,
         ).json()
 
-        
         self._attachments.append(
-            DeviceAttachment(attachment_id=new_attachment['nac_resource_id'], device_phone_number=device.phone_number)
+            DeviceAttachment(
+                attachment_id=new_attachment["nac_resource_id"],
+                device_phone_number=device.phone_number,
+            )
         )
 
         return new_attachment
-
 
     def detach(
         self,
@@ -367,72 +387,67 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
         #### Example:
             ```python
-            device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+            device = client.devices.get("testuser@open5glab.net", 
+            ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
+            private_address="1.1.1.2", public_port=80))
             slice.attach(device)
             slice.detach()
             ```
         """
         attachment_id = fetch_and_remove(self._attachments, device)
-        
+
         if attachment_id:
-            self._api.slice_attach.detach(
-                attachment_id
-            )
+            self._api.slice_attach.detach(attachment_id)
         else:
             raise NotFound("Attachment not found")
-        
-    
+
     @staticmethod
-    def network_identifier_from_dict(networkIdentifierDict: Optional[Dict[str, str]]):
+    def network_identifier_from_dict(network_identifier_dict: Optional[Dict[str, str]]):
         """Returns a `NetworkIdentifier` instance.
 
         Assigns the `mcc` and `mnc`.
         #### Args:
-            networkIdentifierDict (Dict[str, str]): A Network Identifier object with `mcc` and `mnc` values.
+            network_identifier_dict (Dict[str, str]): A Network Identifier object with `mcc` and `mnc` values.
         """
-        if networkIdentifierDict:
+        if network_identifier_dict:
             return NetworkIdentifier(
-                mcc=networkIdentifierDict["mcc"], mnc=networkIdentifierDict["mnc"]
+                mcc=network_identifier_dict["mcc"], mnc=network_identifier_dict["mnc"]
             )
-        else:
-            return None
 
     @staticmethod
-    def slice_info_from_dict(sliceInfoDict: Optional[Dict[str, str]]):
+    def slice_info_from_dict(slice_info_dict: Optional[Dict[str, str]]):
         """Returns a `SliceInfo` instance.
 
         Assigns the `service_type` and `differentiator`.
         #### Args:
-            sliceInfoDict (Dict[str, str]): A Slice Info object with `service_type` and `differentiator` values.
+            slice_info_dict (Dict[str, str]): A Slice Info object with `service_type` and `differentiator` values.
         """
-        if sliceInfoDict:
+        if slice_info_dict:
             return SliceInfo(
-                service_type=str(sliceInfoDict["serviceType"]),
-                differentiator=sliceInfoDict["differentiator"],
+                service_type=str(slice_info_dict["serviceType"]),
+                differentiator=slice_info_dict["differentiator"],
             )
-        else:
-            return None
 
     @staticmethod
-    def area_of_service_from_dict(areaOfServiceDict: Optional[Dict[str, List[Dict[str, float]]]]) -> Optional[AreaOfService]:
+    def area_of_service_from_dict(
+        area_of_service_dict: Optional[Dict[str, List[Dict[str, float]]]]
+    ) -> Optional[AreaOfService]:
         """Returns a `AreaOfService` instance.
 
         Assigns the `polygon`.
         #### Args:
-            areaOfServiceDict (Dict[str, List[Dict[str, float]]]): An Area Of Service object with polygon list value.
+            area_of_service_dict (Dict[str, List[Dict[str, float]]]): An Area Of Service object with polygon list value.
         """
-        if areaOfServiceDict:
-            polygon = areaOfServiceDict["polygon"]
+        if area_of_service_dict:
+            polygon = area_of_service_dict["polygon"]
             return AreaOfService(
-                    polygon=[
-                        Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
-                        Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
-                        Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
-                        Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
-                    ]
+                polygon=[
+                    Point(latitude=polygon[0]["lat"], longitude=polygon[0]["lon"]),
+                    Point(latitude=polygon[1]["lat"], longitude=polygon[1]["lon"]),
+                    Point(latitude=polygon[2]["lat"], longitude=polygon[2]["lon"]),
+                    Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
+                ]
             )
-        else:
-            return None
 
     @staticmethod
     def throughput(throughputdict: Optional[Dict[str, float]]):
@@ -447,5 +462,3 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                 guaranteed=throughputdict.get("guaranteed"),
                 maximum=throughputdict.get("maximum"),
             )
-        else:
-            return None

@@ -17,7 +17,7 @@ def device(client) -> Device:
     return device
 
 def test_getting_slices(client):
-    assert type(client.slices.getAll()) is list
+    assert type(client.slices.get_all()) is list
 
 def test_creating_a_slice(client):
     slice = client.slices.create(
@@ -180,8 +180,8 @@ def test_attach_device_to_slice_and_detach(client, device):
     new_attachment = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
-    )), notificationUrl="https://example.com/notifications",
-    notificationAuthToken="c8974e592c2fa383d4a3960714")
+    )), notification_url="https://example.com/notifications",
+    notification_auth_token="c8974e592c2fa383d4a3960714")
     
     time.sleep(30)
 

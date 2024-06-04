@@ -14,7 +14,6 @@
 
 from . import Namespace
 from ..models import QoDSession
-from ..errors import error_handler
 
 
 class Sessions(Namespace):

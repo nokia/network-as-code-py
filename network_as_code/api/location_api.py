@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import cast
 import httpx
 
 from ..errors import error_handler
 
-from typing import cast
 
 
 class LocationVerifyAPI:

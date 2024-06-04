@@ -14,10 +14,12 @@ exclude = ["**/__pycache__", "**/.pytest_cache", "**/.*"]
 pythonVersion = "^3.9"
 pythonPlatform = "Linux"
 
+
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = {extras = ["email"], version = "^2.7.1"}
 httpx = "^0.24.1"
+pylint = "^3.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"
