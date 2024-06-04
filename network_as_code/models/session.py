@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pydantic import ConfigDict, BaseModel, PrivateAttr, Field
-
 from typing import Union, List
+from datetime import datetime
+from pydantic import ConfigDict, BaseModel, PrivateAttr
 
 from network_as_code.api.client import APIClient
 
-from ..errors import error_handler
 
-from datetime import datetime
 
 ALIASES = {"start": "from", "end": "to"}
 
@@ -99,8 +97,6 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         """Returns the duration of a given session."""
         if self.started_at and self.expires_at:
             return self.expires_at - self.started_at
-        else:
-            return None
 
     @staticmethod
     def convert_session_model(api, ip, session):

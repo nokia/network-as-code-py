@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from datetime import datetime
-from pydantic import BaseModel, PrivateAttr
 from typing import Optional
+from pydantic import BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
 
 

@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import pdb
 from typing import List, Optional, Union
-import math
 
-from httpx import Response
+from urllib.error import HTTPError
 
+from pydantic import ValidationError
 from . import Namespace
 from ..models.slice import (
     Slice,
@@ -28,8 +26,6 @@ from ..models.slice import (
     AreaOfService,
 )
 from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
-from urllib.error import HTTPError
-from pydantic import ValidationError
 
 from ..api import Throughput as ApiThroughput
 
@@ -71,7 +67,9 @@ class Slices(Namespace):
             slice_uplink_throughput (optional): Optional throughput object
             device_downlink_throughput (optional): Optional throughput object
             device_uplink_throughput: (optional): Optional throughput object
-            name (optional): Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event, such as "Concert-2029-Big-Arena".
+            name (optional): Optional short name for the slice. 
+            Must be ASCII characters, digits and dash. 
+            Like name of an event, such as "Concert-2029-Big-Arena".
             max_data_connections (optional): Optional maximum number of data connection sessions in the slice.
             max_devices (optional): Optional maximum number of devices using the slice.
 
@@ -81,7 +79,8 @@ class Slices(Namespace):
 
         network_id = NetworkIdentifier(mcc="358ffYYT", mnc="246fsTRE")
         slice_info = SliceInfo(service_type="eMBB", differentiator="44eab5")
-        area_of_service = AreaOfService(poligon=[Point(lat=47.344, lon=104.349), Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)])
+        area_of_service = AreaOfService(poligon=[Point(lat=47.344, lon=104.349), 
+        Point(lat=35.344, lon=76.619), Point(lat=12.344, lon=142.541), Point(lat=19.43, lon=103.53)])
         notification_url = "https://notify.me/here"
 
         new_slice = nac_client.slices.create(
@@ -195,7 +194,7 @@ class Slices(Namespace):
 
         return existing_slice
 
-    def getAll(self) -> List[Slice]:
+    def get_all(self) -> List[Slice]:
         """Get All slices by id.
 
         #### Args:
@@ -203,7 +202,7 @@ class Slices(Namespace):
 
         #### Example:
             ```python
-            fetched_slices = nac_client.slices.getAll()
+            fetched_slices = nac_client.slices.get_all()
             ```
         """
         slice_data = self.api.slicing.get_all()

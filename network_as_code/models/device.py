@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pdb
-from pydantic import BaseModel, EmailStr, Field, PrivateAttr, ValidationError
 from typing import List, Union, Optional
+from pydantic import BaseModel, Field, PrivateAttr
 from datetime import datetime
+from pydantic import BaseModel, PrivateAttr
 
 
 from ..api import APIClient
@@ -126,7 +126,10 @@ class Device(BaseModel):
 
         #### Example:
             ```python
-            session = device.create_session(profile="QOS_L", service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", notification_url="https://example.com/notifications, notification_token="c8974e592c2fa383d4a3960714")
+            session = device.create_session(profile="QOS_L", 
+            service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", 
+            notification_url="https://example.com/notifications, 
+            notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
         # Checks if at least one parameter is set
@@ -161,7 +164,7 @@ class Device(BaseModel):
             sessions = self._api.sessions.get_all_sessions(self)
             return list(
                 map(
-                    lambda session: self.__convert_session_model(session),
+                    self.__convert_session_model,
                     sessions.json(),
                 )
             )
@@ -252,7 +255,8 @@ class Device(BaseModel):
 
         #### Example:
             ```python
-            located? = device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000, max_age=60)
+            located? = device.verify_location(longitude=24.07915612501993, 
+            latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
         return self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)

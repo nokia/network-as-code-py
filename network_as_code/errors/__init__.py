@@ -40,7 +40,8 @@ class APIConnectionError(NaCError):
 
 
 class AuthenticationException(NaCError):
-    """Error for when the API key is invalid, the user of the key is not subscribed to the API, or the API key was not supplied. (403)"""
+    """Error for when the API key is invalid, the user of the key is not subscribed to the API, 
+    or the API key was not supplied. (403)"""
 
 
 class ServiceError(NaCError):
@@ -57,7 +58,7 @@ def error_handler(response):
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 404:
             raise NotFound() from e
-        elif e.response.status_code == 403 or e.response.status_code == 401:
+        elif e.response.status_code in (403, 401):
             raise AuthenticationException() from e
         elif e.response.status_code >= 400 and e.response.status_code < 500:
             raise APIError() from e

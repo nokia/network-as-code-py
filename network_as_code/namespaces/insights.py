@@ -69,7 +69,7 @@ class NetworkInsights(Namespace):
 
         json_data = self.api.congestion.get_subscriptions()
 
-        return list(map(lambda entry: self._parse_congestion_subscription(entry), json_data))
+        return list(map(self._parse_congestion_subscription, json_data))
 
     def _parse_congestion_subscription(self, json_data) -> CongestionSubscription:
         return CongestionSubscription(

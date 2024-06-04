@@ -81,7 +81,7 @@ class CongestionAPI:
         return response.json()
 
     def get_subscriptions(self):
-        response = self.client.get(url=f"/subscriptions")
+        response = self.client.get(url="/subscriptions")
 
         error_handler(response)
 

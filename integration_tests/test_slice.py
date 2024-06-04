@@ -17,7 +17,7 @@ def device(client) -> Device:
     return device
 
 def test_getting_slices(client):
-    assert type(client.slices.getAll()) is list
+    assert type(client.slices.get_all()) is list
 
 def test_creating_a_slice(client):
     slice = client.slices.create(
@@ -107,7 +107,7 @@ def test_getting_attachments(client):
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_deactivating_and_deleting_a_slice(client):
     slice = client.slices.create(
         name="slicemock26",

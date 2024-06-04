@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-from ..api.slice_api import AttachAPI, SliceAPI
 from network_as_code.api.qod_api import QodAPI
+from ..api.slice_api import AttachAPI, SliceAPI
 from .location_api import LocationVerifyAPI, LocationRetrievalAPI
 from .device_status_api import DeviceStatusAPI
 from .congestion_api import CongestionAPI
@@ -68,7 +67,6 @@ class APIClient:
         device_status_base_url: str = DEVICE_STATUS_BASE_URL_PROD,
         congestion_base_url: str = CONGESTION_BASE_URL_PROD,
         dev_mode: bool = False,
-        **kwargs,
     ):
         if dev_mode and qos_base_url == QOS_BASE_URL_PROD:
             qos_base_url = QOS_BASE_URL_DEV

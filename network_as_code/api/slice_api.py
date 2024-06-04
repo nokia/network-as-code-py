@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union
+from typing import Union, Optional, Any
 import httpx
 
-from typing import Optional, Any
 from pydantic import BaseModel
 
 from ..errors import error_handler
+from .utils import delete_none
 
 
 class Throughput(BaseModel):
@@ -155,21 +155,6 @@ class SliceAPI:
         return {"polygon": polygons}
 
 
-def delete_none(_dict):
-    """Delete None values recursively from all of the dictionaries"""
-    for key, value in list(_dict.items()):
-        if isinstance(value, dict):
-            delete_none(value)
-        elif value is None:
-            del _dict[key]
-        elif isinstance(value, list):
-            for v_i in value:
-                if isinstance(v_i, dict):
-                    delete_none(v_i)
-
-    return _dict
-
-
 class AttachAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
         self.client = httpx.Client(
@@ -204,7 +189,7 @@ class AttachAPI:
         }
 
         res = self.client.post(
-            url=f"/attachments",
+            url="/attachments",
             json=delete_none(payload),
         )
 
@@ -212,7 +197,7 @@ class AttachAPI:
         return res
 
     def get_attachments(self):
-        res = self.client.get(url=f"/attachments")
+        res = self.client.get(url="/attachments")
 
         error_handler(res)
 

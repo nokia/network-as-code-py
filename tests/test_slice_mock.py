@@ -411,7 +411,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         url="https://network-slicing.p-eu.rapidapi.com/slices",
         json=slices
     )
-    client.slices.getAll()
+    client.slices.get_all()
     
 
 def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):

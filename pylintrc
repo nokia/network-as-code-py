@@ -321,7 +321,9 @@ max-statements=50
 min-public-methods=2
 
 disable=too-many-instance-attributes,
-        too-many-arguments
+        too-many-arguments,
+        too-few-public-methods,
+        too-many-locals
 
 
 [EXCEPTIONS]
@@ -329,6 +331,7 @@ disable=too-many-instance-attributes,
 # Exceptions that will emit a warning when caught.
 overgeneral-exceptions=builtins.BaseException,builtins.Exception
 
+disable=raise-missing-from
 
 [FORMAT]
 
@@ -398,6 +401,8 @@ known-third-party=enchant
 # Couples of modules and preferred modules, separated by a comma.
 preferred-modules=
 
+
+disable=relative-beyond-top-level
 
 [LOGGING]
 
@@ -485,7 +490,8 @@ never-returning-functions=sys.exit,argparse.parse_error
 # ".join(items)``)
 suggest-join-with-non-empty-separator=yes
 
-disable=inconsistent-return-statements
+disable=inconsistent-return-statements,
+        no-else-raise
 
 
 [REPORTS]
@@ -530,6 +536,8 @@ ignore-signatures=yes
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4
+
+disable=
 
 
 [SPELLING]
@@ -651,3 +659,5 @@ init-import=no
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
+
+disable=redefined-builtin
