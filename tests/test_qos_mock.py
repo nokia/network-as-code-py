@@ -35,13 +35,10 @@ def test_creating_a_session_mock(httpx_mock, client):
                     "privateAddress": "1.1.1.2",
                     "publicPort": 80
                 },
-                "ipv6Address": None,
             },
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
             },
-            "devicePorts": None,
-            "applicationServerPorts": None
         }).encode('utf-8'),
         json=mock_response)
 
@@ -53,6 +50,35 @@ def test_creating_a_session_mock(httpx_mock, client):
     )
     session.delete()
 
+def test_creating_a_minimal_session(httpx_mock, client):
+    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "phoneNumber": "9382948473",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2"
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8",
+            },
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
 def test_creating_a_session_with_ipv6(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), ipv6_address = "2266:25::12:0:ad12", phone_number = "9382948473")
@@ -83,8 +109,6 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
                 "ipv4Address": "5.6.7.8",
                 "ipv6Address": "2266:25::12:0:ad12"
             },
-            "devicePorts": None,
-            "applicationServerPorts": None
         }).encode('utf-8'),
         json=mock_response)
 
