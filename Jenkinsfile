@@ -70,6 +70,17 @@ pipeline {
     }
 
     stages {
+        stage('Linting') {
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                        python3 -m poetry run pylint network_as_code
+                        """
+                    }
+                }        
+            }
+        }
         stage('Test') {
             steps {
                 container('beluga') {
