@@ -1,5 +1,4 @@
 
-import pdb
 import pytest
 
 import time
@@ -10,36 +9,39 @@ from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, Sl
 
 from network_as_code.errors import error_handler
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+import random
 
 @pytest.fixture
 def device(client) -> Device:
     device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
     return device
 
-def test_getting_slices(client):
-    assert type(client.slices.get_all()) is list
-
-def test_creating_a_slice(client):
+@pytest.fixture
+def setup_and_cleanup_slice_data(client):
     slice = client.slices.create(
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
         notification_url="https://notify.me/here",
         notification_auth_token="my-token",
-        name="sdk-integration-slice-1"
+        name=f'slice{random.randint(1, 1000)}'
     )
 
-    assert slice.name == "sdk-integration-slice-1"
+    yield slice
+
     slice.delete()
 
+def test_getting_slices(client):
+    assert type(client.slices.get_all()) is list
+
+def test_creating_a_slice(client, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
+    
+    assert slice.network_identifier.mnc == '30'
+    assert slice.network_identifier.mcc == '236'
+
 @pytest.mark.xfail
-def test_modifying_a_slice(client):
-    my_slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
-        notification_url="https://notify.me/here",
-        notification_auth_token="my-token",
-        name="sdk-integration-slice-1"
-    )
+def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
+    my_slice = setup_and_cleanup_slice_data
 
     my_slice.modify(
         max_devices=10,
@@ -49,11 +51,9 @@ def test_modifying_a_slice(client):
     assert my_slice.max_devices == 10
     assert my_slice.max_data_connections == 20
 
-    my_slice.delete()
-
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
-        name="slicemock24",
+        name=f'slice{random.randint(1, 1000)}',
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
         area_of_service=AreaOfService(polygon=[Point(latitude=47.344, longitude=104.349), Point(latitude=35.344, longitude=76.619), Point(latitude=12.344, longitude=142.541), Point(latitude=19.43, longitude=103.53)]),
@@ -69,30 +69,16 @@ def test_creating_a_slice_with_optional_args(client):
 
     slice.delete()
 
-def test_getting_a_slice(client):
-    new_slice = client.slices.create(
-        name="slicemock25",
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-        notification_url="https://notify.me/here",
-        notification_auth_token="my-token",
-    )
-    
+def test_getting_a_slice(client, setup_and_cleanup_slice_data):
+    new_slice = setup_and_cleanup_slice_data
 
     fetched_slice = client.slices.get(new_slice.name)
 
     assert new_slice.sid == fetched_slice.sid
 
-    new_slice.delete()
 
-def test_deleting_a_slice_marks_it_as_deleted(client):
-    slice = client.slices.create(
-        name="slicemock27",
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-        notification_url="https://notify.me/here",
-        notification_auth_token= "samplenotificationtoken",
-    )
+def test_deleting_a_slice_marks_it_as_deleted(client, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
 
     slice.delete()
 
@@ -108,14 +94,8 @@ def test_getting_attachments(client):
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-def test_deactivating_and_deleting_a_slice(client):
-    slice = client.slices.create(
-        name="slicemock26",
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-        notification_url="https://notify.me/here",
-        notification_auth_token= "samplenotificationtoken",
-    )
+def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
 
     counter = 0
     while slice.state == "PENDING" and counter < 5:
@@ -145,19 +125,11 @@ def test_deactivating_and_deleting_a_slice(client):
 
     assert slice.state == "AVAILABLE"
 
-    slice.delete()
-
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-def test_attach_device_to_slice_and_detach(client, device):
-    slice = client.slices.create(
-        name="Enterprise-testslice02",
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="44eab5"),
-        notification_url="https://notify.me/here",
-        notification_auth_token= "samplenotificationtoken",
-    )
+def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
 
     counter = 0
     while slice.state == "PENDING" and counter < 5:
@@ -201,9 +173,6 @@ def test_attach_device_to_slice_and_detach(client, device):
 
     assert slice.state == "AVAILABLE"
 
-    slice.delete()
-
-
 def test_NotFound_error(client):
     with pytest.raises(NotFound):
-        client.slices.get('non_existent_slice_id')
+        client.slices.get('nonexistentsliceid')
