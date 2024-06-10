@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List
+from typing import Union, List, Optional
 from datetime import datetime
 from pydantic import ConfigDict, BaseModel, PrivateAttr
 
@@ -50,8 +50,8 @@ class PortsSpec(BaseModel):
             ports (Optional[str]): the `ports` of a ports spec object.
     """
 
-    ranges: List[PortRange] = []
-    ports: List[int] = []
+    ranges: Optional[List[PortRange]] = None
+    ports: Optional[List[int]] = None
 
 
 class QoDSession(BaseModel, arbitrary_types_allowed=True):

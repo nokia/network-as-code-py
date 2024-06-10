@@ -111,33 +111,22 @@ class Slices(Namespace):
             device_uplink_throughput=device_uplink_throughput,
         )
 
-        # Error Case: Creating Slice
-        try:
-            slice_data = self.api.slicing.create(
-                network_id=network_id,
-                slice_info=slice_info,
-                notification_url=notification_url,
-                area_of_service=area_of_service,
-                name=name,
-                notification_auth_token=notification_auth_token,
-                slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
-                slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-                device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
-                device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
-                max_data_connections=max_data_connections,
-                max_devices=max_devices,
-            )
-            new_slice.sid = slice_data.json().get("csi_id")
-            new_slice.state = slice_data.json()["state"]
-        except HTTPError as e:
-            if e.code == 403:
-                raise AuthenticationException(e)
-            elif e.code == 404:
-                raise NotFound(e)
-            elif e.code >= 500:
-                raise ServiceError(e)
-        except ValidationError as e:
-            raise InvalidParameter(e)
+        slice_data = self.api.slicing.create(
+            network_id=network_id,
+            slice_info=slice_info,
+            notification_url=notification_url,
+            area_of_service=area_of_service,
+            name=name,
+            notification_auth_token=notification_auth_token,
+            slice_downlink_throughput=self._to_api_throughput(slice_downlink_throughput),
+            slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
+            device_downlink_throughput=self._to_api_throughput(device_downlink_throughput),
+            device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
+            max_data_connections=max_data_connections,
+            max_devices=max_devices,
+        )
+        new_slice.sid = slice_data.json().get("csi_id")
+        new_slice.state = slice_data.json()["state"]
 
         return new_slice
 
