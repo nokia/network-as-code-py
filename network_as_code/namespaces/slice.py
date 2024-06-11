@@ -14,9 +14,6 @@
 
 from typing import List, Optional, Union
 
-from urllib.error import HTTPError
-
-from pydantic import ValidationError
 from . import Namespace
 from ..models.slice import (
     Slice,
@@ -25,8 +22,6 @@ from ..models.slice import (
     Throughput,
     AreaOfService,
 )
-from ..errors import NotFound, AuthenticationException, ServiceError, InvalidParameter
-
 from ..api import Throughput as ApiThroughput
 
 
