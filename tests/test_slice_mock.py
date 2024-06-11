@@ -1,4 +1,5 @@
 import json
+import copy
 import pytest
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
@@ -8,8 +9,6 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.errors import error_handler
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
-
-
 
 MOCK_SLICE = {
     "slice": {
@@ -67,7 +66,7 @@ MOCK_SLICE = {
             "csi_id": "csi_368",
             "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
             "administrativeState": None,
-            "state": "inProgress"
+            "state": "PENDING"
 }
 
 def to_bytes(json_content: dict) -> bytes:
@@ -452,6 +451,190 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     
     response = client.slices.get(MOCK_SLICE['slice']['name'])
     assert response.sid == MOCK_SLICE['csi_id']
+
+def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }]
+    )
+    
+    my_slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    assert my_slice.state == "PENDING"
+
+    modified_slice = copy.deepcopy(MOCK_SLICE)
+    modified_slice["state"] = "AVAILABLE"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=modified_slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    my_slice.refresh()
+
+    assert my_slice.state == "AVAILABLE"
+
+@pytest.mark.asyncio
+async def test_slice_wait_done_polls_to_completion(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }]
+    )
+    
+    my_slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    assert my_slice.state == "PENDING"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    modified_slice = copy.deepcopy(MOCK_SLICE)
+    modified_slice["state"] = "AVAILABLE"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=modified_slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    await my_slice.wait_done()
+
+    assert my_slice.state == "AVAILABLE"
+
+@pytest.mark.asyncio
+async def test_slice_wait_done_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+    httpx_mock.add_response(
+        method="GET",
+        url="https://device-application-attach.p-eu.rapidapi.com/attachments",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-2",
+            "resource": {
+                "device": {
+                    "phoneNumber": "09213284343"
+                },
+                "sliceId": "sliceone"
+            },
+        }, {
+            "nac_resource_id": "attachment-3",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sdk-integration-slice-5"
+            },
+        }]
+    )
+    
+    my_slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    assert my_slice.state == "PENDING"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    modified_slice = copy.deepcopy(MOCK_SLICE)
+    modified_slice["state"] = "AVAILABLE"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=modified_slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    await my_slice.wait_done()
+
+    modified_slice = copy.deepcopy(MOCK_SLICE)
+    modified_slice["state"] = "OPERATING"
+
+    httpx_mock.add_response(
+        method="GET",
+        json=modified_slice,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    await my_slice.wait_done(desired_state="OPERATING")
+
+    assert my_slice.state == "OPERATING"
 
 def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(

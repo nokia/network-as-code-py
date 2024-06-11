@@ -26,6 +26,28 @@ def test_creating_a_qos_flow(client, device):
 
     session.delete()
 
+def test_creating_a_qos_flow_for_device_with_only_phone_number(client, device):
+    device = client.devices.get(phone_number=f"3670{random.randint(123456, 999999)}", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
+
+    session.delete()
+
+def test_creating_a_qos_flow_medium_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_M")
+
+    session.delete()
+
+def test_creating_a_qos_flow_small_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_S")
+
+    session.delete()
+
+def test_creating_a_qos_flow_low_latency_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_E")
+
+    session.delete()
+
 def test_getting_a_created_qos_session_by_id(client, device, setup_and_cleanup_session_data):
     session = setup_and_cleanup_session_data
     assert client.sessions.get(session.id).id == session.id

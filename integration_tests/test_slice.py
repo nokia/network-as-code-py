@@ -94,58 +94,40 @@ def test_getting_attachments(client):
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice_data):
+@pytest.mark.asyncio
+async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
-    counter = 0
-    while slice.state == "PENDING" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
     slice.activate()
 
-    counter = 0
-    while slice.state == "AVAILABLE" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="OPERATING")
 
     assert slice.state == "OPERATING"
     
     slice.deactivate()
 
-    counter = 0
-    while slice.state == "OPERATING" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
+@pytest.mark.asyncio
+async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
-    counter = 0
-    while slice.state == "PENDING" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
     slice.activate()
 
-    counter = 0
-    while slice.state == "AVAILABLE" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="OPERATING")
 
     assert slice.state == "OPERATING"
 
@@ -165,11 +147,7 @@ def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_sli
 
     slice.deactivate()
 
-    counter = 0
-    while slice.state == "OPERATING" and counter < 5:
-        slice.refresh()
-        time.sleep(30)
-        counter += 1
+    await slice.wait_done(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 

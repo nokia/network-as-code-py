@@ -4,8 +4,9 @@ import pytest
 
 import os
 import json
-from network_as_code.models.device import DeviceIpv4Addr
+from network_as_code.models.device import DeviceIpv4Addr, PortsSpec
 from network_as_code.errors import NotFound, AuthenticationException
+from network_as_code.models.session import PortRange
 
 def test_getting_a_device(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
@@ -122,6 +123,201 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
         json={}
     )
     session.delete()
+
+def test_creating_qod_session_with_device_ports(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8"
+            },
+            "devicePorts": {
+                "ports": [80, 443]
+            },
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]))
+
+def test_creating_qod_session_with_device_port_range(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8"
+            },
+            "devicePorts": {
+                "ranges": [{"from": 1024, "to": 3000}]
+            },
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
+
+def test_creating_qod_session_with_service_ports(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8"
+            },
+            "applicationServerPorts": {
+                "ports": [80, 443]
+            },
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ports=[80, 443]))
+
+def test_creating_qod_session_with_service_port_range(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8"
+            },
+            "applicationServerPorts": {
+                "ranges": [{"from": 1024, "to": 3000}]
+            },
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
+
+def test_creating_a_qod_session_with_duration(httpx_mock, client):
+    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "phoneNumber": "9382948473",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2"
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8",
+            },
+            "duration": 3600
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
+
+def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock, client):
+    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+
+    mock_response = {
+        "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
+        "qosProfile": "QOS_L",
+        "qosStatus": "REQUESTED",
+        "startedAt": 1691671102,
+        "expiresAt": 1691757502
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        match_content = json.dumps({
+            "qosProfile": "QOS_L",
+            "device": {
+                "phoneNumber": "9382948473",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2"
+                },
+            },
+            "applicationServer": {
+                "ipv4Address": "5.6.7.8",
+            },
+            "notificationUrl": "https://example.com",
+            "notificationAuthToken": "Bearer my-auth-token"
+        }).encode('utf-8'),
+        json=mock_response)
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com", notification_auth_token="my-auth-token")
 
 def test_getting_one_session(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
