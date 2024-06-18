@@ -1,6 +1,20 @@
 
 # Changelog
 
+## Version 3.0.0
+
+Breaking changes:
+- `slice.wait_done()` was renamed to `slice.wait_for()`
+- `client.slices.create()` parameter names now all use snake_case
+- `client.slices.getAll()` was renamed to `client.slices.get_all()`
+- `slice.attach()` parameter names now all use snake
+
+Changes:
+- Handle ISO date strings in the QoD API instead of using Unix timestamps
+- Internal code refactors to fix linter issues
+- Improvements to test suite coverage
+- Updated dependencies
+
 ## Version 2.2.2
 
 Breaking changes:

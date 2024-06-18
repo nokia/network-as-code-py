@@ -12,26 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional
 import httpx
 
-from typing import Optional
 
 from ..errors import error_handler
+from .utils import delete_none
 
 
-def delete_none(_dict):
-    """Delete None values recursively from all of the dictionaries"""
-    for key, value in list(_dict.items()):
-        if isinstance(value, dict):
-            delete_none(value)
-        elif value is None:
-            del _dict[key]
-        elif isinstance(value, list):
-            for v_i in value:
-                if isinstance(v_i, dict):
-                    delete_none(v_i)
-
-    return _dict
 
 
 class DeviceStatusAPI:
@@ -85,7 +73,7 @@ class DeviceStatusAPI:
         return res.json()
 
     def get_subscriptions(self):
-        res = self.client.get(f"/subscriptions")
+        res = self.client.get("/subscriptions")
 
         error_handler(res)
 
@@ -97,18 +85,14 @@ class DeviceStatusAPI:
         error_handler(res)
 
     def get_connectivity(self, device: dict):
-        res = self.client.post("/connectivity", json={
-            "device": device
-        })
+        res = self.client.post("/connectivity", json={"device": device})
 
         error_handler(res)
 
         return res.json()
 
     def get_roaming(self, device: dict):
-        res = self.client.post("/roaming", json={
-            "device": device
-        })
+        res = self.client.post("/roaming", json={"device": device})
 
         error_handler(res)
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "network_as_code"
-version = "2.2.2"
+version = "3.0.0"
 description = ""
 authors = ["Sami Lahtinen <sami.lahtinen@nokia.com>", "Pavel Garmuyev <pavel.garmuyev@nokia.com>"]
 packages = [
@@ -14,10 +14,12 @@ exclude = ["**/__pycache__", "**/.pytest_cache", "**/.*"]
 pythonVersion = "^3.9"
 pythonPlatform = "Linux"
 
+
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = {extras = ["email"], version = "^2.7.1"}
 httpx = "^0.24.1"
+pylint = "^3.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.271"

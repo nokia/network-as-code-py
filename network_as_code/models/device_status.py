@@ -13,13 +13,11 @@
 # limitations under the License.
 
 from datetime import datetime
-from os import access
-from pydantic import BaseModel, EmailStr, PrivateAttr, ValidationError
-from typing import List, Union
+from typing import Optional
+from pydantic import BaseModel, PrivateAttr
 
 from ..api import APIClient
 from ..models.device import Device
-from typing import Optional
 
 
 class EventSubscription(BaseModel):

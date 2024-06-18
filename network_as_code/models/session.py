@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pydantic import ConfigDict, BaseModel, PrivateAttr, Field
-
-from typing import Union, List
+from typing import Union, List, Optional
+from datetime import datetime
+from pydantic import ConfigDict, BaseModel, PrivateAttr
 
 from network_as_code.api.client import APIClient
 
-from ..errors import error_handler
 
-from datetime import datetime
 
 ALIASES = {"start": "from", "end": "to"}
 
@@ -52,8 +50,8 @@ class PortsSpec(BaseModel):
             ports (Optional[str]): the `ports` of a ports spec object.
     """
 
-    ranges: List[PortRange] = []
-    ports: List[int] = []
+    ranges: Optional[List[PortRange]] = None
+    ports: Optional[List[int]] = None
 
 
 class QoDSession(BaseModel, arbitrary_types_allowed=True):
@@ -98,9 +96,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     def duration(self):
         """Returns the duration of a given session."""
         if self.started_at and self.expires_at:
-            return  self.expires_at - self.started_at
-        else:
-            return None
+            return self.expires_at - self.started_at
 
     @staticmethod
     def convert_session_model(api, ip, session):
@@ -112,10 +108,16 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (
-            datetime.fromtimestamp(session["startedAt"]) if session.get("startedAt", False) else None
+            # I really hate having to carry this hack around
+            datetime.fromisoformat(session["startedAt"].replace("Z", "+00:00"))
+            if session.get("startedAt", False)
+            else None
         )
         expires_at = (
-            datetime.fromtimestamp(session["expiresAt"]) if session.get("expiresAt", False) else None
+            # I might just bump minimum Python version over this
+            datetime.fromisoformat(session["expiresAt"].replace("Z", "+00:00"))
+            if session.get("expiresAt", False)
+            else None
         )
         return QoDSession(
             api=api,

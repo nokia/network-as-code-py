@@ -13,16 +13,11 @@
 # limitations under the License.
 
 from datetime import datetime
-import pdb
-from typing import List, Union
-import math
+from typing import List, Union, Optional
 from . import Namespace
 from ..models.device import Device, DeviceIpv4Addr
 from ..models.device_status import EventSubscription
 
-from urllib.error import HTTPError
-from pydantic import ValidationError
-from typing import Optional
 
 
 class Connectivity(Namespace):
@@ -49,7 +44,8 @@ class Connectivity(Namespace):
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
             max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
-            subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. Either a datetime object or ISO formatted date string
+            subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. 
+            Either a datetime object or ISO formatted date string
         """
 
         # Handle conversion
@@ -70,8 +66,10 @@ class Connectivity(Namespace):
             notification_url=notification_url,
             notification_auth_token=notification_auth_token,
             device=device,
-            starts_at=connectivity_data["startsAt"] if "startsAt" in connectivity_data else None,
-            expires_at= connectivity_data["expiresAt"] if "expiresAt" in connectivity_data  else None,
+            starts_at=(connectivity_data["startsAt"] if "startsAt" in connectivity_data else None),
+            expires_at=(
+                connectivity_data["expiresAt"] if "expiresAt" in connectivity_data else None
+            ),
         )
 
         connectivity_subscription.id = connectivity_data["subscriptionId"]
@@ -104,7 +102,7 @@ class Connectivity(Namespace):
         """
         json = self.api.devicestatus.get_subscriptions()
 
-        return list(map(lambda subscription: self.__parse_event_subscription(subscription), json))
+        return list(map(self.__parse_event_subscription, json))
 
     def __parse_event_subscription(self, data: dict) -> EventSubscription:
         device_data = data["subscriptionDetail"]["device"]
@@ -121,7 +119,7 @@ class Connectivity(Namespace):
             device.ipv4_address = DeviceIpv4Addr(
                 public_address=device_data["ipv4Address"].get("publicAddress"),
                 private_address=device_data["ipv4Address"].get("privateAddress"),
-                public_port=device_data["ipv4Address"].get("publicPort")
+                public_port=device_data["ipv4Address"].get("publicPort"),
             )
 
         return EventSubscription(

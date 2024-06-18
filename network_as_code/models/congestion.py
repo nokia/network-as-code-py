@@ -13,9 +13,10 @@
 # limitations under the License.
 
 from datetime import datetime
-from pydantic import BaseModel, PrivateAttr
 from typing import Optional
+from pydantic import BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
+
 
 class CongestionSubscription(BaseModel):
     id: Optional[str] = None
@@ -29,6 +30,7 @@ class CongestionSubscription(BaseModel):
 
     def delete(self):
         self._api.congestion.delete_subscription(self.id)
+
 
 class Congestion(BaseModel):
     level: str

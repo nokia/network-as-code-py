@@ -1,29 +1,56 @@
 
-import pdb
 import pytest
 
 from network_as_code.models.session import PortsSpec, PortRange
 from network_as_code.models.device import Device, DeviceIpv4Addr
+import random
 
-@pytest.fixture
+@pytest.fixture()
 def device(client) -> Device:
-    device = client.devices.get("test-device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+    device = client.devices.get(f"test-device{random.randint(1, 1000)}@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
+@pytest.fixture
+def setup_and_cleanup_session_data(device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
+
+    yield session
+
+    session.delete()
+
 def test_getting_a_device(client, device):
-    assert device.network_access_identifier == "test-device@testcsp.net"
+    assert device.ipv4_address.public_address == "1.1.1.2"
 
 def test_creating_a_qos_flow(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
     session.delete()
 
-def test_getting_a_created_qos_session_by_id(client, device):
+def test_creating_a_qos_flow_for_device_with_only_phone_number(client, device):
+    device = client.devices.get(phone_number=f"3670{random.randint(123456, 999999)}", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
-    assert client.sessions.get(session.id).id == session.id
+    session.delete()
+
+def test_creating_a_qos_flow_medium_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_M")
 
     session.delete()
+
+def test_creating_a_qos_flow_small_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_S")
+
+    session.delete()
+
+def test_creating_a_qos_flow_low_latency_profile(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_E")
+
+    session.delete()
+
+def test_getting_a_created_qos_session_by_id(client, device, setup_and_cleanup_session_data):
+    session = setup_and_cleanup_session_data
+    assert client.sessions.get(session.id).id == session.id
 
     try:
         client.sessions.get(session.id)
@@ -59,8 +86,6 @@ def test_creating_a_qos_flow_with_duration(client, device):
     assert session.expires_at
 
     assert session.duration().seconds == 60
-
-    session.delete()
 
 def test_creating_a_qos_flow_with_notification_url(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714")

@@ -19,6 +19,7 @@ from .namespaces import Slices
 from .namespaces import Connectivity
 from .namespaces import NetworkInsights
 
+
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
 
