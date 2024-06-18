@@ -6,6 +6,7 @@
 Breaking changes:
 - `slice.wait_done()` was renamed to `slice.wait_for()`
 - `client.slices.create()` parameter names now all use snake_case
+- `client.slices.getAll()` was renamed to `client.slices.get_all()`
 - `slice.attach()` parameter names now all use snake
 
 Changes:
