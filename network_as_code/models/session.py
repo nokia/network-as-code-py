@@ -108,12 +108,14 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (
-            datetime.fromisoformat(session["startedAt"])
+            # I really hate having to carry this hack around
+            datetime.fromisoformat(session["startedAt"].replace("Z", "+00:00"))
             if session.get("startedAt", False)
             else None
         )
         expires_at = (
-            datetime.fromisoformat(session["expiresAt"])
+            # I might just bump minimum Python version over this
+            datetime.fromisoformat(session["expiresAt"].replace("Z", "+00:00"))
             if session.get("expiresAt", False)
             else None
         )
