@@ -5,7 +5,8 @@
 
 Breaking changes:
 - `slice.wait_done()` was renamed to `slice.wait_for()`
-- `client.slices.create()` parameters now all use snake_case
+- `client.slices.create()` parameter names now all use snake_case
+- `slice.attach()` parameter names now all use snake
 
 Changes:
 - Handle ISO date strings in the QoD API instead of using Unix timestamps
