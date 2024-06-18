@@ -146,7 +146,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         delete (None): Delete network slice.
         The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
-        wait_done (str): Wait until a slice is no longer PENDING or until specified state is reached, returns state
+        wait_for (str): Wait until a slice is no longer PENDING or until specified state is reached, returns state
 
     #### Callback Functions:
         on_creation ():
@@ -296,11 +296,11 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         slice_data = self._api.slicing.get(self.name)
         self.state = slice_data.json()["state"]
 
-    async def wait_done(
-        self,
-        timeout: datetime.timedelta = datetime.timedelta(seconds=3600),
-        poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10),
-        desired_state: Optional[str] = None
+    async def wait_for(
+            self,
+            desired_state: Optional[str] = None,
+            timeout: datetime.timedelta = datetime.timedelta(seconds=3600),
+            poll_backoff: datetime.timedelta = datetime.timedelta(seconds=10)
     ) -> str:
         """Wait for an ongoing order to complete.
            I.e. not being in "PENDING" state.

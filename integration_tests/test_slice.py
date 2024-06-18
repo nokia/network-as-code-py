@@ -98,19 +98,19 @@ def test_getting_attachments(client):
 async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
-    await slice.wait_done(desired_state="AVAILABLE")
+    await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
     slice.activate()
 
-    await slice.wait_done(desired_state="OPERATING")
+    await slice.wait_for(desired_state="OPERATING")
 
     assert slice.state == "OPERATING"
     
     slice.deactivate()
 
-    await slice.wait_done(desired_state="AVAILABLE")
+    await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
@@ -121,13 +121,13 @@ async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice
 async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
-    await slice.wait_done(desired_state="AVAILABLE")
+    await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 
     slice.activate()
 
-    await slice.wait_done(desired_state="OPERATING")
+    await slice.wait_for(desired_state="OPERATING")
 
     assert slice.state == "OPERATING"
 
@@ -147,7 +147,7 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 
     slice.deactivate()
 
-    await slice.wait_done(desired_state="AVAILABLE")
+    await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
 

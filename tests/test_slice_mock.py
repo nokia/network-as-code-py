@@ -506,7 +506,7 @@ def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     assert my_slice.state == "AVAILABLE"
 
 @pytest.mark.asyncio
-async def test_slice_wait_done_polls_to_completion(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+async def test_slice_wait_for_polls_to_completion(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
@@ -561,12 +561,12 @@ async def test_slice_wait_done_polls_to_completion(httpx_mock: HTTPXMock, client
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
 
-    await my_slice.wait_done()
+    await my_slice.wait_for()
 
     assert my_slice.state == "AVAILABLE"
 
 @pytest.mark.asyncio
-async def test_slice_wait_done_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
@@ -621,7 +621,7 @@ async def test_slice_wait_done_can_wait_for_arbitrary_state(httpx_mock: HTTPXMoc
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
 
-    await my_slice.wait_done()
+    await my_slice.wait_for()
 
     modified_slice = copy.deepcopy(MOCK_SLICE)
     modified_slice["state"] = "OPERATING"
@@ -632,7 +632,7 @@ async def test_slice_wait_done_can_wait_for_arbitrary_state(httpx_mock: HTTPXMoc
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
     )
 
-    await my_slice.wait_done(desired_state="OPERATING")
+    await my_slice.wait_for(desired_state="OPERATING")
 
     assert my_slice.state == "OPERATING"
 
