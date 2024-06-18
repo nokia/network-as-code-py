@@ -19,8 +19,8 @@ def test_creating_a_session_mock(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -58,8 +58,8 @@ def test_creating_a_minimal_session(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -87,8 +87,8 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -131,8 +131,8 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -164,8 +164,8 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -197,8 +197,8 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -230,8 +230,8 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -263,8 +263,8 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -294,8 +294,8 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
 
     httpx_mock.add_response(
@@ -325,8 +325,8 @@ def test_getting_one_session(httpx_mock, client):
         "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "REQUESTED",
-        "startedAt": 1691671102,
-        "expiresAt": 1691757502
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }
     
     httpx_mock.add_response(
@@ -345,8 +345,8 @@ def test_getting_all_sessions(httpx_mock, client):
         "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "BLA",
-        "expiresAt": 1641494400,
-        "startedAt": 0,
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }]
 
     httpx_mock.add_response(
@@ -366,8 +366,8 @@ def test_getting_all_sessions_phone_number(httpx_mock, client):
         "sessionId": "1234",
         "qosProfile": "QOS_L",
         "qosStatus": "BLA",
-        "expiresAt": 1641494400,
-        "startedAt": 0,
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
     }]
 
     httpx_mock.add_response(
