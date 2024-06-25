@@ -17,6 +17,7 @@ from ..api.slice_api import AttachAPI, SliceAPI
 from .location_api import LocationVerifyAPI, LocationRetrievalAPI
 from .device_status_api import DeviceStatusAPI
 from .congestion_api import CongestionAPI
+from .sim_swap_api import SimSwapAPI
 
 QOS_BASE_URL_PROD = "https://quality-of-service-on-demand.p-eu.rapidapi.com"
 QOS_RAPID_HOST_PROD = "quality-of-service-on-demand.nokia.rapidapi.com"
@@ -46,6 +47,10 @@ CONGESTION_BASE_URL_PROD = "https://congestion-insights.p-eu.rapidapi.com"
 CONGESTION_RAPID_HOST_PROD = "congestion-insights.nokia.rapidapi.com"
 CONGESTION_BASE_URL_DEV = "https://congestion-insights.p-eu.rapidapi.com"
 
+SIM_SWAP_BASE_URL_PROD = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
+SIM_SWAP_RAPID_HOST_PROD = "sim-swap.nokia.rapidapi.com"
+SIM_SWAP_BASE_URL_DEV = "https://simswap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
+
 
 class APIClient:
     """A client for communicating with Network as Code APIs.
@@ -66,6 +71,7 @@ class APIClient:
         slice_attach_base_url: str = SLICE_ATTACH_BASE_URL_PROD,
         device_status_base_url: str = DEVICE_STATUS_BASE_URL_PROD,
         congestion_base_url: str = CONGESTION_BASE_URL_PROD,
+        sim_swap_base_url: str = SIM_SWAP_BASE_URL_PROD,
         dev_mode: bool = False,
     ):
         if dev_mode and qos_base_url == QOS_BASE_URL_PROD:
@@ -88,6 +94,9 @@ class APIClient:
 
         if dev_mode and congestion_base_url == CONGESTION_BASE_URL_PROD:
             congestion_base_url = CONGESTION_BASE_URL_DEV
+
+        if dev_mode and sim_swap_base_url == SIM_SWAP_BASE_URL_PROD:
+            sim_swap_base_url = SIM_SWAP_BASE_URL_DEV
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
@@ -155,5 +164,15 @@ class APIClient:
                 congestion_base_url.replace("https://", "").replace("p-eu", "nokia")
                 if not dev_mode
                 else congestion_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+            ),
+        )
+
+        self.sim_swap = SimSwapAPI(
+            base_url=sim_swap_base_url,
+            rapid_key=token,
+            rapid_host=(
+                sim_swap_base_url.replace("https://", "").replace("p-eu", "nokia")
+                if not dev_mode
+                else sim_swap_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
         )

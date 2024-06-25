@@ -82,14 +82,20 @@ class Device(BaseModel):
         get_connectivity (ConnectivityData): Retrieve device connectivity status data
         update_connectivity (ConnectivityData): Update device connectivity status data
         delete_connectivity (): Delete device connectivity status
+        get_sim_swap_date (): Retrieve the latest sim swap date
+        verify_sim_swap (): Verify if there was sim swap
     """
 
     _api: APIClient = PrivateAttr()
     _sessions: List[QoDSession] = PrivateAttr()
-    network_access_identifier: Union[str, None] = Field(None, serialization_alias='networkAccessIdentifier')
-    phone_number: Union[str, None] = Field(None, serialization_alias='phoneNumber')
-    ipv4_address: Union[DeviceIpv4Addr, None] = Field(None, serialization_alias='ipv4Address')
-    ipv6_address: Union[str, None] = Field(None, serialization_alias='ipv6Address')
+    network_access_identifier: Union[str, None] = Field(
+        None, serialization_alias="networkAccessIdentifier"
+    )
+    phone_number: Union[str, None] = Field(None, serialization_alias="phoneNumber")
+    ipv4_address: Union[DeviceIpv4Addr, None] = Field(
+        None, serialization_alias="ipv4Address"
+    )
+    ipv6_address: Union[str, None] = Field(None, serialization_alias="ipv6Address")
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -125,9 +131,9 @@ class Device(BaseModel):
 
         #### Example:
             ```python
-            session = device.create_session(profile="QOS_L", 
-            service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B", 
-            notification_url="https://example.com/notifications, 
+            session = device.create_session(profile="QOS_L",
+            service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B",
+            notification_url="https://example.com/notifications,
             notification_token="c8974e592c2fa383d4a3960714")
             ```
         """
@@ -149,7 +155,9 @@ class Device(BaseModel):
 
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-        return QoDSession.convert_session_model(self._api, self.ipv4_address, session.json())
+        return QoDSession.convert_session_model(
+            self._api, self.ipv4_address, session.json()
+        )
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -239,7 +247,9 @@ class Device(BaseModel):
                 ),
             )
 
-        return Location(longitude=longitude, latitude=latitude, civic_address=civic_address)
+        return Location(
+            longitude=longitude, latitude=latitude, civic_address=civic_address
+        )
 
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int = 60
@@ -254,16 +264,19 @@ class Device(BaseModel):
 
         #### Example:
             ```python
-            located? = device.verify_location(longitude=24.07915612501993, 
+            located? = device.verify_location(longitude=24.07915612501993,
             latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
-        return self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
+        return self._api.location_verify.verify_location(
+            latitude, longitude, self, radius, max_age
+        )
 
     def get_connectivity(self):
         """Get the connectivity status for the device as a string"""
         status = self._api.devicestatus.get_connectivity(
-            self.model_dump(mode='json', by_alias=True, exclude_none=True))["connectivityStatus"]
+            self.model_dump(mode="json", by_alias=True, exclude_none=True)
+        )["connectivityStatus"]
 
         return status
 
@@ -273,7 +286,9 @@ class Device(BaseModel):
         #### Returns
         Object of RoamingStatus class, which contains the roaming status, country code and country name
         """
-        status = self._api.devicestatus.get_roaming(self.model_dump(mode='json', by_alias=True, exclude_none=True))
+        status = self._api.devicestatus.get_roaming(
+            self.model_dump(mode="json", by_alias=True, exclude_none=True)
+        )
 
         return RoamingStatus(
             roaming=status["roaming"],
@@ -300,3 +315,27 @@ class Device(BaseModel):
         json = self._api.congestion.fetch_congestion(self, start=start, end=end)
 
         return Congestion(level=json["level"])
+
+    def get_sim_swap_date(self) -> str:
+        """Get the latest simswap date.
+
+        #### Returns
+             latest sim swap date-time
+        """
+        if self.phone_number is None:
+            return "Device phone number is required."
+        return self._api.sim_swap.fetch_sim_swap_date(self.phone_number)[
+            "latestSimChange"
+        ]
+
+    def verify_sim_swap(self, max_age: Optional[int] = None) -> bool:
+        """Verify if there was sim swap.
+
+        #### Args:
+             max_age (Optional[int]): Max acceptable age for sim swap verification info in seconds
+        #### Returns
+             True/False
+        """
+        if self.phone_number is None:
+            return "Device phone number is required."
+        return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)["swapped"]
