@@ -13,12 +13,11 @@
 # limitations under the License.
 
 from typing import Union, Optional, Any
-import httpx
 
 from pydantic import BaseModel
 
 from ..errors import error_handler
-from .utils import delete_none
+from .utils import delete_none, httpx_client
 
 
 class Throughput(BaseModel):
@@ -36,14 +35,7 @@ class Throughput(BaseModel):
 
 class SliceAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={
-                "content-type": "application/json",
-                "X-RapidAPI-Key": rapid_key,
-                "X-RapidAPI-Host": rapid_host,
-            },
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def create(
         self,
@@ -157,10 +149,7 @@ class SliceAPI:
 
 class AttachAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={"X-RapidAPI-Key": rapid_key, "X-RapidAPI-Host": rapid_host},
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def attach(
         self,

@@ -13,7 +13,8 @@
 # limitations under the License.
 
 from typing import Union
-import httpx
+
+from .utils import httpx_client
 
 
 from .. import errors
@@ -32,14 +33,7 @@ class QodAPI:
             rapid_key (str): RapidAPI Key
             base_url (str): URL for the httpx client
         """
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={
-                "content-type": "application/json",
-                "X-RapidAPI-Key": rapid_key,
-                "X-RapidAPI-Host": rapid_host,
-            },
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def create_session(
         self,
@@ -93,7 +87,6 @@ class QodAPI:
             session_resource["notificationAuthToken"] = "Bearer " + notification_auth_token
 
         response = self.client.post(url="/sessions", json=session_resource)
-
         errors.error_handler(response)
 
         return response
