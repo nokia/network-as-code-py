@@ -14,17 +14,15 @@
 
 
 from typing import Optional
-import httpx
+
+from network_as_code.api.utils import httpx_client
 
 from ..errors import error_handler
 
 
 class SimSwapAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def fetch_sim_swap_date(self, phone_number):
         body = {"phoneNumber": phone_number}

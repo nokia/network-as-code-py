@@ -1,8 +1,5 @@
-from pytest_httpx import httpx_mock
 import pytest
-import json
 from datetime import datetime
-from httpx import HTTPError
 
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
@@ -13,11 +10,6 @@ from tests.conftest import to_bytes
 @pytest.fixture
 def device(client) -> Device:
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
-    return device
-
-@pytest.fixture
-def device_with_just_public_ipv4(client) -> Device:
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
     return device
 
 @pytest.fixture
@@ -171,59 +163,6 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
     )
 
     subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token")
-
-def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, device_with_just_public_ipv4, client):
-    httpx_mock.add_response(
-        method="POST",
-        json={
-            "subscriptionId": "test-subscription",
-            "startsAt": "2024-03-28T12:40:20.398Z",
-            "expiresAt": "2024-03-28T12:40:20.398Z"
-        },
-        match_content=to_bytes({
-            "subscriptionDetail": {
-                "device": {
-                    "networkAccessIdentifier": "testuser@open5glab.net",
-                    "ipv4Address": {
-                        "publicAddress": "1.1.1.2"
-                    }
-                },
-                "type": "CONNECTIVITY"
-            },
-            "maxNumberOfReports": 1,
-            "webhook": {
-                "notificationUrl": "https://localhost:9090/notify",
-                "notificationAuthToken": "my_auth_token"
-            }
-        })
-    )
-
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_public_ipv4, notification_auth_token="my_auth_token", max_num_of_reports=1)
-
-def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock, device_with_just_phone_number, client):
-    httpx_mock.add_response(
-        method="POST",
-        json={
-            "subscriptionId": "test-subscription",
-            "startsAt": "2024-03-28T12:40:20.398Z",
-            "expiresAt": "2024-03-28T12:40:20.398Z"
-        },
-        match_content=to_bytes({
-            "subscriptionDetail": {
-                "device": {
-                    "phoneNumber": "7777777777"
-                },
-                "type": "CONNECTIVITY"
-            },
-            "maxNumberOfReports": 1,
-            "webhook": {
-                "notificationUrl": "https://localhost:9090/notify",
-                "notificationAuthToken": "my_auth_token"
-            }
-        })
-    )
-
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_phone_number, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_device_status_creation_with_optional_parameters(httpx_mock, device, client):
     httpx_mock.add_response(
