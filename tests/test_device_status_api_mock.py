@@ -1,8 +1,5 @@
-from pytest_httpx import httpx_mock
 import pytest
-import json
 from datetime import datetime
-from httpx import HTTPError
 
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 

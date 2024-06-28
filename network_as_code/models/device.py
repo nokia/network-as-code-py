@@ -69,7 +69,6 @@ class DeviceIpv4Addr(BaseModel):
                 raise ValueError('Either private_address or public_port must be provided when public_address is set.')
         return values
 
-
 class Device(BaseModel):
     """
     A class representing the `Device` model.
@@ -340,7 +339,7 @@ class Device(BaseModel):
             "latestSimChange"
         ]
 
-    def verify_sim_swap(self, max_age: Optional[int] = None) -> bool:
+    def verify_sim_swap(self, max_age: Optional[int] = None) -> Union[bool, str]:
         """Verify if there was sim swap.
 
         #### Args:
