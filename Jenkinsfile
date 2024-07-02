@@ -49,7 +49,7 @@ pipeline {
         )
     }
     parameters {
-        string(name: 'gitlabSourceBranch', defaultValue: 'master', description: 'Default branch used when built on-demand', trim: true)
+        string(name: 'gitlabSourceBranch', defaultValue: 'main', description: 'Default branch used when built on-demand', trim: true)
     }
     environment {
         PYPI_REPOSITORY = credentials('PYPI_REPOSITORY')
@@ -144,6 +144,24 @@ pipeline {
                             python3 -m poetry install
                             python3 -m poetry build
                         """
+                    }
+                }
+            }
+        }
+        stage('Installation Test') {
+            when { expression { env.gitlabActionType == "TAG_PUSH" && 
+            (env.gitlabTargetBranch.contains("rc-") || env.gitlabTargetBranch.contains("release-"))} }
+            steps {
+                container('beluga') {
+                    script {
+                        sh '''
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            python3 -m pip install pytest python-dotenv toml
+                            version=$(python3 -m extract_version)
+                            python3 -m pip install dist/network_as_code-${version}.tar.gz
+                            python3 -m pytest installation_tests/
+                        '''
                     }
                 }
             }
