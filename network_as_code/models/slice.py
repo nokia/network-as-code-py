@@ -151,7 +151,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     #### Callback Functions:
         on_creation ():
         on_event ():
-
     """
 
     _api: APIClient = PrivateAttr()
