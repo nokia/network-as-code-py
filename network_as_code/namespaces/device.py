@@ -27,7 +27,7 @@ class Devices(Namespace):
     def get(
         self,
         network_access_identifier: Union[None, str] = None,
-        ipv4_address=None,
+        ipv4_address: Union[None, DeviceIpv4Addr]= None,
         ipv6_address=None,
         phone_number=None,
     ) -> Device:
@@ -35,7 +35,7 @@ class Devices(Namespace):
 
         Args:
             id (str): External ID of the subscription. Email-like.
-            ipv4_address (Any | None): ipv4 address of the subscription.
+            ipv4_address (DeviceIpv4Addr | None): ipv4 address of the subscription.
             ipv6_address (Any | None): ipv6 address of the subscription.
             phone_number (Any | None): phone number of the subscription.
         """
@@ -44,10 +44,6 @@ class Devices(Namespace):
             [id, ipv4_address, ipv6_address, phone_number]
         ), "At least one parameter must be set."
 
-        if ipv4_address and isinstance(ipv4_address, str):
-            ipv4_address = DeviceIpv4Addr(
-                public_address=ipv4_address, private_address=None, public_port=None
-            )
 
         ret_device = Device(
             api=self.api,
