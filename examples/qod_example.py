@@ -1,11 +1,6 @@
-import time
+# QoD functionalities
 
-from fastapi import FastAPI, Header
-
-from pydantic import BaseModel
-
-from typing_extensions import Annotated
-from typing import Union
+# QoS session examples:
 
 import network_as_code as nac
 
@@ -50,30 +45,3 @@ my_session.delete()
 
 # Delete all QoD sessions associated with a particular device
 device.clear_sessions()
-
-# Our web server for receiving QoD notifications
-
-app = FastAPI()
-
-class EventDetail(BaseModel):
-    sessionId: str
-    qosStatus: str
-    statusInfo: str
-
-class Event(BaseModel):
-    eventType: str
-    eventTime: str
-    eventDetail: EventDetail
-
-class QoDNotification(BaseModel):
-    event: Event
-
-@app.post("/qod")
-def receive_notification(
-    notification: QoDNotification,
-    authorization: Annotated[Union[str, None], Header]
-):
-    if authorization == "Bearer my-token":
-        # We can now react to the notifications
-        # based on the Notification object
-        print(notification)

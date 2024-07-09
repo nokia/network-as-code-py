@@ -1,11 +1,6 @@
-import time
+# Specialized Network functionalities
 
-from fastapi import FastAPI, Header
-
-from pydantic import BaseModel
-
-from typing_extensions import Annotated
-from typing import Union
+# Slice examples:
 
 import network_as_code as nac
 
@@ -64,26 +59,3 @@ my_slice.modify(
 
 # Delete a slice by its name
 my_slice.delete()
-
-
-# Our web server for receiving slice notifications
-
-app = FastAPI()
-
-class Notification(BaseModel):
-    resource: str
-    action: str
-    state: str
-
-# We'll keep track of when we are retiring the slice between the notifications
-retiring = False
-
-@app.post("/notifications")
-def receive_notification(
-    notification: Notification,
-    authorization: Annotated[Union[str, None], Header]
-):
-    if authorization == "Bearer my-token":
-        # We can now react to the notifications
-        # based on the Notification object
-        print(notification)
