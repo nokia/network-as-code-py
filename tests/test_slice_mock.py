@@ -452,6 +452,37 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     response = client.slices.get(MOCK_SLICE['slice']['name'])
     assert response.sid == MOCK_SLICE['csi_id']
 
+def test_get_slice_with_no_differentiator(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
+    MOCK_SLICE_RES = {
+    "slice": {
+            "name": "sliceone",
+            "notificationUrl": "",
+            "notificationAuthToken": "samplenotificationtoken",
+            "networkIdentifier": {
+                "mcc": "236",
+                "mnc": "30"
+            },
+            "sliceInfo": {
+                "serviceType": '1',
+            },
+            },
+            "csi_id": "csi_368",
+            "state": "PENDING"
+}
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE_RES,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE_RES['slice']['name']}"
+    )
+    httpx_mock.add_response(
+        method="GET",
+        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        json=[]
+    )
+    
+    response = client.slices.get(MOCK_SLICE_RES['slice']['name'])
+    assert response.sid == MOCK_SLICE_RES['csi_id']
+
 def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
