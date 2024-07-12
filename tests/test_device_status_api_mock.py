@@ -16,8 +16,8 @@ def device(client) -> Device:
     return device
 
 @pytest.fixture
-def device_with_just_public_ipv4(client) -> Device:
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+def device_with_just_public_ipv4_port(client) -> Device:
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
     return device
 
 @pytest.fixture
@@ -172,7 +172,7 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
 
     subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token")
 
-def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, device_with_just_public_ipv4, client):
+def test_device_status_creation_minimal_parameters_minimal_ipv4_and_public_port(httpx_mock, device_with_just_public_ipv4_port, client):
     httpx_mock.add_response(
         method="POST",
         json={
@@ -185,7 +185,8 @@ def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, devi
                 "device": {
                     "networkAccessIdentifier": "testuser@open5glab.net",
                     "ipv4Address": {
-                        "publicAddress": "1.1.1.2"
+                        "publicAddress": "1.1.1.2",
+                        "publicPort": 80
                     }
                 },
                 "type": "CONNECTIVITY"
@@ -198,7 +199,7 @@ def test_device_status_creation_minimal_parameters_minimal_ipv4(httpx_mock, devi
         })
     )
 
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_public_ipv4, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_public_ipv4_port, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock, device_with_just_phone_number, client):
     httpx_mock.add_response(

@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta
 import pytest
 
@@ -52,7 +51,7 @@ def test_creating_a_session_mock(httpx_mock, client):
     session.delete()
 
 def test_creating_a_minimal_session(httpx_mock, client):
-    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+    device = client.devices.get(ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80), phone_number = "9382948473")
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -70,7 +69,8 @@ def test_creating_a_minimal_session(httpx_mock, client):
             "device": {
                 "phoneNumber": "9382948473",
                 "ipv4Address": {
-                    "publicAddress": "1.1.1.2"
+                    "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -125,7 +125,7 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
     session.delete()
 
 def test_creating_qod_session_with_device_ports(httpx_mock, client):
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -144,6 +144,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
                 "networkAccessIdentifier": "testuser@open5glab.net",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -158,7 +159,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]))
 
 def test_creating_qod_session_with_device_port_range(httpx_mock, client):
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -177,6 +178,7 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
                 "networkAccessIdentifier": "testuser@open5glab.net",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -191,7 +193,7 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
 
 def test_creating_qod_session_with_service_ports(httpx_mock, client):
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -210,6 +212,7 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
                 "networkAccessIdentifier": "testuser@open5glab.net",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -224,7 +227,7 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ports=[80, 443]))
 
 def test_creating_qod_session_with_service_port_range(httpx_mock, client):
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = "1.1.1.2")
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -243,6 +246,7 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
                 "networkAccessIdentifier": "testuser@open5glab.net",
                 "ipv4Address": {
                     "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -257,7 +261,7 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
 
 def test_creating_a_qod_session_with_duration(httpx_mock, client):
-    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+    device = client.devices.get(ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80), phone_number = "9382948473")
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -275,7 +279,8 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
             "device": {
                 "phoneNumber": "9382948473",
                 "ipv4Address": {
-                    "publicAddress": "1.1.1.2"
+                    "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
@@ -288,7 +293,7 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
 
 def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock, client):
-    device = client.devices.get(ipv4_address = "1.1.1.2", phone_number = "9382948473")
+    device = client.devices.get(ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80), phone_number = "9382948473")
 
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
@@ -306,7 +311,8 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
             "device": {
                 "phoneNumber": "9382948473",
                 "ipv4Address": {
-                    "publicAddress": "1.1.1.2"
+                    "publicAddress": "1.1.1.2",
+                    "publicPort": 80
                 },
             },
             "applicationServer": {
