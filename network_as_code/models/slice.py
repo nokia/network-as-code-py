@@ -428,7 +428,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         if slice_info_dict:
             return SliceInfo(
                 service_type=str(slice_info_dict["serviceType"]),
-                differentiator=slice_info_dict["differentiator"],
+                differentiator=slice_info_dict.get("differentiator"),
             )
 
     @staticmethod

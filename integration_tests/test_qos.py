@@ -104,9 +104,17 @@ def test_clearing_qos_flows(client, device):
     for session in device.sessions():
         assert not session.id in ids
 
-def test_creating_session_with_just_public_ipv4(client):
-    device = client.devices.get("test-device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2"))
+def test_creating_session_with_public_and_private_ipv4(client):
+    device = client.devices.get("test-device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2"))
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
 
     session.delete()
+
+def test_creating_session_with_public_ipv4_and_public_port(client):
+    device = client.devices.get("test-device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
+
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
+
+    session.delete()
+

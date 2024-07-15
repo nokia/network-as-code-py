@@ -34,8 +34,8 @@ SLICE_BASE_URL_PROD = "https://network-slicing.p-eu.rapidapi.com"
 SLICE_RAPID_HOST_PROD = "network-slicing.nokia.rapidapi.com"
 SLICE_BASE_URL_DEV = "https://network-slicing2.p-eu.rapidapi.com"
 
-SLICE_ATTACH_BASE_URL_PROD = "https://device-application-attach.p-eu.rapidapi.com"
-SLICE_ATTACH_RAPID_HOST_PROD = "device-application-attach.nokia.rapidapi.com"
+SLICE_ATTACH_BASE_URL_PROD = "https://network-slice-device-attachment.p-eu.rapidapi.com"
+SLICE_ATTACH_RAPID_HOST_PROD = "network-slice-device-attachment.nokia.rapidapi.com"
 SLICE_ATTACH_BASE_URL_DEV = "https://device-application-attach.p-eu.rapidapi.com"
 
 DEVICE_STATUS_BASE_URL_PROD = "https://device-status.p-eu.rapidapi.com"
