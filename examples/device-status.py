@@ -1,5 +1,6 @@
+# Device Status functionalities
 
-# device-status.py
+# Subscribing to Connectivity and Roaming updates:
 
 from typing import List
 import network_as_code as nac
@@ -36,71 +37,3 @@ subscription = client.connectivity.get_subscription(connectivity_subscription.id
 
 # Delete a subscription
 connectivity_subscription.delete()
-
-# Get roaming-status notifications
-
-# status_handler.py for ROAMING_STATUS
-
-# run with: uvicorn status_handler:app
-
-from fastapi import FastAPI, Header
-from pydantic import BaseModel
-
-from typing_extensions import Annotated
-from typing import Union
-
-
-app = FastAPI()
-
-class ConnectivityEventDetail(BaseModel):
-    deviceStatus: str
-
-class Event(BaseModel):
-    eventType: str
-    eventTime: str
-    eventDetail: ConnectivityEventDetail
-
-class Notification(BaseModel):
-    eventSubscriptionId: str
-    event: Event
-
-@app.post("/notifications")
-def receive_notification(notification: Notification):
-    if notification.event.eventDetail.deviceStatus == "REACHABLE":
-        print("Device is available")
-    elif notification.event.eventDetail.deviceStatus == "UNREACHABLE":
-        print("Device is not available")
-
-# Get connectivity notifications
-
-# status_handler.py for CONNECTIVITY
-
-# run with: uvicorn status_handler:app
-
-from fastapi import FastAPI, Header
-from pydantic import BaseModel
-
-from typing_extensions import Annotated
-from typing import Union
-
-
-app = FastAPI()
-
-class ConnectivityEventDetail(BaseModel):
-    deviceStatus: str
-
-class Event(BaseModel):
-    eventType: str
-    eventTime: str
-    eventDetail: ConnectivityEventDetail
-
-class Notification(BaseModel):
-    eventSubscriptionId: str
-    event: Event
-
-@app.post("/notifications")
-def receive_notification(notification: Notification):
-    if notification.event.eventDetail.deviceStatus == "REACHABLE":
-        print("Device is available")
-    elif notification.event.eventDetail.deviceStatus == "UNREACHABLE":
-        print("Device is not available")
