@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 3.1.0
+
+Changes:
+
+- Introduced SIM Swap functionality to query the date of a SIM Swap event for a particular device
+- Minor code cleanup and more thorough release testing
+
 ## Version 3.0.1
 
 Fixes

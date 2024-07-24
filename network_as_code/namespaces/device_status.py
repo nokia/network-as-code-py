@@ -93,7 +93,7 @@ class Connectivity(Namespace):
         return self.__parse_event_subscription(connectivity_data)
 
     def get_subscriptions(self) -> List[EventSubscription]:
-        """Retrieve list of active Device Status subscriptions
+        """Retrieve list of active Device Status Subscriptions
 
         #### Example:
              '''python

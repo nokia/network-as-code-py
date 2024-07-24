@@ -13,7 +13,8 @@
 # limitations under the License.
 
 from typing import cast
-import httpx
+
+from network_as_code.api.utils import httpx_client
 
 from ..errors import error_handler
 
@@ -21,10 +22,7 @@ from ..errors import error_handler
 
 class LocationVerifyAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def verify_location(self, latitude, longitude, device, radius, max_age=60):
         body = {
@@ -48,10 +46,7 @@ class LocationVerifyAPI:
 
 class LocationRetrievalAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
-        self.client = httpx.Client(
-            base_url=base_url,
-            headers={"X-RapidAPI-Host": rapid_host, "X-RapidAPI-Key": rapid_key},
-        )
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
 
     def get_location(self, device, max_age=60):
         body = {"device": device.model_dump(mode='json', by_alias=True, exclude_none=True)}
