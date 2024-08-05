@@ -2,6 +2,8 @@
 
 # Slice examples:
 
+import asyncio
+import time
 import network_as_code as nac
 
 from network_as_code.models.slice import (
@@ -16,12 +18,12 @@ from network_as_code.models.slice import (
 SDK_TOKEN = "<replace-me>"
 DEVICE_ID = "device@testcsp.net"
 
+
 # Give the device the device identifier and SDK token
 client = nac.NetworkAsCodeClient(
     token=SDK_TOKEN
 )
 
-device = client.devices.get(DEVICE_ID)
 
 # Creation of a slice
 # We use the country code (MCC) and network code (MNC) to identify the network
@@ -57,5 +59,34 @@ my_slice.modify(
     device_uplink_throughput=Throughput(guaranteed=10, maximum=10)
 )
 
-# Delete a slice by its name
-my_slice.delete()
+async def slice_attachments():
+    # We can take advantage of Slice.wait_for() in async functions
+    # This allows us to, e.g., wait for a slice to become available
+    await my_slice.wait_for(desired_state="AVAILABLE")
+
+    # Slices must be activated before devices can be added
+    my_slice.activate()
+    await my_slice.wait_for(desired_state="OPERATING")
+
+    # Afterwards we can attach or detach devices
+    device = client.devices.get(DEVICE_ID)
+    my_slice.attach(device)
+    my_slice.detach(device)
+
+    # For unallocating a slice, we first deactivate the slice
+    my_slice.deactivate()
+    await my_slice.wait_for(desired_state="AVAILABLE")
+
+    # A deactivated slice can be freely removed
+    my_slice.delete()
+
+# Since we use the asynchronous Slice.wait_for(), we must execute
+# in an async function. We can run such functions with asyncio:
+asyncio.run(slice_attachments())
+
+# If you cannot run async functions, you can also utilize webhook
+# handlers or polling to handle slice state transitions.
+# Simple manual polling can be implemented like this:
+while my_slice.state != "AVAILABLE":
+    my_slice.refresh()
+    time.sleep(1)
