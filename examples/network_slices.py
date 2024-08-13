@@ -10,12 +10,11 @@ from network_as_code.models.slice import (
     Point,
     AreaOfService,
     NetworkIdentifier,
-    Slice,
     SliceInfo,
     Throughput
 )
 
-SDK_TOKEN = "<replace-me>"
+SDK_TOKEN = "<your-application-key-here>"
 DEVICE_ID = "device@testcsp.net"
 
 
@@ -24,30 +23,36 @@ client = nac.NetworkAsCodeClient(
     token=SDK_TOKEN
 )
 
-
 # Creation of a slice
 # We use the country code (MCC) and network code (MNC) to identify the network
 # Different types of slices can be requested using service type and differentiator
 # Area of the slice must also be described in geo-coordinates
 my_slice = client.slices.create(
-    name="slice-name",
-    network_id=NetworkIdentifier(mcc="664", mnc="22"),
-    slice_info=SliceInfo(service_type="eMBB", differentiator="123456"),
-    area_of_service=AreaOfService(
-        polygon=[
-            Point(latitude=42.0, longitude=42.0),
-            Point(latitude=41.0, longitude=42.0),
-            Point(latitude=42.0, longitude=41.0),
-            Point(latitude=42.0, longitude=42.0)
-        ]
-    ),
-    notification_url="https://notify.me/here",
-    # Use HTTPS to send notifications
-    notification_auth_token="replace-with-your-auth-token"
+    name="slice-test-2",
+    network_id = NetworkIdentifier(mcc="236", mnc="30"),
+    slice_info = SliceInfo(service_type="eMBB", differentiator="444444"),
+    area_of_service = AreaOfService(polygon=[
+        Point(latitude=47.344, longitude=104.349),
+        Point(latitude=35.344, longitude=76.619),
+        Point(latitude=12.344, longitude=142.541),
+        Point(latitude=19.43, longitude=103.53)
+    ]),
+    slice_downlink_throughput = Throughput(guaranteed=3415, maximum=1234324),
+    slice_uplink_throughput = Throughput(guaranteed=3415, maximum=1234324),
+    device_downlink_throughput = Throughput(guaranteed=3415, maximum=1234324),
+    device_uplink_throughput = Throughput(guaranteed=3415, maximum=1234324),
+    max_data_connections=10,
+    max_devices=6,
+     # Use HTTPS to send notifications
+    notification_url="https://snippets.requestcatcher.com/test",
 )
 
 # Get a slice by its ID
 slice = client.slices.get(my_slice.name)
+
+# Get a slice by using an index
+# or remove the index '[0]' to get all slices
+one_slice = client.slices.get_all()[0]
 
 # Modify the slice
 my_slice.modify(
