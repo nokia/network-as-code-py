@@ -6,7 +6,7 @@ import network_as_code as nac
 
 from network_as_code.models.device import DeviceIpv4Addr
 
-client = nac.NetworkAsCodeClient(...)
+client = nac.NetworkAsCodeClient("<your-application-key-here>")
 
 # Identify the device with its ID,
 # IP address(es) and optionally, a phone number
