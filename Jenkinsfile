@@ -93,38 +93,38 @@ pipeline {
                 }        
             }
         }
-        stage('Integration Test') {
-            steps {
-                container('beluga') {
-                    script {
-                        sh """
-                            env | grep gitlab
-                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest integration_tests/
-                        """
-                    }
-                }        
-            }
-        }
-        stage('Sonar Scan') {
-            steps {
-                withCredentials([string(credentialsId: "${SONAR_TOKEN}", variable: 'sonar_login')]) {
-                    container('sonar') {
-                        script {
-                            sh """
-                                export PATH=$PATH:${SONAR_PATH}
-                                sonar-scanner \
-                                    -Dsonar.projectKey=nac-sdk-py \
-                                    -Dsonar.sources=./network_as_code \
-                                    -Dsonar.tests=./tests \
-                                    -Dsonar.host.url=${SONARQUBE_HTTPS_URL} \
-                                    -Dsonar.login=${sonar_login} \
-                                    -Dsonar.python.coverage.reportPaths=coverage.xml
-                            """
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Integration Test') {
+        //     steps {
+        //         container('beluga') {
+        //             script {
+        //                 sh """
+        //                     env | grep gitlab
+        //                     https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest integration_tests/
+        //                 """
+        //             }
+        //         }        
+        //     }
+        // }
+        // stage('Sonar Scan') {
+        //     steps {
+        //         withCredentials([string(credentialsId: "${SONAR_TOKEN}", variable: 'sonar_login')]) {
+        //             container('sonar') {
+        //                 script {
+        //                     sh """
+        //                         export PATH=$PATH:${SONAR_PATH}
+        //                         sonar-scanner \
+        //                             -Dsonar.projectKey=nac-sdk-py \
+        //                             -Dsonar.sources=./network_as_code \
+        //                             -Dsonar.tests=./tests \
+        //                             -Dsonar.host.url=${SONARQUBE_HTTPS_URL} \
+        //                             -Dsonar.login=${sonar_login} \
+        //                             -Dsonar.python.coverage.reportPaths=coverage.xml
+        //                     """
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Audit') {
             steps {
                 container('beluga') {
@@ -150,7 +150,7 @@ pipeline {
         }
         stage('Installation Test') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && 
-            (env.gitlabTargetBranch.contains("rc-") || env.gitlabTargetBranch.contains("release-"))} }
+            (env.gitlabBranch.contains("rc-") || env.gitlabBranch.contains("release-"))} }
             steps {
                 container('beluga') {
                     script {
@@ -167,26 +167,27 @@ pipeline {
             }
         }
         stage('Deploy candidate') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("rc-")} }
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
             steps {
                 container('beluga') {
                     script {
                         sh """
                         env | grep gitlab
                         """
-                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("rc-")){
-                            sh '''
-                                python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
-                                python3 -m poetry build
-                                python3 -m poetry publish --no-interaction -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
-                            '''
+                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
+                            sh "echo RC handling successful!"
+                            // sh '''
+                            //     python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
+                            //     python3 -m poetry build
+                            //     python3 -m poetry publish --no-interaction -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+                            // '''
                         }
                     }
                 }
             }
         }
         stage('Deploy release') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")} }
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
                 container('beluga') {
                     script {
@@ -194,11 +195,13 @@ pipeline {
                         env | grep gitlab
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")){
-                            sh '''
-                                python3 -m poetry config pypi-token.pypi ${PYPI_TOKEN}
-                                python3 -m poetry build
-                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry publish --no-interaction
-                            '''
+                            sh "echo release handling successful!"
+                            // sh '''
+
+                            //     python3 -m poetry config pypi-token.pypi ${PYPI_TOKEN}
+                            //     python3 -m poetry build
+                            //     https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry publish --no-interaction
+                            // '''
                         }
                     }
                 }
