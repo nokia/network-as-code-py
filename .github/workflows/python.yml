@@ -26,7 +26,7 @@ jobs:
         poetry install
     - name: Lint with pylint
       run: |
-        poetry run pylint
+        poetry run pylint network_as_code
     - name: Test with pytest
       run: |
         poetry run pytest
