@@ -21,8 +21,6 @@ def test_creating_connectivity_subscription_with_notification(client, device):
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
-    print(subscription)
-
     subscription.delete()
 
 def test_creating_connectivity_subscription_roaming(client, device):
