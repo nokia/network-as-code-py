@@ -17,6 +17,20 @@ from typing import Optional
 from pydantic import BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
 
+class Congestion(BaseModel):
+    level: str
+    start: datetime
+    stop: datetime
+    confidence: Optional[int]
+
+    @classmethod
+    def from_json(cls, json) -> "Congestion":
+        level = json["congestionLevel"]
+        confidence = json.get("confidenceLevel")
+        start = datetime.fromisoformat(json["timeIntervalStart"].replace("Z", "+00:00"))
+        stop = datetime.fromisoformat(json["timeIntervalStop"].replace("Z", "+00:00"))
+
+        return cls(level=level, confidence=confidence, start=start, stop=stop)
 
 class CongestionSubscription(BaseModel):
     id: Optional[str] = None
@@ -30,7 +44,3 @@ class CongestionSubscription(BaseModel):
 
     def delete(self):
         self._api.congestion.delete_subscription(self.id)
-
-
-class Congestion(BaseModel):
-    level: str

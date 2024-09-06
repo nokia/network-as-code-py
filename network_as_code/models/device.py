@@ -307,11 +307,15 @@ class Device(BaseModel):
             country_name=status.get("countryName"),
         )
 
+    # TODO:                                                              # pylint: disable=fixme
+    #       In the future this won't be possible without first creating a CongestionSubscription
+    #       Either this needs to be migrated to CongestionSubscription, needs to take a valid
+    #       CongestionSubscription as a parameter or needs to be documented as having that requirement
     def get_congestion(
         self,
         start: Union[datetime, str, None] = None,
         end: Union[datetime, str, None] = None,
-    ) -> Congestion:
+    ) -> List[Congestion]:
         """Get the congestion level this device is experiencing
 
         #### Args:
@@ -325,7 +329,9 @@ class Device(BaseModel):
 
         json = self._api.congestion.fetch_congestion(self, start=start, end=end)
 
-        return Congestion(level=json["level"])
+        assert isinstance(json, list)
+
+        return [Congestion.from_json(congestion_json) for congestion_json in json]
 
     def get_sim_swap_date(self) -> str:
         """Get the latest simswap date.
