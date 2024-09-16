@@ -208,6 +208,39 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
 
     assert device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=70)
 
+def test_verify_partial_location(httpx_mock: httpx_mock, device):
+    url = f"https://location-verification.p-eu.rapidapi.com/verify"
+
+    httpx_mock.add_response(
+        url=url, 
+        method='POST', 
+        match_content=json.dumps({
+            "device": {
+                "networkAccessIdentifier": "test_device_id",
+                "ipv4Address": {
+                    "publicAddress": "1.1.1.2",
+                    "privateAddress": "1.1.1.2",
+                    "publicPort": 80
+                }
+            },
+            "area": {
+                "areaType": "Circle",
+                "center": {
+                    "latitude": 47,
+                    "longitude": 19
+                },
+                "radius": 10_000
+            },
+            "maxAge": 60
+        }).encode(),
+        json={
+            "lastLocationTime": "2023-09-11T18:34:01+03:00",
+            "verificationResult": "PARTIAL"
+        }
+    )
+
+    result = device.verify_location(longitude=19, latitude=47, radius=10_000)
+    assert result == "PARTIAL"
 
 def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
