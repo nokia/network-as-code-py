@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pdb
 from typing import Union
 
 from .utils import httpx_client
@@ -86,7 +85,6 @@ class QodAPI:
             session_resource["notificationAuthToken"] = "Bearer " + notification_auth_token
 
         response = self.client.post(url="/sessions", json=session_resource)
-        
         errors.error_handler(response)
 
         return response
