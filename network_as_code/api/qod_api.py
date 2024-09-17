@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 from typing import Union
 
 from .utils import httpx_client
@@ -39,11 +40,11 @@ class QodAPI:
         self,
         device,
         profile,
+        duration,
         service_ipv4,
         service_ipv6=None,
         device_ports: Union[None, any] = None,
         service_ports: Union[None, any] = None,
-        duration=None,
         notification_url=None,
         notification_auth_token=None,
     ):
@@ -51,6 +52,7 @@ class QodAPI:
 
         #### Args:
             profile (any): Name of the requested QoS profile.
+            duration(int): The length of the QoD session in seconds.
             service_ipv4 (any): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
@@ -66,6 +68,7 @@ class QodAPI:
             "qosProfile": profile,
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "applicationServer": {"ipv4Address": service_ipv4},
+            "duration": duration
         }
 
         if device_ports:
@@ -77,9 +80,6 @@ class QodAPI:
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
 
-        if duration:
-            session_resource["duration"] = duration
-
         if notification_url:
             session_resource["notificationUrl"] = notification_url
 
@@ -87,6 +87,7 @@ class QodAPI:
             session_resource["notificationAuthToken"] = "Bearer " + notification_auth_token
 
         response = self.client.post(url="/sessions", json=session_resource)
+        
         errors.error_handler(response)
 
         return response
