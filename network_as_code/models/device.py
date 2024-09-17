@@ -137,7 +137,6 @@ class Device(BaseModel):
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            duration (optional): Session duration in seconds.
             notification_url (optional): Notification URL for session-related events.
             notification_token (optional): Security bearer token to authenticate registration of session.
 
