@@ -7,12 +7,12 @@ from network_as_code.models.device import Device
 
 @pytest.fixture
 def nef_device(client) -> Device:
-    device = client.devices.get(phone_number="3670123456")
+    device = client.devices.get(phone_number="+3670123456")
     return device
 
 @pytest.fixture
 def camara_device(client) -> Device:
-    device = client.devices.get(phone_number="3637123456")
+    device = client.devices.get(phone_number="+3637123456")
     return device
 
 @pytest.fixture

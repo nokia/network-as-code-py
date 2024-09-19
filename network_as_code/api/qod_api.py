@@ -39,11 +39,11 @@ class QodAPI:
         self,
         device,
         profile,
+        duration,
         service_ipv4,
         service_ipv6=None,
         device_ports: Union[None, any] = None,
         service_ports: Union[None, any] = None,
-        duration=None,
         notification_url=None,
         notification_auth_token=None,
     ):
@@ -51,11 +51,11 @@ class QodAPI:
 
         #### Args:
             profile (any): Name of the requested QoS profile.
+            duration(int): The length of the QoD session in seconds.
             service_ipv4 (any): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            duration (optional): Session duration in seconds.
             notification_url (optional): Notification URL for session-related events.
             notification_token (optional): Security bearer token to authenticate registration of session.
 
@@ -66,6 +66,7 @@ class QodAPI:
             "qosProfile": profile,
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "applicationServer": {"ipv4Address": service_ipv4},
+            "duration": duration
         }
 
         if device_ports:
@@ -76,9 +77,6 @@ class QodAPI:
 
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
-
-        if duration:
-            session_resource["duration"] = duration
 
         if notification_url:
             session_resource["notificationUrl"] = notification_url

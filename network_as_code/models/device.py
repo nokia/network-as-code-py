@@ -120,11 +120,11 @@ class Device(BaseModel):
     def create_qod_session(
         self,
         profile,
+        duration,
         service_ipv4=None,
         service_ipv6=None,
         device_ports: Union[None, PortsSpec] = None,
         service_ports: Union[None, PortsSpec] = None,
-        duration=None,
         notification_url=None,
         notification_auth_token=None,
     ) -> QoDSession:
@@ -132,17 +132,17 @@ class Device(BaseModel):
 
         #### Args:
             profile (any): Name of the requested QoS profile.
+            duration(int): The length of the QoD session in seconds.
             service_ipv4 (any): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            duration (optional): Session duration in seconds.
             notification_url (optional): Notification URL for session-related events.
             notification_token (optional): Security bearer token to authenticate registration of session.
 
         #### Example:
             ```python
-            session = device.create_session(profile="QOS_L",
+            session = device.create_session(profile="QOS_L", duration=3600,
             service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B",
             notification_url="https://example.com/notifications,
             notification_token="c8974e592c2fa383d4a3960714")
@@ -155,11 +155,11 @@ class Device(BaseModel):
         session = self._api.sessions.create_session(
             self,
             profile,
+            duration,
             service_ipv4,
             service_ipv6,
             device_ports,
             service_ports,
-            duration,
             notification_url,
             notification_auth_token,
         )

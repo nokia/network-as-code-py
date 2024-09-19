@@ -17,6 +17,7 @@ def test_creating_a_session_mock(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -39,10 +40,11 @@ def test_creating_a_session_mock(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
             },
+            "duration": 3600
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     assert session.status == mock_response["qosStatus"]
     
     httpx_mock.add_response(
@@ -56,6 +58,7 @@ def test_creating_a_minimal_session(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -76,16 +79,18 @@ def test_creating_a_minimal_session(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
             },
+            "duration": 3600
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
 
 def test_creating_a_session_with_ipv6(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), ipv6_address = "2266:25::12:0:ad12", phone_number = "9382948473")
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -110,10 +115,11 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
                 "ipv4Address": "5.6.7.8",
                 "ipv6Address": "2266:25::12:0:ad12"
             },
+            "duration": 3600
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2266:25::12:0:ad12", profile="QOS_L")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", service_ipv6="2266:25::12:0:ad12", profile="QOS_L", duration=3600)
     assert type(session.started_at) == datetime
     assert type(session.expires_at) == datetime
     assert type(session.duration()) == timedelta
@@ -130,6 +136,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -150,13 +157,14 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8"
             },
+            "duration": 3600,
             "devicePorts": {
                 "ports": [80, 443]
-            },
+            }
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]))
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]), duration=3600)
 
 def test_creating_qod_session_with_device_port_range(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -164,6 +172,7 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -184,13 +193,14 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8"
             },
+            "duration": 3600,
             "devicePorts": {
                 "ranges": [{"from": 1024, "to": 3000}]
-            },
+            }
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]), duration=3600)
 
 def test_creating_qod_session_with_service_ports(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -198,6 +208,7 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -218,13 +229,14 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8"
             },
+            "duration": 3600,
             "applicationServerPorts": {
                 "ports": [80, 443]
-            },
+            }
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ports=[80, 443]))
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ports=[80, 443]), duration=3600)
 
 def test_creating_qod_session_with_service_port_range(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -232,6 +244,7 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -252,13 +265,14 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
             "applicationServer": {
                 "ipv4Address": "5.6.7.8"
             },
+            "duration": 3600,
             "applicationServerPorts": {
                 "ranges": [{"from": 1024, "to": 3000}]
-            },
+            }
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]))
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", service_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]), duration=3600)
 
 def test_creating_a_qod_session_with_duration(httpx_mock, client):
     device = client.devices.get(ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80), phone_number = "9382948473")
@@ -266,6 +280,7 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -298,6 +313,7 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
     mock_response = {
         "sessionId": "08305343-7ed2-43b7-8eda-4c5ae9805bd0",
         "qosProfile": "QOS_L",
+        "duration": 3600,
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -318,12 +334,13 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
             "applicationServer": {
                 "ipv4Address": "5.6.7.8",
             },
+            "duration": 3600,
             "notificationUrl": "https://example.com",
             "notificationAuthToken": "Bearer my-auth-token"
         }).encode('utf-8'),
         json=mock_response)
 
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com", notification_auth_token="my-auth-token")
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com", notification_auth_token="my-auth-token", duration=3600)
 
 def test_getting_one_session(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
@@ -421,6 +438,6 @@ def test_create_qod_session_requires_ip(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="9382948473")
     
     with pytest.raises(ValueError) as excinfo:
-        session = device.create_qod_session(profile="QOS_L")
+        session = device.create_qod_session(profile="QOS_L", duration=3600)
 
     assert "At least one of IP parameters must be provided" in str(excinfo.value)

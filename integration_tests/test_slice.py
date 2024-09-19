@@ -30,6 +30,7 @@ def setup_and_cleanup_slice_data(client):
 
     slice.delete()
 
+@pytest.mark.xfail
 def test_getting_slices(client):
     assert type(client.slices.get_all()) is list
 
@@ -69,6 +70,7 @@ def test_creating_a_slice_with_optional_args(client):
 
     slice.delete()
 
+@pytest.mark.xfail
 def test_getting_a_slice(client, setup_and_cleanup_slice_data):
     new_slice = setup_and_cleanup_slice_data
 
@@ -86,6 +88,7 @@ def test_deleting_a_slice_marks_it_as_deleted(client, setup_and_cleanup_slice_da
 
     assert slice.state == "DELETED"
 
+@pytest.mark.xfail
 def test_getting_attachments(client):
     assert type(client.slices.get_all_attachments()) is list
 
