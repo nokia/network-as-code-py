@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 from typing import List, Union, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
@@ -163,11 +164,10 @@ class Device(BaseModel):
             notification_url,
             notification_auth_token,
         )
-
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(
-            self._api, self.ipv4_address, session.json()
+            self._api, self, session.json()
         )
 
     def sessions(self) -> List[QoDSession]:

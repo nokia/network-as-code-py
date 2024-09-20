@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Optional
+from __future__ import annotations
+from typing import Union, List, Optional, TYPE_CHECKING
 from datetime import datetime
+
 from pydantic import ConfigDict, BaseModel, PrivateAttr
-
 from network_as_code.api.client import APIClient
-
 
 
 ALIASES = {"start": "from", "end": "to"}
@@ -63,7 +63,8 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
 
     #### Public Attributes:
         id (str): Session identifier.
-        service_ip (str): IP address of a service.
+        service_ipv4 (str): IPv4 address of the service.
+        service_ipv6 (str): IPv6 address of the service.
         service_ports (Union[PortsSpec, None]): List of ports for a service.
         profile (str): Name of the requested QoS profile.
         status(str): Status of the requested QoS.
@@ -82,6 +83,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     status: str
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
+    device: "Device"
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -99,7 +101,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             return self.expires_at - self.started_at
 
     @staticmethod
-    def convert_session_model(api, ip, session):
+    def convert_session_model(api, device, session):
         """Returns a `Session` instance.
 
         Assigns the startedAt and expiresAt attributes None if their value not found.
@@ -119,15 +121,24 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             if session.get("expiresAt", False)
             else None
         )
+        
+        service = session.get("applicationServer")
+        service_ports = session.get('applicationServerPorts')
         return QoDSession(
             api=api,
             id=session["sessionId"],
-            device_ip=ip,
+            device=device,
             device_ports=None,
-            service_ip="",
-            service_ports=None,
+            service_ipv4=service.get("ipv4Address") if service else None,
+            service_ipv6=service.get("ipv6Address") if service else None,
+            service_ports=PortsSpec(**service_ports) if service_ports else None,
             profile=session["qosProfile"],
             status=session["qosStatus"],
             started_at=started_at,
             expires_at=expires_at,
         )
+
+
+if TYPE_CHECKING:
+    from ..models.device import Device
+QoDSession.model_rebuild()
