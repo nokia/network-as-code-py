@@ -170,11 +170,11 @@ class Device(BaseModel):
         )
     def filter_sessions_by_device(self, session: dict):
         return (
-        (self.network_access_identifier is None or
+        (session['device'].get('networkAccessIdentifier') is None or
          session['device'].get('networkAccessIdentifier') == self.network_access_identifier) and
-        (self.phone_number is None or session['device'].get('phoneNumber') == self.phone_number) and
-        (self.ipv4_address is None or (
-            session['device'].get('ipv4Address') is not None and
+        (session['device'].get('phoneNumber') is None or session['device'].get('phoneNumber') == self.phone_number) and
+        (session['device'].get('ipv4Address') is None or (
+            self.ipv4_address is not None and
             session['device']['ipv4Address'].get('publicAddress') == self.ipv4_address.public_address and
             session['device']['ipv4Address'].get('privateAddress') == self.ipv4_address.private_address and
             session['device']['ipv4Address'].get('publicPort') == self.ipv4_address.public_port

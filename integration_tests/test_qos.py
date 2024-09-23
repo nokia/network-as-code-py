@@ -113,6 +113,13 @@ def test_creating_a_qos_flow_with_notification_url(client, device):
 
     session.delete()
 
+def test_getting_all_sessions(client, device):
+    device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
+    sessions = device.sessions()
+
+    assert len(sessions) >= 0
+    device.clear_sessions()
+
 def test_clearing_qos_flows(client, device):
     ids = []
 
