@@ -163,11 +163,10 @@ class Device(BaseModel):
             notification_url,
             notification_auth_token,
         )
-
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(
-            self._api, self.ipv4_address, session.json()
+            self._api, self, session.json()
         )
 
     def sessions(self) -> List[QoDSession]:
@@ -197,7 +196,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> QoDSession:
-        return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
+        return QoDSession.convert_session_model(self._api, self, session)
 
     def location(self, max_age: int = 60) -> Location:
         """Returns the location of the device.

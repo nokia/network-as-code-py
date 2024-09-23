@@ -28,7 +28,7 @@ class LocationVerifyAPI:
         body = {
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {"latitude": latitude, "longitude": longitude},
                 "radius": radius,
             },

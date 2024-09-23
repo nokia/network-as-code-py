@@ -19,7 +19,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
         "area": {
-            "areaType": "Circle",
+            "areaType": "CIRCLE",
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
@@ -65,7 +65,7 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
         "area": {
-            "areaType": "Circle",
+            "areaType": "CIRCLE",
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
@@ -111,7 +111,7 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
         "area": {
-            "areaType": "Circle",
+            "areaType": "CIRCLE",
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
@@ -158,7 +158,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
                 }
             },
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {
                     "latitude": 47,
                     "longitude": 19
@@ -191,7 +191,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
                 }
             },
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {
                     "latitude": 47,
                     "longitude": 19
@@ -224,7 +224,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
                 }
             },
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {
                     "latitude": 47,
                     "longitude": 19
@@ -258,7 +258,7 @@ def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_m
                 }
             },
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {
                     "latitude": 47,
                     "longitude": 19
@@ -292,7 +292,7 @@ def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock
                 }
             },
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {
                     "latitude": 47,
                     "longitude": 19
