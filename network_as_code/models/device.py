@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pdb
 from typing import List, Union, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
@@ -197,7 +196,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> QoDSession:
-        return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
+        return QoDSession.convert_session_model(self._api, self, session)
 
     def location(self, max_age: int = 60) -> Location:
         """Returns the location of the device.

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Any
 from datetime import datetime
 
 from pydantic import ConfigDict, BaseModel, PrivateAttr
@@ -82,7 +82,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     status: str
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
-    device: "Device" # forward references solution is used here to solve circular import
+    device: Any  # Change this to Type Device, after solving the circular import issue later
     service_ipv4: Union[str, None] = None
     service_ipv6: Union[str, None] = None
     service_ports: Union[PortsSpec, None] = None
