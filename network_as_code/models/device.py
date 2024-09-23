@@ -168,6 +168,19 @@ class Device(BaseModel):
         return QoDSession.convert_session_model(
             self._api, self, session.json()
         )
+    def filter_sessions_by_device(self, session: dict):
+        return (
+        (self.network_access_identifier is None or
+         session['device'].get('networkAccessIdentifier') == self.network_access_identifier) and
+        (self.phone_number is None or session['device'].get('phoneNumber') == self.phone_number) and
+        (self.ipv4_address is None or (
+            session['device'].get('ipv4Address') is not None and
+            session['device']['ipv4Address'].get('publicAddress') == self.ipv4_address.public_address and
+            session['device']['ipv4Address'].get('privateAddress') == self.ipv4_address.private_address and
+            session['device']['ipv4Address'].get('publicPort') == self.ipv4_address.public_port
+        )) and
+        (self.ipv6_address is None or session['device'].get('ipv6Address') == self.ipv6_address)
+    )
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -179,10 +192,11 @@ class Device(BaseModel):
         """
         try:
             sessions = self._api.sessions.get_all_sessions(self)
+            filtered_sessions = [session for session in sessions.json() if self.filter_sessions_by_device(session)]
             return list(
                 map(
                     self.__convert_session_model,
-                    sessions.json(),
+                    filtered_sessions,
                 )
             )
         except NotFound:
