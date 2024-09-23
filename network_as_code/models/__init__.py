@@ -16,3 +16,5 @@ from .device import Device, DeviceIpv4Addr
 from .session import QoDSession
 from .location import Location
 from .slice import Slice
+
+QoDSession.model_rebuild() #forward references is used for refering the 'Device' model inside 'QoDSession'

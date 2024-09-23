@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
-from typing import Union, List, Optional, TYPE_CHECKING
+from typing import Union, List, Optional
 from datetime import datetime
 
 from pydantic import ConfigDict, BaseModel, PrivateAttr
@@ -83,7 +82,10 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     status: str
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
-    device: "Device"
+    device: "Device" # forward references solution is used here to solve circular import
+    service_ipv4: Union[str, None] = None
+    service_ipv6: Union[str, None] = None
+    service_ports: Union[PortsSpec, None] = None
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -121,7 +123,6 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             if session.get("expiresAt", False)
             else None
         )
-        
         service = session.get("applicationServer")
         service_ports = session.get('applicationServerPorts')
         return QoDSession(
@@ -137,8 +138,3 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             started_at=started_at,
             expires_at=expires_at,
         )
-
-
-if TYPE_CHECKING:
-    from ..models.device import Device
-QoDSession.model_rebuild()
