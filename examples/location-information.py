@@ -16,7 +16,7 @@ from network_as_code.models.location import CivicAddress, Location
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
-SDK_TOKEN = "<replace-me>"
+SDK_TOKEN = "<your-application-key-here>"
 DEVICE_ID = "device@testcsp.net"
 
 # Give the device the device identifier and SDK token

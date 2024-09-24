@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 # Initialize the client object with your application key
-SDK_TOKEN = "<replace-me>"
+SDK_TOKEN = "<your-application-key-here>"
 DEVICE_ID = "device@testcsp.net"
 
 # Give the device the device identifier and SDK token
@@ -19,7 +19,8 @@ client = nac.NetworkAsCodeClient(
 
 my_device = client.devices.get(DEVICE_ID)
 
-# Subscribe your device to Congestion notifications
+# Subscribe your device to Congestion notifications FIRST.
+# Then, you'll be able to use other functionalities, such as polling.
 congestion_subscription = client.insights.subscribe_to_congestion_info(
     my_device,
     # Set the duration of your subscription to congestion insights,
@@ -38,9 +39,13 @@ print(congestion_subscription.id)
 print(congestion_subscription.starts_at)
 print(congestion_subscription.expires_at)
 
-# Get historical data between two timestamps
+# Get congestion historical data between two timestamps
 # Set the duration/time difference with the timedelta function
+# It returns an array of congested objects and the prediction confidence level
 congestion = my_device.get_congestion(
     start=datetime.now(timezone.utc),
     end=datetime.now(timezone.utc) + timedelta(hours=3)
 )
+
+# Show the congestion level objects
+print(congestion)

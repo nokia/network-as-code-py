@@ -30,5 +30,6 @@ class Sessions(Namespace):
             id (str): ID of the QoS Session
         """
         session_object = self.api.sessions.get_session(id)
-
-        return QoDSession.convert_session_model(self.api, "", session_object.json())
+        device = session_object.json()['device']
+        return QoDSession.convert_session_model(self.api, device, session_object.json())
+    

@@ -28,7 +28,7 @@ class LocationVerifyAPI:
         body = {
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
             "area": {
-                "areaType": "Circle",
+                "areaType": "CIRCLE",
                 "center": {"latitude": latitude, "longitude": longitude},
                 "radius": radius,
             },
@@ -41,7 +41,8 @@ class LocationVerifyAPI:
 
         error_handler(response)
 
-        return response.json()["verificationResult"] == "TRUE"
+        result = response.json()["verificationResult"]
+        return True if result == "TRUE" else False if result == "FALSE" else result
 
 
 class LocationRetrievalAPI:

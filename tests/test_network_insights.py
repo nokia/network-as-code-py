@@ -2,7 +2,7 @@ from pytest_httpx import httpx_mock
 import pytest
 
 from datetime import datetime
-from network_as_code.models.congestion import CongestionSubscription
+from network_as_code.models.congestion import Congestion, CongestionSubscription
 
 from network_as_code.models.device import Device
 from tests.test_device_status_api_mock import to_bytes
@@ -19,11 +19,16 @@ def camara_device(client) -> Device:
 
 def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/device",
+        url="https://congestion-insights.p-eu.rapidapi.com/query",
         method="POST",
-        json={
-            "level": "medium"
-        },
+        json=[
+            {
+                "timeIntervalStart": "2024-08-20T21:00:00+00:00",
+                "timeIntervalStop": "2024-08-20T21:05:00+00:00",
+                "congestionLevel": "medium",
+                "confidenceLevel": 50
+            }
+        ],
         match_content=to_bytes(
             {
                 "device": {
@@ -35,15 +40,24 @@ def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client,
 
     congestion = camara_device.get_congestion()
 
-    assert congestion.level == "medium"
+    assert isinstance(congestion, list)
+
+    assert congestion[0]
+    assert isinstance(congestion[0], Congestion)
+    assert congestion[0].level == "medium"
 
 def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/device",
+        url="https://congestion-insights.p-eu.rapidapi.com/query",
         method="POST",
-        json={
-            "level": "medium"
-        },
+        json=[
+            {
+                "timeIntervalStart": "2024-08-20T21:00:00+00:00",
+                "timeIntervalStop": "2024-08-20T21:05:00+00:00",
+                "congestionLevel": "medium",
+                "confidenceLevel": 50
+            }
+        ],
         match_content=to_bytes(
             {
                 "device": {
@@ -60,7 +74,7 @@ def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
         end=datetime.fromisoformat("2024-04-16T08:18:01.773761+00:00")
     )
 
-    assert congestion.level == "medium"
+    assert congestion[0].level == "medium"
 
 def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
     httpx_mock.add_response(

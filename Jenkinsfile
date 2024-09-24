@@ -93,6 +93,17 @@ pipeline {
                 }        
             }
         }
+        stage('Audit') {
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pip-audit
+                        """
+                    }
+                }
+            }
+        }
         stage('Integration Test') {
             steps {
                 container('beluga') {
@@ -125,17 +136,6 @@ pipeline {
                 }
             }
         }
-        stage('Audit') {
-            steps {
-                container('beluga') {
-                    script {
-                        sh """
-                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pip-audit
-                        """
-                    }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 container('beluga') {
@@ -150,7 +150,7 @@ pipeline {
         }
         stage('Installation Test') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && 
-            (env.gitlabTargetBranch.contains("rc-") || env.gitlabTargetBranch.contains("release-"))} }
+            (env.gitlabBranch.contains("rc-") || env.gitlabBranch.contains("release-"))} }
             steps {
                 container('beluga') {
                     script {
@@ -167,14 +167,14 @@ pipeline {
             }
         }
         stage('Deploy candidate') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("rc-")} }
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
             steps {
                 container('beluga') {
                     script {
                         sh """
                         env | grep gitlab
                         """
-                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("rc-")){
+                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
                                 python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
                                 python3 -m poetry build
@@ -186,7 +186,7 @@ pipeline {
             }
         }
         stage('Deploy release') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")} }
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
                 container('beluga') {
                     script {

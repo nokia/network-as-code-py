@@ -3,33 +3,22 @@ import pytest
 
 from datetime import datetime, timezone, timedelta
 from network_as_code.models.congestion import Congestion
-
 from network_as_code.models.device import Device
-from network_as_code.namespaces import insights
 
 @pytest.fixture
 def nef_device(client) -> Device:
-    device = client.devices.get(phone_number="3670123456")
+    device = client.devices.get(phone_number="+3670123456")
     return device
 
 @pytest.fixture
 def camara_device(client) -> Device:
-    device = client.devices.get(phone_number="3637123456")
+    device = client.devices.get(phone_number="+3637123456")
     return device
 
-
-def test_can_query_congestion_level_from_camara_device(camara_device):
-    congestion = camara_device.get_congestion()
-
-    assert isinstance(congestion, Congestion)
-
-    assert congestion.level in ["none", "low", "medium", "high"]
-
-
-def test_can_query_within_time_range(camara_device: Device):
-    congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
-
-    assert congestion.level in ["none", "low", "medium", "high"]
+@pytest.fixture
+def naid_device(client) -> Device:
+    device = client.devices.get(network_access_identifier="testdevice@testcsp.net")
+    return device
 
 def test_can_subscribe_for_congestion_info(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
@@ -94,3 +83,53 @@ def test_can_get_list_of_subscriptions(client, camara_device: Device):
 
     for subscription in subscriptions:
         subscription.delete()
+
+
+def test_can_query_congestion_level_from_camara_device(client, camara_device):
+    subscription = client.insights.subscribe_to_congestion_info(
+        camara_device,
+        notification_url="https://example.com",
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(minutes=5),
+        notification_auth_token="my-auth-token"
+    )
+
+    congestion = camara_device.get_congestion()
+
+    assert isinstance(congestion, list)
+
+    assert congestion[0].level in ["None", "Low", "Medium", "High"]
+
+    subscription.delete()
+
+@pytest.mark.xfail
+def test_can_query_congestion_level_from_nef_device(client, nef_device):
+    subscription = client.insights.subscribe_to_congestion_info(
+        nef_device,
+        notification_url="https://example.com",
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(minutes=5),
+        notification_auth_token="my-auth-token"
+    )
+
+    congestion = nef_device.get_congestion()
+
+    assert isinstance(congestion, list)
+
+    assert congestion[0].level in ["None", "Low", "Medium", "High"]
+
+    subscription.delete()
+
+def test_can_query_within_time_range(client, camara_device: Device):
+    subscription = client.insights.subscribe_to_congestion_info(
+        camara_device,
+        notification_url="https://example.com",
+        subscription_expire_time=datetime.now(timezone.utc) + timedelta(minutes=5),
+        notification_auth_token="my-auth-token"
+    )
+
+    congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
+
+    assert congestion[0].level in ["None", "Low", "Medium", "High"]
+
+    assert congestion[0].confidence
+
+    subscription.delete()

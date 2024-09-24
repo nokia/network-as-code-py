@@ -120,11 +120,11 @@ class Device(BaseModel):
     def create_qod_session(
         self,
         profile,
+        duration,
         service_ipv4=None,
         service_ipv6=None,
         device_ports: Union[None, PortsSpec] = None,
         service_ports: Union[None, PortsSpec] = None,
-        duration=None,
         notification_url=None,
         notification_auth_token=None,
     ) -> QoDSession:
@@ -132,17 +132,17 @@ class Device(BaseModel):
 
         #### Args:
             profile (any): Name of the requested QoS profile.
+            duration(int): The length of the QoD session in seconds.
             service_ipv4 (any): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            duration (optional): Session duration in seconds.
             notification_url (optional): Notification URL for session-related events.
             notification_token (optional): Security bearer token to authenticate registration of session.
 
         #### Example:
             ```python
-            session = device.create_session(profile="QOS_L",
+            session = device.create_session(profile="QOS_L", duration=3600,
             service_ipv4="5.6.7.8", service_ipv6="2041:0000:140F::875B:131B",
             notification_url="https://example.com/notifications,
             notification_token="c8974e592c2fa383d4a3960714")
@@ -155,20 +155,24 @@ class Device(BaseModel):
         session = self._api.sessions.create_session(
             self,
             profile,
+            duration,
             service_ipv4,
             service_ipv6,
             device_ports,
             service_ports,
-            duration,
             notification_url,
             notification_auth_token,
         )
-
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(
-            self._api, self.ipv4_address, session.json()
+            self._api, self, session.json()
         )
+    def filter_sessions_by_device(self, session: dict):
+        return (
+        (session['device'].get('networkAccessIdentifier') == self.network_access_identifier) and
+        (session['device'].get('phoneNumber') is None or session['device'].get('phoneNumber') == self.phone_number)
+    )
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -180,10 +184,11 @@ class Device(BaseModel):
         """
         try:
             sessions = self._api.sessions.get_all_sessions(self)
+            filtered_sessions = [session for session in sessions.json() if self.filter_sessions_by_device(session)]
             return list(
                 map(
                     self.__convert_session_model,
-                    sessions.json(),
+                    filtered_sessions,
                 )
             )
         except NotFound:
@@ -197,7 +202,7 @@ class Device(BaseModel):
             session.delete()
 
     def __convert_session_model(self, session) -> QoDSession:
-        return QoDSession.convert_session_model(self._api, self.ipv4_address, session)
+        return QoDSession.convert_session_model(self._api, self, session)
 
     def location(self, max_age: int = 60) -> Location:
         """Returns the location of the device.
@@ -264,7 +269,7 @@ class Device(BaseModel):
 
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int = 60
-    ) -> bool:
+    ) -> Union[bool, str]:
         """Verifies the location of the device (Returns boolean value).
 
         #### Args:
@@ -307,11 +312,15 @@ class Device(BaseModel):
             country_name=status.get("countryName"),
         )
 
+    # TODO:                                                              # pylint: disable=fixme
+    #       In the future this won't be possible without first creating a CongestionSubscription
+    #       Either this needs to be migrated to CongestionSubscription, needs to take a valid
+    #       CongestionSubscription as a parameter or needs to be documented as having that requirement
     def get_congestion(
         self,
         start: Union[datetime, str, None] = None,
         end: Union[datetime, str, None] = None,
-    ) -> Congestion:
+    ) -> List[Congestion]:
         """Get the congestion level this device is experiencing
 
         #### Args:
@@ -325,7 +334,9 @@ class Device(BaseModel):
 
         json = self._api.congestion.fetch_congestion(self, start=start, end=end)
 
-        return Congestion(level=json["level"])
+        assert isinstance(json, list)
+
+        return [Congestion.from_json(congestion_json) for congestion_json in json]
 
     def get_sim_swap_date(self) -> str:
         """Get the latest simswap date.

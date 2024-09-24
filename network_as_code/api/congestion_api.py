@@ -35,7 +35,7 @@ class CongestionAPI:
         if end:
             body["end"] = end
 
-        response = self.client.post(url="/device", json=body)
+        response = self.client.post(url="/query", json=body)
 
         error_handler(response)
 
