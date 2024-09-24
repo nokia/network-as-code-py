@@ -644,3 +644,36 @@ def test_getting_all_sessions_filtered_by_device_phone_number(httpx_mock, client
     sessions = device.sessions()
 
     assert len(sessions) == 2
+
+def test_getting_all_sessions_filtered_by_device_with_naid_and_phone_no(httpx_mock, client):
+    device = client.devices.get(network_access_identifier="testuser@open5glab.net", phone_number="+1234567890")
+
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }, {
+        "sessionId": "234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "phoneNumber": "+23423532434",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
+
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
+        json=mock_response
+    )
+
+    sessions = device.sessions()
+
+    assert len(sessions) == 1
