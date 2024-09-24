@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 4.0.0
+
+Breaking changes:
+- `device.create_qod_session()` now requires `duration` as a mandatory parameter
+- `device.get_congestion()` now returns a list of `Congestion` objects
+
+Changes:
+- `device.verify_location()` may now return a "PARTIAL" result if the device is
+  partially inside the verification area
+
+Fixes:
+- Previously due to a miscommunication `device.sessions()` would return all
+  created sessions. These have now been correctly limited to device-specific ones
+
 ## Version 3.1.0
 
 Changes:
