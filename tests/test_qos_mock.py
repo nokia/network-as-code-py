@@ -471,90 +471,176 @@ def test_getting_one_session(httpx_mock, client):
 
     
 
-# def test_getting_all_sessions(httpx_mock, client):
-#     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+def test_getting_all_sessions(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
 
-#     mock_response = [{
-#         "sessionId": "1234",
-#         "qosProfile": "QOS_L",
-#         "device": {
-#             "phoneNumber": "9382948473",
-#             "ipv4Address": {
-#                 "publicAddress": "1.1.1.2",
-#                 "publicPort": 80
-#             },
-#         },
-#         "qosStatus": "BLA",
-#         "startedAt": "2024-06-18T08:48:12.300312Z",
-#         "expiresAt": "2024-06-18T08:48:12.300312Z"
-#     }]
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+            "ipv4Address": {
+                "publicAddress": "1.1.1.2",
+                "privateAddress": "1.1.1.2",
+                "publicPort": 80
+            },
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
 
-#     httpx_mock.add_response(
-#         method='GET',
-#         url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
-#         json=mock_response
-#     )
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
+        json=mock_response
+    )
 
-#     session = device.sessions()
+    session = device.sessions()
 
-#     assert session[0].id == "1234"
+    assert session[0].id == "1234"
 
-# def test_getting_all_sessions_phone_number(httpx_mock, client):
-#     device = client.devices.get(phone_number="1234567890", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+def test_getting_all_sessions_phone_number(httpx_mock, client):
+    device = client.devices.get(phone_number="1234567890", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
 
-#     mock_response = [{
-#         "sessionId": "1234",
-#         "qosProfile": "QOS_L",
-#         "qosStatus": "BLA",
-#         "startedAt": "2024-06-18T08:48:12.300312Z",
-#         "expiresAt": "2024-06-18T08:48:12.300312Z"
-#     }]
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "phoneNumber": "1234567890",
+            "ipv4Address": {
+                "publicAddress": "1.1.1.2",
+                "privateAddress": "1.1.1.2",
+                "publicPort": 80
+            },
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
 
-#     httpx_mock.add_response(
-#         method='GET',
-#         url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?phoneNumber=1234567890',
-#         json=mock_response
-#     )
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?phoneNumber=1234567890',
+        json=mock_response
+    )
 
-#     session = device.sessions()
+    session = device.sessions()
 
-#     assert session[0].id == "1234"
+    assert session[0].id == "1234"
 
-# @pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
-# def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
-#     device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
+@pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
+def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
+    device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
 
-#     httpx_mock.add_response(
-#         method="GET",
-#         url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=nonexistent-user@open5glab.net',
-#         status_code=404,
-#         json={
-#             "detail": "QoS subscription not found"
-#         }
-#     )
+    httpx_mock.add_response(
+        method="GET",
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=nonexistent-user@open5glab.net',
+        status_code=404,
+        json={
+            "detail": "QoS subscription not found"
+        }
+    )
 
-#     with pytest.raises(NotFound):
-#         device.sessions()
+    with pytest.raises(NotFound):
+        device.sessions()
 
-# def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
-#     device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
+def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
+    device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
 
-#     httpx_mock.add_response(
-#         method="GET",
-#         url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=not-my-device@open5glab.net',
-#         status_code=403,
-#         json={
-#             "message":"Invalid API key."
-#         }
-#     )
+    httpx_mock.add_response(
+        method="GET",
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=not-my-device@open5glab.net',
+        status_code=403,
+        json={
+            "message":"Invalid API key."
+        }
+    )
 
-#     with pytest.raises(AuthenticationException):
-#         device.sessions()
+    with pytest.raises(AuthenticationException):
+        device.sessions()
 
-# def test_create_qod_session_requires_ip(httpx_mock, client):
-#     device = client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="9382948473")
+def test_create_qod_session_requires_ip(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="9382948473")
     
-#     with pytest.raises(ValueError) as excinfo:
-#         session = device.create_qod_session(profile="QOS_L", duration=3600)
+    with pytest.raises(ValueError) as excinfo:
+        session = device.create_qod_session(profile="QOS_L", duration=3600)
 
-#     assert "At least one of IP parameters must be provided" in str(excinfo.value)
+    assert "At least one of IP parameters must be provided" in str(excinfo.value)
+
+
+def test_getting_all_sessions_filtered_by_device_naid(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net")
+
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }, {
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "test2user@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    },]
+
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
+        json=mock_response
+    )
+
+    sessions = device.sessions()
+
+    assert len(sessions) == 1
+
+def test_getting_all_sessions_filtered_by_device_phone_number(httpx_mock, client):
+    device = client.devices.get(phone_number="+1234567890")
+
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "phoneNumber": "+1234567890",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }, {
+        "sessionId": "234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "phoneNumber": "+23423532434",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    },
+    {
+        "sessionId": "6643",
+        "qosProfile": "QOS_M",
+        "device": {
+            "phoneNumber": "+1234567890",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
+
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?phoneNumber=+1234567890',
+        json=mock_response
+    )
+
+    sessions = device.sessions()
+
+    assert len(sessions) == 2
