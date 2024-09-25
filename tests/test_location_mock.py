@@ -23,7 +23,8 @@ def test_get_location(httpx_mock: httpx_mock, device):
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
-            }
+            },
+            "radius": 10000
         },
         "civicAddress": {
             "country": "Finland",
@@ -58,6 +59,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
     assert location.longitude == 0.0
     assert location.latitude == 0.0
     assert location.civic_address
+    assert location.radius == 10000
 
 def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
     url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
@@ -69,7 +71,8 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
-            }
+            },
+            "radius": 10000
         },
         "civicAddress": {
             "country": "Finland",
@@ -104,6 +107,7 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
     assert location.longitude == 0.0
     assert location.latitude == 0.0
     assert location.civic_address
+    assert location.radius == 10000
 
 def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
     url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
@@ -115,7 +119,8 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
             "center": {
                 "latitude": 0.0,
                 "longitude": 0.0
-            }
+            },
+            "radius": 10000
         }
     }
 
@@ -141,6 +146,7 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
     assert location.longitude == 0.0
     assert location.latitude == 0.0
     assert not location.civic_address
+    assert location.radius == 10000
 
 def test_verify_location(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"

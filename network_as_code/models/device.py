@@ -220,6 +220,7 @@ class Device(BaseModel):
 
         longitude = body["area"]["center"]["longitude"]
         latitude = body["area"]["center"]["latitude"]
+        radius =  body['area']['radius']
         civic_address = None
 
         if "civicAddress" in body.keys():
@@ -264,7 +265,7 @@ class Device(BaseModel):
             )
 
         return Location(
-            longitude=longitude, latitude=latitude, civic_address=civic_address
+            longitude=longitude, latitude=latitude, civic_address=civic_address, radius=radius
         )
 
     def verify_location(
