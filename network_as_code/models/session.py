@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Optional, Any
+
+from typing import Union, List, Optional, ForwardRef
 from datetime import datetime
 
 from pydantic import ConfigDict, BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
 
+Device = ForwardRef('Device')
 
 ALIASES = {"start": "from", "end": "to"}
 
@@ -76,13 +78,14 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         convert_session_model (Session): Returns A `Session` instance.
     """
 
+
     _api: APIClient = PrivateAttr()
     id: str
     profile: str
     status: str
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
-    device: Any  # Change this to Type Device, after solving the circular import issue later
+    device: Device # ForwardRef value is used here
     service_ipv4: Union[str, None] = None
     service_ipv6: Union[str, None] = None
     service_ports: Union[PortsSpec, None] = None
@@ -138,3 +141,4 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             started_at=started_at,
             expires_at=expires_at,
         )
+    

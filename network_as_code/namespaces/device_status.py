@@ -15,7 +15,7 @@
 from datetime import datetime
 from typing import List, Union, Optional
 from . import Namespace
-from ..models.device import Device, DeviceIpv4Addr
+from ..models.device import Device
 from ..models.device_status import EventSubscription
 
 
@@ -107,20 +107,7 @@ class Connectivity(Namespace):
     def __parse_event_subscription(self, data: dict) -> EventSubscription:
         device_data = data["subscriptionDetail"]["device"]
 
-        device = Device(api=self.api)
-
-        device.network_access_identifier = device_data.get("networkAccessIdentifier")
-
-        device.phone_number = device_data.get("phoneNumber")
-
-        device.ipv6_address = device_data.get("ipv6Address")
-
-        if "ipv4Address" in device_data:
-            device.ipv4_address = DeviceIpv4Addr(
-                public_address=device_data["ipv4Address"].get("publicAddress"),
-                private_address=device_data["ipv4Address"].get("privateAddress"),
-                public_port=device_data["ipv4Address"].get("publicPort"),
-            )
+        device = Device.convert_to_device_model(self.api, device_data)
 
         return EventSubscription(
             id=data["subscriptionId"],

@@ -362,3 +362,18 @@ class Device(BaseModel):
         if self.phone_number is None:
             return "Device phone number is required."
         return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)["swapped"]
+
+    @staticmethod
+    def convert_to_device_model(api, device_json):
+        device = Device(api=api)
+        device.network_access_identifier = device_json.get('networkAccessIdentifier')
+        device.phone_number = device_json.get('phoneNumber')
+        device.ipv6_address = device_json.get("ipv6Address")
+        if "ipv4Address" in device_json:
+            device.ipv4_address = DeviceIpv4Addr(
+                public_address=device_json["ipv4Address"].get("publicAddress"),
+                private_address=device_json["ipv4Address"].get("privateAddress"),
+                public_port=device_json["ipv4Address"].get("publicPort"),
+            )
+        return device
+    
