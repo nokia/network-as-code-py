@@ -137,3 +137,18 @@ class QodAPI:
         errors.error_handler(response)
 
         return response
+
+    def extend_session(self, id: str, additional_duration: int):
+        """Extends a session given session ID
+
+        Args:
+            id (str): session ID
+            additional_duration (int): Additional session duration in seconds.
+        """
+        response = self.client.post(url=f"/sessions/{id}/extend", json={
+            "requestedAdditionalDuration": additional_duration
+        })
+
+        errors.error_handler(response)
+
+        return response

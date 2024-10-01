@@ -104,6 +104,13 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         """Returns the duration of a given session."""
         if self.started_at and self.expires_at:
             return self.expires_at - self.started_at
+        
+    def extend(self, additional_duration: int):
+        """Extends the duration of a given session.
+            #### Args:
+                additional_duration (int): Additional session duration in seconds.
+        """
+        return self._api.sessions.extend_session(self.id, additional_duration)
 
     @staticmethod
     def convert_session_model(api, device, session):

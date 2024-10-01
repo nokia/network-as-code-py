@@ -679,3 +679,49 @@ def test_getting_all_sessions_filtered_by_device_with_naid_and_phone_no(httpx_mo
     sessions = device.sessions()
 
     assert len(sessions) == 1
+
+
+def test_creating_a_qod_session_with_duration(httpx_mock, client):
+    session_id = "08305343-7ed2-43b7-8eda-4c5ae9805bd0"
+
+    mock_response_fetch = {
+        "sessionId": session_id,
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "duration": 3600,
+        "qosStatus": "REQUESTED",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }
+
+    mock_response = {
+        "sessionId": session_id,
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "duration": 3840,
+        "qosStatus": "REQUESTED",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }
+
+    httpx_mock.add_response(
+        method="POST",
+        url = f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{session_id}/extend",
+        match_content = json.dumps({
+            "requestedAdditionalDuration": 240
+        }).encode('utf-8'),
+        json=mock_response)
+    
+    httpx_mock.add_response(
+        method = 'GET',
+        url = f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{session_id}",
+        json=mock_response_fetch
+    )
+
+    session = client.sessions.get(session_id)
+    extended_session = session.extend(additional_duration=240)
+    assert extended_session.json()['duration'] == 3840
