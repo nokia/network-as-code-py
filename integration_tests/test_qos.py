@@ -149,3 +149,9 @@ def test_creating_session_with_public_ipv4_and_public_port(client):
     assert session.device.ipv4_address.public_address == device.ipv4_address.public_address
     assert session.device.ipv4_address.public_port == device.ipv4_address.public_port
     session.delete()
+
+def test_extending_a_qod_session_duration(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=60)
+    assert session.duration().seconds == 60
+    extended_session = session.extend(60)
+    assert extended_session.duration().seconds == 120

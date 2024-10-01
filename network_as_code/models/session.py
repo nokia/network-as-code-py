@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import pdb
 from typing import Union, List, Optional, ForwardRef
 from datetime import datetime
 
@@ -110,7 +111,10 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             #### Args:
                 additional_duration (int): Additional session duration in seconds.
         """
-        return self._api.sessions.extend_session(self.id, additional_duration)
+        from ..models import Device  # We use lazy loading here to solve circular import.
+        res = self._api.sessions.extend_session(self.id, additional_duration)
+        device = Device.convert_to_device_model(api=self._api, device_json=res.json()['device'])
+        return QoDSession.convert_session_model(self._api, device, res.json())
 
     @staticmethod
     def convert_session_model(api, device, session):
