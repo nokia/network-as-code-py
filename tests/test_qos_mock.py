@@ -163,7 +163,7 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
     
     assert type(session.started_at) == datetime
     assert type(session.expires_at) == datetime
-    assert type(session.duration()) == timedelta
+    assert type(session.duration) == int
     assert session.status == mock_response["qosStatus"]
     assert session.service_ipv4 == "5.6.7.8"
     assert session.service_ipv6 == "2266:25::12:0:ad12"
@@ -715,14 +715,14 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
         match_content = json.dumps({
             "requestedAdditionalDuration": 240
         }).encode('utf-8'),
-        json=mock_response_fetch)
+        json=mock_response)
     
     httpx_mock.add_response(
         method = 'GET',
         url = f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{session_id}",
-        json=mock_response
+        json=mock_response_fetch
     )
 
     session = client.sessions.get(session_id)
     extended_session = session.extend(additional_duration=240)
-    assert extended_session.duration().seconds == 3840
+    assert extended_session.duration == 3840

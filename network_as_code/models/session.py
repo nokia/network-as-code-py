@@ -70,11 +70,11 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         service_ports (Union[PortsSpec, None]): List of ports for a service.
         profile (str): Name of the requested QoS profile.
         status(str): Status of the requested QoS.
+        duration(int): Session duration in seconds.
         started_at (Union[datetime, None]): Starting time of the session.
         expires_at (Union[datetime, None]): Expiry time of the session.
     #### Public Methods:
         delete (None): Deletes a given session.
-        duration (timedelta | None): Returns the duration of a given session.
     #### Static Methods:
         convert_session_model (Session): Returns A `Session` instance.
     """
@@ -84,6 +84,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     id: str
     profile: str
     status: str
+    duration: Union[int, None] = None
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
     device: Device # ForwardRef value is used here
@@ -100,11 +101,6 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         Deletes a given session
         ."""
         self._api.sessions.delete_session(self.id)
-
-    def duration(self):
-        """Returns the duration of a given session."""
-        if self.started_at and self.expires_at:
-            return self.expires_at - self.started_at
         
     def extend(self, additional_duration: int):
         """Extends the duration of a given session.
@@ -149,6 +145,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             service_ports=PortsSpec(**service_ports) if service_ports else None,
             profile=session["qosProfile"],
             status=session["qosStatus"],
+            duration=session.get('duration'),
             started_at=started_at,
             expires_at=expires_at,
         )

@@ -32,7 +32,7 @@ my_session = device.create_qod_session(
 # Show a list of all of the QoD sessions associated with a device
 print(device.sessions())
 # You can also show the duration of a given sssion
-print(my_session.duration())
+print(my_session.duration)
 # Or use these to check when your session started/expires:
 print(my_session.started_at)
 print(my_session.expires_at)
