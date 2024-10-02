@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import pdb
 from typing import Union, List, Optional, ForwardRef
 from datetime import datetime
 
@@ -101,12 +100,13 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         Deletes a given session
         ."""
         self._api.sessions.delete_session(self.id)
-        
+
     def extend(self, additional_duration: int):
         """Extends the duration of a given session.
             #### Args:
                 additional_duration (int): Additional session duration in seconds.
         """
+        # pylint: disable=redefined-outer-name, import-outside-toplevel
         from ..models import Device  # We use lazy loading here to solve circular import.
         res = self._api.sessions.extend_session(self.id, additional_duration)
         device = Device.convert_to_device_model(api=self._api, device_json=res.json()['device'])
