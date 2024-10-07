@@ -682,7 +682,7 @@ def test_getting_all_sessions_filtered_by_device_with_naid_and_phone_no(httpx_mo
     assert len(sessions) == 1
 
 
-def test_creating_a_qod_session_with_duration(httpx_mock, client):
+def test_extending_a_qod_session_duration(httpx_mock, client):
     session_id = "08305343-7ed2-43b7-8eda-4c5ae9805bd0"
 
     mock_response_fetch = {
@@ -724,5 +724,5 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
     )
 
     session = client.sessions.get(session_id)
-    extended_session = session.extend(additional_duration=240)
-    assert extended_session.duration == 3840
+    session.extend(additional_duration=240)
+    assert session.duration == 3840

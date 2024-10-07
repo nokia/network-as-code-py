@@ -155,6 +155,5 @@ def test_creating_session_with_public_ipv4_and_public_port(client):
 def test_extending_a_qod_session_duration(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     assert session.duration == 3600
-    extended_session = session.extend(300)
-    assert extended_session.duration == 3900
-    session.delete()
+    session.extend(300)
+    assert session.duration == 3900
