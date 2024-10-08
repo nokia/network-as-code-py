@@ -18,7 +18,7 @@ device = client.devices.get(
         public_port=80),
     ipv6_address = "2001:db8:1234:5678:9abc:def0:fedc:ba98",
     # The phone number accepts the "+" sign, but not spaces or "()" marks
-    phone_number = "36721601234567"
+    phone_number = "+3672123456"
 )
 
 # Create a QoD session with QOS_L (large bandwidth) that lasts for 3,600 seconds (1 hour):
