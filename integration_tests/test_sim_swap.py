@@ -1,4 +1,6 @@
 
+from datetime import datetime
+
 import pytest
 
 from network_as_code.models.device import Device
@@ -9,7 +11,7 @@ def device(client) -> Device:
     return device
 
 def test_get_sim_swap_date(client, device):
-    assert device.get_sim_swap_date()
+    assert type(device.get_sim_swap_date()) is datetime
 
 def test_sim_swap_verify_without_max_age(client, device):
     assert device.verify_sim_swap()

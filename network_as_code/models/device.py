@@ -21,7 +21,7 @@ from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import CivicAddress, Location
 from ..models.congestion import Congestion
-from ..errors import NotFound
+from ..errors import InvalidParameter, NotFound
 
 
 class RoamingStatus(BaseModel):
@@ -57,17 +57,19 @@ class DeviceIpv4Addr(BaseModel):
     private_address: Optional[str] = Field(None, serialization_alias="privateAddress")
     public_port: Optional[int] = Field(None, serialization_alias="publicPort")
 
-
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def check_addresses_and_port(cls, values):
-        public_address = values.get('public_address')
-        private_address = values.get('private_address')
-        public_port = values.get('public_port')
+        public_address = values.get("public_address")
+        private_address = values.get("private_address")
+        public_port = values.get("public_port")
         if public_address:
             if not (private_address or public_port):
-                raise ValueError('Either private_address or public_port must be provided when public_address is set.')
+                raise ValueError(
+                    "Either private_address or public_port must be provided when public_address is set."
+                )
         return values
+
 
 class Device(BaseModel):
     """
@@ -165,14 +167,16 @@ class Device(BaseModel):
         )
         # Convert response body to an Event model
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
-        return QoDSession.convert_session_model(
-            self._api, self, session.json()
-        )
+        return QoDSession.convert_session_model(self._api, self, session.json())
+
     def filter_sessions_by_device(self, session: dict):
         return (
-        (session['device'].get('networkAccessIdentifier') == self.network_access_identifier) and
-        (session['device'].get('phoneNumber') is None or session['device'].get('phoneNumber') == self.phone_number)
-    )
+            session["device"].get("networkAccessIdentifier")
+            == self.network_access_identifier
+        ) and (
+            session["device"].get("phoneNumber") is None
+            or session["device"].get("phoneNumber") == self.phone_number
+        )
 
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
@@ -184,7 +188,11 @@ class Device(BaseModel):
         """
         try:
             sessions = self._api.sessions.get_all_sessions(self)
-            filtered_sessions = [session for session in sessions.json() if self.filter_sessions_by_device(session)]
+            filtered_sessions = [
+                session
+                for session in sessions.json()
+                if self.filter_sessions_by_device(session)
+            ]
             return list(
                 map(
                     self.__convert_session_model,
@@ -220,7 +228,7 @@ class Device(BaseModel):
 
         longitude = body["area"]["center"]["longitude"]
         latitude = body["area"]["center"]["latitude"]
-        radius =  body['area']['radius']
+        radius = body["area"]["radius"]
         civic_address = None
 
         if "civicAddress" in body.keys():
@@ -265,7 +273,10 @@ class Device(BaseModel):
             )
 
         return Location(
-            longitude=longitude, latitude=latitude, civic_address=civic_address, radius=radius
+            longitude=longitude,
+            latitude=latitude,
+            civic_address=civic_address,
+            radius=radius,
         )
 
     def verify_location(
@@ -339,19 +350,26 @@ class Device(BaseModel):
 
         return [Congestion.from_json(congestion_json) for congestion_json in json]
 
-    def get_sim_swap_date(self) -> str:
-        """Get the latest simswap date.
+    def get_sim_swap_date(self) -> Union[datetime, None]:
+        """Get the latest SIM swap date.
 
         #### Returns
-             latest sim swap date-time
+             datetime object containing the date of last SIM swap OR the activation date OR None
+             if date is not available
         """
         if self.phone_number is None:
-            return "Device phone number is required."
-        return self._api.sim_swap.fetch_sim_swap_date(self.phone_number)[
-            "latestSimChange"
-        ]
+            raise InvalidParameter("Device phone number is required.")
 
-    def verify_sim_swap(self, max_age: Optional[int] = None) -> Union[bool, str]:
+        response = self._api.sim_swap.fetch_sim_swap_date(self.phone_number).get(
+            "latestSimChange"
+        )
+
+        if response:
+            return datetime.fromisoformat(response.replace("Z", "+00:00"))
+
+        return None
+
+    def verify_sim_swap(self, max_age: Optional[int] = None) -> bool:
         """Verify if there was sim swap.
 
         #### Args:
@@ -360,14 +378,14 @@ class Device(BaseModel):
              True/False
         """
         if self.phone_number is None:
-            return "Device phone number is required."
+            raise InvalidParameter("Device phone number is required.")
         return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)["swapped"]
 
     @staticmethod
     def convert_to_device_model(api, device_json):
         device = Device(api=api)
-        device.network_access_identifier = device_json.get('networkAccessIdentifier')
-        device.phone_number = device_json.get('phoneNumber')
+        device.network_access_identifier = device_json.get("networkAccessIdentifier")
+        device.phone_number = device_json.get("phoneNumber")
         device.ipv6_address = device_json.get("ipv6Address")
         if "ipv4Address" in device_json:
             device.ipv4_address = DeviceIpv4Addr(
@@ -376,4 +394,3 @@ class Device(BaseModel):
                 public_port=device_json["ipv4Address"].get("publicPort"),
             )
         return device
-    

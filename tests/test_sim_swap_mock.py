@@ -1,5 +1,6 @@
 import json
 import httpx
+from datetime import datetime
 from pytest_httpx import httpx_mock
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
@@ -29,7 +30,7 @@ def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
 
     latest_sim_swap_date = device.get_sim_swap_date()
     
-    assert latest_sim_swap_date == "2024-06-19T10:36:59.976Z"
+    assert latest_sim_swap_date == datetime.fromisoformat("2024-06-19T10:36:59.976+00:00")
 
 def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
     url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
