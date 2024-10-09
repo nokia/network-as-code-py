@@ -17,7 +17,7 @@ my_device = client.devices.get(
     ),
     ipv6_address="2001:db8:1234:5678:9abc:def0:fedc:ba98",
     # The phone number accepts the "+" sign, but not spaces or "()" marks
-    phone_number="36721601234567"
+    phone_number="+3637123456"
 )
 
 # Simply change the event_type to
