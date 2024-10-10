@@ -16,7 +16,7 @@ from typing import Union, Optional, Any
 
 from pydantic import BaseModel
 
-from ..errors import error_handler
+from ..errors import InvalidParameter, error_handler
 from .utils import delete_none, httpx_client
 
 
@@ -155,27 +155,23 @@ class AttachAPI:
         self,
         device,
         slice_id: str,
-        traffic_categories: Union[any, None],
+        traffic_categories: Union[Any, None],
         notification_url: Union[str, None],
-        notification_auth_token: str,
+        notification_auth_token: Union[str, None],
     ):
+        if device.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
         payload = {
-            "device": {
-                "phoneNumber": device.phone_number,
-                "ipv4Address": {
-                    "publicAddress": device.ipv4_address.public_address,
-                    "privateAddress": device.ipv4_address.private_address,
-                    "publicPort": device.ipv4_address.public_port,
-                },
-                "ipv6Address": device.ipv6_address,
-            },
             "sliceId": slice_id,
-            "traffic_categories": {"apps": traffic_categories.apps.__dict__},
-            "webhook": {
-                "notificationUrl": notification_url,
-                "notificationAuthToken": notification_auth_token,
-            },
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True)
         }
+
+        if traffic_categories:
+            payload['traffic_categories'] = {"apps": traffic_categories.apps.__dict__}
+        if notification_url:
+            payload['webhook'] = {}
+            payload['webhook']['notificationUrl'] = notification_url
+            payload['webhook']['notificationAuthToken'] = notification_auth_token
 
         res = self.client.post(
             url="/attachments",
