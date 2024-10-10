@@ -4,7 +4,6 @@
 
 import asyncio
 import time
-from integration_tests.test_slice import Apps, DeviceIpv4Addr, TrafficCategories
 import network_as_code as nac
 
 from network_as_code.models.slice import (
@@ -12,7 +11,13 @@ from network_as_code.models.slice import (
     AreaOfService,
     NetworkIdentifier,
     SliceInfo,
-    Throughput
+    Throughput,
+    TrafficCategories,
+    Apps
+)
+
+from network_as_code.models.device import (
+    DeviceIpv4Addr
 )
 
 SDK_TOKEN = "<YOUR-API-KEY>"
