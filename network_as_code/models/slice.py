@@ -205,7 +205,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            return self._api.slicing.activate(self.name)
+            self._api.slicing.activate(self.name)
 
     def deactivate(self) -> None:
         """Deactivate network slice.
@@ -219,7 +219,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            return self._api.slicing.deactivate(self.name)
+            self._api.slicing.deactivate(self.name)
 
     def _to_api_throughput(
         self, throughput: Optional[Throughput] = None

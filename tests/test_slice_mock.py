@@ -680,7 +680,7 @@ def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.activate().status_code == 200
+    slice.activate()
 
 def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
@@ -695,7 +695,7 @@ def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.deactivate().status_code == 200
+    slice.deactivate()
 
 def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
@@ -711,7 +711,7 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.delete().status_code == 204
+    slice.delete()
 
 def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
     httpx_mock.add_response(
