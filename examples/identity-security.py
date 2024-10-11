@@ -23,9 +23,7 @@ my_device = client.devices.get(
 # Or it may also return the SIM activation date.
 sim_swap_date = my_device.get_sim_swap_date()
 
-# Otherwise it behaves like a datetime string
-date_obj = datetime.fromisoformat(sim_swap_date.replace("Z", "+00:00"))
-print(date_obj.isoformat())
+print(sim_swap_date.isoformat())
 
 # If you are only interested if a SIM swap has occurred,
 # just use:
