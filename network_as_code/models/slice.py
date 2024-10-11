@@ -279,7 +279,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         if self.name:
-            return self._api.slicing.delete(self.name)
+            self._api.slicing.delete(self.name)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.

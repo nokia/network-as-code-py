@@ -12,7 +12,7 @@ import random
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
+    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3670123456")
     return device
 
 @pytest.fixture
