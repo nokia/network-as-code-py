@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 4.0.1
+
+Fixes:
+- Webhook information was passed to the QoD API using an older way, but has now
+  been updated to match the current behavior of the API, this has no impact on
+  application code
+
 ## Version 4.0.0
 
 Breaking changes:
