@@ -681,7 +681,6 @@ def test_getting_all_sessions_filtered_by_device_with_naid_and_phone_no(httpx_mo
 
     assert len(sessions) == 1
 
-
 def test_extending_a_qod_session_duration(httpx_mock, client):
     session_id = "08305343-7ed2-43b7-8eda-4c5ae9805bd0"
 
