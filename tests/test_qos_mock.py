@@ -436,8 +436,10 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
                 "ipv4Address": "5.6.7.8",
             },
             "duration": 3600,
-            "notificationUrl": "https://example.com",
-            "notificationAuthToken": "Bearer my-auth-token"
+            "webhook" : {
+                "notificationUrl": "https://example.com",
+                "notificationAuthToken": "Bearer my-auth-token"
+            }
         }).encode('utf-8'),
         json=mock_response)
 
