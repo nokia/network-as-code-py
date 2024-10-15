@@ -49,9 +49,9 @@ class NetworkAsCodeClient:
 
     @property
     def devices(self):
-        """Namespace containing functionalities related to mobile subscriptions.
+        """Namespace containing functionalities related to deivce.
 
-        TODO: Write some documentation about the subscription namespace here.
+        Returns NAC devices 
         """
         return self._devices
 
@@ -59,18 +59,30 @@ class NetworkAsCodeClient:
     def sessions(self):
         """Namespace containing functionalities related to mobile subscriptions.
 
-        TODO: Write some documentation about the subscription namespace here.
+        Returns NAC sessions 
         """
         return self._sessions
 
     @property
     def slices(self):
+        """Namespace containing functionalities related to network slicing.
+
+        Returns NAC slices
+        """
         return self._slices
 
     @property
     def connectivity(self):
+        """Namespace containing functionalities related to device status.
+
+        Returns NAC device status
+        """
         return self._connectivity
 
     @property
     def insights(self):
+        """Namespace containing functionalities related to congestion insights.
+
+        Returns NAC congestion insights
+        """
         return self._insights

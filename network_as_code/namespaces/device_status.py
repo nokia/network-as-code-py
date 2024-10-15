@@ -46,6 +46,8 @@ class Connectivity(Namespace):
             max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
             subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. 
             Either a datetime object or ISO formatted date string
+
+        Returns: EventSubscription
         """
 
         # Handle conversion
@@ -99,6 +101,8 @@ class Connectivity(Namespace):
              '''python
              subscriptions = client.connectivity.get_subscriptions()
              '''
+
+        Returns: List[EventSubscription]
         """
         json = self.api.devicestatus.get_subscriptions()
 
