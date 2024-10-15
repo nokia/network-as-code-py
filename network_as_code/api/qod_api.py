@@ -81,8 +81,8 @@ class QodAPI:
         if notification_url:
             session_resource["webhook"] = { "notificationUrl": notification_url }
 
-        if notification_auth_token:
-            session_resource["webhook"]["notificationAuthToken"] = "Bearer " + notification_auth_token
+            if notification_auth_token:
+                session_resource["webhook"]["notificationAuthToken"] = "Bearer " + notification_auth_token
 
         response = self.client.post(url="/sessions", json=session_resource)
         errors.error_handler(response)
