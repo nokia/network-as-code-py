@@ -50,6 +50,7 @@ class QodAPI:
         """Function that hits the create session endpoint with the data
 
         #### Args:
+            device (Device): Device object for the session.
             profile (any): Name of the requested QoS profile.
             duration(int): The length of the QoD session in seconds.
             service_ipv4 (any): IPv4 address of the service.
@@ -93,7 +94,7 @@ class QodAPI:
         """This function retrieves all sessions given a device_id
 
         Args:
-            device_id (dict): The dict with device-id of the device whose sessions to retrieve
+            device (dict): The dict with device-id of the device whose sessions to retrieve
 
         Returns:
             list: returns list of session
@@ -115,7 +116,7 @@ class QodAPI:
         """Returns a session given session ID
 
         Args:
-            sessionId (str): A string session ID
+            session_id (str): A string session ID
 
         Returns:
             Session: the session object

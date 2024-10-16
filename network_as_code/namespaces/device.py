@@ -41,7 +41,10 @@ class Devices(Namespace):
 
         #### Example:
              '''python
-             device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3670123456")
+             device = client.devices.get("testuser@testcsp.net", 
+             ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
+             private_address="1.1.1.2", public_port=80), 
+             phone_number="+3670123456")
              '''    
         Returns: Device
         """

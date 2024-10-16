@@ -27,7 +27,8 @@ class Congestion(BaseModel):
             level (str): Congestion level experienced by the device ranging from "None", "Low", "Medium" and "High"
             start (datetime): Start timestamp for retrieving congestion data.
             stop (datetime): End timestamp for retrieving congestion data.
-            confidence (Optional[int]): Level of confidence when dealing with a congestion level prediction, ranging from 0 to 100.
+            confidence (Optional[int]): Level of confidence when dealing with a congestion level prediction, 
+            ranging from 0 to 100.
     """
     level: str
     start: datetime
