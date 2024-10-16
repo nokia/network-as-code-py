@@ -81,10 +81,10 @@ class Device(BaseModel):
 
 
     #### Public Attributes:
-        sid(EmailStr): Device Identifier email string.
+        network_access_identifier(EmailStr): Device Identifier email string.
         phone_number(str): Phone Number string
-        ipv4_address (DeviceIpv4Addr): DeviceIpv4Addr
-        ipv6_address (str): string
+        ipv4_address (DeviceIpv4Addr): Ipv4 address of the device.
+        ipv6_address (str): Ipv6 address of the device.
 
     #### Public Methods:
         create_session (Session): Creates a session for the device.

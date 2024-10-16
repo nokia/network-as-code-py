@@ -72,8 +72,10 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         duration(int): Session duration in seconds.
         started_at (Union[datetime, None]): Starting time of the session.
         expires_at (Union[datetime, None]): Expiry time of the session.
+        device (Device): Session belongs to device.
     #### Public Methods:
         delete (None): Deletes a given session.
+        extend (None): Extends the duration of a given session.
     #### Static Methods:
         convert_session_model (Session): Returns A `Session` instance.
     """
@@ -115,7 +117,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
 
         Assigns the startedAt and expiresAt attributes None if their value not found.
         #### Args:
-            ip (any): IP address of the service.
+            device (Device): A `Device` object.
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (

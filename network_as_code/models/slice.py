@@ -88,6 +88,13 @@ class AreaOfService(BaseModel):
 
 
 class Apps(BaseModel):
+    """
+    A class representing the `Apps` model.
+
+    #### Public Attributes:
+            apps (List[str]): The enterprise app name (ID).
+            os (str): The OSId identifier according to the OS you use (Android, iOS, etc.).
+    """
     os: str
     apps: List[str]
 
@@ -117,6 +124,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     #### Private Attributes:
         _api(APIClient): An API client object.
         _sessions(List[Session]): List of device session instances.
+        _attachments(List[DeviceAttachment]): List of device attachments
 
     #### Public Attributes:
         sid (optional): String ID of the slice
@@ -124,18 +132,18 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         name (optional): Optional short name for the slice.
         Must be ASCII characters, digits and dash.
         Like name of an event, such as "Concert-2029-Big-Arena".
-        networkIdentifier (NetworkIdentifier): Name of the network
-        sliceInfo (SliceInfo): Purpose of this slice
+        network_identifier (NetworkIdentifier): Name of the network
+        slice_info (SliceInfo): Purpose of this slice
         notification_url: Destination URL of notifications
         notification_auth_token: Authorization token for notifications
-        areaOfService (AreaOfService): Location of the slice
-        maxDataConnections (optional): Optional maximum number of data
+        area_of_service (AreaOfService): Location of the slice
+        max_data_connections (optional): Optional maximum number of data
         connection sessions in the slice.
-        maxDevices (optional): Optional maximum number of devices using the slice.
-        sliceDownlinkThroughput (optional): Optional throughput object
-        sliceUplinkThroughput (optional): Optional throughput object
-        deviceDownlinkThroughput (optional): Optional throughput object
-        deviceUplinkThroughput: (optional): Optional throughput object
+        max_devices (optional): Optional maximum number of devices using the slice.
+        slice_downlink_throughput (optional): Optional throughput object
+        slice_uplink_throughput (optional): Optional throughput object
+        device_downlink_throughput (optional): Optional throughput object
+        device_uplink_throughput: (optional): Optional throughput object
 
 
     #### Public Methods:
@@ -147,6 +155,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
         wait_for (str): Wait until a slice is no longer PENDING or until specified state is reached, returns state
+        modify (OptionalArgs): Modify the parameters for an existing slice
 
     #### Callback Functions:
         on_creation ():
@@ -239,6 +248,29 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         max_data_connections: Optional[int] = None,
         max_devices: Optional[int] = None,
     ):
+        """Modify the parameters for an existing slice.
+
+        #### Args:
+            slice_downlink_throughput (Optional[Throughput]): Specify the amount of bandwidth the slice can get.
+            slice_uplink_throughput (Optional[Throughput]): Specify the amount of bandwidth the slice can get.
+            device_downlink_throughput (Optional[Throughput]): Specify the amount of bandwidth the device can get.
+            device_uplink_throughput (Optional[Throughput]): Specify the amount of bandwidth the device can get.
+            max_data_connections (Optional[int]): Maximum number of data connection sessions in the slice.
+            max_devices (Optional[int]): Maximum number of devices in the slice.
+
+        #### Example:
+            ```python
+            slice.modify(
+                    max_data_connections = 12,
+                    max_devices = 3,
+                    slice_downlink_throughput=Throughput(guaranteed=10, maximum=10),
+                    slice_uplink_throughput=Throughput(guaranteed=10, maximum=10),
+                    device_downlink_throughput=Throughput(guaranteed=10, maximum=10),
+                    device_uplink_throughput=Throughput(guaranteed=10, maximum=10)
+            )
+            ```
+        """
+
         self._api.slicing.create(
             modify=True,
             network_id=self.network_identifier,
@@ -306,12 +338,13 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
            Returns new state.
 
         #### Args:
+            desired_state (str): if not provided, the AVAILABLE state will be returned.
             timeout (datetime.timedelta): Timeout of waiting. Default is 1h.
             poll_backoff (datetime.timedelta): Backoff time between polling.
 
         #### Example:
             ```python
-            new_state = slice.wait_done()
+            new_state = slice.wait_for()
             ```
         """
         if not desired_state:
@@ -345,6 +378,9 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
         #### Args:
             device (Device): Device object that the slice is being attached to
+            traffic_categories (TrafficCategories): It should contain the OSId, according to the OS and the OsAppId
+            notification_url (str): Notification URL for attachment-related events.
+            notification_auth_token (str): Authorization token for notification sending.
 
         #### Example:
             ```python
@@ -385,7 +421,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         """Detach network slice.
 
         #### Args:
-            None
+            device (Device): Device object that the slice is being attached to
 
         #### Example:
             ```python
@@ -393,7 +429,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
             private_address="1.1.1.2", public_port=80))
             slice.attach(device)
-            slice.detach()
+            slice.detach(device)
             ```
         """
         attachment_id = fetch_and_remove(self._attachments, device)

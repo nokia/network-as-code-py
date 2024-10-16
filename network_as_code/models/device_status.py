@@ -28,10 +28,15 @@ class EventSubscription(BaseModel):
         _api(APIClient): An API client object.
 
     #### Public Attributes:
+        id (str): It represents the subscription identifier.
         max_num_of_reports (str): Number of notifications until the subscription is available
         notification_url (str): Notification URL for session-related events.
         notification_auth_token (optional): Authorization token for notification sending.
         device (Device): Identifier of the device
+        starts_at (optional): It represents when this subscription started.
+        expires_at (optional): It represents when this subscription should expire.
+    #### Public Methods:
+        delete (None): Deletes device connectivity status subscription.
     """
 
     id: Optional[str] = None
@@ -48,16 +53,7 @@ class EventSubscription(BaseModel):
         self._api = api
 
     def delete(self) -> None:
-        """Delete device connectivity status
-
-        #### Args:
-            id (str): Resource ID
-
-        #### Example:
-            ```python
-            device.delete_connectivity(id="hadsghsio")
-            ```
-        """
+        """Delete device connectivity status"""
 
         # Error Case: Delete connectivity status
         self._api.devicestatus.delete_subscription(self.id)
