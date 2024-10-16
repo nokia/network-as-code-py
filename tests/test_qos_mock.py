@@ -532,21 +532,72 @@ def test_getting_all_sessions_phone_number(httpx_mock, client):
 
     assert session[0].id == "1234"
 
-@pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
+def test_clearing_device_sessions(httpx_mock, client):
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
+
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }, {
+        "sessionId": "12345",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
+
+    httpx_mock.add_response(
+        method='GET',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=testuser@open5glab.net',
+        json=mock_response
+    )
+
+    sessions = device.sessions()
+    assert len(sessions) == 2
+    assert len(httpx_mock.get_requests()) == 1
+
+    httpx_mock.add_response(
+        method='DELETE',
+        url=f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{mock_response[0]['sessionId']}",
+        json=mock_response
+    )
+
+    httpx_mock.add_response(
+        method='DELETE',
+        url=f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{mock_response[1]['sessionId']}",
+        json=mock_response
+    )
+
+    device.clear_sessions()
+    requests = httpx_mock.get_requests()
+    assert requests[-2].method == 'DELETE'
+    assert requests[-1].method == 'DELETE'
+
+# @pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
 def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
     device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
 
     httpx_mock.add_response(
         method="GET",
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?device-id=nonexistent-user@open5glab.net',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions?networkAccessIdentifier=nonexistent-user@open5glab.net',
         status_code=404,
         json={
             "detail": "QoS subscription not found"
         }
     )
 
-    with pytest.raises(NotFound):
-        device.sessions()
+    sessions = device.sessions()
+    assert len(sessions) == 0
+    
 
 def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
     device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
