@@ -213,8 +213,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.activate()
             ```
         """
-        if self.name:
-            self._api.slicing.activate(self.name)
+        self._api.slicing.activate(self.name)
 
     def deactivate(self) -> None:
         """Deactivate network slice.
@@ -227,8 +226,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.deactivate()
             ```
         """
-        if self.name:
-            self._api.slicing.deactivate(self.name)
+        self._api.slicing.deactivate(self.name)
 
     def _to_api_throughput(
         self, throughput: Optional[Throughput] = None
@@ -310,8 +308,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             slice.delete()
             ```
         """
-        if self.name:
-            self._api.slicing.delete(self.name)
+        self._api.slicing.delete(self.name)
 
     def refresh(self) -> None:
         """Refresh state of the network slice.
