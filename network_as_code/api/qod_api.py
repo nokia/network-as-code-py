@@ -51,9 +51,9 @@ class QodAPI:
 
         #### Args:
             device (Device): Device object for the session.
-            profile (any): Name of the requested QoS profile.
+            profile (str): Name of the requested QoS profile.
             duration(int): The length of the QoD session in seconds.
-            service_ipv4 (any): IPv4 address of the service.
+            service_ipv4 (str): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.

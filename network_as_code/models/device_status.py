@@ -30,6 +30,7 @@ class EventSubscription(BaseModel):
     #### Public Attributes:
         id (str): It represents the subscription identifier.
         max_num_of_reports (str): Number of notifications until the subscription is available
+        event_type (str): The status type you want to check, which can be connectivity or roaming.
         notification_url (str): Notification URL for session-related events.
         notification_auth_token (optional): Authorization token for notification sending.
         device (Device): Identifier of the device
@@ -42,6 +43,7 @@ class EventSubscription(BaseModel):
     id: Optional[str] = None
     _api: APIClient = PrivateAttr()
     max_num_of_reports: Optional[int] = None
+    event_type: str
     notification_url: str
     notification_auth_token: Optional[str] = None
     device: Device

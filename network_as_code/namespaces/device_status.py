@@ -65,6 +65,7 @@ class Connectivity(Namespace):
         connectivity_subscription = EventSubscription(
             api=self.api,
             max_num_of_reports=max_num_of_reports,
+            event_type = event_type,
             notification_url=notification_url,
             notification_auth_token=notification_auth_token,
             device=device,
@@ -117,6 +118,7 @@ class Connectivity(Namespace):
             id=data["subscriptionId"],
             api=self.api,
             max_num_of_reports=data.get("maxNumberOfReports"),
+            event_type=data['subscriptionDetail'].get("type"),
             notification_url=data["webhook"].get("notificationUrl"),
             notification_auth_token=data["webhook"].get("notificationAuthToken"),
             device=device,
