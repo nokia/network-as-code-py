@@ -1,8 +1,7 @@
 import json
-import httpx
 from datetime import datetime
 from pytest_httpx import httpx_mock
-from network_as_code.errors import InvalidParameter
+from network_as_code.errors import APIError, InvalidParameter
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 import pytest
@@ -100,3 +99,23 @@ def test_verify_sim_swap_with_max_age(httpx_mock: httpx_mock, device):
 
     assert device.verify_sim_swap(max_age=120) == True
 
+# This test actually tests the error handler class by taking simswap as use-case
+def test_error_trace_info(httpx_mock, device):
+    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
+    httpx_mock.add_response(
+        url=url,
+        match_content=json.dumps({
+            "phoneNumber": "3637123456",
+            "maxAge": 120
+        }).encode("utf-8"),
+        method="POST",
+        status_code=422,
+        json= {'detail': [{'msg': 'Input should be less than or equal to 2400'}]}  
+    )
+
+    
+    with pytest.raises(APIError) as exc_info:
+        device.verify_sim_swap(max_age=120)
+        
+    assert str(exc_info.value) == "Status Code: 422, Response Body: {'detail': [{'msg': 'Input should be less than or equal to 2400'}]}"
+        
