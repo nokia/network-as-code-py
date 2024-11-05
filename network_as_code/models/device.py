@@ -169,15 +169,6 @@ class Device(BaseModel):
         # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(self._api, self, session.json())
 
-    def filter_sessions_by_device(self, session: dict):
-        return (
-            session["device"].get("networkAccessIdentifier")
-            == self.network_access_identifier
-        ) and (
-            session["device"].get("phoneNumber") is None
-            or session["device"].get("phoneNumber") == self.phone_number
-        )
-
     def sessions(self) -> List[QoDSession]:
         """List sessions of the device. TODO change the name to get_sessions
 
@@ -188,15 +179,10 @@ class Device(BaseModel):
         """
         try:
             sessions = self._api.sessions.get_all_sessions(self)
-            filtered_sessions = [
-                session
-                for session in sessions.json()
-                if self.filter_sessions_by_device(session)
-            ]
             return list(
                 map(
                     self.__convert_session_model,
-                    filtered_sessions,
+                    sessions.json(),
                 )
             )
         except NotFound:

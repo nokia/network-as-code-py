@@ -91,22 +91,17 @@ class QodAPI:
         return response
 
     def get_all_sessions(self, device) -> list:
-        """This function retrieves all sessions given a device_id
+        """This function retrieves all sessions given a device
 
         Args:
-            device (dict): The dict with device-id of the device whose sessions to retrieve
+            device (Device): The device object with device-id of the device whose sessions to retrieve
 
         Returns:
             list: returns list of session
         """
-        url = ""
-
-        if device.network_access_identifier:
-            url = f"/sessions?networkAccessIdentifier={device.network_access_identifier}"
-        elif device.phone_number:
-            url = f"/sessions?phoneNumber={device.phone_number}"
-
-        response = self.client.get(url=url)
+        response = self.client.post(url="/retrieve-sessions", json = {
+            "device": device.model_dump(mode='json', by_alias=True, exclude_none=True)
+        })
 
         errors.error_handler(response)
 
