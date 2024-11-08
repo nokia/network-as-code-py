@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 4.1.0
+
+Changes:
+- Location information from `device.location()` now supplies radius information
+- QoD sessions can be extended with `session.extend_session()` method
+- The date given by SIM Swap is now provided as `datetime`
+- Docstrings have been updated across the board
+
 ## Version 4.0.1
 
 Fixes:
