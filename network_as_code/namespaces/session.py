@@ -14,6 +14,7 @@
 
 from . import Namespace
 from ..models import QoDSession
+from ..models import Device
 
 
 class Sessions(Namespace):
@@ -30,6 +31,7 @@ class Sessions(Namespace):
             id (str): ID of the QoS Session
         """
         session_object = self.api.sessions.get_session(id)
-        device = session_object.json()['device']
+        device_json = session_object.json()['device']
+        device = Device.convert_to_device_model(self.api, device_json)
         return QoDSession.convert_session_model(self.api, device, session_object.json())
     

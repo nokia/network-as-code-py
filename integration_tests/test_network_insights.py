@@ -101,7 +101,6 @@ def test_can_query_congestion_level_from_camara_device(client, camara_device):
 
     subscription.delete()
 
-@pytest.mark.xfail
 def test_can_query_congestion_level_from_nef_device(client, nef_device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,

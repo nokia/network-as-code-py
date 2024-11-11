@@ -322,7 +322,9 @@ min-public-methods=2
 
 disable=too-many-instance-attributes,
         too-many-arguments,
+        too-many-positional-arguments,
         too-few-public-methods,
+        missing-final-newline,
         too-many-locals
 
 

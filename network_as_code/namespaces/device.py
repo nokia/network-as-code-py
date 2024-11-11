@@ -34,10 +34,19 @@ class Devices(Namespace):
         """Get a subscription by its external ID.
 
         Args:
-            id (str): External ID of the subscription. Email-like.
+            network_access_identifier (str): External ID of the subscription. Email-like.
             ipv4_address (DeviceIpv4Addr | None): ipv4 address of the subscription.
             ipv6_address (Any | None): ipv6 address of the subscription.
             phone_number (Any | None): phone number of the subscription.
+
+        #### Example:
+             '''python
+             device = client.devices.get("testuser@testcsp.net", 
+             ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
+             private_address="1.1.1.2", public_port=80), 
+             phone_number="+3670123456")
+             '''    
+        Returns: Device
         """
 
         assert any(

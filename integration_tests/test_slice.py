@@ -7,13 +7,12 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 
 from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point, TrafficCategories
 
-from network_as_code.errors import error_handler
-from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+from network_as_code.errors import NotFound
 import random
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
+    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3670123456")
     return device
 
 @pytest.fixture
@@ -39,9 +38,11 @@ def test_creating_a_slice(client, setup_and_cleanup_slice_data):
     assert slice.network_identifier.mnc == '30'
     assert slice.network_identifier.mcc == '236'
 
-@pytest.mark.xfail
-def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
+@pytest.mark.asyncio
+async def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
     my_slice = setup_and_cleanup_slice_data
+
+    await my_slice.wait_for(desired_state="AVAILABLE")
 
     my_slice.modify(
         max_devices=10,
@@ -114,9 +115,9 @@ async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice
 
     assert slice.state == "AVAILABLE"
 
-# # NOTE: This test takes a long time to execute, since it must wait for slice updates
-# #       if you are in a rush, add a temporary skip here
-# # @pytest.mark.skip
+# NOTE: This test takes a long time to execute, since it must wait for slice updates
+#       if you are in a rush, add a temporary skip here
+# @pytest.mark.skip
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
@@ -136,6 +137,81 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
         apps=["ENTERPRISE"]
     )), notification_url="https://example.com/notifications",
     notification_auth_token="c8974e592c2fa383d4a3960714")
+    
+    time.sleep(30)
+
+    attachment = client.slices.get_attachment(new_attachment['nac_resource_id'])
+
+    assert attachment['nac_resource_id'] == new_attachment['nac_resource_id']
+
+    slice.detach(device)
+
+    slice.deactivate()
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    assert slice.state == "AVAILABLE"
+
+# NOTE: This test takes a long time to execute, since it must wait for slice updates
+#       if you are in a rush, add a temporary skip here
+# @pytest.mark.skip
+@pytest.mark.asyncio
+async def test_attach_device_to_slice_with_manadatory_params(client, device, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    assert slice.state == "AVAILABLE"
+
+    slice.activate()
+
+    await slice.wait_for(desired_state="OPERATING")
+
+    assert slice.state == "OPERATING"
+
+    device = client.devices.get(phone_number="+12065550100")
+
+    new_attachment = slice.attach(device)
+    
+    time.sleep(30)
+
+    attachment = client.slices.get_attachment(new_attachment['nac_resource_id'])
+
+    assert attachment['nac_resource_id'] == new_attachment['nac_resource_id']
+
+    slice.detach(device)
+
+    slice.deactivate()
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    assert slice.state == "AVAILABLE"
+
+# NOTE: This test takes a long time to execute, since it must wait for slice updates
+#       if you are in a rush, add a temporary skip here
+# @pytest.mark.skip
+@pytest.mark.asyncio
+async def test_attach_device_to_slice_with_optional_params(client, device, setup_and_cleanup_slice_data):
+    slice = setup_and_cleanup_slice_data
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    assert slice.state == "AVAILABLE"
+
+    slice.activate()
+
+    await slice.wait_for(desired_state="OPERATING")
+
+    assert slice.state == "OPERATING"
+
+    device = client.devices.get(phone_number="+12065550100")
+
+    new_attachment = slice.attach(device,
+                                  traffic_categories=TrafficCategories(apps=Apps(
+                                  os="97a498e3-fc92-5c94-8986-0333d06e4e47",
+                                  apps=["ENTERPRISE"])), 
+                                  notification_url="https://example.com/notifications",
+                                  notification_auth_token="c8974e592c2fa383d4a3960714")
     
     time.sleep(30)
 

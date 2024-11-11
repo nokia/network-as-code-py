@@ -7,7 +7,7 @@ from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceIn
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
-from network_as_code.errors import error_handler
+from network_as_code.errors import InvalidParameter, error_handler
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
 MOCK_SLICE = {
@@ -680,7 +680,7 @@ def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.activate().status_code == 200
+    slice.activate()
 
 def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
@@ -695,7 +695,7 @@ def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.deactivate().status_code == 200
+    slice.deactivate()
 
 def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
@@ -711,9 +711,9 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
             slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
             notification_url="https://example.com/notify"
     )
-    assert slice.delete().status_code == 204
+    slice.delete()
 
-def test_attach_device_to_slice(httpx_mock, client, device):
+def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
@@ -759,7 +759,9 @@ def test_attach_device_to_slice(httpx_mock, client, device):
             "nac_resource_id": "attachment-1"
         },
         match_content=to_bytes({
+            "sliceId": "sliceone",
             "device": {
+                "networkAccessIdentifier": device.network_access_identifier,
                 "phoneNumber": device.phone_number,
                 "ipv4Address": {
                     "publicAddress": device.ipv4_address.public_address,
@@ -767,7 +769,6 @@ def test_attach_device_to_slice(httpx_mock, client, device):
                     "publicPort": device.ipv4_address.public_port
                 },
             },
-            "sliceId": "sliceone",
             "traffic_categories": {
                 "apps": {
                     "os": "97a498e3-fc92-5c94-8986-0333d06e4e47",
@@ -786,6 +787,76 @@ def test_attach_device_to_slice(httpx_mock, client, device):
         apps=["ENTERPRISE"]
     )), notification_url="https://example.com/notifications",
     notification_auth_token="c8974e592c2fa383d4a3960714")
+
+    
+def test_attach_device_to_slice_with_only_manadatory_params(httpx_mock, client, device):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "+12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }],
+        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+    )
+    
+    slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    httpx_mock.add_response(
+        method="POST",
+        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        json={
+            "nac_resource_id": "attachment-1"
+        },
+        match_content=to_bytes({
+            "sliceId": "sliceone",
+            "device": {
+                "phoneNumber": device.phone_number
+            }
+        })
+    )
+
+    device = client.devices.get(phone_number="+12065550100")
+    slice.attach(device)    
+
+def test_attach_device_to_slice_with_no_device_phone_number(httpx_mock, client, device):
+    httpx_mock.add_response(
+        method="GET",
+        json=MOCK_SLICE,
+        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+    )
+
+    httpx_mock.add_response(
+        method="GET",
+        json=[{
+            "nac_resource_id": "attachment-1",
+            "resource": {
+                "device": {
+                    "phoneNumber": "12065550100"
+                },
+                "sliceId": "sliceone"
+            },
+        }],
+        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+    )
+    
+    slice = client.slices.get(MOCK_SLICE['slice']['name'])
+
+    device = client.devices.get("testuser@open5glab.net")
+    with pytest.raises(InvalidParameter):
+        slice.attach(device)
+
+
 
 def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(

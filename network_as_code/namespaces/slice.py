@@ -57,11 +57,13 @@ class Slices(Namespace):
         #### Args:
             network_id (NetworkIdentifier): Name of the network
             slice_info (SliceInfo): Purpose of this slice
+            notification_url (str): Destination URL of notifications
             area_of_service (AreaOfService): Location of the slice
             slice_downlink_throughput (optional): Optional throughput object
             slice_uplink_throughput (optional): Optional throughput object
             device_downlink_throughput (optional): Optional throughput object
             device_uplink_throughput: (optional): Optional throughput object
+            notification_auth_token: (optional): Authorization token for notification sending.
             name (optional): Optional short name for the slice. 
             Must be ASCII characters, digits and dash. 
             Like name of an event, such as "Concert-2029-Big-Arena".

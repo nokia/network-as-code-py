@@ -11,5 +11,7 @@ from network_as_code import NetworkAsCodeClient
 @pytest.fixture(scope="module")
 def client() -> NetworkAsCodeClient:
     load_dotenv()
-    token = os.environ["NAC_TOKEN"]
-    return NetworkAsCodeClient(token=token, dev_mode=True)
+    using_prod = "PRODTEST" in os.environ
+
+    token = os.environ["NAC_TOKEN"] if not using_prod else os.environ["NAC_TOKEN_PROD"]
+    return NetworkAsCodeClient(token=token, dev_mode=not using_prod)

@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Optional, Any
+
+from typing import Union, List, Optional, ForwardRef
 from datetime import datetime
 
 from pydantic import ConfigDict, BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
 
+Device = ForwardRef('Device')
 
 ALIASES = {"start": "from", "end": "to"}
 
@@ -67,22 +69,26 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         service_ports (Union[PortsSpec, None]): List of ports for a service.
         profile (str): Name of the requested QoS profile.
         status(str): Status of the requested QoS.
+        duration(int): Session duration in seconds.
         started_at (Union[datetime, None]): Starting time of the session.
         expires_at (Union[datetime, None]): Expiry time of the session.
+        device (Device): Session belongs to device.
     #### Public Methods:
         delete (None): Deletes a given session.
-        duration (timedelta | None): Returns the duration of a given session.
+        extend (None): Extends the duration of a given session.
     #### Static Methods:
         convert_session_model (Session): Returns A `Session` instance.
     """
+
 
     _api: APIClient = PrivateAttr()
     id: str
     profile: str
     status: str
+    duration: Union[int, None] = None
     started_at: Union[datetime, None] = None
     expires_at: Union[datetime, None] = None
-    device: Any  # Change this to Type Device, after solving the circular import issue later
+    device: Device # ForwardRef value is used here
     service_ipv4: Union[str, None] = None
     service_ipv6: Union[str, None] = None
     service_ports: Union[PortsSpec, None] = None
@@ -97,10 +103,13 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         ."""
         self._api.sessions.delete_session(self.id)
 
-    def duration(self):
-        """Returns the duration of a given session."""
-        if self.started_at and self.expires_at:
-            return self.expires_at - self.started_at
+    def extend(self, additional_duration: int):
+        """Extends the duration of a given session.
+            #### Args:
+                additional_duration (int): Additional session duration in seconds.
+        """
+        res = self._api.sessions.extend_session(self.id, additional_duration)
+        self.duration = res.json()['duration']
 
     @staticmethod
     def convert_session_model(api, device, session):
@@ -108,7 +117,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
 
         Assigns the startedAt and expiresAt attributes None if their value not found.
         #### Args:
-            ip (any): IP address of the service.
+            device (Device): A `Device` object.
             session (any): A `Session` object created by the low-level API.
         """
         started_at = (
@@ -135,6 +144,8 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             service_ports=PortsSpec(**service_ports) if service_ports else None,
             profile=session["qosProfile"],
             status=session["qosStatus"],
+            duration=session.get('duration'),
             started_at=started_at,
             expires_at=expires_at,
         )
+    

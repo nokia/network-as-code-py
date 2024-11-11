@@ -15,7 +15,7 @@
 from datetime import datetime
 from typing import List, Union, Optional
 from . import Namespace
-from ..models.device import Device, DeviceIpv4Addr
+from ..models.device import Device
 from ..models.device_status import EventSubscription
 
 
@@ -46,6 +46,8 @@ class Connectivity(Namespace):
             max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
             subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. 
             Either a datetime object or ISO formatted date string
+
+        Returns: EventSubscription
         """
 
         # Handle conversion
@@ -63,6 +65,7 @@ class Connectivity(Namespace):
         connectivity_subscription = EventSubscription(
             api=self.api,
             max_num_of_reports=max_num_of_reports,
+            event_type = event_type,
             notification_url=notification_url,
             notification_auth_token=notification_auth_token,
             device=device,
@@ -99,6 +102,8 @@ class Connectivity(Namespace):
              '''python
              subscriptions = client.connectivity.get_subscriptions()
              '''
+
+        Returns: List[EventSubscription]
         """
         json = self.api.devicestatus.get_subscriptions()
 
@@ -107,25 +112,13 @@ class Connectivity(Namespace):
     def __parse_event_subscription(self, data: dict) -> EventSubscription:
         device_data = data["subscriptionDetail"]["device"]
 
-        device = Device(api=self.api)
-
-        device.network_access_identifier = device_data.get("networkAccessIdentifier")
-
-        device.phone_number = device_data.get("phoneNumber")
-
-        device.ipv6_address = device_data.get("ipv6Address")
-
-        if "ipv4Address" in device_data:
-            device.ipv4_address = DeviceIpv4Addr(
-                public_address=device_data["ipv4Address"].get("publicAddress"),
-                private_address=device_data["ipv4Address"].get("privateAddress"),
-                public_port=device_data["ipv4Address"].get("publicPort"),
-            )
+        device = Device.convert_to_device_model(self.api, device_data)
 
         return EventSubscription(
             id=data["subscriptionId"],
             api=self.api,
             max_num_of_reports=data.get("maxNumberOfReports"),
+            event_type=data['subscriptionDetail'].get("type"),
             notification_url=data["webhook"].get("notificationUrl"),
             notification_auth_token=data["webhook"].get("notificationAuthToken"),
             device=device,

@@ -34,8 +34,11 @@ class Location(BaseModel):
             longitude (float): the `longitude` of a location object.
             latitude (float): the `latitude` of a location object.
             civic_address (Optional[CivicAddress]): the `civic_address` of a location object.
+            radius (Optional[float]): the `radius` of a location object.
     """
 
     longitude: float
     latitude: float
     civic_address: Optional[CivicAddress] = None
+    radius: Optional[float] = None
+    

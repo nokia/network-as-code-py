@@ -50,9 +50,10 @@ class QodAPI:
         """Function that hits the create session endpoint with the data
 
         #### Args:
-            profile (any): Name of the requested QoS profile.
+            device (Device): Device object for the session.
+            profile (str): Name of the requested QoS profile.
             duration(int): The length of the QoD session in seconds.
-            service_ipv4 (any): IPv4 address of the service.
+            service_ipv4 (str): IPv4 address of the service.
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
@@ -93,7 +94,7 @@ class QodAPI:
         """This function retrieves all sessions given a device_id
 
         Args:
-            device_id (dict): The dict with device-id of the device whose sessions to retrieve
+            device (dict): The dict with device-id of the device whose sessions to retrieve
 
         Returns:
             list: returns list of session
@@ -115,7 +116,7 @@ class QodAPI:
         """Returns a session given session ID
 
         Args:
-            sessionId (str): A string session ID
+            session_id (str): A string session ID
 
         Returns:
             Session: the session object
@@ -137,3 +138,19 @@ class QodAPI:
         errors.error_handler(response)
 
         return response
+
+    def extend_session(self, id: str, additional_duration: int):
+        """Extends a session given session ID
+
+        Args:
+            id (str): session ID
+            additional_duration (int): Additional session duration in seconds.
+        """
+        response = self.client.post(url=f"/sessions/{id}/extend", json={
+            "requestedAdditionalDuration": additional_duration
+        })
+
+        errors.error_handler(response)
+
+        return response
+    

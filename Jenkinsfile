@@ -57,6 +57,7 @@ pipeline {
         PYPI_PASSWORD = credentials('PYPI_PASSWORD')
         PYPI_TOKEN = credentials('PYPI_TOKEN')
         NAC_TOKEN = credentials('NAC_TOKEN')
+        NAC_TOKEN_PROD = credentials('NAC_TOKEN_PROD')
         TEAMS_WEBHOOK = credentials('TEAMS_WEBHOOK')
         SONAR_PATH = "/opt/sonar-scanner/bin"
         SONAR_TOKEN = "sonar-token"
@@ -166,6 +167,23 @@ pipeline {
                 }
             }
         }
+        stage('Candidate integration tests against production') {
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                        env | grep gitlab
+                        """
+                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
+                            sh '''
+                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
+                            '''
+                        }
+                    }
+                }
+            }
+        }
         stage('Deploy candidate') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
             steps {
@@ -179,6 +197,23 @@ pipeline {
                                 python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
                                 python3 -m poetry build
                                 python3 -m poetry publish --no-interaction -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage('Release integration tests against production') {
+            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
+            steps {
+                container('beluga') {
+                    script {
+                        sh """
+                        env | grep gitlab
+                        """
+                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
+                            sh '''
+                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
                             '''
                         }
                     }

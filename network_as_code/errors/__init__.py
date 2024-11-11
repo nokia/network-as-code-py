@@ -52,15 +52,27 @@ class InvalidParameter(NaCError):
     """Error for when the user input parameters are invalid"""
 
 
+def parse_response(response):
+    if "application/json" in response.headers.get("Content-Type", ""):
+        try:
+            response_body = response.json()
+        except ValueError:
+            response_body = "Invalid JSON response"
+    else:
+        response_body = response.text
+    return response_body
+
 def error_handler(response):
     try:
         response.raise_for_status()
     except httpx.HTTPStatusError as e:
+        trace_info = f"Status Code: {e.response.status_code}, Response Body: {parse_response(response)}"
+
         if e.response.status_code == 404:
-            raise NotFound() from e
+            raise NotFound(trace_info) from e
         elif e.response.status_code in (403, 401):
-            raise AuthenticationException() from e
+            raise AuthenticationException(trace_info) from e
         elif e.response.status_code >= 400 and e.response.status_code < 500:
-            raise APIError() from e
+            raise APIError(trace_info) from e
         elif e.response.status_code >= 500:
-            raise ServiceError() from e
+            raise ServiceError(trace_info) from e

@@ -26,6 +26,7 @@ def test_creating_a_qos_flow(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     
     assert session.service_ipv4 == "5.6.7.8"
+    assert session.duration == 3600
     assert session.device.network_access_identifier == device.network_access_identifier
     session.delete()
 
@@ -35,6 +36,7 @@ def test_creating_a_qos_flow_for_device_with_only_phone_number(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
 
     assert session.device.phone_number == device.phone_number
+    assert session.duration == 3600
     session.delete()
 
 def test_creating_a_qos_flow_medium_profile(client, device):
@@ -106,7 +108,7 @@ def test_creating_a_qos_flow_with_duration(client, device):
     assert session.started_at
     assert session.expires_at
 
-    assert session.duration().seconds == 60
+    assert session.duration == 60
 
 def test_creating_a_qos_flow_with_notification_url(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714", duration=3600)
@@ -149,3 +151,9 @@ def test_creating_session_with_public_ipv4_and_public_port(client):
     assert session.device.ipv4_address.public_address == device.ipv4_address.public_address
     assert session.device.ipv4_address.public_port == device.ipv4_address.public_port
     session.delete()
+
+def test_extending_a_qod_session_duration(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
+    assert session.duration == 3600
+    session.extend(300)
+    assert session.duration == 3900

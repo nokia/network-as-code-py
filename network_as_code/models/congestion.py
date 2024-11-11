@@ -17,7 +17,19 @@ from typing import Optional
 from pydantic import BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
 
+
+
 class Congestion(BaseModel):
+    """
+    A class representing the `Congestion` model.
+
+    #### Public Attributes:
+            level (str): Congestion level experienced by the device ranging from "None", "Low", "Medium" and "High"
+            start (datetime): Start timestamp for retrieving congestion data.
+            stop (datetime): End timestamp for retrieving congestion data.
+            confidence (Optional[int]): Level of confidence when dealing with a congestion level prediction, 
+            ranging from 0 to 100.
+    """
     level: str
     start: datetime
     stop: datetime
@@ -33,6 +45,19 @@ class Congestion(BaseModel):
         return cls(level=level, confidence=confidence, start=start, stop=stop)
 
 class CongestionSubscription(BaseModel):
+    """
+    A class representing the `CongestionSubscription` model.
+
+    #### Private Attributes:
+        _api(APIClient): An API client object.
+
+    #### Public Attributes:
+        id (optional): It represents the subscription identifier.
+        starts_at (optional): It represents when this subscription started.
+        expires_at (optional): It represents when this subscription should expire.
+    #### Public Methods:
+        delete (None): Delete congestion insights subscription.
+    """
     id: Optional[str] = None
     _api: APIClient = PrivateAttr()
     starts_at: Optional[datetime] = None
@@ -43,4 +68,5 @@ class CongestionSubscription(BaseModel):
         self._api = api
 
     def delete(self):
+        """Delete congestion insights subscription"""
         self._api.congestion.delete_subscription(self.id)
