@@ -563,6 +563,37 @@ def test_clearing_device_sessions(httpx_mock, client):
         json=mock_response
     )
 
+    mock_response = [{
+        "sessionId": "1234",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }, {
+        "sessionId": "12345",
+        "qosProfile": "QOS_L",
+        "device": {
+            "networkAccessIdentifier": "testuser@open5glab.net",
+        },
+        "qosStatus": "BLA",
+        "startedAt": "2024-06-18T08:48:12.300312Z",
+        "expiresAt": "2024-06-18T08:48:12.300312Z"
+    }]
+
+    httpx_mock.add_response(
+        method='POST',
+        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        match_content = json.dumps({
+            "device": {
+                "networkAccessIdentifier": "testuser@open5glab.net",
+            },
+        }).encode('utf-8'),
+        json=mock_response
+    )
+
     device.clear_sessions()
     requests = httpx_mock.get_requests()
     assert requests[-2].method == 'DELETE'

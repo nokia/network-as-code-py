@@ -88,7 +88,7 @@ pipeline {
                 container('beluga') {
                     script {
                         sh """
-                            poetry run pytest --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
+                            poetry run pytest -n auto --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
                         """
                     }
                 }        
@@ -112,7 +112,7 @@ pipeline {
                     script {
                         sh """
                             env | grep gitlab
-                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest integration_tests/
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest -n 8 --dist worksteal integration_tests/
                         """
                     }
                 }        
@@ -178,7 +178,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
-                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
+                                PRODTEST=1 python3 -m poetry run pytest -n 4 integration_tests/
                             '''
                         }
                     }
@@ -214,7 +214,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
                             sh '''
-                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
+                                PRODTEST=1 python3 -m poetry run pytest -n 4 integration_tests/
                             '''
                         }
                     }
