@@ -213,7 +213,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
     )
     location_verification = device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=70)
     assert location_verification.result_type == "TRUE"
-    assert location_verification.lastLocationTime == "2023-09-11T18:34:01+03:00"
+    assert location_verification.last_location_time == "2023-09-11T18:34:01+03:00"
 
 def test_verify_partial_location(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"
@@ -249,7 +249,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
 
     location_verification = device.verify_location(longitude=19, latitude=47, radius=10_000)
     assert location_verification.result_type == "PARTIAL"
-    assert location_verification.matchRate == 74
+    assert location_verification.match_rate == 74
 
 def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"

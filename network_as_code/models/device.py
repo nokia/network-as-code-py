@@ -285,13 +285,13 @@ class Device(BaseModel):
         response = self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
         body = response
         result_type = body["verificationResult"]
-        matchRate = body["matchRate"] if "matchRate" in body.keys() else None
-        lastLocationTime = body["lastLocationTime"] if "lastLocationTime" in body.keys() else None
+        match_rate = body["matchRate"] if "matchRate" in body.keys() else None
+        last_location_time = body["lastLocationTime"] if "lastLocationTime" in body.keys() else None
 
         return VerificationResult(
             result_type = result_type,
-            matchRate = matchRate,
-            lastLocationTime = lastLocationTime
+            match_rate = match_rate,
+            last_location_time = last_location_time
         )
 
     def get_connectivity(self):
