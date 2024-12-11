@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
-from ..models.location import CivicAddress, Location
+from ..models.location import CivicAddress, Location, VerificationResult
 from ..models.congestion import Congestion
 from ..errors import InvalidParameter, NotFound
 
@@ -267,8 +267,8 @@ class Device(BaseModel):
 
     def verify_location(
         self, longitude: float, latitude: float, radius: float, max_age: int = 60
-    ) -> Union[bool, str]:
-        """Verifies the location of the device (Returns boolean value).
+    ) -> VerificationResult:
+        """Verifies the location of the device (Returns VerificationResult object).
 
         #### Args:
             longitude (float): longitude of the device.
@@ -282,8 +282,16 @@ class Device(BaseModel):
             latitude=47.48627616952785, radius=10_000, max_age=60)
             ```
         """
-        return self._api.location_verify.verify_location(
-            latitude, longitude, self, radius, max_age
+        response = self._api.location_verify.verify_location(latitude, longitude, self, radius, max_age)
+        body = response
+        result_type = body["verificationResult"]
+        matchRate = body["matchRate"] if "matchRate" in body.keys() else None
+        lastLocationTime = body["lastLocationTime"] if "lastLocationTime" in body.keys() else None
+
+        return VerificationResult(
+            result_type = result_type,
+            matchRate = matchRate,
+            lastLocationTime = lastLocationTime
         )
 
     def get_connectivity(self):

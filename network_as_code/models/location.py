@@ -25,6 +25,19 @@ class CivicAddress(BaseModel):
     a5: Optional[str] = None
     a6: Optional[str] = None
 
+class VerificationResult(BaseModel):
+    """
+    A class representing the `Location verification result` model.
+
+    #### Public Attributes:
+            result_type (str): the `result_type` of a VerificationResult object.
+            matchRate (int): the `matchRate` in case of result_type is "Partial" of a VerificationResult object.
+            lastLocationTime (str): the `lastLocationTime` of the VerificationResult object.
+    """
+    result_type: str 
+    matchRate: Optional[int] = None
+    lastLocationTime: Optional[str] = None
+    
 
 class Location(BaseModel):
     """
