@@ -13,8 +13,8 @@ pipeline {
             yaml """
         spec:
           containers:
-          - name: beluga
-            image: sf-docker-releases.repo.lab.pl.alcatel-lucent.com/abllabs/beluga:latest
+          - name: python
+            image: docker-registry-remote.artifactory-espoo1.int.net.nokia.com/python:3.10-slim
             workingDir: /home/jenkins
             tty: true
             command:
@@ -71,12 +71,23 @@ pipeline {
     }
 
     stages {
-        stage('Linting') {
+        stage('Setup tools') {
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
-                        python3 -m poetry --no-cache install
+                        pip install poetry
+                        poetry --no-cache install
+                        """
+                    }
+                }        
+            }
+        }
+        stage('Linting') {
+            steps {
+                container('python') {
+                    script {
+                        sh """
                         poetry run pylint network_as_code
                         """
                     }
@@ -85,7 +96,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                             poetry run pytest -n auto --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
@@ -96,7 +107,7 @@ pipeline {
         }
         stage('Audit') {
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                             https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pip-audit
@@ -108,7 +119,7 @@ pipeline {
         stage('Integration Test') {
             when { expression { env.gitlabActionType != "TAG_PUSH" } }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                             env | grep gitlab
@@ -140,7 +151,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                             python3 -m poetry install
@@ -154,7 +165,7 @@ pipeline {
             when { expression { env.gitlabActionType == "TAG_PUSH" && 
             (env.gitlabBranch.contains("rc-") || env.gitlabBranch.contains("release-"))} }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh '''
                             python3 -m venv venv
@@ -171,7 +182,7 @@ pipeline {
         stage('Candidate integration tests against production') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                         env | grep gitlab
@@ -188,7 +199,7 @@ pipeline {
         stage('Deploy candidate') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                         env | grep gitlab
@@ -207,7 +218,7 @@ pipeline {
         stage('Release integration tests against production') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                         env | grep gitlab
@@ -224,7 +235,7 @@ pipeline {
         stage('Deploy release') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
-                container('beluga') {
+                container('python') {
                     script {
                         sh """
                         env | grep gitlab
