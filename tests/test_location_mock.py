@@ -242,7 +242,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
         }).encode(),
         json={
             "lastLocationTime": "2023-09-11T18:34:01+03:00",
-            "verificationResult": "PARTIAL"
+            "verificationResult": "PARTIAL",
             "matchRate": 74
         }
     )
