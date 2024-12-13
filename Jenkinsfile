@@ -71,12 +71,23 @@ pipeline {
     }
 
     stages {
+        stage('Setup tools') {
+            steps {
+                container('python') {
+                    script {
+                        sh """
+                        pip install poetry
+                        poetry --no-cache install
+                        """
+                    }
+                }        
+            }
+        }
         stage('Linting') {
             steps {
                 container('python') {
                     script {
                         sh """
-                        python3 -m poetry --no-cache install
                         poetry run pylint network_as_code
                         """
                     }
