@@ -46,4 +46,4 @@ is_there = device.verify_location(
     latitude=47,
     radius=10_000,
     max_age=3600
-)
+).result_type
