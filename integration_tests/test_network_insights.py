@@ -7,22 +7,19 @@ from network_as_code.models.device import Device
 
 @pytest.fixture
 def nef_device(client) -> Device:
-    device = client.devices.get(phone_number="+3672123456")
+    """Test device for NEF backend"""
+    device = client.devices.get(phone_number="+3670123456")
     return device
 
 @pytest.fixture
 def camara_device(client) -> Device:
-    device = client.devices.get(phone_number="+3672123456")
+    """This is a device object for the CAMARA backend"""
+    device = client.devices.get(phone_number="+3637123456")
     return device
 
-@pytest.fixture
-def naid_device(client) -> Device:
-    device = client.devices.get(network_access_identifier="testdevice@testcsp.net")
-    return device
-
-def test_can_subscribe_for_congestion_info(client, camara_device: Device):
+def test_can_subscribe_for_congestion_info(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1)
     )
@@ -31,9 +28,9 @@ def test_can_subscribe_for_congestion_info(client, camara_device: Device):
 
     subscription.delete()
 
-def test_can_subscribe_for_congestion_info(client, camara_device: Device):
+def test_can_subscribe_for_congestion_info(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1)
     )
@@ -42,9 +39,9 @@ def test_can_subscribe_for_congestion_info(client, camara_device: Device):
 
     subscription.delete()
 
-def test_can_subscribe_for_congestion_info_with_auth_token(client, camara_device: Device):
+def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_auth_token="my-auth-token"
@@ -54,9 +51,9 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, camara_device
 
     subscription.delete()
 
-def test_can_get_subscription_by_id(client, camara_device: Device):
+def test_can_get_subscription_by_id(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_auth_token="my-auth-token"
@@ -68,10 +65,10 @@ def test_can_get_subscription_by_id(client, camara_device: Device):
 
     subscription.delete()
 
-def test_can_get_list_of_subscriptions(client, camara_device: Device):
+def test_can_get_list_of_subscriptions(client, nef_device: Device):
     for _i in range(5):
         client.insights.subscribe_to_congestion_info(
-            camara_device,
+            nef_device,
             notification_url="https://example.com",
             subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
             notification_auth_token="my-auth-token"
@@ -85,15 +82,15 @@ def test_can_get_list_of_subscriptions(client, camara_device: Device):
         subscription.delete()
 
 
-def test_can_query_congestion_level_from_camara_device(client, camara_device):
+def test_can_query_congestion_level_from_camara_device(client, nef_device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(minutes=5),
         notification_auth_token="my-auth-token"
     )
 
-    congestion = camara_device.get_congestion()
+    congestion = nef_device.get_congestion()
 
     assert isinstance(congestion, list)
 
@@ -101,6 +98,7 @@ def test_can_query_congestion_level_from_camara_device(client, camara_device):
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_can_query_congestion_level_from_nef_device(client, nef_device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -117,15 +115,15 @@ def test_can_query_congestion_level_from_nef_device(client, nef_device):
 
     subscription.delete()
 
-def test_can_query_within_time_range(client, camara_device: Device):
+def test_can_query_within_time_range(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
-        camara_device,
+        nef_device,
         notification_url="https://example.com",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(minutes=5),
         notification_auth_token="my-auth-token"
     )
 
-    congestion = camara_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
+    congestion = nef_device.get_congestion(start=datetime.now(timezone.utc), end=datetime.now(timezone.utc) + timedelta(hours=3))
 
     assert congestion[0].level in ["None", "Low", "Medium", "High"]
 

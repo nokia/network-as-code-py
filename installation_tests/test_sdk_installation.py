@@ -20,7 +20,7 @@ def test_getting_a_device_location_sends_out_request(device):
     assert location.latitude
 
 def test_verifying_a_device_location_sends_out_request(device):
-    assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, radius=10_000)
+    assert device.verify_location(longitude=19.07915612501993, latitude=47.48627616952785, radius=10_000).result_type == "TRUE"
 
 def test_verifying_a_device_location_too_returns_false(device):
-    assert not device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000)
+    assert device.verify_location(longitude=24.07915612501993, latitude=47.48627616952785, radius=10_000).result_type == "FALSE"

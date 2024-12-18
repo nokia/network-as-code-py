@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel
-
 
 class CivicAddress(BaseModel):
     country: Optional[str] = None
@@ -25,6 +25,18 @@ class CivicAddress(BaseModel):
     a5: Optional[str] = None
     a6: Optional[str] = None
 
+class VerificationResult(BaseModel):
+    """
+    A class representing the `Location verification result` model.
+
+    #### Public Attributes:
+            result_type (str): the `result_type` of a VerificationResult object.
+            match_rate (int): the `match_rate` in case of result_type is "Partial" of a VerificationResult object.
+            last_location_time (datetime): the `last_location_time` of the VerificationResult object.
+    """
+    result_type: str
+    match_rate: Optional[int] = None
+    last_location_time: Optional[datetime] = None
 
 class Location(BaseModel):
     """
@@ -41,4 +53,3 @@ class Location(BaseModel):
     latitude: float
     civic_address: Optional[CivicAddress] = None
     radius: Optional[float] = None
-    

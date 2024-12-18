@@ -41,8 +41,7 @@ class LocationVerifyAPI:
 
         error_handler(response)
 
-        result = response.json()["verificationResult"]
-        return True if result == "TRUE" else False if result == "FALSE" else result
+        return response.json()
 
 
 class LocationRetrievalAPI:
