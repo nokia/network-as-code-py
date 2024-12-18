@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 5.0.0
+
+Breaking changes:
+- Location verification using `device.verify_location()` returns a result object containing
+  `match_rate`, `last_location_time` and the `result_type` fields
+
 ## Version 4.1.0
 
 Changes:

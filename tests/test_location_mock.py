@@ -7,6 +7,8 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 import pytest
 import json
 
+from datetime import datetime
+
 @pytest.fixture
 def device(client) -> Device:
     device = client.devices.get("test_device_id", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
@@ -213,7 +215,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
     )
     location_verification = device.verify_location(longitude=19, latitude=47, radius=10_000, max_age=70)
     assert location_verification.result_type == "TRUE"
-    assert location_verification.last_location_time == "2023-09-11T18:34:01+03:00"
+    assert location_verification.last_location_time == datetime.fromisoformat("2023-09-11T18:34:01+03:00")
 
 def test_verify_partial_location(httpx_mock: httpx_mock, device):
     url = f"https://location-verification.p-eu.rapidapi.com/verify"

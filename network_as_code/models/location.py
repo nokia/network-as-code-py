@@ -15,6 +15,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
+from datetime import datetime
 
 class CivicAddress(BaseModel):
     country: Optional[str] = None
@@ -32,11 +33,11 @@ class VerificationResult(BaseModel):
     #### Public Attributes:
             result_type (str): the `result_type` of a VerificationResult object.
             match_rate (int): the `match_rate` in case of result_type is "Partial" of a VerificationResult object.
-            last_location_time (str): the `last_location_time` of the VerificationResult object.
+            last_location_time (datetime): the `last_location_time` of the VerificationResult object.
     """
     result_type: str
     match_rate: Optional[int] = None
-    last_location_time: Optional[str] = None
+    last_location_time: Optional[datetime] = None
 
 class Location(BaseModel):
     """
