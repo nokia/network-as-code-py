@@ -17,7 +17,6 @@ def camara_device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
-@pytest.mark.skip
 def test_can_subscribe_for_congestion_info(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -29,7 +28,7 @@ def test_can_subscribe_for_congestion_info(client, nef_device: Device):
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_subscribe_for_congestion_info(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -41,7 +40,7 @@ def test_can_subscribe_for_congestion_info(client, nef_device: Device):
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -54,7 +53,7 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: D
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_get_subscription_by_id(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -69,7 +68,7 @@ def test_can_get_subscription_by_id(client, nef_device: Device):
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_get_list_of_subscriptions(client, nef_device: Device):
     for _i in range(5):
         client.insights.subscribe_to_congestion_info(
@@ -86,7 +85,7 @@ def test_can_get_list_of_subscriptions(client, nef_device: Device):
     for subscription in subscriptions:
         subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_query_congestion_level_from_camara_device(client, nef_device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -103,7 +102,7 @@ def test_can_query_congestion_level_from_camara_device(client, nef_device):
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_query_congestion_level_from_nef_device(client, nef_device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -120,7 +119,7 @@ def test_can_query_congestion_level_from_nef_device(client, nef_device):
 
     subscription.delete()
 
-@pytest.mark.skip
+
 def test_can_query_within_time_range(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
