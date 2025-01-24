@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from typing import Optional
+from typing import Optional, Any
 
 from network_as_code.api.utils import httpx_client
 
@@ -34,7 +34,7 @@ class SimSwapAPI:
         return response.json()
 
     def verify_sim_swap(self, phone_number: str, max_age: Optional[int]) -> bool:
-        body = {
+        body: dict[str, Any] = {
             "phoneNumber": phone_number,
         }
 
@@ -45,4 +45,4 @@ class SimSwapAPI:
 
         error_handler(response)
 
-        return response.json()
+        return bool(response.json()['swapped'])
