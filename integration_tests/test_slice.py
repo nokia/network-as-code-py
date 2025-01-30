@@ -119,7 +119,6 @@ async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-@pytest.mark.xfail
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
@@ -157,7 +156,6 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-@pytest.mark.xfail
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_with_manadatory_params(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
@@ -193,7 +191,6 @@ async def test_attach_device_to_slice_with_manadatory_params(client, device, set
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
 # @pytest.mark.skip
-@pytest.mark.xfail
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_with_optional_params(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
