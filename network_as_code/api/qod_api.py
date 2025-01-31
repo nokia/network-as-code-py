@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union
-
+from typing import Union, List, Any
 from .utils import httpx_client
 
 
@@ -42,8 +41,8 @@ class QodAPI:
         duration,
         service_ipv4,
         service_ipv6=None,
-        device_ports: Union[None, any] = None,
-        service_ports: Union[None, any] = None,
+        device_ports: Union[None, Any] = None,
+        service_ports: Union[None, Any] = None,
         notification_url=None,
         notification_auth_token=None,
     ):
@@ -105,7 +104,9 @@ class QodAPI:
 
         errors.error_handler(response)
 
-        return response
+        session_list: List[dict] = response.json()
+
+        return session_list
 
     def get_session(self, session_id: str):
         """Returns a session given session ID

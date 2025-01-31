@@ -40,7 +40,7 @@ class EventSubscription(BaseModel):
         delete (None): Deletes device connectivity status subscription.
     """
 
-    id: Optional[str] = None
+    id: str = ''
     _api: APIClient = PrivateAttr()
     max_num_of_reports: Optional[int] = None
     event_type: str

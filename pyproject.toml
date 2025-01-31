@@ -36,6 +36,7 @@ pip-audit = "^2.6.1"
 pipdeptree = "^2.13.2"
 toml = "^0.10.2"
 pytest-xdist = "^3.6.1"
+mypy = "^1.14.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
