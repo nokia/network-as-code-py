@@ -27,6 +27,13 @@ def setup_and_cleanup_slice_data(client):
 
     yield slice
 
+    # If a slice was activated but the test failed before deactivation, we need to manually deactivate
+    if slice.state == "OPERATING":
+        slice.deactivate()
+        while slice.state == "OPERATING":
+            time.sleep(5)
+            slice.refresh()
+
     slice.delete()
 
 def test_getting_slices(client):
