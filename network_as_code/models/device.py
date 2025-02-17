@@ -286,7 +286,7 @@ class Device(BaseModel):
         result_type = body["verificationResult"]
         match_rate = body["matchRate"] if "matchRate" in body.keys() else None
         last_location_time = datetime.fromisoformat(
-            body["lastLocationTime"].replace("Z", "+00:00")
+            body["lastLocationTime"]
         ) if "lastLocationTime" in body.keys() else None
 
         return VerificationResult(
@@ -360,7 +360,7 @@ class Device(BaseModel):
         )
 
         if response:
-            return datetime.fromisoformat(response.replace("Z", "+00:00"))
+            return datetime.fromisoformat(response)
 
         return None
 

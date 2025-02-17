@@ -76,13 +76,13 @@ class NetworkInsights(Namespace):
             api=self.api,
             id=json_data.get("subscriptionId"),
             starts_at=(
-                datetime.fromisoformat(json_data.get("startsAt").replace("Z", "+00:00"))
+                datetime.fromisoformat(json_data.get("startsAt"))
                 if json_data.get("startsAt")
                 else None
-            ),  # How did Python developers ever think this hack made sense?
+            ),
             expires_at=(
-                datetime.fromisoformat(json_data.get("expiresAt").replace("Z", "+00:00"))
+                datetime.fromisoformat(json_data.get("expiresAt"))
                 if json_data.get("expiresAt")
                 else None
-            ),  # Poor timezone handling makes me very sad
+            )
         )
