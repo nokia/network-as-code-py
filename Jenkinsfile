@@ -14,7 +14,7 @@ pipeline {
         spec:
           containers:
           - name: python
-            image: docker-registry-remote.artifactory-espoo1.int.net.nokia.com/python:3.10-slim
+            image: docker-registry-remote.artifactory-espoo1.int.net.nokia.com/python:3.11-slim
             workingDir: /home/jenkins
             tty: true
             command:
@@ -89,6 +89,7 @@ pipeline {
                     script {
                         sh """
                         poetry run pylint network_as_code
+                        poetry run mypy network_as_code
                         """
                     }
                 }        

@@ -15,18 +15,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.9
+    - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
-        python-version: "3.9"
+        python-version: "3.11"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
-    - name: Lint with pylint
+    - name: Lint with pylint and mypy
       run: |
         poetry run pylint network_as_code
+        poetry run mypy network_as_code
     - name: Test with pytest
       run: |
         poetry run pytest
