@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 5.1.0
+
+Changes:
+- Made using devices with public IPv4 address a bit easier by allowing private address to be omitted
+- Upped the minimum Python version requirement to 3.11, so that some zulu-time workarounds could be removed
+
+Fixes:
+- Sources now get regularly type-checked with mypy and type issues have been resolved
+- Some dependency versions have been bumped in lock file to avoid vulnerabilities
+
 ## Version 5.0.0
 
 Breaking changes:
