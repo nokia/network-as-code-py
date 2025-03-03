@@ -11,15 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-from typing import Union, List, Optional, ForwardRef
+from __future__ import annotations
+from typing import Union, List, Optional, TYPE_CHECKING
 from datetime import datetime
 
 from pydantic import ConfigDict, BaseModel, PrivateAttr
 from network_as_code.api.client import APIClient
-
-Device = ForwardRef('Device')
+if TYPE_CHECKING:
+    from network_as_code.models.device import Device
 
 ALIASES = {"start": "from", "end": "to"}
 
@@ -80,7 +79,6 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         convert_session_model (Session): Returns A `Session` instance.
     """
 
-
     _api: APIClient = PrivateAttr()
     id: str
     profile: str
@@ -92,6 +90,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     service_ipv4: Union[str, None] = None
     service_ipv6: Union[str, None] = None
     service_ports: Union[PortsSpec, None] = None
+
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)

@@ -166,8 +166,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     _sessions: List[QoDSession] = PrivateAttr()
     sid: Optional[str] = None
     state: str
-    name: Optional[str] = Field(
-        None,
+    name: str = Field(
+        default = '',
         description="""Optional short name for the slice.
         Must be ASCII characters, digits and dash. 
         Like name of an event, such as "Concert-2029-Big-Arena".""",
@@ -402,6 +402,8 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             notification_auth_token,
         ).json()
 
+        assert isinstance(device.phone_number, str)
+
         self._attachments.append(
             DeviceAttachment(
                 attachment_id=new_attachment["nac_resource_id"],
@@ -483,6 +485,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                     Point(latitude=polygon[3]["lat"], longitude=polygon[3]["lon"]),
                 ]
             )
+        return None
 
     @staticmethod
     def throughput(throughputdict: Optional[Dict[str, float]]):

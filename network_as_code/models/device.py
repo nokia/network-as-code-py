@@ -104,7 +104,7 @@ class Device(BaseModel):
     network_access_identifier: Union[str, None] = Field(
         None, serialization_alias="networkAccessIdentifier"
     )
-    phone_number: Union[str, None] = Field(None, serialization_alias="phoneNumber")
+    phone_number: Optional[str] = Field(None, serialization_alias="phoneNumber")
     ipv4_address: Union[DeviceIpv4Addr, None] = Field(
         None, serialization_alias="ipv4Address"
     )
@@ -181,10 +181,9 @@ class Device(BaseModel):
             sessions = self._api.sessions.get_all_sessions(self)
             return list(
                 map(
-                    self.__convert_session_model,
-                    sessions.json(),
-                )
-            )
+                     self.__convert_session_model,
+                     sessions
+                ))
         except NotFound:
             # API will return 404 for a device which has had all of its sessions deleted
             # Because this is not an error, we will simply return an empty list here
@@ -287,7 +286,7 @@ class Device(BaseModel):
         result_type = body["verificationResult"]
         match_rate = body["matchRate"] if "matchRate" in body.keys() else None
         last_location_time = datetime.fromisoformat(
-            body["lastLocationTime"].replace("Z", "+00:00")
+            body["lastLocationTime"]
         ) if "lastLocationTime" in body.keys() else None
 
         return VerificationResult(
@@ -361,7 +360,7 @@ class Device(BaseModel):
         )
 
         if response:
-            return datetime.fromisoformat(response.replace("Z", "+00:00"))
+            return datetime.fromisoformat(response)
 
         return None
 
@@ -375,7 +374,7 @@ class Device(BaseModel):
         """
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
-        return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)["swapped"]
+        return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)
 
     @staticmethod
     def convert_to_device_model(api, device_json):

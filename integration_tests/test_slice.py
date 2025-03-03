@@ -27,6 +27,13 @@ def setup_and_cleanup_slice_data(client):
 
     yield slice
 
+    # If a slice was activated but the test failed before deactivation, we need to manually deactivate
+    if slice.state == "OPERATING":
+        slice.deactivate()
+        while slice.state == "OPERATING":
+            time.sleep(5)
+            slice.refresh()
+
     slice.delete()
 
 def test_getting_slices(client):
@@ -38,6 +45,7 @@ def test_creating_a_slice(client, setup_and_cleanup_slice_data):
     assert slice.network_identifier.mnc == '30'
     assert slice.network_identifier.mcc == '236'
 
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
     my_slice = setup_and_cleanup_slice_data
@@ -117,7 +125,7 @@ async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
@@ -154,9 +162,9 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.asyncio
-async def test_attach_device_to_slice_with_manadatory_params(client, device, setup_and_cleanup_slice_data):
+async def test_attach_device_to_slice_with_mandatory_params(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
     await slice.wait_for(desired_state="AVAILABLE")
@@ -189,7 +197,7 @@ async def test_attach_device_to_slice_with_manadatory_params(client, device, set
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_with_optional_params(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data

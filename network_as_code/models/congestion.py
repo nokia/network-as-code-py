@@ -39,8 +39,8 @@ class Congestion(BaseModel):
     def from_json(cls, json) -> "Congestion":
         level = json["congestionLevel"]
         confidence = json.get("confidenceLevel")
-        start = datetime.fromisoformat(json["timeIntervalStart"].replace("Z", "+00:00"))
-        stop = datetime.fromisoformat(json["timeIntervalStop"].replace("Z", "+00:00"))
+        start = datetime.fromisoformat(json["timeIntervalStart"])
+        stop = datetime.fromisoformat(json["timeIntervalStop"])
 
         return cls(level=level, confidence=confidence, start=start, stop=stop)
 

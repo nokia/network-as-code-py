@@ -53,6 +53,11 @@ class Devices(Namespace):
             [id, ipv4_address, ipv6_address, phone_number]
         ), "At least one parameter must be set."
 
+        # If the user only supplied a public IPv4 address without a public address or port, let's assume the
+        # device is not NAT'd and we can just rely on one IP
+        if ipv4_address and (ipv4_address.public_address
+                             and (not ipv4_address.private_address and not ipv4_address.public_port)):
+            ipv4_address.private_address = ipv4_address.public_address
 
         ret_device = Device(
             api=self.api,
