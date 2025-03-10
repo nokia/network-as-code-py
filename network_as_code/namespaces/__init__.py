@@ -18,3 +18,4 @@ from .session import Sessions
 from .slice import Slices
 from .device_status import Connectivity
 from .insights import NetworkInsights
+from .geofencing import Geofencing

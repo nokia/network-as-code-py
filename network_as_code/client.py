@@ -18,6 +18,7 @@ from .namespaces import Sessions
 from .namespaces import Slices
 from .namespaces import Connectivity
 from .namespaces import NetworkInsights
+from .namespaces import Geofencing
 
 
 class NetworkAsCodeClient:
@@ -44,6 +45,7 @@ class NetworkAsCodeClient:
         self._slices = Slices(self._api)
         self._connectivity = Connectivity(self._api)
         self._insights = NetworkInsights(self._api)
+        self._geofencing = Geofencing(self._api)
 
     #### NAMESPACES
 
@@ -86,3 +88,11 @@ class NetworkAsCodeClient:
         Returns NAC congestion insights
         """
         return self._insights
+
+    @property
+    def geofencing(self):
+        """Namespace containing functionalities related to geofencing.
+
+        Returns NAC geofencing
+        """
+        return self._geofencing
