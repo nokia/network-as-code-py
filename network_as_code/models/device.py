@@ -14,7 +14,7 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, PrivateAttr, model_validator
+from pydantic import BaseModel, Field, PrivateAttr
 
 
 from ..api import APIClient
