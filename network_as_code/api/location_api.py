@@ -37,7 +37,7 @@ class LocationVerifyAPI:
         if max_age:
             body["maxAge"] = cast(int, max_age)
 
-        response = self.client.post(url="/verify", json=body)
+        response = self.client.post(url="/v1/verify", json=body)
 
         error_handler(response)
 
