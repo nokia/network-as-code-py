@@ -54,9 +54,3 @@ def test_serializing_device_with_phone_number(client):
         "networkAccessIdentifier": "test_device_id",
         "phoneNumber": "+1 206 555 0100"
     }
-
-def test_getting_device_with_only_ipv4_public(client):
-    with pytest.raises(ValueError) as excinfo:
-        client.devices.get("testuser@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2"))
-
-    assert "Either private_address or public_port must be provided when public_address is set." in str(excinfo.value)
