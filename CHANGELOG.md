@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 5.1.1
+
+Fixes:
+- Adapted the Location Verification bindings to use the new version prefix
+- Using just a public IPv4 address for a device didn't actually work and has now been fixed
+
 ## Version 5.1.0
 
 Changes:
