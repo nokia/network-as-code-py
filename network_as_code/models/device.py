@@ -14,7 +14,7 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, PrivateAttr, model_validator
+from pydantic import BaseModel, Field, PrivateAttr
 
 
 from ..api import APIClient
@@ -56,20 +56,6 @@ class DeviceIpv4Addr(BaseModel):
     public_address: Optional[str] = Field(None, serialization_alias="publicAddress")
     private_address: Optional[str] = Field(None, serialization_alias="privateAddress")
     public_port: Optional[int] = Field(None, serialization_alias="publicPort")
-
-    @model_validator(mode="before")
-    @classmethod
-    def check_addresses_and_port(cls, values):
-        public_address = values.get("public_address")
-        private_address = values.get("private_address")
-        public_port = values.get("public_port")
-        if public_address:
-            if not (private_address or public_port):
-                raise ValueError(
-                    "Either private_address or public_port must be provided when public_address is set."
-                )
-        return values
-
 
 class Device(BaseModel):
     """

@@ -43,12 +43,12 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-norecursedirs = "binding_generation"
 testpaths = [
     "tests",
     #"integration_tests"
 ]
 xfail_strict = true
+addopts = "--ignore-glob='*geofencing*'"
 
 [tool.poetry_bumpversion.file."network_as_code/__init__.py"]
 

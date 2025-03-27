@@ -18,6 +18,7 @@ from .location_api import LocationVerifyAPI, LocationRetrievalAPI
 from .device_status_api import DeviceStatusAPI
 from .congestion_api import CongestionAPI
 from .sim_swap_api import SimSwapAPI
+from .geofencing_api import GeofencingAPI
 
 QOS_BASE_URL_PROD = "https://quality-of-service-on-demand.p-eu.rapidapi.com"
 QOS_RAPID_HOST_PROD = "quality-of-service-on-demand.nokia.rapidapi.com"
@@ -51,6 +52,9 @@ SIM_SWAP_BASE_URL_PROD = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v
 SIM_SWAP_RAPID_HOST_PROD = "sim-swap.nokia.rapidapi.com"
 SIM_SWAP_BASE_URL_DEV = "https://simswap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
 
+GEOFENCING_BASE_URL_PROD = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
+GEOFENCING_RAPID_HOST_PROD = "geofencing-subscription.nokia.rapidapi.com"
+GEOFENCING_BASE_URL_DEV = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
 
 class APIClient:
     """A client for communicating with Network as Code APIs.
@@ -72,6 +76,7 @@ class APIClient:
         device_status_base_url: str = DEVICE_STATUS_BASE_URL_PROD,
         congestion_base_url: str = CONGESTION_BASE_URL_PROD,
         sim_swap_base_url: str = SIM_SWAP_BASE_URL_PROD,
+        geofencing_base_url: str = GEOFENCING_BASE_URL_PROD,
         dev_mode: bool = False,
     ):
         if dev_mode and qos_base_url == QOS_BASE_URL_PROD:
@@ -97,6 +102,9 @@ class APIClient:
 
         if dev_mode and sim_swap_base_url == SIM_SWAP_BASE_URL_PROD:
             sim_swap_base_url = SIM_SWAP_BASE_URL_DEV
+
+        if dev_mode and geofencing_base_url == GEOFENCING_BASE_URL_PROD:
+            geofencing_base_url = GEOFENCING_BASE_URL_DEV
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
@@ -175,4 +183,14 @@ class APIClient:
                 if not dev_mode
                 else sim_swap_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             ),
+        )
+
+        self.geofencing = GeofencingAPI(
+            base_url=geofencing_base_url,
+            rapid_key=token,
+            rapid_host=(
+                geofencing_base_url.replace("https://", "").replace("p-eu", "nokia")
+                if not dev_mode
+                else geofencing_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+            )
         )
