@@ -190,7 +190,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
-                                PRODTEST=1 python3 -m poetry run pytest -n 4 integration_tests/
+                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
                             '''
                         }
                     }
@@ -226,7 +226,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
                             sh '''
-                                PRODTEST=1 python3 -m poetry run pytest -n 4 integration_tests/
+                                PRODTEST=1 python3 -m poetry run pytest integration_tests/
                             '''
                         }
                     }
