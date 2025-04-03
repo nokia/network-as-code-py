@@ -19,7 +19,7 @@ from .namespaces import Slices
 from .namespaces import Connectivity
 from .namespaces import NetworkInsights
 from .namespaces import Geofencing
-
+from .namespaces import Authorization
 
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
@@ -46,7 +46,7 @@ class NetworkAsCodeClient:
         self._connectivity = Connectivity(self._api)
         self._insights = NetworkInsights(self._api)
         self._geofencing = Geofencing(self._api)
-
+        self._authorization = Authorization(self._api)
     #### NAMESPACES
 
     @property
@@ -96,3 +96,11 @@ class NetworkAsCodeClient:
     #     Returns NAC geofencing
     #     """
     #     return self._geofencing
+
+    @property
+    def authorization(self):
+        """Namespace containing functionalities related to authorization.
+
+        Returns NAC authorization
+        """
+        return self._authorization

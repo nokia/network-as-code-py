@@ -19,6 +19,9 @@ from .device_status_api import DeviceStatusAPI
 from .congestion_api import CongestionAPI
 from .sim_swap_api import SimSwapAPI
 from .geofencing_api import GeofencingAPI
+from .credentials_api import CredentialsAPI
+from .authorization_api import AuthorizationAPI
+from. number_verification_api import NumberVerificationAPI
 
 QOS_BASE_URL_PROD = "https://quality-of-service-on-demand.p-eu.rapidapi.com"
 QOS_RAPID_HOST_PROD = "quality-of-service-on-demand.nokia.rapidapi.com"
@@ -56,6 +59,18 @@ GEOFENCING_BASE_URL_PROD = "https://geofencing-subscription.p-eu.rapidapi.com/v0
 GEOFENCING_RAPID_HOST_PROD = "geofencing-subscription.nokia.rapidapi.com"
 GEOFENCING_BASE_URL_DEV = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
 
+CREDENTIALS_BASE_URL_PROD = "https://nac-authorization-server.p-eu.rapidapi.com"
+CREDENTIALS_RAPID_HOST_PROD = "nac-authorization-server.nokia.rapidapi.com"
+CREDENTIALS_BASE_URL_DEV = "https://nac-authorization-server.p-eu.rapidapi.com"
+
+AUTHORIZATION_BASE_URL_PROD = "https://well-known-metadata.p-eu.rapidapi.com"
+AUTHORIZATION_RAPID_HOST_PROD = "well-known-metadata.nokia.rapidapi.com"
+AUTHORIZATION_BASE_URL_DEV = "https://well-known-metadata.p-eu.rapidapi.com"
+
+NUMBER_VERIFICATION_BASE_URL_PROD = "https://number-verification.p-eu.rapidapi.com"
+NUMBER_VERIFICATION_RAPID_HOST_PROD = "number-verification.nokia.rapidapi.com"
+NUMBER_VERIFICATION_BASE_URL_DEV = "https://number-verification.p-eu.rapidapi.com"
+
 class APIClient:
     """A client for communicating with Network as Code APIs.
 
@@ -77,6 +92,9 @@ class APIClient:
         congestion_base_url: str = CONGESTION_BASE_URL_PROD,
         sim_swap_base_url: str = SIM_SWAP_BASE_URL_PROD,
         geofencing_base_url: str = GEOFENCING_BASE_URL_PROD,
+        credentials_base_url: str = CREDENTIALS_BASE_URL_PROD,
+        authorization_base_url: str = AUTHORIZATION_BASE_URL_PROD,
+        number_verification_base_url: str = NUMBER_VERIFICATION_BASE_URL_PROD,
         dev_mode: bool = False,
     ):
         if dev_mode and qos_base_url == QOS_BASE_URL_PROD:
@@ -105,6 +123,15 @@ class APIClient:
 
         if dev_mode and geofencing_base_url == GEOFENCING_BASE_URL_PROD:
             geofencing_base_url = GEOFENCING_BASE_URL_DEV
+
+        if dev_mode and credentials_base_url == CREDENTIALS_BASE_URL_PROD:
+            credentials_base_url = CREDENTIALS_BASE_URL_DEV
+
+        if dev_mode and authorization_base_url == AUTHORIZATION_BASE_URL_PROD:
+            authorization_base_url = AUTHORIZATION_BASE_URL_DEV
+
+        if dev_mode and number_verification_base_url == NUMBER_VERIFICATION_BASE_URL_PROD:
+            number_verification_base_url = NUMBER_VERIFICATION_BASE_URL_DEV
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
@@ -193,4 +220,34 @@ class APIClient:
                 if not dev_mode
                 else geofencing_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
             )
+        )
+
+        self.credentials = CredentialsAPI(
+            base_url = credentials_base_url,
+            rapid_key = token,
+            rapid_host=(
+                credentials_base_url.replace("https://", "").replace("p-eu", "nokia")
+                if not dev_mode
+                else credentials_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+            ),
+        )
+
+        self.authorization = AuthorizationAPI(
+            base_url = authorization_base_url,
+            rapid_key = token,
+            rapid_host=(
+                authorization_base_url.replace("https://", "").replace("p-eu", "nokia")
+                if not dev_mode
+                else authorization_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+            ),
+        )
+
+        self.number_verification = NumberVerificationAPI(
+            base_url = number_verification_base_url,
+            rapid_key = token,
+            rapid_host=(
+                number_verification_base_url.replace("https://", "").replace("p-eu", "nokia")
+                if not dev_mode
+                else number_verification_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+            ),
         )

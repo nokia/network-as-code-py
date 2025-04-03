@@ -1,5 +1,6 @@
 
 import httpx
+from ..errors import error_handler
 
 def delete_none(_dict):
     """Delete None values recursively from all of the dictionaries"""
@@ -25,3 +26,8 @@ def httpx_client(base_url: str, rapid_key: str, rapid_host: str):
                 "X-RapidAPI-Host": rapid_host,
         },
     )
+
+def tokenizer(base_url: str, data: dict):
+    response = httpx.post(url=base_url, data=data)
+    error_handler(response)
+    return response

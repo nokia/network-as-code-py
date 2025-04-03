@@ -1,4 +1,4 @@
-# Copyright 2023 Nokia
+# Copyright 2025 Nokia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .namespace import Namespace
-from .device import Devices
-from .session import Sessions
-from .slice import Slices
-from .device_status import Connectivity
-from .insights import NetworkInsights
-from .geofencing import Geofencing
-from .authorization import Authorization
+
+from network_as_code.api.utils import httpx_client
+from ..errors import error_handler
+
+class NumberVerificationAPI:
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
+
+    def verify_number(self, payload: dict, headers: dict) -> bool:
+
+        response = self.client.post(url="/verify", json=payload, headers=headers)
+
+        error_handler(response)
+
+        return bool(response.json()["devicePhoneNumberVerified"])

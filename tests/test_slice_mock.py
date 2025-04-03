@@ -1,6 +1,7 @@
 import json
 import copy
 import pytest
+from typing import Any, Dict
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
 from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput, TrafficCategories
@@ -10,7 +11,7 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 from network_as_code.errors import InvalidParameter, error_handler
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
-MOCK_SLICE = {
+MOCK_SLICE: Dict[str, Any] = {
     "slice": {
             "name": "sliceone",
             "notificationUrl": "",
@@ -453,7 +454,7 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     assert response.sid == MOCK_SLICE['csi_id']
 
 def test_get_slice_with_no_differentiator(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
-    MOCK_SLICE_RES = {
+    MOCK_SLICE_RES: Dict[str, Any] = {
     "slice": {
             "name": "sliceone",
             "notificationUrl": "",
@@ -481,6 +482,7 @@ def test_get_slice_with_no_differentiator(httpx_mock: HTTPXMock, client: Network
     )
     
     response = client.slices.get(MOCK_SLICE_RES['slice']['name'])
+
     assert response.sid == MOCK_SLICE_RES['csi_id']
 
 def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
