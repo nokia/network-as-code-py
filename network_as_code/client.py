@@ -89,13 +89,13 @@ class NetworkAsCodeClient:
         """
         return self._insights
 
-    # @property
-    # def geofencing(self):
-    #     """Namespace containing functionalities related to geofencing.
+    @property
+    def geofencing(self):
+        """Namespace containing functionalities related to geofencing.
 
-    #     Returns NAC geofencing
-    #     """
-    #     return self._geofencing
+        Returns NAC geofencing
+        """
+        return self._geofencing
 
     @property
     def authorization(self):
