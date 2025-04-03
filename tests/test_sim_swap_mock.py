@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import pytest
 from pytest_httpx import httpx_mock
 from network_as_code.errors import APIError, InvalidParameter
 from network_as_code.models.device import Device, DeviceIpv4Addr

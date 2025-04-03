@@ -1,0 +1,75 @@
+import json
+import pytest
+from unittest.mock import patch
+from network_as_code.models.number_verification import AccessToken
+from network_as_code.errors import AuthenticationException, APIError, InvalidParameter
+from network_as_code.models.device import Device
+
+import pytest
+
+
+@pytest.fixture
+def device(client) -> Device:
+    device = client.devices.get(phone_number="3637123456")
+    return device
+
+
+def test_verify_number(httpx_mock, device):
+    with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
+
+        mock_response={
+            "devicePhoneNumberVerified": True
+        }
+
+        httpx_mock.add_response(
+            url= "https://number-verification.p-eu.rapidapi.com/verify",
+            method= 'POST',
+            match_content=json.dumps({
+                "phoneNumber": "3637123456"
+            }).encode("utf-8"),
+            json= mock_response,
+        )
+
+        assert device.verify_number(code='your-code') == True
+
+def test_verify_number_unauthenticated(httpx_mock, device):
+    with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='invalid-token', token_type='Bearer', expires_in=12345)):
+        url = "https://number-verification.p-eu.rapidapi.com/verify"
+
+        mock_response = {
+            "message": "Request not authenticated due to missing, invalid, or expired credentials"
+        }
+
+        httpx_mock.add_response(
+            url=url,
+            method="POST",
+            match_content=json.dumps({
+                "phoneNumber": "3637123456"
+            }).encode("utf-8"),
+            status_code=401,
+            json= mock_response 
+        )
+
+        with pytest.raises(AuthenticationException):
+            device.verify_number(code='your-code')
+
+
+def test_number_verification_api_error(httpx_mock, device):
+    with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
+        url = "https://number-verification.p-eu.rapidapi.com/verify"
+        httpx_mock.add_response(
+            url=url,
+            method="POST",
+            status_code=400
+        )
+        
+        with pytest.raises(APIError):
+            device.verify_number(code='your-code')
+
+def test_verify_number_with_no_phone_number(client):
+    device = client.devices.get(network_access_identifier="testuser@open5glab.net")
+
+    with pytest.raises(InvalidParameter):
+        device.verify_number(code='your-code')
+                            
+
