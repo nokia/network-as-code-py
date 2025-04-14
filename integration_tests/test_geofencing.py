@@ -15,10 +15,8 @@ def device(client) -> Device:
 
 def test_creating_geofencing_subscription_area_entered_type(client, device):
     notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
-    notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
     subscription = client.geofencing.subscribe(
         device=device,
-        sink=f"{notification_base_url}/notify",
         sink=f"{notification_base_url}/notify",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
         latitude=-90,
