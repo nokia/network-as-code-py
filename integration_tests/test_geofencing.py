@@ -6,6 +6,7 @@ from network_as_code.models.geofencing import PlainCredential, AccessTokenCreden
 
 import pytest
 import time
+import requests
 
 @pytest.fixture
 def device(client) -> Device:
