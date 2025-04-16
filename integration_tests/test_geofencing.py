@@ -6,7 +6,7 @@ from network_as_code.models.geofencing import PlainCredential, AccessTokenCreden
 
 import pytest
 import time
-import requests
+import httpx
 
 @pytest.fixture
 def device(client) -> Device:
@@ -14,8 +14,7 @@ def device(client) -> Device:
     return device
 
 
-def test_creating_geofencing_subscription_area_entered_type(client, device):
-    notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
+def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
@@ -29,15 +28,14 @@ def test_creating_geofencing_subscription_area_entered_type(client, device):
     )
     assert subscription.event_subscription_id
     time.sleep(5)
-    notification = requests.get(f"{notification_base_url}/get/{subscription.event_subscription_id}") 
-    assert notification.json().get('id') is not None
-    notification = requests.delete(f"{notification_base_url}/delete/{subscription.event_subscription_id}")
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
 
 
-def test_creating_geofencing_subscription_area_left_type(client, device):
-    notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
+def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
@@ -49,13 +47,12 @@ def test_creating_geofencing_subscription_area_left_type(client, device):
     
     assert subscription.event_subscription_id
     time.sleep(5)
-    notification = requests.get(f"{notification_base_url}/get/{subscription.event_subscription_id}") 
-    assert notification.json().get('id') is not None
-    notification = requests.delete(f"{notification_base_url}/delete/{subscription.event_subscription_id}")
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
-def test_creating_geofencing_subscription_sink_credential_plain(client, device):
-    notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
+def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
@@ -70,13 +67,12 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device):
     )
     assert subscription.event_subscription_id
     time.sleep(5)
-    notification = requests.get(f"{notification_base_url}/get/{subscription.event_subscription_id}") 
-    assert notification.json().get('id') is not None
-    notification = requests.delete(f"{notification_base_url}/delete/{subscription.event_subscription_id}")
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
-def test_creating_geofencing_subscription_sink_credential_bearer(client, device):
-    notification_base_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python/geofencing"
+def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
@@ -91,9 +87,9 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device)
     )
     assert subscription.event_subscription_id
     time.sleep(5)
-    notification = requests.get(f"{notification_base_url}/get/{subscription.event_subscription_id}") 
-    assert notification.json().get('id') is not None
-    notification = requests.delete(f"{notification_base_url}/delete/{subscription.event_subscription_id}")
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
 def test_getting_geofencing_subscription(client, device):
