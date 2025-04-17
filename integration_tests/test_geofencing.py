@@ -5,6 +5,8 @@ from network_as_code.models.device import Device, DeviceIpv4Addr
 from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
 
 import pytest
+import time
+import httpx
 
 @pytest.fixture
 def device(client) -> Device:
@@ -12,10 +14,10 @@ def device(client) -> Device:
     return device
 
 
-def test_creating_geofencing_subscription_area_entered_type(client, device):
+def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
-        sink="https://example.com/",
+        sink=f"{notification_base_url}/notify",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
         latitude=-90,
         longitude=-180,
@@ -24,25 +26,36 @@ def test_creating_geofencing_subscription_area_entered_type(client, device):
         subscription_max_events=1,
         initial_event=False
     )
-
+    assert subscription.event_subscription_id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
-def test_creating_geofencing_subscription_area_left_type(client, device):
+
+
+def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
-        sink="https://example.com/",
+        sink=f"{notification_base_url}/notify",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
         latitude=-90,
         longitude=-180,
         radius=2001
     )
     
+    assert subscription.event_subscription_id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
-def test_creating_geofencing_subscription_sink_credential_plain(client, device):
+def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
-        sink="https://example.com/",
+        sink=f"{notification_base_url}/notify",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
         latitude=-90,
         longitude=-180,
@@ -52,13 +65,17 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device):
         subscription_max_events=1,
         initial_event=False
     )
-
+    assert subscription.event_subscription_id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
-def test_creating_geofencing_subscription_sink_credential_bearer(client, device):
+def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
-        sink="https://example.com/",
+        sink=f"{notification_base_url}/notify",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
         latitude=-90,
         longitude=-180,
@@ -68,7 +85,11 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device)
         subscription_max_events=1,
         initial_event=False
     )
-
+    assert subscription.event_subscription_id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
 def test_getting_geofencing_subscription(client, device):
