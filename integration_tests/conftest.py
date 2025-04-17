@@ -18,6 +18,5 @@ def client() -> NetworkAsCodeClient:
 
 @pytest.fixture(scope="module")
 def notification_base_url() -> str:
-    # To be fetched from os.environ
-    notification_url = "http://notification-testing-alb-948081273.us-east-1.elb.amazonaws.com:3000/python"
+    notification_url = f"{os.environ['SDK_NOTIFICATION_SERVER_URL']}python"
     return notification_url
