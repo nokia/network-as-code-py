@@ -27,3 +27,11 @@ class NumberVerificationAPI:
         error_handler(response)
 
         return bool(response.json()["devicePhoneNumberVerified"])
+
+    def get_phone_number(self, headers:dict) -> str:
+
+        response = self.client.get(url="/device-phone-number", headers=headers)
+
+        error_handler(response)
+
+        return response.json()["devicePhoneNumber"]
