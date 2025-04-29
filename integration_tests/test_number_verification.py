@@ -47,7 +47,7 @@ def test_number_verification(client, device):
 
 def test_get_device_phone_number(client, device):
 
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:device-phone-number:read')
+    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:device-phone-number:read', login_hint= None)
 
     response = httpx.get(url= auth_link)
 
