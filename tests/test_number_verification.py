@@ -32,6 +32,21 @@ def test_verify_number(httpx_mock, device):
 
         assert device.verify_number(code='your-code') == True
 
+def test_get_device_phone_number(httpx_mock, device):
+    with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
+
+        mock_response={
+            "devicePhoneNumber": "+123456789"
+        }
+
+        httpx_mock.add_response(
+            url= "https://number-verification.p-eu.rapidapi.com/device-phone-number",
+            method= 'GET',
+            json= mock_response,
+        )
+
+        assert device.get_phone_number(code='your-code') == "+123456789"
+
 def test_verify_number_unauthenticated(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='invalid-token', token_type='Bearer', expires_in=12345)):
         url = "https://number-verification.p-eu.rapidapi.com/verify"
