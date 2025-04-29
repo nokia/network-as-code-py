@@ -103,7 +103,7 @@ def test_get_auth_endpoints_api_error(httpx_mock, client):
         client.authorization.auth_endpoints()
 
 
-def test_create_authentication_link(client):
+def test_create_authentication_link_with_login_hint(client):
     url = "https://some-auth-server.example.com/oauth2/v1/authorize"
     with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
         with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint")):
@@ -116,6 +116,20 @@ def test_create_authentication_link(client):
             )
 
             assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
+
+def test_create_authentication_link_without_login_hint(client):
+    url = "https://some-auth-server.example.com/oauth2/v1/authorize"
+    with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
+        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint")):
+
+            authentication_link = client.authorization.create_authentication_link(
+            redirect_uri= "https://example.com/redirect",
+            login_hint= None,
+            scope= "number-verification:device-phone-number:read",
+            state= "foobar"
+            )
+
+            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Adevice-phone-number%3Aread&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=None"
 
 def test_create_authentication_link_without_optionals(client):
     url = "https://some-auth-server.example.com/oauth2/v1/authorize"
