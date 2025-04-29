@@ -30,7 +30,7 @@ my_device = client.devices.get(
 callback = client.authorization.create_authentication_link(
     redirect_uri= "https://my-example/redirect",
     login_hint= my_device.phone_number,
-    scope= "number-verification:verify",
+    scope= "number-verification:verify", # "number-verification:device-phone-number:read" In case of getting the device phone number.
     state= "foobar"
 )
 
