@@ -129,7 +129,7 @@ def test_create_authentication_link_without_login_hint(client):
             state= "foobar"
             )
 
-            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Adevice-phone-number%3Aread&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=None"
+            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Adevice-phone-number%3Aread&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect"
 
 def test_create_authentication_link_without_optionals(client):
     url = "https://some-auth-server.example.com/oauth2/v1/authorize"
