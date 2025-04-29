@@ -27,6 +27,7 @@ my_device = client.devices.get(
 # should return a 401 Unauthorized error code.
 
 # create callbacklink
+# In case of retrieving the device phone number, login_hint should be None
 callback = client.authorization.create_authentication_link(
     redirect_uri= "https://my-example/redirect",
     login_hint= my_device.phone_number,
@@ -51,3 +52,9 @@ code = "NaC-authorization-code"
 verify_number_result = my_device.verify_number(code= code)
 
 print(verify_number_result)
+
+# The Number Verification API retieves the Device phone number of the used device.
+
+device_phone_number = my_device.get_phone_number(code = code)
+
+print(device_phone_number) # e.g. "+123456789"
