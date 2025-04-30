@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 5.2.0
+
+Changes:
+- Introduced support for Geofencing API
+- Introduced support for Number Verification API
+
+Fixes:
+- API request timeouts have been extended to 30 seconds for long-running requests
+- Bumped dependency versions
+
 ## Version 5.1.1
 
 Fixes:
