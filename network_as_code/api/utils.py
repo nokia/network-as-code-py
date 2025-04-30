@@ -20,6 +20,7 @@ def delete_none(_dict):
 def httpx_client(base_url: str, rapid_key: str, rapid_host: str):
     return httpx.Client(
         base_url=base_url,
+        timeout=30.0,
         headers={
                 "content-type": "application/json",
                 "X-RapidAPI-Key": rapid_key,
