@@ -55,7 +55,7 @@ SIM_SWAP_BASE_URL_PROD = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v
 SIM_SWAP_RAPID_HOST_PROD = "sim-swap.nokia.rapidapi.com"
 SIM_SWAP_BASE_URL_DEV = "https://simswap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
 
-GEOFENCING_BASE_URL_PROD = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
+GEOFENCING_BASE_URL_PROD = "https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3"
 GEOFENCING_RAPID_HOST_PROD = "geofencing-subscription.nokia.rapidapi.com"
 GEOFENCING_BASE_URL_DEV = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
 
