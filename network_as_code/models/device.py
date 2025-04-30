@@ -411,6 +411,20 @@ class Device(BaseModel):
 
         return self._api.number_verification.verify_number(payload=payload, headers=headers)
 
+    def get_phone_number(self, code: str) -> str:
+        """Gets the users phone number.
+
+        #### Args:
+             code (str): Changes the code for Access Token through  _get_single_use_access_token
+        #### Returns:
+             String 
+        """
+
+        authenticator = self._get_single_use_access_token(code=code)
+        headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
+
+        return self._api.number_verification.get_phone_number(headers=headers)
+
     @staticmethod
     def convert_to_device_model(api, device_json):
         device = Device(api=api)

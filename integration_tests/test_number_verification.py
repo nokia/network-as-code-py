@@ -44,3 +44,20 @@ def test_number_verification(client, device):
     code = parse_qs(parsed_url.query)['code'][0]
 
     assert device.verify_number(code= code)
+
+def test_get_device_phone_number(client, device):
+
+    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:device-phone-number:read', login_hint="+3637123456")
+
+    response = httpx.get(url= auth_link)
+
+    redirect_url = response.headers["location"]
+    response = httpx.get(url= redirect_url)
+    
+    redirect_url = response.headers["location"]
+    response = httpx.get(url= redirect_url)
+
+    parsed_url = urlparse(response.headers.get('location'))
+    code = parse_qs(parsed_url.query)['code'][0]
+
+    assert device.get_phone_number(code=code)

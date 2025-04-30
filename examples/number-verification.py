@@ -30,7 +30,7 @@ my_device = client.devices.get(
 callback = client.authorization.create_authentication_link(
     redirect_uri= "https://my-example/redirect",
     login_hint= my_device.phone_number,
-    scope= "number-verification:verify",
+    scope= "number-verification:verify", # "number-verification:device-phone-number:read" In case of getting the device phone number.
     state= "foobar"
 )
 
@@ -51,3 +51,9 @@ code = "NaC-authorization-code"
 verify_number_result = my_device.verify_number(code= code)
 
 print(verify_number_result)
+
+# The Number Verification API retieves the phone number of the used device.
+
+device_phone_number = my_device.get_phone_number(code = code)
+
+print(device_phone_number) # e.g. "+123456789"
