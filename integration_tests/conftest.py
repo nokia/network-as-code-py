@@ -15,3 +15,8 @@ def client() -> NetworkAsCodeClient:
 
     token = os.environ["NAC_TOKEN"] if not using_prod else os.environ["NAC_TOKEN_PROD"]
     return NetworkAsCodeClient(token=token, dev_mode=not using_prod)
+
+@pytest.fixture(scope="module")
+def notification_base_url() -> str:
+    notification_url = f"{os.environ['SDK_NOTIFICATION_SERVER_URL']}python"
+    return notification_url

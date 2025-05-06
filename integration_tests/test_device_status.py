@@ -6,55 +6,88 @@ from network_as_code.errors import error_handler
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
 import pytest
+import time
+import httpx
 
 @pytest.fixture
 def device(client) -> Device:
     device = client.devices.get("sdk-integration@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
-def test_creating_connectivity_subscription_with_notification(client, device):
+def test_creating_connectivity_subscription_with_notification(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
-        notification_url="http://192.0.2.0:8080/", 
+        notification_url=f"{notification_base_url}/notify", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
+    assert subscription.id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
 
     subscription.delete()
 
-def test_creating_connectivity_subscription_roaming(client, device):
+def test_creating_connectivity_subscription_roaming(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
         event_type="org.camaraproject.device-status.v0.roaming-status",
         device=device, 
         max_num_of_reports=5, 
-        notification_url="http://192.0.2.0:8080/", 
+        notification_url=f"{notification_base_url}/notify", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
     assert subscription.id is not None
     assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
+
+    assert subscription.id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
     subscription.delete()
 
-def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device):
+def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
-        notification_url="http://192.0.2.0:8080/", 
+        notification_url=f"{notification_base_url}/notify", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
+    assert subscription.id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
     subscription.delete()
 
-def test_creating_connectivity_subscription_with_expiration(client, device):
+def test_creating_connectivity_subscription_with_expiration(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
-        notification_url="http://192.0.2.0:8080/", 
+        notification_url=f"{notification_base_url}/notify", 
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
+
+    assert subscription.id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    assert notification.json() is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    assert notification.json() 
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
 
     subscription.delete()
 

@@ -1,6 +1,8 @@
 
 import pdb
 import pytest
+import httpx
+import time
 
 from network_as_code.models.session import PortsSpec, PortRange
 from network_as_code.models.device import Device, DeviceIpv4Addr
@@ -110,10 +112,39 @@ def test_creating_a_qos_flow_with_duration(client, device):
 
     assert session.duration == 60
 
-def test_creating_a_qos_flow_with_notification_url(client, device):
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url="https://example.com/notifications", notification_auth_token="c8974e592c2fa383d4a3960714", duration=3600)
+def test_creating_a_qos_flow_with_notification_url(client, device, notification_base_url):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
+    assert session.id
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/qod/get/{session.id}")
+    assert notification.json() is not None
+
+    notification_data = notification.json()[0]["data"]
+
+    status_data_keys = ["sessionId", "qosStatus"]
+    for key in status_data_keys:
+        assert key in notification_data
 
     session.delete()
+    time.sleep(5)
+
+    notification = httpx.delete(f"{notification_base_url}/qod/delete/{session.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200]
+
+def test_qos_session_info_changes_from_deletion(client, device, notification_base_url):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
+    assert session.id
+    time.sleep(5)
+
+    session.delete()
+    time.sleep(5)
+    
+    notification = httpx.get(f"{notification_base_url}/qod/get/{session.id}")
+    notification_data = notification.json()[1]["data"]
+
+    assert notification_data['statusInfo'] == "DELETE_REQUESTED"
+
+    notification = httpx.delete(f"{notification_base_url}/qod/delete/{session.id}")
 
 def test_getting_all_sessions(client, device):
     device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
