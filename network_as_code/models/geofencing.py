@@ -35,9 +35,9 @@ class GeofencingSubscription(BaseModel):
     protocol: Optional[str] = None
     sink: str
     types: List[str]
-    latitude: int
-    longitude: int
-    radius: int
+    latitude: float
+    longitude: float
+    radius: Union[int, float]
     starts_at: datetime
     sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None
     def __init__(self, api: APIClient, **data):
