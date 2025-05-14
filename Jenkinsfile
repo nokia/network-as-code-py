@@ -226,7 +226,9 @@ pipeline {
                         env | grep gitlab
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
-                            
+                            sh '''
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m poetry run pytest integration_tests/
+                            '''
                         }
                     }
                 }
