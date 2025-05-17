@@ -236,7 +236,7 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
 
     assert slice.state == "AVAILABLE"
 
-def test_notifications(client, notification_base_url):
+async def test_notifications(client, notification_base_url):
     slice = client.slices.create(
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
         slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
