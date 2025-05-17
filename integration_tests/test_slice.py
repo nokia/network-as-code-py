@@ -9,6 +9,7 @@ from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, Sl
 
 from network_as_code.errors import NotFound
 import random
+import httpx
 
 @pytest.fixture
 def device(client) -> Device:
@@ -60,7 +61,7 @@ async def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
     assert my_slice.max_devices == 10
     assert my_slice.max_data_connections == 20
 
-def test_creating_a_slice_with_optional_args(client):
+def test_creating_a_slice_with_optional_args(client,notification_base_url):
     slice = client.slices.create(
         name=f'slice{random.randint(1, 1000)}',
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
@@ -234,6 +235,43 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
     await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
+
+def test_notifications(client, notification_base_url):
+    slice = client.slices.create(
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
+        notification_url=f"{notification_base_url}/notify",
+        notification_auth_token="my-token",
+        name=f'slice{random.randint(1, 1000)}'
+    )
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+    assert notification.json()['current_slice_state'] == "AVAILABLE"
+
+    slice.activate()
+
+    await slice.wait_for(desired_state="OPERATING")
+
+    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+    assert notification.json()['current_slice_state'] == "OPERATING"
+
+    slice.deactivate()
+
+    await slice.wait_for(desired_state="AVAILABLE")
+
+    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+    assert notification.json()['current_slice_state'] == "AVAILABLE"
+
+    slice.delete()
+
+    await slice.wait_for(desired_state="DELETED")
+
+    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+    assert notification.json()['current_slice_state'] == "DELETED"
+
+    httpx.delete(f"{notification_base_url}/network-slice/delete/{slice.name}")
 
 def test_NotFound_error(client):
     with pytest.raises(NotFound):
