@@ -268,10 +268,8 @@ async def test_notifications(client, notification_base_url):
     assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
 
     slice.delete()
-
-    await slice.wait_for(desired_state="DELETED")
-
-    time.sleep(5)
+    # Waiting 2 mins for the notification to be sent!
+    time.sleep(2 * 60)
     notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "DELETED"
 
