@@ -236,6 +236,7 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
 
     assert slice.state == "AVAILABLE"
 
+@pytest.mark.asyncio
 async def test_notifications(client, notification_base_url):
     slice = client.slices.create(
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
