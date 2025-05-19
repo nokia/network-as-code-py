@@ -248,6 +248,7 @@ async def test_notifications(client, notification_base_url):
 
     await slice.wait_for(desired_state="AVAILABLE")
 
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
 
@@ -255,13 +256,14 @@ async def test_notifications(client, notification_base_url):
 
     await slice.wait_for(desired_state="OPERATING")
 
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "OPERATING"
 
     slice.deactivate()
 
     await slice.wait_for(desired_state="AVAILABLE")
-
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
 
@@ -269,6 +271,7 @@ async def test_notifications(client, notification_base_url):
 
     await slice.wait_for(desired_state="DELETED")
 
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "DELETED"
 
