@@ -127,7 +127,8 @@ def test_getting_geofencing_subscriptions(client, device):
     
     subscriptions = client.geofencing.get_all()
     assert isinstance(subscriptions, list)
-
+    assert len(subscriptions) >= 2
+    
     for subscription in subscriptions:
         subscription.delete()
 
