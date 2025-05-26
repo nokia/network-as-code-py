@@ -91,12 +91,12 @@ The following pillars guide the design and development of the SDKs:
 
 ### First time setup
 
-Requirements: [python-poetry](https://python-poetry.org/docs/)
+Requirements: [uv](https://docs.astral.sh/uv/)
 
 1. Clone the repo
 2. Install the project
    ```bash
-   poetry install
+   uv sync
    ```
 
 ### End-to-end development process
@@ -180,27 +180,6 @@ Our expectation is that the API team provides a predictable
 environment to be tested against and deviations from this
 expectation should be considered issues to be fixed.
 
-### Acquiring new OAS specification from API implementation
-
-The API service implementations use FastAPI and are developed at https://gitlabe2.ext.net.nokia.com/nwac/api
-It is possible to launch the individual services using `uvicorn` like so:
-
-```bash 
-uvicorn --app-dir scripts/ <service-name>:app
-```
-
-For example, QoD service can be launched like this:
-
-```bash 
-uvicorn --app-dir scripts/ qos:app
-```
-
-Navigating into http://localhost:8000/docs should then yield the integrated
-FastAPI specification view, which matches that of Swagger. It also has a link
-to http://localhost:8000/openapi.json which contains the generated OAS spec.
-
-You can then just download that into any directory you want.
-
 ### Branch workflow
 
 1. Create a branch
@@ -253,17 +232,17 @@ Read their respective documentation to learn more about the possible configurati
 **Quick check:**
 
 ```bash
-poetry run pytest --cov=network_as_code
+uv run pytest --cov=network_as_code
 ```
 
 **HTML report:**
 
 ```bash
-poetry run pytest --cov-report html --cov=network_as_code
+uv run pytest --cov-report html --cov=network_as_code
 ```
 
 **HTML report with branch checks:**
 
 ```bash
-poetry run pytest -cov-branch --cov-report html --cov=network_as_code
+uv run pytest -cov-branch --cov-report html --cov=network_as_code
 ```

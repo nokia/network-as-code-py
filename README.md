@@ -50,9 +50,9 @@ The Network as Code Python SDK is open-source software available under the Apach
 
 ### Commands
 
-- `poetry install` - install project dependencies
-- `poetry run pytest` - run unit tests against mocks
-- `poetry run pytest integration_tests` - run integration tests against development APIs
+- `uv sync` - install project dependencies
+- `uv run pytest` - run unit tests against mocks
+- `uv run pytest integration_tests` - run integration tests against development APIs
 
 ### Architecture
 

@@ -13,6 +13,11 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="3637123456")
     return device
 
+"""
+
+POST request on https://number-verification.p-eu.rapidapi.com/verify with b'{"phoneNumber":"3637123456"}' body amongst:
+POST request on https://number-verification.p-eu.rapidapi.com/verify with b'{"phoneNumber": "3637123456"}' body
+"""
 
 def test_verify_number(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
@@ -24,10 +29,10 @@ def test_verify_number(httpx_mock, device):
         httpx_mock.add_response(
             url= "https://number-verification.p-eu.rapidapi.com/verify",
             method= 'POST',
-            match_content=json.dumps({
+            match_json={
                 "phoneNumber": "3637123456"
-            }).encode("utf-8"),
-            json= mock_response,
+            },
+            json=mock_response,
         )
 
         assert device.verify_number(code='your-code') == True
@@ -58,9 +63,9 @@ def test_verify_number_unauthenticated(httpx_mock, device):
         httpx_mock.add_response(
             url=url,
             method="POST",
-            match_content=json.dumps({
+            match_json={
                 "phoneNumber": "3637123456"
-            }).encode("utf-8"),
+            },
             status_code=401,
             json= mock_response 
         )
