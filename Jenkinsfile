@@ -77,8 +77,8 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                        pip install poetry
-                        poetry --no-cache install
+                        pip install uv
+                        uv sync
                         """
                     }
                 }        
@@ -89,8 +89,8 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                        poetry run pylint network_as_code
-                        poetry run mypy network_as_code
+                        uv run pylint network_as_code
+                        uv run mypy network_as_code
                         """
                     }
                 }        
@@ -101,7 +101,7 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            poetry run pytest -n auto --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
+                            uv run pytest -n auto --cov-config=.coveragerc --cov-report term --cov-report xml:coverage.xml --cov=network_as_code
                         """
                     }
                 }        
@@ -112,7 +112,7 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pip-audit
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pip-audit
                         """
                     }
                 }
@@ -125,7 +125,7 @@ pipeline {
                     script {
                         sh """
                             env | grep gitlab
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry run pytest -n 8 --dist worksteal integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 8 --dist worksteal integration_tests/
                         """
                     }
                 }        
@@ -156,8 +156,7 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            python3 -m poetry install
-                            python3 -m poetry build
+                            python3 -m uv build
                         """
                     }
                 }
@@ -191,26 +190,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
-                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m poetry run pytest integration_tests/
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-        stage('Deploy candidate') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")} }
-            steps {
-                container('python') {
-                    script {
-                        sh """
-                        env | grep gitlab
-                        """
-                        if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
-                            sh '''
-                                python3 -m poetry config repositories.devpi ${PYPI_REPOSITORY}
-                                python3 -m poetry build
-                                python3 -m poetry publish --no-interaction -r devpi -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }
@@ -227,7 +207,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
                             sh '''
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m poetry run pytest integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }
@@ -244,9 +224,9 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabTargetBranch.contains("release-")){
                             sh '''
-                                python3 -m poetry config pypi-token.pypi ${PYPI_TOKEN}
-                                python3 -m poetry build
-                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m poetry publish --no-interaction
+                                export UV_PUBLISH_TOKEN=$PYPI_TOKEN
+                                python3 -m uv build
+                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv publish --no-interaction
                             '''
                         }
                     }

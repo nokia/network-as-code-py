@@ -6,4 +6,3 @@ htmlcov/
 .hypothesis/
 .env
 dist/
-.python-version

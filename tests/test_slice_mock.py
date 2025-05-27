@@ -70,9 +70,6 @@ MOCK_SLICE: Dict[str, Any] = {
             "state": "PENDING"
 }
 
-def to_bytes(json_content: dict) -> bytes:
-    return json.dumps(json_content).encode()
-
 @pytest.fixture
 def device(client) -> Device:
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
@@ -153,7 +150,7 @@ def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="POST",
-        match_content=to_bytes(slice_payload),
+        match_json=slice_payload,
         json=slice_response,
         url="https://network-slicing.p-eu.rapidapi.com/slices"
     )
@@ -276,7 +273,7 @@ def test_modifying_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="POST",
-        match_content=to_bytes(slice_payload),
+        match_json=slice_payload,
         json=slice_response_original,
         url="https://network-slicing.p-eu.rapidapi.com/slices"
     )
@@ -293,7 +290,7 @@ def test_modifying_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="PUT",
-        match_content=to_bytes(slice_modification_payload),
+        match_json=slice_modification_payload,
         json=slice_response_modified,
         url=f"https://network-slicing.p-eu.rapidapi.com/slices/slicefour"
     )
@@ -760,7 +757,7 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
         json={
             "nac_resource_id": "attachment-1"
         },
-        match_content=to_bytes({
+        match_json={
             "sliceId": "sliceone",
             "device": {
                 "networkAccessIdentifier": device.network_access_identifier,
@@ -781,7 +778,7 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
                 "notificationUrl": "https://example.com/notifications",
                 "notificationAuthToken": "c8974e592c2fa383d4a3960714"
             }
-        })
+        }
     )
 
     slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
@@ -820,12 +817,12 @@ def test_attach_device_to_slice_with_only_manadatory_params(httpx_mock, client, 
         json={
             "nac_resource_id": "attachment-1"
         },
-        match_content=to_bytes({
+        match_json={
             "sliceId": "sliceone",
             "device": {
                 "phoneNumber": device.phone_number
             }
-        })
+        }
     )
 
     device = client.devices.get(phone_number="+12065550100")

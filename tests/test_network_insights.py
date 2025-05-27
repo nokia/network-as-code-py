@@ -29,13 +29,12 @@ def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client,
                 "confidenceLevel": 50
             }
         ],
-        match_content=to_bytes(
-            {
-                "device": {
-                    "phoneNumber": "3637123456"
-                }
+        match_json=
+        {
+            "device": {
+                "phoneNumber": "3637123456"
             }
-        )
+        }
     )
 
     congestion = camara_device.get_congestion()
@@ -58,15 +57,14 @@ def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
                 "confidenceLevel": 50
             }
         ],
-        match_content=to_bytes(
-            {
-                "device": {
-                    "phoneNumber": "3637123456"
-                },
-                "start": "2024-04-15T08:17:16.664106+00:00",
-                "end": "2024-04-16T08:18:01.773761+00:00"
-            }
-        )
+        match_json=
+        {
+            "device": {
+                "phoneNumber": "3637123456"
+            },
+            "start": "2024-04-15T08:17:16.664106+00:00",
+            "end": "2024-04-16T08:18:01.773761+00:00"
+        }
     )
 
     congestion= camara_device.get_congestion(
@@ -85,7 +83,7 @@ def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
             "startsAt": None,
             "expiresAt": None
         },
-        match_content=to_bytes({
+        match_json={
             "device": {
                 "phoneNumber": "3637123456"
             },
@@ -94,7 +92,7 @@ def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
                 "notificationAuthToken": "my-auth-token"
             },
             "subscriptionExpireTime": "2024-04-16T08:18:01.773761+00:00"
-        })
+        }
     )
 
     subscription = client.insights.subscribe_to_congestion_info(
@@ -115,7 +113,7 @@ def test_can_delete_subscription(httpx_mock, client, camara_device):
             "startsAt": None,
             "expiresAt": None
         },
-        match_content=to_bytes({
+        match_json={
             "device": {
                 "phoneNumber": "3637123456"
             },
@@ -123,7 +121,7 @@ def test_can_delete_subscription(httpx_mock, client, camara_device):
                 "notificationUrl": "https://example.com"
             },
             "subscriptionExpireTime": "2024-04-16T08:18:01.773761+00:00"
-        })
+        }
     )
 
     subscription = client.insights.subscribe_to_congestion_info(
