@@ -24,9 +24,9 @@ def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "phoneNumber": "3637123456"
-        }).encode("utf-8")
+        }
     )
 
     latest_sim_swap_date = device.get_sim_swap_date()
@@ -42,9 +42,9 @@ def test_get_sim_swap_date_no_response(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "phoneNumber": "3637123456"
-        }).encode("utf-8")
+        }
     )
 
     latest_sim_swap_date = device.get_sim_swap_date()
@@ -74,9 +74,9 @@ def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "phoneNumber": "3637123456"
-        }).encode("utf-8")
+        }
     )
 
     assert device.verify_sim_swap(max_age=None) == True
@@ -92,10 +92,10 @@ def test_verify_sim_swap_with_max_age(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "phoneNumber": "3637123456",
             "maxAge": 120
-        }).encode("utf-8")
+        }
     )
 
     assert device.verify_sim_swap(max_age=120) == True
@@ -105,10 +105,10 @@ def test_error_trace_info(httpx_mock, device):
     url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
     httpx_mock.add_response(
         url=url,
-        match_content=json.dumps({
+        match_json={
             "phoneNumber": "3637123456",
             "maxAge": 120
-        }).encode("utf-8"),
+        },
         method="POST",
         status_code=422,
         json= {'detail': [{'msg': 'Input should be less than or equal to 2400'}]}  

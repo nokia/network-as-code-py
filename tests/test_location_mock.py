@@ -44,7 +44,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -54,7 +54,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
                 }
             },
             "maxAge": 60
-        }).encode("utf-8")
+        }
     )
 
     location = device.location()
@@ -92,7 +92,7 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -102,7 +102,7 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
                 }
             },
             "maxAge": 60
-        }).encode("utf-8")
+        }
     )
 
     location = device.location()
@@ -131,7 +131,7 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
         url=url, 
         method='POST', 
         json=mock_response,
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -141,7 +141,7 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
                 }
             },
             "maxAge": 60
-        }).encode("utf-8")
+        }
     )
 
     location = device.location()
@@ -157,7 +157,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
     httpx_mock.add_response(
         url=url, 
         method='POST', 
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -175,7 +175,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
                 "radius": 10_000
             },
             "maxAge": 60
-        }).encode(),
+        },
         json={
             "lastLocationTime": "2023-09-11T18:34:01+03:00",
             "verificationResult": "TRUE"
@@ -190,7 +190,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
     httpx_mock.add_response(
         url=url, 
         method='POST', 
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -208,7 +208,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
                 "radius": 10_000
             },
             "maxAge": 70
-        }).encode(),
+        },
         json={
             "lastLocationTime": "2023-09-11T18:34:01+03:00",
             "verificationResult": "TRUE"
@@ -224,7 +224,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
     httpx_mock.add_response(
         url=url, 
         method='POST', 
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -242,7 +242,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
                 "radius": 10_000
             },
             "maxAge": 60
-        }).encode(),
+        },
         json={
             "lastLocationTime": "2023-09-11T18:34:01+03:00",
             "verificationResult": "PARTIAL",
@@ -260,7 +260,7 @@ def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_m
     httpx_mock.add_response(
         url=url, 
         method='POST', 
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -278,7 +278,7 @@ def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_m
                 "radius": 10_000
             },
             "maxAge": 60
-        }).encode(),
+        },
         status_code=403,
         json={
             "message": "You are not authorized!"
@@ -294,7 +294,7 @@ def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock
     httpx_mock.add_response(
         url=url, 
         method='POST', 
-        match_content=json.dumps({
+        match_json={
             "device": {
                 "networkAccessIdentifier": "test_device_id",
                 "ipv4Address": {
@@ -312,7 +312,7 @@ def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock
                 "radius": 10_000
             },
             "maxAge": 60
-        }).encode(),
+        },
         status_code=500,
         json={
             "message": "Internal server error"
