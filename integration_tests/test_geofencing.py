@@ -27,7 +27,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
         initial_event=False
     )
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
@@ -46,7 +46,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
     )
     
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
