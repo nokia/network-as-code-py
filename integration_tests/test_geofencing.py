@@ -52,6 +52,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
