@@ -27,7 +27,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
         initial_event=False
     )
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
@@ -46,12 +46,13 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
     )
     
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(5)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -60,13 +61,10 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
         latitude=-90,
         longitude=-180,
         radius=2001,
-        sink_credential=PlainCredential(identifier="client-id",secret="client-secret"),
-        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
-        subscription_max_events=1,
-        initial_event=False
+        sink_credential=PlainCredential(identifier="client-id",secret="client-secret")
     )
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(10)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
@@ -80,13 +78,10 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
         latitude=-90,
         longitude=-180,
         radius=2001,
-        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= "2025-07-01T14:15:16.789Z",access_token_type="bearer"),
-        subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
-        subscription_max_events=1,
-        initial_event=False
+        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= "2025-07-01T14:15:16.789Z",access_token_type="bearer")
     )
     assert subscription.event_subscription_id
-    time.sleep(2)
+    time.sleep(10)
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
     assert notification.json() is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")

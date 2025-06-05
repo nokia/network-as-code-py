@@ -353,7 +353,7 @@ class Device(BaseModel):
         """Verify if there was sim swap.
 
         #### Args:
-             max_age (Optional[int]): Max acceptable age for sim swap verification info in seconds
+             max_age (Optional[int]): Max acceptable age for sim swap verification info in hours
         #### Returns
              True/False
         """
