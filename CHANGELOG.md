@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 5.2.1
+
+Fixes:
+- Sim Swap docstring incorrectly stated that the `max_age` was in seconds, when it is in fact in hours
+
+Tooling:
+- Project has been switched over to use the `uv` tool for managing dependencies and venvs
+
 ## Version 5.2.0
 
 Changes:
