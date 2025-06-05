@@ -226,7 +226,7 @@ pipeline {
                             sh '''
                                 export UV_PUBLISH_TOKEN=$PYPI_TOKEN
                                 python3 -m uv build
-                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv publish --no-interaction
+                                https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv publish
                             '''
                         }
                     }
