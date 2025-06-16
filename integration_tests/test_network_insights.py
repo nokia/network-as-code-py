@@ -1,5 +1,8 @@
 
+import uuid
 import pytest
+import time
+import httpx
 
 from datetime import datetime, timezone, timedelta
 from network_as_code.models.congestion import Congestion
@@ -17,14 +20,26 @@ def camara_device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
-def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device):
+def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, notification_base_url):
+    notification_id = str(uuid.uuid4())
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
-        notification_url="https://example.com",
+        notification_url=f"{notification_base_url}/notify/{notification_id}",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1)
     )
 
     assert subscription.id
+
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/congestion-insights/get/{notification_id}")
+    assert notification.json() is not None
+
+    notification_info = notification.json()[0]["data"]
+    assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
+
+    notification = httpx.delete(f"{notification_base_url}/congestion-insights/delete/{notification_id}")
+    time.sleep(5)
+    assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
     subscription.delete()
 
@@ -39,15 +54,27 @@ def test_can_subscribe_for_congestion_info_with_camara(client, camara_device: De
 
     subscription.delete()
 
-def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: Device):
+def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: Device, notification_base_url):
+    notification_id = str(uuid.uuid4())
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
-        notification_url="https://example.com",
+        notification_url=f"{notification_base_url}/notify/{notification_id}",
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_auth_token="my-auth-token"
     )
 
     assert subscription.id
+
+    time.sleep(5)
+    notification = httpx.get(f"{notification_base_url}/congestion-insights/get/{notification_id}")
+    assert notification.json() is not None
+    
+    notification_info = notification.json()[0]["data"]
+    assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
+
+    notification = httpx.delete(f"{notification_base_url}/congestion-insights/delete/{notification_id}")
+    time.sleep(5)
+    assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
     subscription.delete()
 
