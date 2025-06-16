@@ -182,10 +182,14 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
                     "publicPort": 80
             },
         },
+        
         "applicationServer": {
             "ipv4Address": "5.6.7.8"
         },
         "duration": 3600,
+        "devicePorts": {
+                "ports": [80, 443]
+            },
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -214,6 +218,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
         json=mock_response)
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]), duration=3600)
+    assert session.device_ports.ports == [80, 443]
 
 def test_creating_qod_session_with_device_port_range(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -232,6 +237,9 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
             "ipv4Address": "5.6.7.8"
         },
         "duration": 3600,
+        "devicePorts": {
+            "ranges": [{"from": 1024, "to": 3000}]
+        },
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -260,6 +268,8 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
         json=mock_response)
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]), duration=3600)
+    assert session.device_ports.ranges[0].start == 1024
+    assert session.device_ports.ranges[0].end == 3000
 
 def test_creating_qod_session_with_service_ports(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
