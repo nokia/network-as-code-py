@@ -76,6 +76,8 @@ def test_creating_a_qos_flow_with_service_port_and_device_port(client, device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L", device_ports=PortsSpec(ports=[20000]), duration=3600)
     
     assert session.service_ports.ports == [80]
+    assert session.device_ports.ports == [20000]
+
     session.delete()
 
 def test_creating_a_qos_flow_with_service_ipv6(client, device):
@@ -102,6 +104,13 @@ def test_creating_a_qos_flow_with_service_port_range(client, device):
 
     assert session.service_ports.ranges[0].start == 80
     assert session.service_ports.ranges[0].end == 443
+    session.delete()
+
+def test_creating_a_qos_flow_with_device_port_range(client, device):
+    session = device.create_qod_session(service_ipv4="5.6.7.8", device_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L", duration=3600)
+
+    assert session.device_ports.ranges[0].start == 80
+    assert session.device_ports.ranges[0].end == 443
     session.delete()
 
 def test_creating_a_qos_flow_with_duration(client, device):

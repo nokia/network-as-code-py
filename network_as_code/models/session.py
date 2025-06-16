@@ -72,6 +72,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
         started_at (Union[datetime, None]): Starting time of the session.
         expires_at (Union[datetime, None]): Expiry time of the session.
         device (Device): Session belongs to device.
+        device_ports (Union[PortsSpec, None]): List of ports for a device.
     #### Public Methods:
         delete (None): Deletes a given session.
         extend (None): Extends the duration of a given session.
@@ -89,6 +90,7 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
     device: Device # ForwardRef value is used here
     service_ipv4: Union[str, None] = None
     service_ipv6: Union[str, None] = None
+    device_ports: Union[PortsSpec, None] = None
     service_ports: Union[PortsSpec, None] = None
 
 
@@ -132,12 +134,13 @@ class QoDSession(BaseModel, arbitrary_types_allowed=True):
             else None
         )
         service = session.get("applicationServer")
+        device_ports = session.get('devicePorts')
         service_ports = session.get('applicationServerPorts')
         return QoDSession(
             api=api,
             id=session["sessionId"],
             device=device,
-            device_ports=None,
+            device_ports=PortsSpec(**device_ports) if device_ports else None,
             service_ipv4=service.get("ipv4Address") if service else None,
             service_ipv6=service.get("ipv6Address") if service else None,
             service_ports=PortsSpec(**service_ports) if service_ports else None,
