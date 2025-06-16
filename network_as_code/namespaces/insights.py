@@ -76,8 +76,8 @@ class NetworkInsights(Namespace):
             api=self.api,
             id=json_data.get("subscriptionId"),
             starts_at=(
-                datetime.fromisoformat(json_data.get("startsAt"))
-                if json_data.get("startsAt")
+                datetime.fromisoformat(json_data.get("startedAt"))
+                if json_data.get("startedAt")
                 else None
             ),
             expires_at=(

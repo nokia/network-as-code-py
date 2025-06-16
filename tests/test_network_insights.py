@@ -160,7 +160,7 @@ def test_subscription_stores_start_and_expiry_as_datetime(httpx_mock, client):
         method="GET",
         json={
             "subscriptionId": "asd",
-            "startsAt": "2024-04-18T10:50:43.991418+00:00",
+            "startedAt": "2024-04-18T10:50:43.991418+00:00",
             "expiresAt": "2024-04-18T10:50:43.991418+00:00"
         }
     )
