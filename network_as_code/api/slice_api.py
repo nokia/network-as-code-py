@@ -42,7 +42,6 @@ class SliceAPI:
         network_id,
         slice_info,
         notification_url,
-        modify: bool = False,
         name: Optional[str] = None,
         notification_auth_token: Optional[str] = None,
         area_of_service: Optional[Any] = None,
@@ -86,12 +85,7 @@ class SliceAPI:
         if device_downlink_throughput:
             body["deviceDownlinkThroughput"] = device_downlink_throughput.model_dump(mode='json')
 
-        if modify:
-            if name is None:
-                raise ValueError("Name is mandatory for modify")
-            response = self.client.put(url=f"/slices/{name}", json=body)
-        else:
-            response = self.client.post(url="/slices", json=body)
+        response = self.client.post(url="/slices", json=body)
 
         error_handler(response)
 
