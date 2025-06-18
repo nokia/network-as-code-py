@@ -46,21 +46,6 @@ def test_creating_a_slice(client, setup_and_cleanup_slice_data):
     assert slice.network_identifier.mnc == '30'
     assert slice.network_identifier.mcc == '236'
 
-@pytest.mark.skip
-@pytest.mark.asyncio
-async def test_modifying_a_slice(client, setup_and_cleanup_slice_data):
-    my_slice = setup_and_cleanup_slice_data
-
-    await my_slice.wait_for(desired_state="AVAILABLE")
-
-    my_slice.modify(
-        max_devices=10,
-        max_data_connections=20
-    )
-
-    assert my_slice.max_devices == 10
-    assert my_slice.max_data_connections == 20
-
 def test_creating_a_slice_with_optional_args(client,notification_base_url):
     slice = client.slices.create(
         name=f'slice{random.randint(1, 1000)}',

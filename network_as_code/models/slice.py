@@ -155,7 +155,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
         The slice state must not be active to perform this operation.
         refresh (None): Refresh the state of the network slice.
         wait_for (str): Wait until a slice is no longer PENDING or until specified state is reached, returns state
-        modify (OptionalArgs): Modify the parameters for an existing slice
 
     #### Callback Functions:
         on_creation ():
@@ -236,66 +235,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
                 guaranteed=throughput.guaranteed, maximum=throughput.maximum
             )
         return None
-
-    def modify(
-        self,
-        slice_downlink_throughput: Optional[Throughput] = None,
-        slice_uplink_throughput: Optional[Throughput] = None,
-        device_downlink_throughput: Optional[Throughput] = None,
-        device_uplink_throughput: Optional[Throughput] = None,
-        max_data_connections: Optional[int] = None,
-        max_devices: Optional[int] = None,
-    ):
-        """Modify the parameters for an existing slice.
-
-        #### Args:
-            slice_downlink_throughput (Optional[Throughput]): Specify the amount of bandwidth the slice can get.
-            slice_uplink_throughput (Optional[Throughput]): Specify the amount of bandwidth the slice can get.
-            device_downlink_throughput (Optional[Throughput]): Specify the amount of bandwidth the device can get.
-            device_uplink_throughput (Optional[Throughput]): Specify the amount of bandwidth the device can get.
-            max_data_connections (Optional[int]): Maximum number of data connection sessions in the slice.
-            max_devices (Optional[int]): Maximum number of devices in the slice.
-
-        #### Example:
-            ```python
-            slice.modify(
-                    max_data_connections = 12,
-                    max_devices = 3,
-                    slice_downlink_throughput=Throughput(guaranteed=10, maximum=10),
-                    slice_uplink_throughput=Throughput(guaranteed=10, maximum=10),
-                    device_downlink_throughput=Throughput(guaranteed=10, maximum=10),
-                    device_uplink_throughput=Throughput(guaranteed=10, maximum=10)
-            )
-            ```
-        """
-
-        self._api.slicing.create(
-            modify=True,
-            network_id=self.network_identifier,
-            slice_info=self.slice_info,
-            notification_url=self.notification_url,
-            notification_auth_token=self.notification_auth_token,
-            name=self.name,
-            area_of_service=self.area_of_service,
-            slice_downlink_throughput=self._to_api_throughput(
-                slice_downlink_throughput
-            ),
-            slice_uplink_throughput=self._to_api_throughput(slice_uplink_throughput),
-            device_downlink_throughput=self._to_api_throughput(
-                device_downlink_throughput
-            ),
-            device_uplink_throughput=self._to_api_throughput(device_uplink_throughput),
-            max_data_connections=max_data_connections,
-            max_devices=max_devices,
-        )
-
-        # Update model (if no exception on modify)
-        self.slice_downlink_throughput = slice_downlink_throughput
-        self.slice_uplink_throughput = slice_uplink_throughput
-        self.device_downlink_throughput = device_downlink_throughput
-        self.device_uplink_throughput = device_uplink_throughput
-        self.max_data_connections = max_data_connections
-        self.max_devices = max_devices
 
     def delete(self) -> None:
         """Delete network slice.
