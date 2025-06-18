@@ -25,39 +25,39 @@ from. number_verification_api import NumberVerificationAPI
 
 QOS_BASE_URL_PROD = "https://quality-of-service-on-demand.p-eu.rapidapi.com"
 QOS_RAPID_HOST_PROD = "quality-of-service-on-demand.nokia.rapidapi.com"
-QOS_BASE_URL_DEV = "https://qos-on-demand2.p-eu.rapidapi.com"
+QOS_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/qod/v0"
 
-LOCATION_VERIFY_BASE_URL_PROD = "https://location-verification.p-eu.rapidapi.com"
+LOCATION_VERIFY_BASE_URL_PROD = "https://location-verification.p-eu.rapidapi.com/v1"
 LOCATION_VERIFY_RAPID_HOST_PROD = "location-verification.nokia.rapidapi.com"
-LOCATION_VERIFY_BASE_URL_DEV = "https://location-verification5.p-eu.rapidapi.com"
+LOCATION_VERIFY_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/location-verification/v1"
 
 LOCATION_RETRIEVE_BASE_URL_PROD = "https://location-retrieval.p-eu.rapidapi.com"
 LOCATION_RETRIEVE_RAPID_HOST_PROD = "location-retrieval.nokia.rapidapi.com"
-LOCATION_RETRIEVE_BASE_URL_DEV = "https://location-retrieval3.p-eu.rapidapi.com"
+LOCATION_RETRIEVE_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/location-retrieval/v0"
 
 SLICE_BASE_URL_PROD = "https://network-slicing.p-eu.rapidapi.com"
 SLICE_RAPID_HOST_PROD = "network-slicing.nokia.rapidapi.com"
-SLICE_BASE_URL_DEV = "https://network-slicing2.p-eu.rapidapi.com"
+SLICE_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/slice/v1"
 
 SLICE_ATTACH_BASE_URL_PROD = "https://network-slice-device-attachment.p-eu.rapidapi.com"
 SLICE_ATTACH_RAPID_HOST_PROD = "network-slice-device-attachment.nokia.rapidapi.com"
-SLICE_ATTACH_BASE_URL_DEV = "https://device-application-attach.p-eu.rapidapi.com"
+SLICE_ATTACH_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/device-attach/v0"
 
 DEVICE_STATUS_BASE_URL_PROD = "https://device-status.p-eu.rapidapi.com"
 DEVICE_STATUS_RAPID_HOST_PROD = "device-status.nokia.rapidapi.com"
-DEVICE_STATUS_BASE_URL_DEV = "https://device-status1.p-eu.rapidapi.com"
+DEVICE_STATUS_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/device-status/v0"
 
 CONGESTION_BASE_URL_PROD = "https://congestion-insights.p-eu.rapidapi.com"
 CONGESTION_RAPID_HOST_PROD = "congestion-insights.nokia.rapidapi.com"
-CONGESTION_BASE_URL_DEV = "https://congestion-insights.p-eu.rapidapi.com"
+CONGESTION_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/congestion-insights/v0"
 
 SIM_SWAP_BASE_URL_PROD = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
 SIM_SWAP_RAPID_HOST_PROD = "sim-swap.nokia.rapidapi.com"
-SIM_SWAP_BASE_URL_DEV = "https://simswap.p-eu.rapidapi.com/sim-swap/sim-swap/v0"
+SIM_SWAP_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0"
 
 GEOFENCING_BASE_URL_PROD = "https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3"
 GEOFENCING_RAPID_HOST_PROD = "geofencing-subscription.nokia.rapidapi.com"
-GEOFENCING_BASE_URL_DEV = "https://geofencing-subscription.p-eu.rapidapi.com/v0.3"
+GEOFENCING_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/geofencing-subscriptions/v0.3"
 
 CREDENTIALS_BASE_URL_PROD = "https://nac-authorization-server.p-eu.rapidapi.com"
 CREDENTIALS_RAPID_HOST_PROD = "nac-authorization-server.nokia.rapidapi.com"
@@ -69,7 +69,7 @@ AUTHORIZATION_BASE_URL_DEV = "https://well-known-metadata.p-eu.rapidapi.com"
 
 NUMBER_VERIFICATION_BASE_URL_PROD = "https://number-verification.p-eu.rapidapi.com"
 NUMBER_VERIFICATION_RAPID_HOST_PROD = "number-verification.nokia.rapidapi.com"
-NUMBER_VERIFICATION_BASE_URL_DEV = "https://number-verification.p-eu.rapidapi.com"
+NUMBER_VERIFICATION_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0"
 
 class APIClient:
     """A client for communicating with Network as Code APIs.
