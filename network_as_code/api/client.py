@@ -69,7 +69,9 @@ AUTHORIZATION_BASE_URL_DEV = "https://well-known-metadata.p-eu.rapidapi.com"
 
 NUMBER_VERIFICATION_BASE_URL_PROD = "https://number-verification.p-eu.rapidapi.com"
 NUMBER_VERIFICATION_RAPID_HOST_PROD = "number-verification.nokia.rapidapi.com"
-NUMBER_VERIFICATION_BASE_URL_DEV = "https://network-as-code1.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0"
+NUMBER_VERIFICATION_BASE_URL_DEV = (
+    "https://network-as-code1.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0"
+    )
 
 class APIClient:
     """A client for communicating with Network as Code APIs.
