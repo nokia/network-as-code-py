@@ -217,9 +217,9 @@ class APIClient:
             base_url = credentials_base_url,
             rapid_key = token,
             rapid_host=(
-                credentials_base_url.replace("https://", "").replace("p-eu", "nokia")
+                rapid_host_prod
                 if not dev_mode
-                else credentials_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+                else rapid_host_prod.replace(".nokia", "1.nokia-dev")
             ),
         )
 
@@ -227,8 +227,8 @@ class APIClient:
             base_url = authorization_base_url,
             rapid_key = token,
             rapid_host=(
-                authorization_base_url.replace("https://", "").replace("p-eu", "nokia")
+                rapid_host_prod
                 if not dev_mode
-                else authorization_base_url.replace("https://", "").replace("p-eu", "nokia-dev")
+                else rapid_host_prod.replace(".nokia", "1.nokia-dev")
             ),
         )
