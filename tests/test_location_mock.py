@@ -17,7 +17,7 @@ def device(client) -> Device:
 
 
 def test_get_location(httpx_mock: httpx_mock, device):
-    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
+    url = "https://network-as-code.p-eu.rapidapi.com/location-retrieval/v0/retrieve"
 
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
@@ -65,7 +65,7 @@ def test_get_location(httpx_mock: httpx_mock, device):
     assert location.radius == 10000
 
 def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
-    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
+    url = "https://network-as-code.p-eu.rapidapi.com/location-retrieval/v0/retrieve"
 
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
@@ -113,7 +113,7 @@ def test_get_location_without_maxage(httpx_mock: httpx_mock, device):
     assert location.radius == 10000
 
 def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
-    url = "https://location-retrieval.p-eu.rapidapi.com/retrieve"
+    url = "https://network-as-code.p-eu.rapidapi.com/location-retrieval/v0/retrieve"
 
     mock_response = {
         "lastLocationTime": "2023-09-12T11:41:28+03:00",
@@ -152,7 +152,7 @@ def test_get_location_without_civic_address(httpx_mock: httpx_mock, device):
     assert location.radius == 10000
 
 def test_verify_location(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/v1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/location-verification/v1/verify"
 
     httpx_mock.add_response(
         url=url, 
@@ -185,7 +185,7 @@ def test_verify_location(httpx_mock: httpx_mock, device):
     assert location_verification.result_type == "TRUE"
 
 def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/v1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/location-verification/v1/verify"
 
     httpx_mock.add_response(
         url=url, 
@@ -219,7 +219,7 @@ def test_verify_location_with_max_age(httpx_mock: httpx_mock, device):
     assert location_verification.last_location_time == datetime.fromisoformat("2023-09-11T18:34:01+03:00")
 
 def test_verify_partial_location(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/v1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/location-verification/v1/verify"
 
     httpx_mock.add_response(
         url=url, 
@@ -255,7 +255,7 @@ def test_verify_partial_location(httpx_mock: httpx_mock, device):
     assert location_verification.match_rate == 74
 
 def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/v1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/location-verification/v1/verify"
 
     httpx_mock.add_response(
         url=url, 
@@ -289,7 +289,7 @@ def test_verify_location_raises_exception_if_unauthenticated(httpx_mock: httpx_m
         device.verify_location(longitude=19, latitude=47, radius=10_000)
 
 def test_verify_location_raises_exception_if_server_fails(httpx_mock: httpx_mock, device):
-    url = f"https://location-verification.p-eu.rapidapi.com/v1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/location-verification/v1/verify"
 
     httpx_mock.add_response(
         url=url, 
