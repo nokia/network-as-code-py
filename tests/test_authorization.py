@@ -7,7 +7,7 @@ import json
 from unittest.mock import patch
 
 def test_get_credentials(httpx_mock, client):
-    url = "https://nac-authorization-server.p-eu.rapidapi.com/auth/clientcredentials"
+    url = "https://network-as-code.p-eu.rapidapi.com/oauth2/v1/auth/clientcredentials"
 
     mock_response = {    
         "client_id": "my-client-id",
@@ -26,7 +26,7 @@ def test_get_credentials(httpx_mock, client):
     assert credentials.client_secret == "my-client-secret"
 
 def test_get_credentials_raises_exception_if_server_fails(httpx_mock, client):
-    url = "https://nac-authorization-server.p-eu.rapidapi.com/auth/clientcredentials"
+    url = "https://network-as-code.p-eu.rapidapi.com/oauth2/v1/auth/clientcredentials"
 
     mock_response = {
         "message": "Internal server error" 
@@ -43,7 +43,7 @@ def test_get_credentials_raises_exception_if_server_fails(httpx_mock, client):
         client.authorization.credentials()
 
 def test_get_credentials_api_error(httpx_mock, client):
-    url = "https://nac-authorization-server.p-eu.rapidapi.com/auth/clientcredentials"
+    url = "https://network-as-code.p-eu.rapidapi.com/oauth2/v1/auth/clientcredentials"
 
     httpx_mock.add_response(
         url=url, 
@@ -55,7 +55,7 @@ def test_get_credentials_api_error(httpx_mock, client):
         client.authorization.credentials()
 
 def test_get_auth_endpoints(httpx_mock, client):
-    url = "https://well-known-metadata.p-eu.rapidapi.com/openid-configuration"
+    url = "https://network-as-code.p-eu.rapidapi.com/.well-known/openid-configuration"
 
     mock_response = {
         "authorization_endpoint": "authorization-endpoint",
@@ -74,7 +74,7 @@ def test_get_auth_endpoints(httpx_mock, client):
     assert endpoints.token_endpoint == "token-endpoint"
 
 def test_get_auth_endpoints_raises_exception_if_server_fails(httpx_mock, client):
-    url = "https://well-known-metadata.p-eu.rapidapi.com/openid-configuration"
+    url = "https://network-as-code.p-eu.rapidapi.com/.well-known/openid-configuration"
 
     mock_response = {
         "message": "Internal server error" 
@@ -91,7 +91,7 @@ def test_get_auth_endpoints_raises_exception_if_server_fails(httpx_mock, client)
         client.authorization.auth_endpoints()
 
 def test_get_auth_endpoints_api_error(httpx_mock, client):
-    url = "https://well-known-metadata.p-eu.rapidapi.com/openid-configuration"
+    url = "https://network-as-code.p-eu.rapidapi.com/.well-known/openid-configuration"
 
     httpx_mock.add_response(
         url=url, 
