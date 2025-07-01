@@ -45,13 +45,9 @@ NUMBER_VERIFICATION_BASE_URL_PROD = (
     "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0"
     )
 
-CREDENTIALS_BASE_URL_PROD = "https://nac-authorization-server.p-eu.rapidapi.com"
-CREDENTIALS_RAPID_HOST_PROD = "nac-authorization-server.nokia.rapidapi.com"
-CREDENTIALS_BASE_URL_DEV = "https://nac-authorization-server.p-eu.rapidapi.com"
+CREDENTIALS_BASE_URL_PROD = "https://network-as-code.p-eu.rapidapi.com/oauth2/v1"
 
-AUTHORIZATION_BASE_URL_PROD = "https://well-known-metadata.p-eu.rapidapi.com"
-AUTHORIZATION_RAPID_HOST_PROD = "well-known-metadata.nokia.rapidapi.com"
-AUTHORIZATION_BASE_URL_DEV = "https://well-known-metadata.p-eu.rapidapi.com"
+AUTHORIZATION_BASE_URL_PROD = "https://network-as-code.p-eu.rapidapi.com/.well-known"
 
 RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 
@@ -113,10 +109,10 @@ class APIClient:
             number_verification_base_url = number_verification_base_url.replace(".p-eu", "1.p-eu")
 
         if dev_mode and credentials_base_url == CREDENTIALS_BASE_URL_PROD:
-            credentials_base_url = CREDENTIALS_BASE_URL_DEV
+            credentials_base_url = credentials_base_url.replace(".p-eu", "1.p-eu")
 
         if dev_mode and authorization_base_url == AUTHORIZATION_BASE_URL_PROD:
-            authorization_base_url = AUTHORIZATION_BASE_URL_DEV
+            authorization_base_url = authorization_base_url.replace(".p-eu", "1.p-eu")
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
