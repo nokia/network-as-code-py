@@ -14,7 +14,7 @@ def device(client) -> Device:
 
 def test_creating_geofencing_subscription_area_entered_type(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
         method="POST",
         json={
             "protocol": "HTTP",
@@ -101,7 +101,7 @@ def test_creating_geofencing_subscription_area_entered_type(httpx_mock, client):
 
 def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
         method="POST",
         json={
             "protocol": "HTTP",
@@ -186,7 +186,7 @@ def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, clie
 
 def test_creating_geofencing_subscription_sink_credential_plain(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
         method= "POST",
         json={
             "protocol": "HTTP",
@@ -284,7 +284,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(httpx_mock, clie
 
 def test_creating_geofencing_subscription_sink_credential_bearer(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
         method= "POST",
         json={
             "protocol": "HTTP",
@@ -385,7 +385,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(httpx_mock, cli
 
 def test_getting_geofencing_subscription(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
         method="GET",
         json={
             "protocol": "HTTP",
@@ -426,7 +426,7 @@ def test_getting_geofencing_subscription(httpx_mock, client):
 
 def test_getting_geofencing_subscriptions(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
         method="GET",
         json=[
             {
@@ -510,7 +510,7 @@ def test_getting_geofencing_subscriptions(httpx_mock, client):
 
 def test_deleting_geofencing_subscription(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
         method="GET",
         json={
             "protocol": "HTTP",
@@ -550,7 +550,7 @@ def test_deleting_geofencing_subscription(httpx_mock, client):
     subscription = client.geofencing.get("de87e438-58b4-42c3-9d49-0fbfbd878305")
 
     httpx_mock.add_response(
-        url="https://geofencing-subscriptions.p-eu.rapidapi.com/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions/de87e438-58b4-42c3-9d49-0fbfbd878305",
         method="DELETE",
     )
     subscription.delete()

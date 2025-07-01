@@ -14,7 +14,7 @@ def device(client) -> Device:
     return device
 
 def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
-    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/retrieve-date"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date"
 
     mock_response = {
         "latestSimChange": "2024-06-19T10:36:59.976Z",
@@ -34,7 +34,7 @@ def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
     assert latest_sim_swap_date == datetime.fromisoformat("2024-06-19T10:36:59.976+00:00")
 
 def test_get_sim_swap_date_no_response(httpx_mock: httpx_mock, device):
-    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/retrieve-date"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date"
 
     mock_response = {}
 
@@ -64,7 +64,7 @@ def test_verify_sim_swap_with_no_phone_number(client):
         device.verify_sim_swap()
 
 def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
-    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/check"
 
     mock_response = {
         "swapped": True,
@@ -82,7 +82,7 @@ def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
     assert device.verify_sim_swap(max_age=None) == True
 
 def test_verify_sim_swap_with_max_age(httpx_mock: httpx_mock, device):
-    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/check"
 
     mock_response = {
         "swapped": True,
@@ -102,7 +102,7 @@ def test_verify_sim_swap_with_max_age(httpx_mock: httpx_mock, device):
 
 # This test actually tests the error handler class by taking simswap as use-case
 def test_error_trace_info(httpx_mock, device):
-    url = "https://sim-swap.p-eu.rapidapi.com/sim-swap/sim-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/check"
     httpx_mock.add_response(
         url=url,
         match_json={

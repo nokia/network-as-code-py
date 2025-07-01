@@ -19,7 +19,7 @@ def camara_device(client) -> Device:
 
 def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/query",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/query",
         method="POST",
         json=[
             {
@@ -47,7 +47,7 @@ def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client,
 
 def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/query",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/query",
         method="POST",
         json=[
             {
@@ -76,7 +76,7 @@ def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
 
 def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions",
         method="POST",
         json={
             "subscriptionId": "asd",
@@ -106,7 +106,7 @@ def test_can_subscribe_to_congestion_reports(httpx_mock, client, camara_device):
 
 def test_can_delete_subscription(httpx_mock, client, camara_device):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions",
         method="POST",
         json={
             "subscriptionId": "asd",
@@ -131,7 +131,7 @@ def test_can_delete_subscription(httpx_mock, client, camara_device):
     )
 
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions/asd",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions/asd",
         method="DELETE"
     )
 
@@ -139,7 +139,7 @@ def test_can_delete_subscription(httpx_mock, client, camara_device):
 
 def test_get_subscription_by_id(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions/asd",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions/asd",
         method="GET",
         json={
             "subscriptionId": "asd",
@@ -156,7 +156,7 @@ def test_get_subscription_by_id(httpx_mock, client):
 
 def test_subscription_stores_start_and_expiry_as_datetime(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions/asd",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions/asd",
         method="GET",
         json={
             "subscriptionId": "asd",
@@ -173,7 +173,7 @@ def test_subscription_stores_start_and_expiry_as_datetime(httpx_mock, client):
 
 def test_get_subscriptions(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://congestion-insights.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/subscriptions",
         method="GET",
         json=[
             {
