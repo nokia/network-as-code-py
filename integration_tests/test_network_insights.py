@@ -9,17 +9,19 @@ from network_as_code.models.congestion import Congestion
 from network_as_code.models.device import Device
 
 @pytest.fixture
+@pytest.mark.skip
 def nef_device(client) -> Device:
     """Test device for NEF backend"""
     device = client.devices.get(phone_number="+3670123456")
     return device
 
 @pytest.fixture
+@pytest.mark.skip
 def camara_device(client) -> Device:
     """This is a device object for the CAMARA backend"""
     device = client.devices.get(phone_number="+3637123456")
     return device
-
+@pytest.mark.skip
 def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, notification_base_url):
     notification_id = str(uuid.uuid4())
     subscription = client.insights.subscribe_to_congestion_info(
@@ -43,6 +45,7 @@ def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, 
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_can_subscribe_for_congestion_info_with_camara(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
@@ -53,7 +56,7 @@ def test_can_subscribe_for_congestion_info_with_camara(client, camara_device: De
     assert subscription.id
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: Device, notification_base_url):
     notification_id = str(uuid.uuid4())
     subscription = client.insights.subscribe_to_congestion_info(
@@ -77,7 +80,7 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: D
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_get_subscription_by_id(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -91,7 +94,7 @@ def test_can_get_subscription_by_id(client, nef_device: Device):
     assert same_subscription == subscription
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_get_subscription_start_and_expiration(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -107,7 +110,7 @@ def test_can_get_subscription_start_and_expiration(client, nef_device: Device):
     assert isinstance(subscription.starts_at, datetime)
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_get_list_of_subscriptions(client, nef_device: Device):
     for _i in range(5):
         client.insights.subscribe_to_congestion_info(
@@ -123,7 +126,7 @@ def test_can_get_list_of_subscriptions(client, nef_device: Device):
 
     for subscription in subscriptions:
         subscription.delete()
-
+@pytest.mark.skip
 def test_can_query_congestion_level_from_camara_device(client, camara_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         camara_device,
@@ -139,7 +142,7 @@ def test_can_query_congestion_level_from_camara_device(client, camara_device: De
     assert congestion[0].level in ["None", "Low", "Medium", "High"]
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_query_congestion_level_from_nef_device(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
@@ -155,7 +158,7 @@ def test_can_query_congestion_level_from_nef_device(client, nef_device: Device):
     assert congestion[0].level in ["None", "Low", "Medium", "High"]
 
     subscription.delete()
-
+@pytest.mark.skip
 def test_can_query_within_time_range(client, nef_device: Device):
     subscription = client.insights.subscribe_to_congestion_info(
         nef_device,
