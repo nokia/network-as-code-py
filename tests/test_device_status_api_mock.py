@@ -24,7 +24,7 @@ def device_with_just_phone_number(client) -> Device:
 
 def test_updated_device_status_subscription_creation(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://device-status.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/subscriptions",
         method="POST",
         json={
             "subscriptionDetail": {
@@ -81,7 +81,7 @@ def test_updated_device_status_subscription_creation(httpx_mock, client):
 
 def test_subscribing_using_datetime(httpx_mock, client):
     httpx_mock.add_response(
-        url="https://device-status.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/subscriptions",
         method="POST",
         json={
             "subscriptionDetail": {
@@ -281,7 +281,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
-        url="https://device-status.p-eu.rapidapi.com/subscriptions/test-subscription",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/subscriptions/test-subscription",
         method="GET",
         json={
             "subscriptionId": "test-subscription",
@@ -332,7 +332,7 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
     subscription = client.connectivity.get_subscription("test-subscription")
 
     httpx_mock.add_response(
-        url="https://device-status.p-eu.rapidapi.com/subscriptions/test-subscription",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/subscriptions/test-subscription",
         method="DELETE",
     )
 
@@ -341,7 +341,7 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
 def test_get_subscriptions(httpx_mock, device, client):
     httpx_mock.add_response(
         method="GET",
-        url="https://device-status.p-eu.rapidapi.com/subscriptions",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/subscriptions",
         json=[
             {
                 "subscriptionDetail": {
@@ -433,7 +433,7 @@ def test_get_subscriptions(httpx_mock, device, client):
 def test_poll_connectivity(httpx_mock, device, client):
     httpx_mock.add_response(
         method="POST",
-        url="https://device-status.p-eu.rapidapi.com/connectivity",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/connectivity",
         json={
             "connectivityStatus": "CONNECTED_DATA"
         },
@@ -456,7 +456,7 @@ def test_poll_connectivity(httpx_mock, device, client):
 def test_poll_roaming(httpx_mock, device, client):
     httpx_mock.add_response(
         method="POST",
-        url="https://device-status.p-eu.rapidapi.com/roaming",
+        url="https://network-as-code.p-eu.rapidapi.com/device-status/v0/roaming",
         json={
             "roaming": True,
             "countryCode": 358,

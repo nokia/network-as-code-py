@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 6.0.0
+
+Breaking Changes:
+- Introduced one main API with all features available as separate endpoints.
+
+Deprications:
+- Slice modification endpoint is no longer supported.
+
 ## Version 5.2.1
 
 Fixes:

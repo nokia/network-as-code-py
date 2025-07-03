@@ -15,8 +15,8 @@ def device(client) -> Device:
 
 """
 
-POST request on https://number-verification.p-eu.rapidapi.com/verify with b'{"phoneNumber":"3637123456"}' body amongst:
-POST request on https://number-verification.p-eu.rapidapi.com/verify with b'{"phoneNumber": "3637123456"}' body
+POST request on https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify with b'{"phoneNumber":"3637123456"}' body amongst:
+POST request on https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify with b'{"phoneNumber": "3637123456"}' body
 """
 
 def test_verify_number(httpx_mock, device):
@@ -27,7 +27,7 @@ def test_verify_number(httpx_mock, device):
         }
 
         httpx_mock.add_response(
-            url= "https://number-verification.p-eu.rapidapi.com/verify",
+            url= "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify",
             method= 'POST',
             match_json={
                 "phoneNumber": "3637123456"
@@ -45,7 +45,7 @@ def test_get_device_phone_number(httpx_mock, device):
         }
 
         httpx_mock.add_response(
-            url= "https://number-verification.p-eu.rapidapi.com/device-phone-number",
+            url= "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
             method= 'GET',
             json= mock_response,
         )
@@ -54,7 +54,7 @@ def test_get_device_phone_number(httpx_mock, device):
 
 def test_verify_number_unauthenticated(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='invalid-token', token_type='Bearer', expires_in=12345)):
-        url = "https://number-verification.p-eu.rapidapi.com/verify"
+        url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify"
 
         mock_response = {
             "message": "Request not authenticated due to missing, invalid, or expired credentials"
@@ -76,7 +76,7 @@ def test_verify_number_unauthenticated(httpx_mock, device):
 
 def test_number_verification_api_error(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
-        url = "https://number-verification.p-eu.rapidapi.com/verify"
+        url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify"
         httpx_mock.add_response(
             url=url,
             method="POST",

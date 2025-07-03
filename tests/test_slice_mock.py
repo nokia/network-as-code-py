@@ -152,7 +152,7 @@ def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         method="POST",
         match_json=slice_payload,
         json=slice_response,
-        url="https://network-slicing.p-eu.rapidapi.com/slices"
+        url="https://network-as-code.p-eu.rapidapi.com/slice/v1/slices"
     )
 
     slice = client.slices.create(
@@ -163,153 +163,6 @@ def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     )
     assert slice.name == slice_payload['name']
     assert slice.state == slice_response['state']
-
-def test_modifying_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
-    slice_payload = {
-        "networkIdentifier": {
-            "mnc": "30",
-            "mcc": "236"
-        },
-        "sliceInfo": {
-            "serviceType": "eMBB",
-            "differentiator": "AAABBB"
-        },
-        "notificationUrl": "https://example.com/notify",
-        "name": "slicefour"
-    }
-
-    slice_response_original = {
-        "slice": {
-            "name": "slicefour",
-            "notificationUrl": "",
-            "notificationAuthToken": "samplenotificationtoken",
-            "networkIdentifier": {
-                "mcc": "236",
-                "mnc": "30"
-            },
-            "sliceInfo": {
-                "serviceType": "eMBB",
-                "differentiator": "AAABBB"
-            },
-            "maxDataConnections": 12,
-            "maxDevices": 3,
-        },
-        "startPollingAt": 1691482014,
-        "csi_id": "csi_989",
-        "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
-        "administrativeState": None,
-        "state": "PENDING"
-    }
-
-    slice_modification_payload = {
-        "networkIdentifier": {
-            "mnc": "30",
-            "mcc": "236"
-        },
-        "sliceInfo": {
-            "serviceType": "eMBB",
-            "differentiator": "AAABBB"
-        },
-        "notificationUrl": "https://example.com/notify",
-        "name": "slicefour",
-        "maxDataConnections": 12,
-        "maxDevices": 3,
-        "sliceDownlinkThroughput": {
-            "guaranteed": 10.0,
-            "maximum": 10.0
-        },
-        "sliceUplinkThroughput": {
-            "guaranteed": 10.0,
-            "maximum": 10.0
-        },
-        "deviceUplinkThroughput": {
-            "guaranteed": 10.0,
-            "maximum": 10.0
-        },
-        "deviceDownlinkThroughput": {
-            "guaranteed": 10.0,
-            "maximum": 10.0
-        },
-    }
-
-    slice_response_modified = {
-        "slice": {
-            "name": "slicefour",
-            "notificationUrl": "",
-            "notificationAuthToken": "samplenotificationtoken",
-            "networkIdentifier": {
-                "mcc": "236",
-                "mnc": "30"
-            },
-            "sliceInfo": {
-                "serviceType": "eMBB",
-                "differentiator": "AAABBB"
-            },
-            "maxDataConnections": 12,
-            "maxDevices": 3,
-            "sliceDownlinkThroughput": {
-                "guaranteed": 10.0,
-                "maximum": 10.0
-            },
-            "sliceUplinkThroughput": {
-                "guaranteed": 10.0,
-                "maximum": 10.0
-            },
-            "deviceDownlinkThroughput": {
-                "guaranteed": 10.0,
-                "maximum": 10.0
-            },
-            "deviceUplinkThroughput": {
-                "guaranteed": 10.0,
-                "maximum": 10.0
-            },
-        },
-        "startPollingAt": 1691482014,
-        "csi_id": "csi_989",
-        "order_id": "6ed9b1b3-a6c5-49c2-8fa7-5cf70ba8fc23",
-        "administrativeState": None,
-        "state": "PENDING"
-    }
-
-    httpx_mock.add_response(
-        method="POST",
-        match_json=slice_payload,
-        json=slice_response_original,
-        url="https://network-slicing.p-eu.rapidapi.com/slices"
-    )
-
-    slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc='236', mnc='30'),
-        slice_info=SliceInfo(service_type='eMBB', differentiator='AAABBB'),
-        notification_url="https://example.com/notify",
-        name="slicefour",
-    )
-
-    assert not slice.max_data_connections
-    assert not slice.max_data_connections
-
-    httpx_mock.add_response(
-        method="PUT",
-        match_json=slice_modification_payload,
-        json=slice_response_modified,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/slicefour"
-    )
-
-    slice.modify(
-        max_data_connections=12,
-        max_devices=3,
-        slice_downlink_throughput=Throughput(guaranteed=10, maximum=10),
-        slice_uplink_throughput=Throughput(guaranteed=10, maximum=10),
-        device_downlink_throughput=Throughput(guaranteed=10, maximum=10),
-        device_uplink_throughput=Throughput(guaranteed=10, maximum=10)
-    )
-
-    assert slice.max_data_connections == 12
-    assert slice.max_devices == 3
-    assert slice.slice_uplink_throughput
-    assert slice.slice_downlink_throughput
-    assert slice.device_uplink_throughput
-    assert slice.device_downlink_throughput
 
 def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     slices = [
@@ -375,7 +228,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[{
             "nac_resource_id": "attachment-1",
             "resource": {
@@ -405,7 +258,7 @@ def test_get_all_slices(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slicing.p-eu.rapidapi.com/slices",
+        url="https://network-as-code.p-eu.rapidapi.com/slice/v1/slices",
         json=slices
     )
     client.slices.get_all()
@@ -415,11 +268,11 @@ def test_get_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[{
             "nac_resource_id": "attachment-1",
             "resource": {
@@ -470,11 +323,11 @@ def test_get_slice_with_no_differentiator(httpx_mock: HTTPXMock, client: Network
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE_RES,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE_RES['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE_RES['slice']['name']}"
     )
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[]
     )
     
@@ -486,11 +339,11 @@ def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[{
             "nac_resource_id": "attachment-1",
             "resource": {
@@ -528,7 +381,7 @@ def test_refresh_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="GET",
         json=modified_slice,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     my_slice.refresh()
@@ -540,11 +393,11 @@ async def test_slice_wait_for_polls_to_completion(httpx_mock: HTTPXMock, client:
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[{
             "nac_resource_id": "attachment-1",
             "resource": {
@@ -579,7 +432,7 @@ async def test_slice_wait_for_polls_to_completion(httpx_mock: HTTPXMock, client:
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     modified_slice = copy.deepcopy(MOCK_SLICE)
@@ -588,7 +441,7 @@ async def test_slice_wait_for_polls_to_completion(httpx_mock: HTTPXMock, client:
     httpx_mock.add_response(
         method="GET",
         json=modified_slice,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     await my_slice.wait_for()
@@ -600,11 +453,11 @@ async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
     httpx_mock.add_response(
         method="GET",
-        url="https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url="https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json=[{
             "nac_resource_id": "attachment-1",
             "resource": {
@@ -639,7 +492,7 @@ async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     modified_slice = copy.deepcopy(MOCK_SLICE)
@@ -648,7 +501,7 @@ async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock
     httpx_mock.add_response(
         method="GET",
         json=modified_slice,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     await my_slice.wait_for()
@@ -659,7 +512,7 @@ async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock
     httpx_mock.add_response(
         method="GET",
         json=modified_slice,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     await my_slice.wait_for(desired_state="OPERATING")
@@ -669,7 +522,7 @@ async def test_slice_wait_for_can_wait_for_arbitrary_state(httpx_mock: HTTPXMock
 def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="POST",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/activate"
+        url="https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/sliceone/activate"
     )
     slice = Slice(
             api=client._api,
@@ -684,7 +537,7 @@ def test_activate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
 def test_deactivate_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="POST",
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone/deactivate"
+        url="https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/sliceone/deactivate"
     )
     slice = Slice(
             api=client._api,
@@ -700,7 +553,7 @@ def test_delete_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
     httpx_mock.add_response(
         method="DELETE", 
         status_code=204,
-        url="https://network-slicing.p-eu.rapidapi.com/slices/sliceone"
+        url="https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/sliceone"
     )
     slice = Slice(
             api=client._api,
@@ -716,7 +569,7 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -746,14 +599,14 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
                 "sliceId": "sdk-integration-slice-5"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json={
             "nac_resource_id": "attachment-1"
         },
@@ -792,7 +645,7 @@ def test_attach_device_to_slice_with_only_manadatory_params(httpx_mock, client, 
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -806,14 +659,14 @@ def test_attach_device_to_slice_with_only_manadatory_params(httpx_mock, client, 
                 "sliceId": "sliceone"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="POST",
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments",
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments",
         json={
             "nac_resource_id": "attachment-1"
         },
@@ -832,7 +685,7 @@ def test_attach_device_to_slice_with_no_device_phone_number(httpx_mock, client, 
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -846,7 +699,7 @@ def test_attach_device_to_slice_with_no_device_phone_number(httpx_mock, client, 
                 "sliceId": "sliceone"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -861,7 +714,7 @@ def test_detach_device_to_slice(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -891,14 +744,14 @@ def test_detach_device_to_slice(httpx_mock, client, device):
                 "sliceId": "sdk-integration-slice-5"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
 
     httpx_mock.add_response(
         method="DELETE",
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments/attachment-1"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments/attachment-1"
     )
 
     slice.detach(device)
@@ -908,7 +761,7 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
     httpx_mock.add_response(
         method="GET",
         json=MOCK_SLICE,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{MOCK_SLICE['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{MOCK_SLICE['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -938,7 +791,7 @@ def test_detach_device_from_slice_not_found(httpx_mock, client, device):
                 "sliceId": "sdk-integration-slice-5"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     slice = client.slices.get(MOCK_SLICE['slice']['name'])
@@ -954,7 +807,7 @@ def test_get_atttachment(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
         json={
             "nac_resource_id":"4f11d02d-e661-4e4b-b623-55292a431c60"
         },
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments/4f11d02d-e661-4e4b-b623-55292a431c60"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments/4f11d02d-e661-4e4b-b623-55292a431c60"
     )
     
     response = client.slices.get_attachment("4f11d02d-e661-4e4b-b623-55292a431c60")
@@ -988,7 +841,7 @@ def test_get_all_atttachments(httpx_mock: HTTPXMock, client: NetworkAsCodeClient
                 "sliceId": "sdk-integration-slice-5"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
     
     response = client.slices.get_all_attachments()
@@ -1109,7 +962,7 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
     httpx_mock.add_response(
         method="GET",
         json=mock_slice_no_csi,
-        url=f"https://network-slicing.p-eu.rapidapi.com/slices/{mock_slice_no_csi['slice']['name']}"
+        url=f"https://network-as-code.p-eu.rapidapi.com/slice/v1/slices/{mock_slice_no_csi['slice']['name']}"
     )
 
     httpx_mock.add_response(
@@ -1139,7 +992,7 @@ def test_get_slice_missing_csi_id(httpx_mock: HTTPXMock, client: NetworkAsCodeCl
                 "sliceId": "sdk-integration-slice-5"
             },
         }],
-        url=f"https://network-slice-device-attachment.p-eu.rapidapi.com/attachments"
+        url=f"https://network-as-code.p-eu.rapidapi.com/device-attach/v0/attachments"
     )
 
     response = client.slices.get(MOCK_SLICE['slice']['name'])

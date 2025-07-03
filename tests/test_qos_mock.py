@@ -33,7 +33,7 @@ def test_creating_a_session_mock(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -87,7 +87,7 @@ def test_creating_a_minimal_session(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -134,7 +134,7 @@ def test_creating_a_session_with_ipv6(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -182,10 +182,14 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
                     "publicPort": 80
             },
         },
+        
         "applicationServer": {
             "ipv4Address": "5.6.7.8"
         },
         "duration": 3600,
+        "devicePorts": {
+                "ports": [80, 443]
+            },
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -193,7 +197,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -214,6 +218,7 @@ def test_creating_qod_session_with_device_ports(httpx_mock, client):
         json=mock_response)
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ports=[80, 443]), duration=3600)
+    assert session.device_ports.ports == [80, 443]
 
 def test_creating_qod_session_with_device_port_range(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -232,6 +237,9 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
             "ipv4Address": "5.6.7.8"
         },
         "duration": 3600,
+        "devicePorts": {
+            "ranges": [{"from": 1024, "to": 3000}]
+        },
         "qosStatus": "REQUESTED",
         "startedAt": "2024-06-18T08:48:12.300312Z",
         "expiresAt": "2024-06-18T08:48:12.300312Z"
@@ -239,7 +247,7 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -260,6 +268,8 @@ def test_creating_qod_session_with_device_port_range(httpx_mock, client):
         json=mock_response)
 
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", device_ports=PortsSpec(ranges=[PortRange(start=1024, end=3000)]), duration=3600)
+    assert session.device_ports.ranges[0].start == 1024
+    assert session.device_ports.ranges[0].end == 3000
 
 def test_creating_qod_session_with_service_ports(httpx_mock, client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
@@ -288,7 +298,7 @@ def test_creating_qod_session_with_service_ports(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -338,7 +348,7 @@ def test_creating_qod_session_with_service_port_range(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -376,7 +386,7 @@ def test_creating_a_qod_session_with_duration(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -419,7 +429,7 @@ def test_creating_a_qod_session_with_notification_url_and_auth_token(httpx_mock,
 
     httpx_mock.add_response(
         method="POST",
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions",
         match_json={
             "qosProfile": "QOS_L",
             "device": {
@@ -462,7 +472,7 @@ def test_getting_one_session(httpx_mock, client):
     
     httpx_mock.add_response(
         method = 'GET',
-        url = "https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/1234",
+        url = "https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions/1234",
         json=mock_response
     )
     session = client.sessions.get("1234")
@@ -491,7 +501,7 @@ def test_getting_all_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='POST',
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        url='https://network-as-code.p-eu.rapidapi.com/qod/v0/retrieve-sessions',
         match_json={
             "device": {
                 "networkAccessIdentifier": "testuser@open5glab.net",
@@ -534,7 +544,7 @@ def test_clearing_device_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='POST',
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        url='https://network-as-code.p-eu.rapidapi.com/qod/v0/retrieve-sessions',
         match_json={
             "device": {
                 "networkAccessIdentifier": "testuser@open5glab.net",
@@ -549,13 +559,13 @@ def test_clearing_device_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='DELETE',
-        url=f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{mock_response[0]['sessionId']}",
+        url=f"https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions/{mock_response[0]['sessionId']}",
         json=mock_response
     )
 
     httpx_mock.add_response(
         method='DELETE',
-        url=f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{mock_response[1]['sessionId']}",
+        url=f"https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions/{mock_response[1]['sessionId']}",
         json=mock_response
     )
 
@@ -581,7 +591,7 @@ def test_clearing_device_sessions(httpx_mock, client):
 
     httpx_mock.add_response(
         method='POST',
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        url='https://network-as-code.p-eu.rapidapi.com/qod/v0/retrieve-sessions',
         match_json={
             "device": {
                 "networkAccessIdentifier": "testuser@open5glab.net",
@@ -597,11 +607,11 @@ def test_clearing_device_sessions(httpx_mock, client):
 
 # @pytest.mark.skip(reason="We are currently working around an API issue with this, so we have to return empty list instead")    
 def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
-    device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port="80"))
+    device = client.devices.get("nonexistent-user@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
 
     httpx_mock.add_response(
         method="POST",
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        url='https://network-as-code.p-eu.rapidapi.com/qod/v0/retrieve-sessions',
         status_code=404,
         json={
             "detail": "QoS subscription not found"
@@ -613,11 +623,11 @@ def test_getting_sessions_for_nonexistent_device(httpx_mock, client):
     
 
 def test_getting_sessions_as_unauthenticated_user(httpx_mock, client):
-    device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", public_port="80"))
+    device = client.devices.get("not-my-device@open5glab.net", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", public_port=80))
 
     httpx_mock.add_response(
         method="POST",
-        url='https://quality-of-service-on-demand.p-eu.rapidapi.com/retrieve-sessions',
+        url='https://network-as-code.p-eu.rapidapi.com/qod/v0/retrieve-sessions',
         status_code=403,
         match_json={
             "device": {
@@ -675,7 +685,7 @@ def test_extending_a_qod_session_duration(httpx_mock, client):
 
     httpx_mock.add_response(
         method="POST",
-        url = f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{session_id}/extend",
+        url = f"https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions/{session_id}/extend",
         match_json={
             "requestedAdditionalDuration": 240
         },
@@ -683,7 +693,7 @@ def test_extending_a_qod_session_duration(httpx_mock, client):
     
     httpx_mock.add_response(
         method = 'GET',
-        url = f"https://quality-of-service-on-demand.p-eu.rapidapi.com/sessions/{session_id}",
+        url = f"https://network-as-code.p-eu.rapidapi.com/qod/v0/sessions/{session_id}",
         json=mock_response_fetch
     )
 
