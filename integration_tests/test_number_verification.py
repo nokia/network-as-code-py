@@ -1,5 +1,6 @@
 import pytest
 import httpx
+import time
 from network_as_code.models.device import Device
 from urllib.parse import urlparse, parse_qs
 
@@ -23,41 +24,35 @@ def test_get_auth_endpoints(client):
     assert type(auth_endpoints.authorization_endpoint) is str
 
 def test_authentication_link(client):
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:verify', login_hint="+3637123456")
+    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
     
     response = httpx.get(url= auth_link)
-
+    
     assert response.status_code == 302
 
-def test_number_verification(client, device):
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:verify', login_hint="+3637123456")
-    
-    response = httpx.get(url= auth_link)
+def test_number_verification(client, device, notification_base_url):
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
 
-    redirect_url = response.headers["location"]
-    response = httpx.get(url= redirect_url)
-    
-    redirect_url = response.headers["location"]
-    response = httpx.get(url= redirect_url)
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
 
-    parsed_url = urlparse(response.headers.get('location'))
-    code = parse_qs(parsed_url.query)['code'][0]
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
+
+    code = response.json().get('code')
 
     assert device.verify_number(code= code)
 
-def test_get_device_phone_number(client, device):
+def test_get_device_phone_number(client, device, notification_base_url):
 
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='number-verification:device-phone-number:read', login_hint="+3637123456")
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='number-verification:device-phone-number:read', login_hint="+3637123456")
 
-    response = httpx.get(url= auth_link)
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
 
-    redirect_url = response.headers["location"]
-    response = httpx.get(url= redirect_url)
-    
-    redirect_url = response.headers["location"]
-    response = httpx.get(url= redirect_url)
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
 
-    parsed_url = urlparse(response.headers.get('location'))
-    code = parse_qs(parsed_url.query)['code'][0]
+    code = response.json().get('code')
 
     assert device.get_phone_number(code=code)
