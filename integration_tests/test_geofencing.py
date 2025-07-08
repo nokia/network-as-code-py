@@ -32,7 +32,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
 
     subscription.delete()
@@ -54,7 +54,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
 
     subscription.delete()
@@ -76,7 +76,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
 
     subscription.delete()
@@ -98,7 +98,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
 
     subscription.delete()

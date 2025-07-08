@@ -130,7 +130,7 @@ def test_creating_a_qos_flow_with_notification_url(client, device, notification_
 
     # Fetching the session notification
     notification = httpx.get(f"{notification_base_url}/qod/{session.id}")
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification_data = notification.json()[0]["data"]
 
     status_data_keys = ["sessionId", "qosStatus"]

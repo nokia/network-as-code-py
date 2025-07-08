@@ -29,7 +29,7 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
     
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
@@ -55,7 +55,7 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
@@ -77,7 +77,7 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
@@ -99,7 +99,7 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 

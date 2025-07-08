@@ -35,7 +35,7 @@ def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, 
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
-    assert notification.json()['id'] is not None
+    assert notification.json()[0]['id'] is not None
     notification_info = notification.json()[0]["data"]
     assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
     notification = httpx.delete(f"{notification_base_url}/congestion-insights/{notification_id}")
@@ -70,7 +70,7 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: D
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
-    assert notification.json()['id'] is not None    
+    assert notification.json()[0]['id'] is not None    
     notification_info = notification.json()[0]["data"]
     assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
     notification = httpx.delete(f"{notification_base_url}/congestion-insights/{notification_id}")
