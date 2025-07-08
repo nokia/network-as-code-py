@@ -26,10 +26,15 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
         initial_event=False
     )
     assert subscription.event_subscription_id
+
+    # Waiting for the notification subscription to be sent
     time.sleep(5)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
@@ -43,10 +48,15 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
     )
     
     assert subscription.event_subscription_id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
@@ -60,10 +70,15 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
         sink_credential=PlainCredential(identifier="client-id",secret="client-secret")
     )
     assert subscription.event_subscription_id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(10)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
 def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
@@ -77,13 +92,17 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
         sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= "2025-07-01T14:15:16.789Z",access_token_type="bearer")
     )
     assert subscription.event_subscription_id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(10)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_getting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,

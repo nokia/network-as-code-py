@@ -23,7 +23,11 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
+    
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
@@ -45,7 +49,11 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
     assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
 
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
@@ -63,7 +71,11 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
     )
 
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
@@ -81,12 +93,15 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
     )
 
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
+
+    # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
     notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
-
 
     subscription.delete()
 
