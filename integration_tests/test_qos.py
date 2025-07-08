@@ -125,7 +125,7 @@ def test_creating_a_qos_flow_with_notification_url(client, device, notification_
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
     assert session.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/qod/get/{session.id}")
+    notification = httpx.get(f"{notification_base_url}/qod/{session.id}")
     assert notification.json()['id'] is not None
 
     notification_data = notification.json()[0]["data"]
@@ -137,7 +137,7 @@ def test_creating_a_qos_flow_with_notification_url(client, device, notification_
     session.delete()
     time.sleep(5)
 
-    notification = httpx.delete(f"{notification_base_url}/qod/delete/{session.id}")
+    notification = httpx.delete(f"{notification_base_url}/qod/{session.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
 def test_qos_session_info_changes_from_deletion(client, device, notification_base_url):
@@ -148,12 +148,12 @@ def test_qos_session_info_changes_from_deletion(client, device, notification_bas
     session.delete()
     time.sleep(5)
     
-    notification = httpx.get(f"{notification_base_url}/qod/get/{session.id}")
+    notification = httpx.get(f"{notification_base_url}/qod/{session.id}")
     notification_data = notification.json()[1]["data"]
 
     assert notification_data['statusInfo'] == "DELETE_REQUESTED"
 
-    notification = httpx.delete(f"{notification_base_url}/qod/delete/{session.id}")
+    notification = httpx.delete(f"{notification_base_url}/qod/{session.id}")
 
 def test_getting_all_sessions(client, device):
     device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)

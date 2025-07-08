@@ -24,9 +24,9 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
     )
     assert subscription.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
 
@@ -46,9 +46,9 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
 
     assert subscription.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
     subscription.delete()
@@ -64,9 +64,9 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
 
     assert subscription.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
     subscription.delete()
@@ -82,9 +82,9 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
 
     assert subscription.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json()['id'] is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}") 
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}") 
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
 

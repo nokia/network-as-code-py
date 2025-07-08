@@ -31,13 +31,13 @@ def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, 
     assert subscription.id
 
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/congestion-insights/get/{notification_id}")
+    notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
     assert notification.json()['id'] is not None
 
     notification_info = notification.json()[0]["data"]
     assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
 
-    notification = httpx.delete(f"{notification_base_url}/congestion-insights/delete/{notification_id}")
+    notification = httpx.delete(f"{notification_base_url}/congestion-insights/{notification_id}")
     time.sleep(5)
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
@@ -66,13 +66,13 @@ def test_can_subscribe_for_congestion_info_with_auth_token(client, nef_device: D
     assert subscription.id
 
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/congestion-insights/get/{notification_id}")
+    notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
     assert notification.json()['id'] is not None
     
     notification_info = notification.json()[0]["data"]
     assert notification_info[0]['congestionLevel'] in ["None", "Low", "Medium", "High"]
 
-    notification = httpx.delete(f"{notification_base_url}/congestion-insights/delete/{notification_id}")
+    notification = httpx.delete(f"{notification_base_url}/congestion-insights/{notification_id}")
     time.sleep(5)
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 

@@ -102,7 +102,7 @@ async def test_deactivating_and_deleting_with_notification_polling(client, notif
     # Wait for the notification to take action
     time.sleep(2 * 60)
 
-    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+    notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
     assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
 
     slice.activate()
@@ -110,7 +110,7 @@ async def test_deactivating_and_deleting_with_notification_polling(client, notif
     # Poll the notification server until slice is operating
     while notification.json()[-1]['current_slice_state'] == "AVAILABLE":
         time.sleep(5)
-        notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
 
     assert notification.json()[-1]['current_slice_state'] == "OPERATING"
     slice.deactivate()
@@ -118,7 +118,7 @@ async def test_deactivating_and_deleting_with_notification_polling(client, notif
     # Poll the notification server until slice is deactivated
     while notification.json()[-1]['current_slice_state'] == "OPERATING":
         time.sleep(5)
-        notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
     
     assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
     slice.delete()
@@ -126,11 +126,11 @@ async def test_deactivating_and_deleting_with_notification_polling(client, notif
     # Poll the notification server until slice is deleted
     while notification.json()[-1]['current_slice_state'] == "AVAILABLE":
         time.sleep(5)
-        notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
 
     assert notification.json()[-1]['current_slice_state'] == "DELETED"
 
-    httpx.delete(f"{notification_base_url}/network-slice/delete/{slice.name}")
+    httpx.delete(f"{notification_base_url}/network-slice/{slice.name}")
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
