@@ -22,7 +22,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
         longitude=-180,
         radius=2001,
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
-        subscription_max_events=1,
+        subscription_max_events=5,
         initial_event=False
     )
     assert subscription.event_subscription_id
@@ -89,7 +89,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
         latitude=-90,
         longitude=-180,
         radius=2001,
-        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= "2025-07-01T14:15:16.789Z",access_token_type="bearer")
+        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),access_token_type="bearer")
     )
     assert subscription.event_subscription_id
 
