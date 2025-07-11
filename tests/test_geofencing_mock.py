@@ -3,7 +3,6 @@ import pytest
 from network_as_code.models.device import DeviceIpv4Addr, Device
 from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
 from network_as_code.errors import NotFound, AuthenticationException, APIError, ServiceError
-from tests.conftest import to_bytes
 
 
 

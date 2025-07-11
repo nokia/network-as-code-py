@@ -3,7 +3,7 @@ from network_as_code import NetworkAsCodeClient
 
 from network_as_code.models.device import DeviceIpv4Addr
 
-def test_getting_a_device(httpx_mock, client):
+def test_getting_a_device(client):
     device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     assert device.network_access_identifier == "testuser@open5glab.net"
 

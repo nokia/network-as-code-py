@@ -1,5 +1,4 @@
 
-import pdb
 import pytest
 import httpx
 import time
@@ -21,10 +20,10 @@ def setup_and_cleanup_session_data(device):
 
     session.delete()
 
-def test_getting_a_device(client, device):
+def test_getting_a_device(device):
     assert device.ipv4_address.public_address == "1.1.1.2"
 
-def test_creating_a_qos_flow(client, device):
+def test_creating_a_qos_flow(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     
     assert session.service_ipv4 == "5.6.7.8"
@@ -41,22 +40,31 @@ def test_creating_a_qos_flow_for_device_with_only_phone_number(client, device):
     assert session.duration == 3600
     session.delete()
 
-def test_creating_a_qos_flow_medium_profile(client, device):
+def test_creating_a_qos_flow_medium_profile(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_M", duration=3600)
 
+    assert session.status == "REQUESTED"
+    assert session.profile == "QOS_M"
+
     session.delete()
 
-def test_creating_a_qos_flow_small_profile(client, device):
+def test_creating_a_qos_flow_small_profile(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_S", duration=3600)
 
+    assert session.status == "REQUESTED"
+    assert session.profile == "QOS_S"
+
     session.delete()
 
-def test_creating_a_qos_flow_low_latency_profile(client, device):
+def test_creating_a_qos_flow_low_latency_profile(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_E", duration=3600)
 
+    assert session.status == "REQUESTED"
+    assert session.profile == "QOS_E"
+
     session.delete()
 
-def test_getting_a_created_qos_session_by_id(client, device, setup_and_cleanup_session_data):
+def test_getting_a_created_qos_session_by_id(client, setup_and_cleanup_session_data):
     session = setup_and_cleanup_session_data
     assert client.sessions.get(session.id).id == session.id
 
@@ -66,13 +74,13 @@ def test_getting_a_created_qos_session_by_id(client, device, setup_and_cleanup_s
     except:
         assert True
 
-def test_creating_a_qos_flow_with_port_info(client, device):
+def test_creating_a_qos_flow_with_port_info(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L", duration=3600)
 
     assert session.service_ports.ports == [80]
     session.delete()
 
-def test_creating_a_qos_flow_with_service_port_and_device_port(client, device):
+def test_creating_a_qos_flow_with_service_port_and_device_port(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ports=[80]), profile="QOS_L", device_ports=PortsSpec(ports=[20000]), duration=3600)
     
     assert session.service_ports.ports == [80]
@@ -80,7 +88,7 @@ def test_creating_a_qos_flow_with_service_port_and_device_port(client, device):
 
     session.delete()
 
-def test_creating_a_qos_flow_with_service_ipv6(client, device):
+def test_creating_a_qos_flow_with_service_ipv6(device):
     session = device.create_qod_session(service_ipv6="2001:db8:1234:5678:9abc:def0:fedc:ba98", service_ports=PortsSpec(ports=[80]), profile="QOS_L", device_ports=PortsSpec(ports=[20000]), duration=3600)
     
     assert session.service_ipv6 == "2001:db8:1234:5678:9abc:def0:fedc:ba98"
@@ -99,21 +107,21 @@ def test_port_range_field_aliasing():
     assert "from" in port_range.model_dump(by_alias=True).keys()
     assert "to" in port_range.model_dump(by_alias=True).keys()
 
-def test_creating_a_qos_flow_with_service_port_range(client, device):
+def test_creating_a_qos_flow_with_service_port_range(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", service_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L", duration=3600)
 
     assert session.service_ports.ranges[0].start == 80
     assert session.service_ports.ranges[0].end == 443
     session.delete()
 
-def test_creating_a_qos_flow_with_device_port_range(client, device):
+def test_creating_a_qos_flow_with_device_port_range(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", device_ports=PortsSpec(ranges=[PortRange(start=80, end=443)]), profile="QOS_L", duration=3600)
 
     assert session.device_ports.ranges[0].start == 80
     assert session.device_ports.ranges[0].end == 443
     session.delete()
 
-def test_creating_a_qos_flow_with_duration(client, device):
+def test_creating_a_qos_flow_with_duration(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=60)
 
     assert session.started_at
@@ -121,7 +129,7 @@ def test_creating_a_qos_flow_with_duration(client, device):
 
     assert session.duration == 60
 
-def test_creating_a_qos_flow_with_notification_url(client, device, notification_base_url):
+def test_creating_a_qos_flow_with_notification_url(device, notification_base_url):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
     assert session.id
 
@@ -146,7 +154,7 @@ def test_creating_a_qos_flow_with_notification_url(client, device, notification_
     notification = httpx.delete(f"{notification_base_url}/qod/{session.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
-def test_qos_session_info_changes_from_deletion(client, device, notification_base_url):
+def test_qos_session_info_changes_from_deletion(device, notification_base_url):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
     assert session.id
 
@@ -164,14 +172,14 @@ def test_qos_session_info_changes_from_deletion(client, device, notification_bas
     assert notification_data['statusInfo'] == "DELETE_REQUESTED"
     notification = httpx.delete(f"{notification_base_url}/qod/{session.id}")
 
-def test_getting_all_sessions(client, device):
+def test_getting_all_sessions(device):
     device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     sessions = device.sessions()
 
     assert len(sessions) >= 0
     device.clear_sessions()
 
-def test_clearing_qos_flows(client, device):
+def test_clearing_qos_flows(device):
     ids = []
 
     for i in range(5):
@@ -201,7 +209,7 @@ def test_creating_session_with_public_ipv4_and_public_port(client):
     assert session.device.ipv4_address.public_port == device.ipv4_address.public_port
     session.delete()
 
-def test_extending_a_qod_session_duration(client, device):
+def test_extending_a_qod_session_duration(device):
     session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", duration=3600)
     assert session.duration == 3600
     session.extend(300)
