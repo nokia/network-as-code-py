@@ -5,7 +5,6 @@ import time
 import httpx
 
 from datetime import datetime, timezone, timedelta
-from network_as_code.models.congestion import Congestion
 from network_as_code.models.device import Device
 
 @pytest.fixture

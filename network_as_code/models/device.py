@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
-from ..models.location import CivicAddress, Location, VerificationResult
+from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
 from ..models.number_verification import AccessToken
 from ..api.utils import tokenizer
@@ -29,28 +29,14 @@ class RoamingStatus(BaseModel):
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
 
-
-class Event(BaseModel):
-    """
-    A class representing the `Event` model.
-
-    #### Public Attributes:
-            target (float): the `target` of an event object.
-            atUnix (float): the `atUnix` of an event object.
-    """
-
-    target: str
-    atUnix: int
-
-
 class DeviceIpv4Addr(BaseModel):
     """
     A class representing the `DeviceIpv4Addr` model.
 
     #### Public Attributes:
-            public_address (float): the `public_address` of a device IPv4 address object.
-            private_address (float): the `private_address` of a device IPv4 address object.
-            public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
+            public_address Optional[str]: the `public_address` of a device IPv4 address object.
+            private_address Optional[str]: the `private_address` of a device IPv4 address object.
+            public_port (Optional[int]): the `public_port` of a device IPv4 address object.
     """
 
     public_address: Optional[str] = Field(None, serialization_alias="publicAddress")
@@ -150,8 +136,6 @@ class Device(BaseModel):
             notification_url,
             notification_auth_token,
         )
-        # Convert response body to an Event model
-        # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(self._api, self, session.json())
 
     def sessions(self) -> List[QoDSession]:
@@ -199,53 +183,10 @@ class Device(BaseModel):
         longitude = body["area"]["center"]["longitude"]
         latitude = body["area"]["center"]["latitude"]
         radius = body["area"]["radius"]
-        civic_address = None
-
-        if "civicAddress" in body.keys():
-            civic_address = CivicAddress(
-                country=body["civicAddress"]["country"],
-                a1=(
-                    body["civicAddress"]["A1"]
-                    if "A1" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A1"], str)
-                    else None
-                ),
-                a2=(
-                    body["civicAddress"]["A2"]
-                    if "A2" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A2"], str)
-                    else None
-                ),
-                a3=(
-                    body["civicAddress"]["A3"]
-                    if "A3" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A3"], str)
-                    else None
-                ),
-                a4=(
-                    body["civicAddress"]["A4"]
-                    if "A4" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A4"], str)
-                    else None
-                ),
-                a5=(
-                    body["civicAddress"]["A5"]
-                    if "A5" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A5"], str)
-                    else None
-                ),
-                a6=(
-                    body["civicAddress"]["A6"]
-                    if "A6" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A6"], str)
-                    else None
-                ),
-            )
 
         return Location(
             longitude=longitude,
             latitude=latitude,
-            civic_address=civic_address,
             radius=radius,
         )
 

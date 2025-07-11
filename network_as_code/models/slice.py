@@ -18,7 +18,6 @@ from typing import Dict, List, Union, Optional
 from pydantic import BaseModel, PrivateAttr, Field
 
 from ..api import APIClient
-from ..api.slice_api import Throughput as ApiThroughput
 from ..models.session import QoDSession
 from ..models.device import Device
 from ..errors import NotFound
@@ -226,15 +225,6 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```
         """
         self._api.slicing.deactivate(self.name)
-
-    def _to_api_throughput(
-        self, throughput: Optional[Throughput] = None
-    ) -> Optional[ApiThroughput]:
-        if throughput is not None:
-            return ApiThroughput(
-                guaranteed=throughput.guaranteed, maximum=throughput.maximum
-            )
-        return None
 
     def delete(self) -> None:
         """Delete network slice.

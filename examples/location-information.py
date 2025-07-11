@@ -12,7 +12,7 @@ and less accurate in more sparse areas.
 
 import network_as_code as nac
 
-from network_as_code.models.location import CivicAddress, Location
+from network_as_code.models.location import  Location
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
@@ -36,7 +36,6 @@ latitude = location.latitude
 
 print(location.longitude)
 print(location.latitude)
-print(location.civic_address)
 
 # Or for estimations, use the is_there object
 # followed by the `verify_location()` method

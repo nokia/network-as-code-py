@@ -1,5 +1,4 @@
 
-import pytest
 from network_as_code.models.device import DeviceIpv4Addr
 
 def test_serializing_device_with_network_id(client):

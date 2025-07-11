@@ -1,11 +1,8 @@
-from datetime import datetime, timedelta
-import pdb
+from datetime import datetime
 import pytest
 
-import os
-import json
 from network_as_code.models.device import DeviceIpv4Addr, PortsSpec
-from network_as_code.errors import NotFound, AuthenticationException
+from network_as_code.errors import AuthenticationException
 from network_as_code.models.session import PortRange
 
 def test_creating_a_session_mock(httpx_mock, client):

@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta, timezone
-from network_as_code.errors import error_handler
 from network_as_code.errors import APIError
-from network_as_code.models.device import Device, DeviceIpv4Addr
+from network_as_code.models.device import Device
 from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
 
 import pytest

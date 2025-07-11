@@ -5,7 +5,6 @@ from network_as_code.errors import AuthenticationException, NotFound, ServiceErr
 
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
-from tests.conftest import to_bytes
 
 @pytest.fixture
 def device(client) -> Device:

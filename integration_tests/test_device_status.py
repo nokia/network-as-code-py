@@ -1,9 +1,7 @@
 from datetime import datetime, timedelta, timezone
-from network_as_code.models.device_status import EventSubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
-from network_as_code.errors import error_handler
-from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+from network_as_code.errors import NotFound, APIError
 
 import pytest
 import time
@@ -48,9 +46,6 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
     assert subscription.id is not None
     assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
 
-    assert subscription.id
-
-    # Waiting for the subscription notification to be sent
     time.sleep(5)
 
     # Fetching and deleting the subscription notification

@@ -14,12 +14,9 @@
 
 from datetime import datetime
 
-from typing import TYPE_CHECKING, List, Union, Optional, Any
+from typing import List, Union, Optional, Any
 from network_as_code.api.utils import httpx_client
 from ..errors import error_handler
-
-if TYPE_CHECKING:
-    from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
 
 class GeofencingAPI:
 

@@ -1,9 +1,7 @@
-import json
 from datetime import datetime
 import pytest
-from pytest_httpx import httpx_mock
 from network_as_code.errors import APIError, InvalidParameter
-from network_as_code.models.device import Device, DeviceIpv4Addr
+from network_as_code.models.device import Device
 
 import pytest
 
@@ -13,7 +11,7 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="3637123456")
     return device
 
-def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
+def test_get_sim_swap_date(httpx_mock, device):
     url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date"
 
     mock_response = {
@@ -33,7 +31,7 @@ def test_get_sim_swap_date(httpx_mock: httpx_mock, device):
     
     assert latest_sim_swap_date == datetime.fromisoformat("2024-06-19T10:36:59.976+00:00")
 
-def test_get_sim_swap_date_no_response(httpx_mock: httpx_mock, device):
+def test_get_sim_swap_date_no_response(httpx_mock, device):
     url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date"
 
     mock_response = {}
@@ -63,7 +61,7 @@ def test_verify_sim_swap_with_no_phone_number(client):
     with pytest.raises(InvalidParameter):
         device.verify_sim_swap()
 
-def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
+def test_verify_sim_swap_without_max_age(httpx_mock, device):
     url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/check"
 
     mock_response = {
@@ -81,7 +79,7 @@ def test_verify_sim_swap_without_max_age(httpx_mock: httpx_mock, device):
 
     assert device.verify_sim_swap(max_age=None) == True
 
-def test_verify_sim_swap_with_max_age(httpx_mock: httpx_mock, device):
+def test_verify_sim_swap_with_max_age(httpx_mock, device):
     url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/sim-swap/sim-swap/v0/check"
 
     mock_response = {

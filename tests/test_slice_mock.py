@@ -1,4 +1,3 @@
-import json
 import copy
 import pytest
 from typing import Any, Dict
@@ -8,7 +7,7 @@ from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceIn
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
-from network_as_code.errors import InvalidParameter, error_handler
+from network_as_code.errors import InvalidParameter
 from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
 
 MOCK_SLICE: Dict[str, Any] = {

@@ -2,7 +2,6 @@ import pytest
 import httpx
 import time
 from network_as_code.models.device import Device
-from urllib.parse import urlparse, parse_qs
 
 @pytest.fixture
 def device(client) -> Device:
