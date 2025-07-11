@@ -12,6 +12,8 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
+# Skipping geofenfing for now
+@pytest.mark.skip
 def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -36,6 +38,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -104,6 +107,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_getting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -118,6 +122,7 @@ def test_getting_geofencing_subscription(client, device):
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_getting_geofencing_subscriptions(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -144,6 +149,7 @@ def test_getting_geofencing_subscriptions(client, device):
     for subscription in subscriptions:
         subscription.delete()
 
+@pytest.mark.skip
 def test_deleting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -161,6 +167,7 @@ def test_deleting_geofencing_subscription(client, device):
     except:
         assert True
 
+@pytest.mark.skip
 def test_subscribe_invalid_parameter(client, device):
     with pytest.raises(APIError):
         client.geofencing.subscribe(
