@@ -59,6 +59,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
 
     subscription.delete()
 
+@pytest.mark.skip # Subscription gets deleted before the notification gets sent
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
