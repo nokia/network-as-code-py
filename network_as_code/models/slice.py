@@ -23,6 +23,23 @@ from ..models.device import Device
 from ..errors import NotFound
 
 
+class Customer(BaseModel):
+    """
+    A class representing the `Customer` model.
+
+    #### Public Attributes:
+            name (str): The name of the Customer.
+            description (Optional[str]): The description of the Slice.
+            address (Optional[str]): Address of the customer ordering slice creation.
+            contact (Optional[str]): Contact of the customer ordering slice creation.
+    """
+
+    name: str = Field(serialization_alias="name")
+    description: Optional[str] = Field(None, serialization_alias="description")
+    address: Optional[str] = Field(None, serialization_alias="address")
+    contact: Optional[str] = Field(None, serialization_alias="contact")
+
+
 class NetworkIdentifier(BaseModel):
     """
     A class representing the `NetworkIdentifier` model.
@@ -296,6 +313,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
     def attach(
         self,
         device: Device,
+        customer: Union[Customer, None] = None,
         traffic_categories: Union[TrafficCategories, None] = None,
         notification_url: Union[str, None] = None,
         notification_auth_token: Union[str, None] = None,
@@ -304,6 +322,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
         #### Args:
             device (Device): Device object that the slice is being attached to
+            customer (Customer): Customer who orders the device attach operations
             traffic_categories (TrafficCategories): It should contain the OSId, according to the OS and the OsAppId
             notification_url (str): Notification URL for attachment-related events.
             notification_auth_token (str): Authorization token for notification sending.
@@ -312,8 +331,10 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
             ```python
             device = client.devices.get("testuser@open5glab.net", 
             ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
-            private_address="1.1.1.2", public_port=80))
-            slice.attach(device, traffic_categories = TrafficCategories(
+            private_address="1.1.1.2", public_port=80), imsi=1223334444)
+            slice.attach(device, customer = Customer(name="Joe Doe", description="B2B_5G_eMBB_Slice",
+            address="123 Main Street, Anytown, USA 12345", contact="(555) 123-4567"),
+            traffic_categories = TrafficCategories(
                 apps=Apps(
                     os="97a498e3-fc92-5c94-8986-0333d06e4e47",
                     apps=["ENTERPRISE", "ENTERPRISE2"]
@@ -325,6 +346,7 @@ class Slice(BaseModel, arbitrary_types_allowed=True):
 
         new_attachment = self._api.slice_attach.attach(
             device,
+            customer,
             self.name,
             traffic_categories,
             notification_url,

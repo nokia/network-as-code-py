@@ -57,6 +57,7 @@ class Device(BaseModel):
         phone_number(str): Phone Number string
         ipv4_address (DeviceIpv4Addr): Ipv4 address of the device.
         ipv6_address (str): Ipv6 address of the device.
+        imsi (Optional[int]): International Mobile Subscriber Identity (IMSI) of the device.
 
     #### Public Methods:
         create_session (Session): Creates a session for the device.
@@ -80,6 +81,7 @@ class Device(BaseModel):
         None, serialization_alias="ipv4Address"
     )
     ipv6_address: Union[str, None] = Field(None, serialization_alias="ipv6Address")
+    imsi: Optional[int] = Field(None, serialization_alias="imsi")
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -372,6 +374,7 @@ class Device(BaseModel):
         device.network_access_identifier = device_json.get("networkAccessIdentifier")
         device.phone_number = device_json.get("phoneNumber")
         device.ipv6_address = device_json.get("ipv6Address")
+        device.imsi = device_json.get("imsi")
         if "ipv4Address" in device_json:
             device.ipv4_address = DeviceIpv4Addr(
                 public_address=device_json["ipv4Address"].get("publicAddress"),
