@@ -71,7 +71,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
     assert subscription.event_subscription_id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(10)
+    time.sleep(15)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
@@ -93,7 +93,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
     assert subscription.event_subscription_id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(10)
+    time.sleep(15)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
