@@ -15,9 +15,20 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, PrivateAttr
+from enum import Enum
 
 from ..api import APIClient
 from ..models.device import Device
+
+
+class EventType(Enum):
+    connectivity_data = "org.camaraproject.device-status.v0.connectivity-data"
+    connectivity_sms = "org.camaraproject.device-status.v0.connectivity-sms"
+    connectivity_disconnected = "org.camaraproject.device-status.v0.connectivity-disconnected"
+    roaming_status = "org.camaraproject.device-status.v0.roaming-status"
+    roaming_on = "org.camaraproject.device-status.v0.roaming-on"
+    roaming_off = "org.camaraproject.device-status.v0.roaming-off"
+    roaming_change_country = "org.camaraproject.device-status.v0.roaming-change-country"
 
 
 class EventSubscription(BaseModel):
