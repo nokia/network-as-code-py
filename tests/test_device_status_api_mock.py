@@ -36,7 +36,7 @@ def test_updated_device_status_subscription_creation(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-status"
+                "type": "roaming_status"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682Z",
             "webhook": {
@@ -93,7 +93,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-on"
+                "type": "roaming_on"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
             "webhook": {
@@ -291,7 +291,7 @@ def test_getting_device_status_subscription(httpx_mock, device, client):
                         "publicAddress": "1.1.1.2",
                     },
                 },
-                "type": "org.camaraproject.device-status.v0.connectivity-data"
+                "type": "connectivity_data"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -317,7 +317,7 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
                         "publicAddress": "1.1.1.2"
                     },
                 },
-                "type": "org.camaraproject.device-status.v0.connectivity-data"
+                "type": "connectivity_data"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -347,7 +347,7 @@ def test_get_subscriptions(httpx_mock, device, client):
                     "device": {
                         "networkAccessIdentifier": "testuser@testcsp.net"
                     },
-                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                    "type": "connectivity_data"
                 },
                 "maxNumberOfReports": 1,
                 "webhook": {
@@ -363,7 +363,7 @@ def test_get_subscriptions(httpx_mock, device, client):
                     "device": {
                         "networkAccessIdentifier": "testuser@testcsp.net"
                     },
-                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                    "type": "connectivity_data"
                 },
                 "maxNumberOfReports": 1,
                 "webhook": {
@@ -384,7 +384,7 @@ def test_get_subscriptions(httpx_mock, device, client):
                             "publicPort": 80
                         }
                     },
-                    "type": "org.camaraproject.device-status.v0.roaming-status",
+                    "type": "roaming_status",
                     "eventType": "ROAMING_STATUS"
                 },
                 "maxNumberOfReports": 1,
@@ -406,7 +406,7 @@ def test_get_subscriptions(httpx_mock, device, client):
                             "publicPort": 80
                         }
                     },
-                    "type": "org.camaraproject.device-status.v0.connectivity-data"
+                    "type": "connectivity_data"
                 },
                 "maxNumberOfReports": 1,
                 "webhook": {

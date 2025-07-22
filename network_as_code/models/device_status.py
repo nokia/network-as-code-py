@@ -20,8 +20,11 @@ from enum import Enum
 from ..api import APIClient
 from ..models.device import Device
 
-
 class EventType(Enum):
+    """
+    Enum class containing the string constant values for the different supported event types.
+    """
+
     connectivity_data = "org.camaraproject.device-status.v0.connectivity-data"
     connectivity_sms = "org.camaraproject.device-status.v0.connectivity-sms"
     connectivity_disconnected = "org.camaraproject.device-status.v0.connectivity-disconnected"
