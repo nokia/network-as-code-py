@@ -72,7 +72,7 @@ def test_updated_device_status_subscription_creation(httpx_mock, client):
 
     subscription = client.connectivity.subscribe(
         device=device,
-        event_type="org.camaraproject.device-status.v0.roaming-status",
+        event_type="roaming_status",
         subscription_expire_time="2023-01-17T13:18:23.682Z",
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
@@ -93,7 +93,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-status"
+                "type": "org.camaraproject.device-status.v0.roaming-on"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
             "webhook": {
@@ -115,7 +115,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-status"
+                "type": "org.camaraproject.device-status.v0.roaming-on"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
             "webhook": {
@@ -129,7 +129,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
 
     subscription = client.connectivity.subscribe(
         device=device,
-        event_type="org.camaraproject.device-status.v0.roaming-status",
+        event_type="roaming_on",
         subscription_expire_time=datetime.fromisoformat("2023-01-17T13:18:23.682+00:00"),
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
@@ -153,7 +153,7 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
                         "publicPort": 80
                     },
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-data"
             },
             "webhook": {
                 "notificationUrl": "https://localhost:9090/notify",
@@ -162,7 +162,7 @@ def test_device_status_creation_minimal_parameters(httpx_mock, device, client):
         }
     )
 
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token")
+    subscription = client.connectivity.subscribe(event_type="connectivity_data", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token")
 
 def test_device_status_creation_minimal_parameters_minimal_ipv4_and_public_port(httpx_mock, device_with_just_public_ipv4_port, client):
     httpx_mock.add_response(
@@ -181,7 +181,7 @@ def test_device_status_creation_minimal_parameters_minimal_ipv4_and_public_port(
                         "publicPort": 80
                     }
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-sms"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -191,7 +191,7 @@ def test_device_status_creation_minimal_parameters_minimal_ipv4_and_public_port(
         }
     )
 
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_public_ipv4_port, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="connectivity_sms", notification_url="https://localhost:9090/notify", device=device_with_just_public_ipv4_port, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock, device_with_just_phone_number, client):
     httpx_mock.add_response(
@@ -206,7 +206,7 @@ def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock,
                 "device": {
                     "phoneNumber": "7777777777"
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-data"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -216,7 +216,7 @@ def test_device_status_creation_minimal_parameters_only_phone_number(httpx_mock,
         }
     )
 
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device_with_just_phone_number, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="connectivity_data", notification_url="https://localhost:9090/notify", device=device_with_just_phone_number, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_device_status_creation_with_optional_parameters(httpx_mock, device, client):
     httpx_mock.add_response(
@@ -235,7 +235,7 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
                         "publicPort": 80
                     },
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-sms"
             },
             "maxNumberOfReports": 1,
             "subscriptionExpireTime": "2023-08-31",
@@ -246,7 +246,7 @@ def test_device_status_creation_with_optional_parameters(httpx_mock, device, cli
         }
     )
     
-    subscription = client.connectivity.subscribe(event_type="CONNECTIVITY", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", subscription_expire_time="2023-08-31", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="connectivity_sms", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", subscription_expire_time="2023-08-31", max_num_of_reports=1)
 
 def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
     httpx_mock.add_response(
@@ -266,7 +266,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
                         "publicPort": 80
                     },
                 },
-                "type": "ROAMING_STATUS"
+                "type": "org.camaraproject.device-status.v0.roaming-off"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -276,7 +276,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
         }
     )
 
-    subscription = client.connectivity.subscribe(event_type="ROAMING_STATUS", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="roaming_off", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
@@ -291,7 +291,7 @@ def test_getting_device_status_subscription(httpx_mock, device, client):
                         "publicAddress": "1.1.1.2",
                     },
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-data"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -317,7 +317,7 @@ def test_deleting_device_status_subscription(httpx_mock, device, client):
                         "publicAddress": "1.1.1.2"
                     },
                 },
-                "type": "CONNECTIVITY"
+                "type": "org.camaraproject.device-status.v0.connectivity-data"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -487,7 +487,7 @@ def test_subscribe_authentication_exception(httpx_mock, device, client):
     
     with pytest.raises(AuthenticationException):
         client.connectivity.subscribe(
-            event_type="CONNECTIVITY",
+            event_type="connectivity_data",
             device=device, 
             max_num_of_reports=5, 
             notification_url="http://localhost:9090/notify", 
@@ -502,7 +502,7 @@ def test_subscribe_not_found(httpx_mock, device, client):
     
     with pytest.raises(NotFound):
         client.connectivity.subscribe(
-            event_type="CONNECTIVITY",
+            event_type="connectivity_sms",
             device=device,  
             max_num_of_reports=5, 
             notification_url="http://localhost:9090/notify", 
@@ -517,7 +517,7 @@ def test_subscribe_service_error(httpx_mock, device, client):
     
     with pytest.raises(ServiceError):
         client.connectivity.subscribe(
-            event_type="CONNECTIVITY",
+            event_type="connectivity_disconnected",
             device=device, 
             max_num_of_reports=5, 
             notification_url="http://localhost:9090/notify", 
@@ -532,7 +532,7 @@ def test_subscribe_api_error(httpx_mock, device, client):
     
     with pytest.raises(APIError):
         client.connectivity.subscribe(
-            event_type="CONNECTIVITY",
+            event_type="connectivity_sms",
             device=device, 
             max_num_of_reports=5, 
             notification_url="http://localhost:9090/notify", 

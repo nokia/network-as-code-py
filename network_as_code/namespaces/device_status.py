@@ -16,8 +16,7 @@ from datetime import datetime
 from typing import List, Union, Optional
 from . import Namespace
 from ..models.device import Device
-from ..models.device_status import EventSubscription
-
+from ..models.device_status import EventSubscription, EventType
 
 
 class Connectivity(Namespace):
@@ -56,7 +55,7 @@ class Connectivity(Namespace):
 
         connectivity_data = self.api.devicestatus.create_subscription(
             device,
-            event_type,
+            EventType[event_type].value,
             notification_url,
             notification_auth_token,
             max_num_of_reports,
