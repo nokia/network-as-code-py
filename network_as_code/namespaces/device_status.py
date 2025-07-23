@@ -28,7 +28,7 @@ class Connectivity(Namespace):
 
     def subscribe(
         self,
-        event_type: str,
+        event_type: Union[EventType, str],
         notification_url: str,
         device: Device,
         max_num_of_reports: Optional[int] = None,
@@ -53,9 +53,12 @@ class Connectivity(Namespace):
         if isinstance(subscription_expire_time, datetime):
             subscription_expire_time = subscription_expire_time.isoformat()
 
+        if isinstance(event_type, EventType):
+            event_type = event_type.value
+
         connectivity_data = self.api.devicestatus.create_subscription(
             device,
-            EventType[event_type.upper()].value,
+            event_type,
             notification_url,
             notification_auth_token,
             max_num_of_reports,
