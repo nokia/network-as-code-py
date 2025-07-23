@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, PrivateAttr
-from enum import Enum
 
 from ..api import APIClient
 from ..models.device import Device
@@ -25,13 +25,13 @@ class EventType(Enum):
     Enum class containing the string constant values for the different supported event types.
     """
 
-    connectivity_data = "org.camaraproject.device-status.v0.connectivity-data"
-    connectivity_sms = "org.camaraproject.device-status.v0.connectivity-sms"
-    connectivity_disconnected = "org.camaraproject.device-status.v0.connectivity-disconnected"
-    roaming_status = "org.camaraproject.device-status.v0.roaming-status"
-    roaming_on = "org.camaraproject.device-status.v0.roaming-on"
-    roaming_off = "org.camaraproject.device-status.v0.roaming-off"
-    roaming_change_country = "org.camaraproject.device-status.v0.roaming-change-country"
+    CONNECTIVITY_DATA = "org.camaraproject.device-status.v0.connectivity-data"
+    CONNECTIVITY_SMS = "org.camaraproject.device-status.v0.connectivity-sms"
+    CONNECTIVITY_DISCONNECTED = "org.camaraproject.device-status.v0.connectivity-disconnected"
+    ROAMING_STATUS = "org.camaraproject.device-status.v0.roaming-status"
+    ROAMING_ON = "org.camaraproject.device-status.v0.roaming-on"
+    ROAMING_OFF = "org.camaraproject.device-status.v0.roaming-off"
+    ROAMING_CHANGE_COUNTRY = "org.camaraproject.device-status.v0.roaming-change-country"
 
 
 class EventSubscription(BaseModel):
