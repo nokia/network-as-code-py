@@ -93,7 +93,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "roaming_on"
+                "type": "roaming_status"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
             "webhook": {
@@ -115,7 +115,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
                     },
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-on"
+                "type": "org.camaraproject.device-status.v0.roaming-status"
             },
             "subscriptionExpireTime": "2023-01-17T13:18:23.682000+00:00",
             "webhook": {
@@ -129,7 +129,7 @@ def test_subscribing_using_datetime(httpx_mock, client):
 
     subscription = client.connectivity.subscribe(
         device=device,
-        event_type="roaming_on",
+        event_type="roaming_status",
         subscription_expire_time=datetime.fromisoformat("2023-01-17T13:18:23.682+00:00"),
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
@@ -266,7 +266,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
                         "publicPort": 80
                     },
                 },
-                "type": "org.camaraproject.device-status.v0.roaming-off"
+                "type": "org.camaraproject.device-status.v0.roaming-status"
             },
             "maxNumberOfReports": 1,
             "webhook": {
@@ -276,7 +276,7 @@ def test_device_status_creation_with_roaming_status(httpx_mock, device, client):
         }
     )
 
-    subscription = client.connectivity.subscribe(event_type="roaming_off", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", max_num_of_reports=1)
+    subscription = client.connectivity.subscribe(event_type="roaming_status", notification_url="https://localhost:9090/notify", device=device, notification_auth_token="my_auth_token", max_num_of_reports=1)
 
 def test_getting_device_status_subscription(httpx_mock, device, client):
     httpx_mock.add_response(
