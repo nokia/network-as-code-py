@@ -55,7 +55,7 @@ class Connectivity(Namespace):
 
         connectivity_data = self.api.devicestatus.create_subscription(
             device,
-            EventType[event_type].value,
+            EventType[event_type.upper()].value,
             notification_url,
             notification_auth_token,
             max_num_of_reports,
