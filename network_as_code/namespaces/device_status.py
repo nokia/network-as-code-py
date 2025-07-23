@@ -38,7 +38,7 @@ class Connectivity(Namespace):
         """Create subscription for device connectivity status.
 
         Args:
-            event_type (str): Event type of the subscription.
+            event_type (Union[EventType, str]): Event type of the subscription.
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
