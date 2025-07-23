@@ -14,9 +14,18 @@
 
 
 from datetime import datetime
+from enum import Enum
 from typing import Optional, List, Union
 from pydantic import BaseModel, PrivateAttr, Field
 from network_as_code.api.client import APIClient
+
+class EventType(Enum):
+    """
+    Enum class containing the string constant values for the different supported event types.
+    """
+
+    AREA_ENTERED = "org.camaraproject.geofencing-subscriptions.v0.area-entered"
+    AREA_LEFT = "org.camaraproject.geofencing-subscriptions.v0.area-left"
 
 class AccessTokenCredential(BaseModel):
     credential_type: str = Field(default="ACCESSTOKEN", serialization_alias="credentialType")
