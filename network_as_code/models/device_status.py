@@ -20,6 +20,7 @@ from pydantic import BaseModel, PrivateAttr
 from ..api import APIClient
 from ..models.device import Device
 
+
 class EventType(Enum):
     """
     Enum class containing the string constant values for the different supported event types.
