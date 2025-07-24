@@ -12,6 +12,7 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
+@pytest.mark.timeout(20)
 def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -39,6 +40,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
 
     subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -63,6 +65,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
 
     subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -87,6 +90,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
 
     subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -111,6 +115,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
 
     subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_getting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -125,6 +130,7 @@ def test_getting_geofencing_subscription(client, device):
 
     subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_getting_geofencing_subscriptions(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -151,6 +157,7 @@ def test_getting_geofencing_subscriptions(client, device):
     for subscription in subscriptions:
         subscription.delete()
 
+@pytest.mark.timeout(20)
 def test_deleting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -168,6 +175,7 @@ def test_deleting_geofencing_subscription(client, device):
     except:
         assert True
 
+@pytest.mark.timeout(20)
 def test_subscribe_invalid_parameter(client, device):
     with pytest.raises(APIError):
         client.geofencing.subscribe(
