@@ -262,7 +262,7 @@ def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, clie
     subscription = client.geofencing.subscribe(
         device=device,
         sink="https://example.com/",
-        types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
+        types=[EventType.AREA_LEFT],
         latitude=-90,
         longitude=-180,
         radius=2001,
