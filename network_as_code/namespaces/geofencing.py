@@ -23,8 +23,7 @@ class Geofencing(Namespace):
     def subscribe(
         self, device: Device,
         sink: str,
-        types: List,   # why does this need to be in list form in the customer side? Based on spec, max items is 1 and min is 1, so could just put it in a list in the backend?
-        # types: Union[EventType, str]
+        types: Union[List[EventType] | List[str]],
         latitude: float,
         longitude: float,
         radius: Union[int, float],
@@ -39,20 +38,13 @@ class Geofencing(Namespace):
             if isinstance(subscription_expire_time, datetime)
             else subscription_expire_time
         )
-        
+
         typelist = []
         for item in types:
             if isinstance(item, EventType):
                 typelist.append(item.value)
             else:
                 typelist.append(item)
-
-       
-        # if isinstance(types, EventType):          if these would NOT be in a list, could just put them in a list here, rather than in the call
-            # typelist = [types.value]
-        # else:
-        #   typelist = [types] 
-
 
         json_data = self.api.geofencing.create_subscription(
             device,

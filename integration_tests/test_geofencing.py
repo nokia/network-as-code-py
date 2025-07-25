@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from network_as_code.errors import APIError
 from network_as_code.models.device import Device
-from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
+from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential, EventType
 
 import pytest
 import time
@@ -39,7 +39,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
-        types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
+        types=[EventType["AREA_LEFT"]],
         latitude=-90,
         longitude=-180,
         radius=2001

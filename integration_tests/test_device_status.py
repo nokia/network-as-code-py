@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from network_as_code.models.device import Device, DeviceIpv4Addr
+from network_as_code.models.device_status import EventType
 
 from network_as_code.errors import NotFound, APIError
 
@@ -14,7 +15,29 @@ def device(client) -> Device:
 
 def test_creating_connectivity_subscription_with_notification(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="connectivity_data",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
+        device=device, 
+        max_num_of_reports=5, 
+        notification_url=f"{notification_base_url}/notify", 
+        notification_auth_token="c8974e592c2fa383d4a3960714",
+    )
+    assert subscription.id
+
+    # Waiting for the subscription notification to be sent
+    time.sleep(5)
+    
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
+
+    subscription.delete()
+
+def test_creating_connectivity_subscription_with_notification_and_event_type(client, device, notification_base_url):
+    subscription = client.connectivity.subscribe(
+        event_type=EventType["CONNECTIVITY_DATA"],
         device=device, 
         max_num_of_reports=5, 
         notification_url=f"{notification_base_url}/notify", 
@@ -36,7 +59,7 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
 
 def test_creating_connectivity_subscription_roaming(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="roaming_status",
+        event_type=EventType.ROAMING_STATUS,
         device=device, 
         max_num_of_reports=5, 
         notification_url=f"{notification_base_url}/notify", 
@@ -58,7 +81,7 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
 
 def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="connectivity_data",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url=f"{notification_base_url}/notify", 
@@ -80,7 +103,7 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
 
 def test_creating_connectivity_subscription_with_expiration(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="connectivity_data",
+        event_type=EventType.CONNECTIVITY_DATA,
         device=device, 
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_url=f"{notification_base_url}/notify", 
@@ -102,7 +125,7 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
 
 def test_getting_connectivity(client, device):
     connectivity_subscription = client.connectivity.subscribe(
-        event_type="connectivity_data",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -117,7 +140,7 @@ def test_getting_connectivity(client, device):
 
 def test_delete_connectivity(client, device):
     connectivity_subscription = client.connectivity.subscribe(
-        event_type="connectivity_data",
+        event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
         notification_url="http://192.0.2.0:8080/", 
@@ -154,7 +177,7 @@ def test_subscribe_device_not_found(client):
 
     with pytest.raises(NotFound):
         client.connectivity.subscribe(
-            event_type="connectivity_data",
+            event_type="org.camaraproject.device-status.v0.connectivity-data",
             device=device,
             max_num_of_reports=5, 
             notification_url="http://192.0.2.0:8080/", 

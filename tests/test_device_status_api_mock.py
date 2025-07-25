@@ -131,7 +131,7 @@ def test_updated_device_status_subscription_creation_with_event_type_connectivit
 
     subscription = client.connectivity.subscribe(
         device=device,
-        event_type=EventType["CONNECTIVITY_DATA"],
+        event_type=EventType.CONNECTIVITY_DATA,
         subscription_expire_time="2023-01-17T13:18:23.682Z",
         notification_url="https://application-server.com",
         notification_auth_token="c8974e592c2fa383d4a3960714"
