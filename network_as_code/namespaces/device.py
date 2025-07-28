@@ -30,6 +30,7 @@ class Devices(Namespace):
         ipv4_address: Union[None, DeviceIpv4Addr]= None,
         ipv6_address=None,
         phone_number=None,
+        imsi=None,
     ) -> Device:
         """Get a subscription by its external ID.
 
@@ -38,13 +39,14 @@ class Devices(Namespace):
             ipv4_address (DeviceIpv4Addr | None): ipv4 address of the subscription.
             ipv6_address (Any | None): ipv6 address of the subscription.
             phone_number (Any | None): phone number of the subscription.
+            imsi (Any | None): International mobile subscriber identity.
 
         #### Example:
              '''python
              device = client.devices.get("testuser@testcsp.net", 
              ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", 
              private_address="1.1.1.2", public_port=80), 
-             phone_number="+3670123456")
+             phone_number="+3670123456", imsi=1223334444)
              '''    
         Returns: Device
         """
@@ -65,5 +67,6 @@ class Devices(Namespace):
             ipv4_address=ipv4_address,
             ipv6_address=ipv6_address,
             phone_number=phone_number,
+            imsi=imsi,
         )
         return ret_device

@@ -148,6 +148,7 @@ class AttachAPI:
     def attach(
         self,
         device,
+        customer,
         slice_id: str,
         traffic_categories: Union[Any, None],
         notification_url: Union[str, None],
@@ -159,7 +160,8 @@ class AttachAPI:
             "sliceId": slice_id,
             "device": device.model_dump(mode='json', by_alias=True, exclude_none=True)
         }
-
+        if customer:
+            payload['customer'] = customer.model_dump(mode='json', by_alias=True, exclude_none=True)
         if traffic_categories:
             payload['traffic_categories'] = {"apps": traffic_categories.apps.__dict__}
         if notification_url:

@@ -3,7 +3,7 @@ import pytest
 from typing import Any, Dict
 from pytest_httpx import HTTPXMock
 from network_as_code.client import NetworkAsCodeClient
-from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput, TrafficCategories
+from network_as_code.models.slice import Apps, NetworkIdentifier, Slice, SliceInfo, AreaOfService, Point, Throughput, TrafficCategories, Customer
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
 
@@ -71,7 +71,7 @@ MOCK_SLICE: Dict[str, Any] = {
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100")
+    device = client.devices.get("testuser@open5glab.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+12065550100", imsi=1223334444)
     return device
 
 def test_creating_a_slice(httpx_mock: HTTPXMock, client: NetworkAsCodeClient):
@@ -577,7 +577,8 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
             "nac_resource_id": "attachment-1",
             "resource": {
                 "device": {
-                    "phoneNumber": "12065550100"
+                    "phoneNumber": "12065550100",
+                    "imsi": 1223334444,
                 },
                 "sliceId": "sliceone"
             },
@@ -619,7 +620,9 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
                     "privateAddress": device.ipv4_address.private_address,
                     "publicPort": device.ipv4_address.public_port
                 },
+                "imsi": 1223334444,
             },
+            "customer": {"name": "SDK_Customer"},
             "traffic_categories": {
                 "apps": {
                     "os": "97a498e3-fc92-5c94-8986-0333d06e4e47",
@@ -633,7 +636,7 @@ def test_attach_device_to_slice_with_all_params(httpx_mock, client, device):
         }
     )
 
-    slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+    slice.attach(device,customer=Customer(name="SDK_Customer"), traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
     )), notification_url="https://example.com/notifications",

@@ -12,8 +12,7 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
-# Skipping geofenfing for now
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -38,7 +37,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
 
     subscription.delete()
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -61,7 +60,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
 
     subscription.delete()
 
-@pytest.mark.skip # Subscription gets deleted before the notification gets sent
+@pytest.mark.skip(reason="fails to find subscription")
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -75,7 +74,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
     assert subscription.event_subscription_id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(10)
+    time.sleep(15)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
@@ -84,7 +83,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
 
     subscription.delete()
 
-@pytest.mark.skip # Subscription gets deleted before the notification gets sent
+@pytest.mark.skip(reason="fails to find subscription")
 def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -98,7 +97,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
     assert subscription.event_subscription_id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(10)
+    time.sleep(15)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}") 
@@ -107,7 +106,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
 
     subscription.delete()
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_getting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -122,7 +121,7 @@ def test_getting_geofencing_subscription(client, device):
 
     subscription.delete()
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_getting_geofencing_subscriptions(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -149,7 +148,7 @@ def test_getting_geofencing_subscriptions(client, device):
     for subscription in subscriptions:
         subscription.delete()
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_deleting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -167,7 +166,7 @@ def test_deleting_geofencing_subscription(client, device):
     except:
         assert True
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="fails to find subscription")
 def test_subscribe_invalid_parameter(client, device):
     with pytest.raises(APIError):
         client.geofencing.subscribe(

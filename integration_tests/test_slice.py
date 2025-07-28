@@ -5,7 +5,7 @@ import time
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
-from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point, TrafficCategories
+from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point, TrafficCategories, Customer
 
 from network_as_code.errors import NotFound
 import random
@@ -13,7 +13,7 @@ import httpx
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3670123456")
+    device = client.devices.get(network_access_identifier="sdk-integration@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3671123456", imsi=1223334444)
     return device
 
 @pytest.fixture
@@ -89,6 +89,7 @@ def test_getting_attachments(client):
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
+#@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_deactivating_and_deleting_with_notification_polling(client, notification_base_url):
     slice = client.slices.create(
@@ -134,7 +135,7 @@ async def test_deactivating_and_deleting_with_notification_polling(client, notif
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-@pytest.mark.skip
+#@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_attach_device_to_slice_and_detach(client, device, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
@@ -149,7 +150,9 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 
     assert slice.state == "OPERATING"
 
-    new_attachment = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+    new_attachment = slice.attach(device, 
+        customer=Customer(name="SDK"),
+        traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
     )), notification_url="https://example.com/notifications",
@@ -171,9 +174,9 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-@pytest.mark.skip
+#@pytest.mark.skip
 @pytest.mark.asyncio
-async def test_attach_device_to_slice_with_mandatory_params(client, device, setup_and_cleanup_slice_data):
+async def test_attach_device_to_slice_with_mandatory_params(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
     await slice.wait_for(desired_state="AVAILABLE")
@@ -186,9 +189,9 @@ async def test_attach_device_to_slice_with_mandatory_params(client, device, setu
 
     assert slice.state == "OPERATING"
 
-    device = client.devices.get(phone_number="+12065550100")
+    device = client.devices.get(phone_number="+367123456",imsi=1223334444)
 
-    new_attachment = slice.attach(device)
+    new_attachment = slice.attach(device, customer=Customer(name="SDK"))
     
     time.sleep(30)
 
@@ -206,9 +209,9 @@ async def test_attach_device_to_slice_with_mandatory_params(client, device, setu
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-@pytest.mark.skip
+#@pytest.mark.skip
 @pytest.mark.asyncio
-async def test_attach_device_to_slice_with_optional_params(client, device, setup_and_cleanup_slice_data):
+async def test_attach_device_to_slice_with_optional_params(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
     await slice.wait_for(desired_state="AVAILABLE")
@@ -221,9 +224,10 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
 
     assert slice.state == "OPERATING"
 
-    device = client.devices.get(phone_number="+12065550100")
+    device = client.devices.get(phone_number="+367123456",imsi=1223334444)
 
     new_attachment = slice.attach(device,
+                                  customer=Customer(name="SDK"),
                                   traffic_categories=TrafficCategories(apps=Apps(
                                   os="97a498e3-fc92-5c94-8986-0333d06e4e47",
                                   apps=["ENTERPRISE"])), 
