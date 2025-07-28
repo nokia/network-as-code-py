@@ -49,7 +49,7 @@ def test_get_device_phone_number(client, device, notification_base_url):
     with httpx.Client(follow_redirects=True) as client:
         response = client.get(auth_link)
 
-    time.sleep(2)
+    time.sleep(10)
     response = httpx.get(f'{notification_base_url}/nv-get-code')
 
     code = response.json().get('code')
