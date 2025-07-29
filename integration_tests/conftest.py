@@ -11,10 +11,18 @@ from network_as_code import NetworkAsCodeClient
 @pytest.fixture(scope="module")
 def client() -> NetworkAsCodeClient:
     load_dotenv()
-    using_prod = "PRODTEST" in os.environ
+    nac_env = os.environ.get("NAC_ENV")
 
-    token = os.environ["NAC_TOKEN"] if not using_prod else os.environ["NAC_TOKEN_PROD"]
-    return NetworkAsCodeClient(token=token, dev_mode=not using_prod)
+    token = os.environ["NAC_TOKEN"]
+
+    if nac_env == "staging":
+        token = os.environ["NAC_TOKEN_STAGE"]
+    elif nac_env == "prod":
+        token = os.environ["NAC_TOKEN_PROD"]
+
+    print(nac_env, token)
+
+    return NetworkAsCodeClient(token=token, env_mode=nac_env if nac_env else "dev")
 
 @pytest.fixture(scope="module")
 def notification_base_url() -> str:
