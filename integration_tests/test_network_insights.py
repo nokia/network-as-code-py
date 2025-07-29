@@ -10,7 +10,7 @@ from network_as_code.models.device import Device
 @pytest.fixture
 def nef_device(client) -> Device:
     """Test device for NEF backend"""
-    device = client.devices.get(phone_number="+3670123456")
+    device = client.devices.get(phone_number="+36719991000")
     return device
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, 
     assert subscription.id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(10)
+    time.sleep(20)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
