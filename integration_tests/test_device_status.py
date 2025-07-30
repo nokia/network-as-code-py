@@ -35,7 +35,7 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
 
     subscription.delete()
 
-def test_creating_connectivity_subscription_with_notification_and_event_type(client, device, notification_base_url):
+def test_creating_connectivity_subscription_with_notification_and_type_string_constant(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
         event_type=EventType["CONNECTIVITY_DATA"],
         device=device, 

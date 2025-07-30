@@ -30,7 +30,7 @@ def test_can_subscribe_for_congestion_info_with_nef(client, nef_device: Device, 
     assert subscription.id
 
     # Waiting for the subscription notification to be sent
-    time.sleep(20)
+    time.sleep(10)
 
     # Fetching and deleting the subscription notification
     notification = httpx.get(f"{notification_base_url}/congestion-insights/{notification_id}")
