@@ -45,7 +45,7 @@ def test_number_verification(client, verification_device: Device, notification_b
 
     code = response.json().get('code')
 
-    assert verification_device.verify_number(code= code)
+    assert verification_device.verify_number(code=code)
 
 def test_get_device_phone_number(client, get_number_device: Device, notification_base_url):
 
