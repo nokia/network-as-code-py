@@ -55,19 +55,21 @@ def environment_hostname(env_mode):
     """Select the right hostname based on given environment"""
     if env_mode == "dev":
         return "network-as-code1.nokia-dev.rapidapi.com"
-    elif env_mode == "staging":
+
+    if env_mode == "staging":
         return "network-as-code.nokia-stage.rapidapi.com"
-    else:
-        return "network-as-code.nokia.rapidapi.com"
+
+    return "network-as-code.nokia.rapidapi.com"
 
 def environment_base_url(env_mode):
     """Select the right API base URL based on given environment"""
     if env_mode == "dev":
         return "https://network-as-code1.p-eu.rapidapi.com"
-    elif env_mode == "staging":
+
+    if env_mode == "staging":
         return "https://network-as-code.p-eu.rapidapi.com"
-    else:
-        return "https://network-as-code.p-eu.rapidapi.com"
+
+    return "https://network-as-code.p-eu.rapidapi.com"
 
 
 class APIClient:
@@ -88,7 +90,7 @@ class APIClient:
         slice_base_url: Optional[str] = None,
         slice_attach_base_url: Optional[str] = None,
         device_status_base_url: Optional[str] = None,
-        congestion_base_url: Optional[str] = None, 
+        congestion_base_url: Optional[str] = None,
         sim_swap_base_url: Optional[str] = None,
         geofencing_base_url: Optional[str] = None,
         credentials_base_url: Optional[str] = None,
