@@ -124,7 +124,6 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            env | grep gitlab
                             http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 0 --dist worksteal integration_tests/
                         """
                     }
@@ -190,14 +189,14 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
-                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
+                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" NAC_ENV=staging python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }
                 }
             }
         }
-        stage('Release integration tests against production') {
+        stage('Release integration tests') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
                 container('python') {
@@ -207,7 +206,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
                             sh '''
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" NAC_ENV=staging python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }
