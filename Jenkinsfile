@@ -163,8 +163,6 @@ pipeline {
             }
         }
         stage('Installation Test') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && 
-            (env.gitlabBranch.contains("rc-") || env.gitlabBranch.contains("release-"))} }
             steps {
                 container('python') {
                     script {
