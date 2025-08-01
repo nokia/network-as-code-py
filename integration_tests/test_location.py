@@ -5,12 +5,12 @@ import pytest
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get(phone_number = "+3671231001")
+    device = client.devices.get(phone_number = "+367199991001")
     return device
 
 @pytest.fixture
 def device_for_false(client) -> Device:
-    device = client.devices.get(phone_number = "+36711231000")
+    device = client.devices.get(phone_number = "+367199991000")
     return device
 
 def test_getting_a_device_location_sends_out_request(device):
