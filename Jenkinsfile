@@ -125,7 +125,7 @@ pipeline {
                     script {
                         sh """
                             env | grep gitlab
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 8 --dist worksteal integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 0 --dist worksteal integration_tests/
                         """
                     }
                 }        
