@@ -16,8 +16,7 @@ from datetime import datetime
 from typing import List, Union, Optional
 from . import Namespace
 from ..models.device import Device
-from ..models.device_status import EventSubscription
-
+from ..models.device_status import EventSubscription, EventType
 
 
 class Connectivity(Namespace):
@@ -29,7 +28,7 @@ class Connectivity(Namespace):
 
     def subscribe(
         self,
-        event_type: str,
+        event_type: Union[EventType, str],
         notification_url: str,
         device: Device,
         max_num_of_reports: Optional[int] = None,
@@ -39,7 +38,7 @@ class Connectivity(Namespace):
         """Create subscription for device connectivity status.
 
         Args:
-            event_type (str): Event type of the subscription.
+            event_type (Union[EventType, str]): Event type of the subscription.
             notification_url (str): Notification URL for session-related events.
             notification_auth_token (optional): Authorization token for notification sending.
             device (Device): Identifier of the device
@@ -53,6 +52,9 @@ class Connectivity(Namespace):
         # Handle conversion
         if isinstance(subscription_expire_time, datetime):
             subscription_expire_time = subscription_expire_time.isoformat()
+
+        if isinstance(event_type, EventType):
+            event_type = event_type.value
 
         connectivity_data = self.api.devicestatus.create_subscription(
             device,

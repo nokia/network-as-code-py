@@ -27,7 +27,7 @@ class GeofencingAPI:
         self,
         device,
         sink: str,
-        types: List[str],
+        typelist: List[str],
         latitude: float,
         longitude: float,
         radius: Union[int, float],
@@ -40,7 +40,7 @@ class GeofencingAPI:
         body: dict = {
             "protocol": "HTTP",
             "sink": sink,
-            "types": types,
+            "types": typelist,
             "config": {
                 "subscriptionDetail": {
                     "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),

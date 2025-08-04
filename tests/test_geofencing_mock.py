@@ -1,7 +1,7 @@
 import pytest
 
 from network_as_code.models.device import DeviceIpv4Addr, Device
-from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
+from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential, EventType
 from network_as_code.errors import NotFound, AuthenticationException, APIError, ServiceError
 
 
@@ -98,6 +98,94 @@ def test_creating_geofencing_subscription_area_entered_type(httpx_mock, client):
 
     assert subscription.event_subscription_id
 
+def test_creating_geofencing_subscription_area_entered_event_type(httpx_mock, client):
+    httpx_mock.add_response(
+        url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
+        method="POST",
+        json={
+            "protocol": "HTTP",
+            "sink": "https://example.com/",
+            "types": [
+                "org.camaraproject.geofencing-subscriptions.v0.area-entered"
+            ],
+            "config": {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "123456789@domain.com",
+                        "phoneNumber": "+123456789",
+                        "ipv4Address": {
+                            "publicAddress": "1.1.1.2",
+                            "publicPort": 80
+                        },
+                        "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                    },
+                    "area": {
+                        "areaType": "CIRCLE",
+                        "center": {
+                            "latitude": -90,
+                            "longitude": -180
+                        },
+                        "radius": 2001
+                    }
+                },
+                "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
+                "subscriptionMaxEvents": 1,
+                "initialEvent": False
+            },
+            "id": "de87e438-58b4-42c3-9d49-0fbfbd878305",
+            "startsAt": "2025-01-23T10:40:30.616Z"
+        },
+        match_json=
+        {
+            "protocol": "HTTP",
+            "sink": "https://example.com/",
+            "types": [
+                "org.camaraproject.geofencing-subscriptions.v0.area-entered"
+            ],
+            "config": {
+                "subscriptionDetail": {
+                    "device": {
+                        "networkAccessIdentifier": "123456789@domain.com",
+                        "phoneNumber": "+123456789",
+                        "ipv4Address": {
+                            "publicAddress": "1.1.1.2",
+                            "publicPort": 80
+                        },
+                        "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                    },
+                    "area": {
+                        "areaType": "CIRCLE",
+                        "center": {
+                            "latitude": -90,
+                            "longitude": -180
+                        },
+                        "radius": 2001
+                    }
+                },
+                "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
+                "subscriptionMaxEvents": 1,
+                "initialEvent": False
+            }
+        }
+    )
+
+    device = client.devices.get("123456789@domain.com", phone_number="+123456789", ipv4_address=DeviceIpv4Addr(public_address="1.1.1.2", public_port=80), ipv6_address="2001:db8:85a3:8d3:1319:8a2e:370:7344")
+
+    subscription = client.geofencing.subscribe(
+        device=device,
+        sink="https://example.com/",
+        types=[EventType["AREA_ENTERED"]],
+        latitude=-90,
+        longitude=-180,
+        radius=2001,
+        subscription_expire_time="2025-01-23T10:40:30.616Z",
+        subscription_max_events=1,
+        initial_event=False
+    )
+
+    assert subscription.event_subscription_id
+
+
 def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, client):
     httpx_mock.add_response(
         url="https://network-as-code.p-eu.rapidapi.com/geofencing-subscriptions/v0.3/subscriptions",
@@ -174,7 +262,7 @@ def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, clie
     subscription = client.geofencing.subscribe(
         device=device,
         sink="https://example.com/",
-        types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
+        types=[EventType.AREA_LEFT],
         latitude=-90,
         longitude=-180,
         radius=2001,
