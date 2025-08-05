@@ -24,6 +24,7 @@ from .geofencing_api import GeofencingAPI
 from .credentials_api import CredentialsAPI
 from .authorization_api import AuthorizationAPI
 from. number_verification_api import NumberVerificationAPI
+from .call_forwarding_api import CallForwardingAPI
 
 QOS_URL = "/qod/v0"
 
