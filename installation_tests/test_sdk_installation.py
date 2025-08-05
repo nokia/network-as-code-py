@@ -9,7 +9,7 @@ token = os.environ["NAC_TOKEN"]
 
 @pytest.fixture
 def device() -> Device:
-    client = NetworkAsCodeClient(token=token, dev_mode=True)
+    client = NetworkAsCodeClient(token=token, env_mode="dev")
     device = client.devices.get("device@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
 
