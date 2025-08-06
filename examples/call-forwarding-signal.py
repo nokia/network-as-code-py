@@ -5,7 +5,7 @@ client = nac.NetworkAsCodeClient(
     token="<your-application-key-here>"
 )
 
-# Then, we create an object for the mobile device we want to use
+# Then, create a device object for the phone number you want to check
 my_device = client.devices.get(
     # The phone number accepts the "+" sign, but not spaces or "()" marks
     phone_number="+3637123456"
@@ -19,7 +19,7 @@ print(result)
 
 # To get information about an active "call forwarding setup" for the given device,
 # use the following snippet:
-service_list = my_device.get_forwarding_services()
+service_list = my_device.get_call_forwarding()
 
 # Show active Call Forwarding Services
 print(service_list)

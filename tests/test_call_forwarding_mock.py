@@ -24,7 +24,7 @@ def test_verify_unconditional_call_forwarding(httpx_mock, device):
     )
     assert device.verify_unconditional_forwarding() == True
 
-def test_get_call_forwarding_services(httpx_mock, device):
+def test_get_call_forwarding(httpx_mock, device):
     url="https://call-forwarding-signal.p-eu.rapidapi.com/call-forwardings"
 
     mock_response = [
@@ -40,7 +40,7 @@ def test_get_call_forwarding_services(httpx_mock, device):
             "phoneNumber": "+367199991000"
         }
     )
-    result = device.get_forwarding_services()
+    result = device.get_call_forwarding()
     types = ['inactive', 'unconditional', 'conditional_busy', 'conditional_not_reachable', 'conditional_no_answer']
 
     assert isinstance(result, list)
@@ -52,8 +52,8 @@ def test_verify_unconditional_forwarding_without_phone_number(client):
     with pytest.raises(InvalidParameter):
         device.verify_unconditional_forwarding()
 
-def test_call_forwarding_without_phone_number(client):
+def test_get_call_forwarding_without_phone_number(client):
     device = client.devices.get(network_access_identifier="test@device.net")
 
     with pytest.raises(InvalidParameter):
-        device.get_forwarding_services()
+        device.get_call_forwarding()

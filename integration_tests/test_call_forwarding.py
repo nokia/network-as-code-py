@@ -22,9 +22,9 @@ def test_device_is_not_unconditionally_forwarding(device):
 
     assert not device.verify_unconditional_forwarding()
 
-def test_get_forwarding_services(forwarding_device):
+def test_get_call_forwarding(forwarding_device):
 
-    result = forwarding_device.get_forwarding_services()
+    result = forwarding_device.get_call_forwarding()
 
     types = ['inactive', 'unconditional', 'conditional_busy', 'conditional_not_reachable', 'conditional_no_answer']
 
@@ -35,4 +35,4 @@ def test_raise_error_with_empty_phone_number(client):
     device = client.devices.get(phone_number="")
 
     with pytest.raises(APIError):
-        device.get_forwarding_services()
+        device.get_call_forwarding()

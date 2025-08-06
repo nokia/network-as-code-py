@@ -22,7 +22,7 @@ class CallForwardingAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
         self.client = httpx_client(base_url, rapid_key, rapid_host)
 
-    def retrieve_call_forwarding_services(self, phone_number):
+    def retrieve_call_forwarding(self, phone_number):
         body = {
             "phoneNumber": phone_number
         }

@@ -368,7 +368,7 @@ class Device(BaseModel):
 
         return self._api.number_verification.get_phone_number(headers=headers)
 
-    def get_forwarding_services(self) -> List:
+    def get_call_forwarding(self) -> List:
         """Gets information about Call Forwarding Services active for the given device.
 
         #### Returns
@@ -377,7 +377,7 @@ class Device(BaseModel):
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
 
-        return self._api.call_forwarding.retrieve_call_forwarding_services(self.phone_number)
+        return self._api.call_forwarding.retrieve_call_forwarding(self.phone_number)
 
     def verify_unconditional_forwarding(self) -> bool:
         """Verify if device has unconditional call forwarding active.
