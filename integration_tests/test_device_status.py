@@ -196,7 +196,6 @@ def test_get_roaming_status_false(client):
 
     assert not status.roaming
 
-@pytest.mark.skip(reason="the API currently gives a 400 error for this")
 def test_subscribe_device_not_found(client):
     device = client.devices.get(phone_number="+99999990404")
 

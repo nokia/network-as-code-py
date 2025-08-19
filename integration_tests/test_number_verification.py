@@ -5,7 +5,7 @@ from network_as_code.models.device import Device
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get(phone_number="+3637123456")
+    device = client.devices.get(phone_number="+99999991000")
     return device
 
 def test_get_client_credentials(client):
@@ -29,8 +29,25 @@ def test_authentication_link(client):
     
     assert response.status_code == 302
 
-def test_number_verification(client, device, notification_base_url):
-    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
+def test_number_verification_true(client, notification_base_url):
+    device = client.devices.get(phone_number="+99999991000")
+
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
+
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
+
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
+
+    code = response.json().get('code')
+
+    assert device.verify_number(code= code)
+
+def test_number_verification_false(client, notification_base_url):
+    device = client.devices.get(phone_number="+99999991001")
+
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991001")
 
     with httpx.Client(follow_redirects=True) as client:
         response = client.get(auth_link)
@@ -44,7 +61,7 @@ def test_number_verification(client, device, notification_base_url):
 
 def test_get_device_phone_number(client, device, notification_base_url):
 
-    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='number-verification:device-phone-number:read', login_hint="+3637123456")
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='number-verification:device-phone-number:read', login_hint="+99999991000")
 
     with httpx.Client(follow_redirects=True) as client:
         response = client.get(auth_link)
