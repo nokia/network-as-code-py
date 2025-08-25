@@ -161,19 +161,43 @@ def test_get_subscriptions(client, device):
 
     assert isinstance(subscriptions, list)
 
-def test_get_connectivity_status(client, device):
+def test_get_connectivity_status_sms(client):
+    device = client.devices.get(phone_number="+99999991000")
+
+    status = device.get_connectivity()
+
+    assert status == "CONNECTED_SMS"
+
+def test_get_connectivity_status_connected(client):
+    device = client.devices.get(phone_number="+99999991001")
+
     status = device.get_connectivity()
 
     assert status == "CONNECTED_DATA"
 
-def test_get_roaming_status(client, device):
+def test_get_connectivity_status_not_connected(client):
+    device = client.devices.get(phone_number="+99999991002")
+
+    status = device.get_connectivity()
+
+    assert status == "NOT_CONNECTED"
+
+def test_get_roaming_status_true(client):
+    device = client.devices.get(phone_number="+99999991000")
+
     status = device.get_roaming()
 
     assert status.roaming
 
-@pytest.mark.skip(reason="the API currently gives a 400 error for this")
+def test_get_roaming_status_false(client):
+    device = client.devices.get(phone_number="+99999991001")
+
+    status = device.get_roaming()
+
+    assert not status.roaming
+
 def test_subscribe_device_not_found(client):
-    device = client.devices.get("non-existent@device.net")
+    device = client.devices.get(phone_number="+99999990404")
 
     with pytest.raises(NotFound):
         client.connectivity.subscribe(
