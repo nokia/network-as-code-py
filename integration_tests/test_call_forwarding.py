@@ -5,12 +5,12 @@ import pytest
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get(phone_number="+367199991001")
+    device = client.devices.get(phone_number="+999999991001")
     return device
 
 @pytest.fixture
 def forwarding_device(client) -> Device:
-    device = client.devices.get(phone_number="+367199991000")
+    device = client.devices.get(phone_number="+99999991111")
     return device
 
 

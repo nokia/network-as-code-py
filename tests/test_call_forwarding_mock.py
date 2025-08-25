@@ -4,11 +4,11 @@ from network_as_code.models.device import Device
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get(phone_number="+367199991000")
+    device = client.devices.get(phone_number="+999999991000")
     return device
 
 def test_verify_unconditional_call_forwarding(httpx_mock, device):
-    url="https://call-forwarding-signal.p-eu.rapidapi.com/unconditional-call-forwardings"
+    url="https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings"
 
     mock_response = {
         "active": True
@@ -19,13 +19,13 @@ def test_verify_unconditional_call_forwarding(httpx_mock, device):
         method='POST', 
         json=mock_response,
         match_json={
-            "phoneNumber": "+367199991000"
+            "phoneNumber": "+999999991000"
         }
     )
     assert device.verify_unconditional_forwarding() == True
 
 def test_get_call_forwarding(httpx_mock, device):
-    url="https://call-forwarding-signal.p-eu.rapidapi.com/call-forwardings"
+    url="https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings"
 
     mock_response = [
     "unconditional",
@@ -37,7 +37,7 @@ def test_get_call_forwarding(httpx_mock, device):
         method='POST', 
         json=mock_response,
         match_json={
-            "phoneNumber": "+367199991000"
+            "phoneNumber": "+999999991000"
         }
     )
     result = device.get_call_forwarding()

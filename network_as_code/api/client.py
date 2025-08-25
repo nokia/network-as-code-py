@@ -50,6 +50,8 @@ CREDENTIALS_URL = "/oauth2/v1"
 
 AUTHORIZATION_URL = "/.well-known"
 
+CALL_FORWARDING_URL = "/passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3"
+
 # RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 
 def environment_hostname(env_mode):
@@ -97,6 +99,7 @@ class APIClient:
         credentials_base_url: Optional[str] = None,
         authorization_base_url: Optional[str] = None,
         number_verification_base_url: Optional[str] = None,
+        call_forwarding_base_url: Optional[str] = None,
         env_mode: Optional[str] = None,
     ):
         base_url = environment_base_url(env_mode)
@@ -138,6 +141,9 @@ class APIClient:
 
         if not authorization_base_url:
             authorization_base_url = f"{base_url}{AUTHORIZATION_URL}"
+
+        if not call_forwarding_base_url:
+            call_forwarding_base_url = f"{base_url}{CALL_FORWARDING_URL}"
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
@@ -206,6 +212,12 @@ class APIClient:
 
         self.authorization = AuthorizationAPI(
             base_url = authorization_base_url,
+            rapid_key = token,
+            rapid_host=hostname,
+        )
+
+        self.call_forwarding = CallForwardingAPI(
+            base_url = call_forwarding_base_url,
             rapid_key = token,
             rapid_host=hostname,
         )
