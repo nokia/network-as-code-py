@@ -10,21 +10,21 @@ dependencies = [
     "httpx<1.0.0,>=0.27.0",
 ]
 name = "network_as_code"
-version = "6.0.0"
+version = "6.1.0"
 description = ""
 
 [dependency-groups]
 dev = [
     "pylint<4.0.0,>=3.2.2",
     "pyright<2.0.0,>=1.1.271",
-    "pytest-asyncio<1.0.0,>=0.19.0",
-    "pdoc<15.0.0,>=14.5.1",
+    "pytest-asyncio<2.0.0,>=0.19.0",
+    "pdoc<16.0.0,>=14.5.1",
     "pytest<9.0.0,>=8.3.3",
-    "pytest-cov<5.0.0,>=4.0.0",
-    "black<25.0.0,>=24.3.0",
+    "pytest-cov<7.0.0,>=4.0.0",
+    "black<26.0.0,>=24.3.0",
     "pyyaml<7.0,>=6.0",
-    "python-dotenv<1.0.0,>=0.19.2",
-    "pytest-env<1.0.0,>=0.8.2",
+    "python-dotenv<2.0.0,>=0.19.2",
+    "pytest-env<2.0.0,>=0.8.2",
     "pytest-httpx<1.0.0,>=0.34.0",
     "pip-audit<3.0.0,>=2.6.1",
     "pipdeptree<3.0.0,>=2.13.2",

@@ -1,11 +1,9 @@
-from pytest_httpx import httpx_mock
 import pytest
 
 from datetime import datetime
 from network_as_code.models.congestion import Congestion, CongestionSubscription
 
 from network_as_code.models.device import Device
-from tests.test_device_status_api_mock import to_bytes
 
 @pytest.fixture
 def nef_device(client) -> Device:
@@ -17,7 +15,7 @@ def camara_device(client) -> Device:
     device = client.devices.get(phone_number="3637123456")
     return device
 
-def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client, camara_device):
+def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, camara_device):
     httpx_mock.add_response(
         url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/query",
         method="POST",
@@ -45,7 +43,7 @@ def test_can_fetch_current_congestion_info_from_device_model(httpx_mock, client,
     assert isinstance(congestion[0], Congestion)
     assert congestion[0].level == "medium"
 
-def test_can_request_congestion_time_range(httpx_mock, client, camara_device):
+def test_can_request_congestion_time_range(httpx_mock, camara_device):
     httpx_mock.add_response(
         url="https://network-as-code.p-eu.rapidapi.com/congestion-insights/v0/query",
         method="POST",

@@ -16,15 +16,6 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
 
-class CivicAddress(BaseModel):
-    country: Optional[str] = None
-    a1: Optional[str] = None
-    a2: Optional[str] = None
-    a3: Optional[str] = None
-    a4: Optional[str] = None
-    a5: Optional[str] = None
-    a6: Optional[str] = None
-
 class VerificationResult(BaseModel):
     """
     A class representing the `Location verification result` model.
@@ -45,11 +36,9 @@ class Location(BaseModel):
     #### Public Attributes:
             longitude (float): the `longitude` of a location object.
             latitude (float): the `latitude` of a location object.
-            civic_address (Optional[CivicAddress]): the `civic_address` of a location object.
             radius (Optional[float]): the `radius` of a location object.
     """
 
     longitude: float
     latitude: float
-    civic_address: Optional[CivicAddress] = None
     radius: Optional[float] = None

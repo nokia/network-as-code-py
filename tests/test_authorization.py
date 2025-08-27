@@ -2,8 +2,6 @@ from network_as_code.errors import ServiceError, APIError
 from network_as_code.models.number_verification import Credentials, Endpoints
 from network_as_code.namespaces.authorization import Authorization
 import pytest
-import httpx
-import json
 from unittest.mock import patch
 
 def test_get_credentials(httpx_mock, client):

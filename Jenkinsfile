@@ -58,6 +58,7 @@ pipeline {
         PYPI_TOKEN = credentials('PYPI_TOKEN')
         NAC_TOKEN = credentials('NAC_TOKEN')
         NAC_TOKEN_PROD = credentials('NAC_TOKEN_PROD')
+        NAC_TOKEN_STAGE = credentials('NAC_TOKEN_STAGE')
         TEAMS_WEBHOOK = credentials('TEAMS_WEBHOOK')
         SDK_NOTIFICATION_SERVER_URL = credentials('SDK_NOTIFICATION_SERVER_URL')
         SONAR_PATH = "/opt/sonar-scanner/bin"
@@ -124,8 +125,7 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            env | grep gitlab
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 8 --dist worksteal integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pytest -n 0 --dist worksteal integration_tests/
                         """
                     }
                 }        
@@ -163,8 +163,6 @@ pipeline {
             }
         }
         stage('Installation Test') {
-            when { expression { env.gitlabActionType == "TAG_PUSH" && 
-            (env.gitlabBranch.contains("rc-") || env.gitlabBranch.contains("release-"))} }
             steps {
                 container('python') {
                     script {
@@ -190,14 +188,14 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("rc-")){
                             sh '''
-                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
+                                http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" NAC_ENV=staging python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }
                 }
             }
         }
-        stage('Release integration tests against production') {
+        stage('Release integration tests') {
             when { expression { env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")} }
             steps {
                 container('python') {
@@ -207,7 +205,7 @@ pipeline {
                         """
                         if(env.gitlabActionType == "TAG_PUSH" && env.gitlabBranch.contains("release-")){
                             sh '''
-                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" PRODTEST=1 python3 -m uv run pytest integration_tests/
+                            http_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" NAC_ENV=staging python3 -m uv run pytest integration_tests/
                             '''
                         }
                     }

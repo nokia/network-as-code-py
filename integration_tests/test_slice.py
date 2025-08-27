@@ -5,7 +5,7 @@ import time
 
 from network_as_code.models.device import Device, DeviceIpv4Addr
 
-from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point, TrafficCategories
+from network_as_code.models.slice import Apps, Throughput, NetworkIdentifier, SliceInfo, AreaOfService, Point, TrafficCategories, Customer
 
 from network_as_code.errors import NotFound
 import random
@@ -13,7 +13,7 @@ import httpx
 
 @pytest.fixture
 def device(client) -> Device:
-    device = client.devices.get("testuser@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3670123456")
+    device = client.devices.get(network_access_identifier="sdk-integration@testcsp.net", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80), phone_number="+3671123456", imsi=1223334444)
     return device
 
 @pytest.fixture
@@ -37,6 +37,7 @@ def setup_and_cleanup_slice_data(client):
 
     slice.delete()
 
+@pytest.mark.skip(reason="API returns 401")
 def test_getting_slices(client):
     assert type(client.slices.get_all()) is list
 
@@ -46,7 +47,7 @@ def test_creating_a_slice(client, setup_and_cleanup_slice_data):
     assert slice.network_identifier.mnc == '30'
     assert slice.network_identifier.mcc == '236'
 
-def test_creating_a_slice_with_optional_args(client,notification_base_url):
+def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
         name=f'slice{random.randint(1, 1000)}',
         network_id=NetworkIdentifier(mcc="236", mnc="30"),
@@ -61,6 +62,8 @@ def test_creating_a_slice_with_optional_args(client,notification_base_url):
         max_data_connections=10,
         max_devices=5
     )
+    assert slice.max_devices == 5
+    assert slice.max_data_connections == 10
 
     slice.delete()
 
@@ -81,33 +84,56 @@ def test_deleting_a_slice_marks_it_as_deleted(client, setup_and_cleanup_slice_da
 
     assert slice.state == "DELETED"
 
+@pytest.mark.skip(reason="API returns 401")
 def test_getting_attachments(client):
     assert type(client.slices.get_all_attachments()) is list
 
 
-
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-# @pytest.mark.skip
+#@pytest.mark.skip
 @pytest.mark.asyncio
-async def test_deactivating_and_deleting_a_slice(client, setup_and_cleanup_slice_data):
-    slice = setup_and_cleanup_slice_data
+async def test_deactivating_and_deleting_with_notification_polling(client, notification_base_url):
+    slice = client.slices.create(
+        network_id=NetworkIdentifier(mcc="236", mnc="30"),
+        slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
+        notification_url=f"{notification_base_url}/notify",
+        notification_auth_token="my-token",
+        name=f'slice{random.randint(1, 1000)}'
+    )
 
-    await slice.wait_for(desired_state="AVAILABLE")
+    # Wait for the notification to take action
+    time.sleep(2 * 60)
 
-    assert slice.state == "AVAILABLE"
+    notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
+    assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
 
     slice.activate()
 
-    await slice.wait_for(desired_state="OPERATING")
+    # Poll the notification server until slice is operating
+    while notification.json()[-1]['current_slice_state'] == "AVAILABLE":
+        time.sleep(5)
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
 
-    assert slice.state == "OPERATING"
-    
+    assert notification.json()[-1]['current_slice_state'] == "OPERATING"
     slice.deactivate()
 
-    await slice.wait_for(desired_state="AVAILABLE")
+    # Poll the notification server until slice is deactivated
+    while notification.json()[-1]['current_slice_state'] == "OPERATING":
+        time.sleep(5)
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
+    
+    assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
+    slice.delete()
 
-    assert slice.state == "AVAILABLE"
+    # Poll the notification server until slice is deleted
+    while notification.json()[-1]['current_slice_state'] == "AVAILABLE":
+        time.sleep(5)
+        notification = httpx.get(f"{notification_base_url}/network-slice/{slice.name}")
+
+    assert notification.json()[-1]['current_slice_state'] == "DELETED"
+
+    httpx.delete(f"{notification_base_url}/network-slice/{slice.name}")
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
@@ -126,7 +152,9 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 
     assert slice.state == "OPERATING"
 
-    new_attachment = slice.attach(device, traffic_categories=TrafficCategories(apps=Apps(
+    new_attachment = slice.attach(device, 
+        customer=Customer(name="SDK"),
+        traffic_categories=TrafficCategories(apps=Apps(
         os="97a498e3-fc92-5c94-8986-0333d06e4e47",
         apps=["ENTERPRISE"]
     )), notification_url="https://example.com/notifications",
@@ -150,7 +178,7 @@ async def test_attach_device_to_slice_and_detach(client, device, setup_and_clean
 #       if you are in a rush, add a temporary skip here
 @pytest.mark.skip
 @pytest.mark.asyncio
-async def test_attach_device_to_slice_with_mandatory_params(client, device, setup_and_cleanup_slice_data):
+async def test_attach_device_to_slice_with_mandatory_params(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
     await slice.wait_for(desired_state="AVAILABLE")
@@ -163,9 +191,9 @@ async def test_attach_device_to_slice_with_mandatory_params(client, device, setu
 
     assert slice.state == "OPERATING"
 
-    device = client.devices.get(phone_number="+12065550100")
+    device = client.devices.get(phone_number="+367123456",imsi=1223334444)
 
-    new_attachment = slice.attach(device)
+    new_attachment = slice.attach(device, customer=Customer(name="SDK"))
     
     time.sleep(30)
 
@@ -185,7 +213,7 @@ async def test_attach_device_to_slice_with_mandatory_params(client, device, setu
 #       if you are in a rush, add a temporary skip here
 @pytest.mark.skip
 @pytest.mark.asyncio
-async def test_attach_device_to_slice_with_optional_params(client, device, setup_and_cleanup_slice_data):
+async def test_attach_device_to_slice_with_optional_params(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
     await slice.wait_for(desired_state="AVAILABLE")
@@ -198,9 +226,10 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
 
     assert slice.state == "OPERATING"
 
-    device = client.devices.get(phone_number="+12065550100")
+    device = client.devices.get(phone_number="+367123456",imsi=1223334444)
 
     new_attachment = slice.attach(device,
+                                  customer=Customer(name="SDK"),
                                   traffic_categories=TrafficCategories(apps=Apps(
                                   os="97a498e3-fc92-5c94-8986-0333d06e4e47",
                                   apps=["ENTERPRISE"])), 
@@ -220,45 +249,6 @@ async def test_attach_device_to_slice_with_optional_params(client, device, setup
     await slice.wait_for(desired_state="AVAILABLE")
 
     assert slice.state == "AVAILABLE"
-
-@pytest.mark.asyncio
-async def test_notifications(client, notification_base_url):
-    slice = client.slices.create(
-        network_id=NetworkIdentifier(mcc="236", mnc="30"),
-        slice_info=SliceInfo(service_type="eMBB", differentiator="444444"),
-        notification_url=f"{notification_base_url}/notify",
-        notification_auth_token="my-token",
-        name=f'slice{random.randint(1, 1000)}'
-    )
-
-    await slice.wait_for(desired_state="AVAILABLE")
-
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
-    assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
-
-    slice.activate()
-
-    await slice.wait_for(desired_state="OPERATING")
-
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
-    assert notification.json()[-1]['current_slice_state'] == "OPERATING"
-
-    slice.deactivate()
-
-    await slice.wait_for(desired_state="AVAILABLE")
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
-    assert notification.json()[-1]['current_slice_state'] == "AVAILABLE"
-
-    slice.delete()
-    # Waiting 2 mins for the notification to be sent!
-    time.sleep(2 * 60)
-    notification = httpx.get(f"{notification_base_url}/network-slice/get/{slice.name}")
-    assert notification.json()[-1]['current_slice_state'] == "DELETED"
-
-    httpx.delete(f"{notification_base_url}/network-slice/delete/{slice.name}")
 
 def test_NotFound_error(client):
     with pytest.raises(NotFound):

@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta, timezone
-from network_as_code.models.device_status import EventSubscription
 from network_as_code.models.device import Device, DeviceIpv4Addr
+from network_as_code.models.device_status import EventType
 
-from network_as_code.errors import error_handler
-from network_as_code.errors import AuthenticationException, NotFound, ServiceError, APIError
+from network_as_code.errors import NotFound, APIError
 
 import pytest
 import time
@@ -23,10 +22,36 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+    
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
+
+
+    subscription.delete()
+
+def test_creating_connectivity_subscription_with_notification_and_type_string_constant(client, device, notification_base_url):
+    subscription = client.connectivity.subscribe(
+        event_type=EventType["CONNECTIVITY_DATA"],
+        device=device, 
+        max_num_of_reports=5, 
+        notification_url=f"{notification_base_url}/notify", 
+        notification_auth_token="c8974e592c2fa383d4a3960714",
+    )
+    assert subscription.id
+
+    # Waiting for the subscription notification to be sent
+    time.sleep(5)
+    
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
 
@@ -34,7 +59,7 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
 
 def test_creating_connectivity_subscription_roaming(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="org.camaraproject.device-status.v0.roaming-status",
+        event_type=EventType.ROAMING_STATUS,
         device=device, 
         max_num_of_reports=5, 
         notification_url=f"{notification_base_url}/notify", 
@@ -44,11 +69,12 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
     assert subscription.id is not None
     assert subscription.max_num_of_reports == 5, f"Expected max_num_of_reports to be 5 but got {subscription.max_num_of_reports}"
 
-    assert subscription.id
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
     subscription.delete()
@@ -63,17 +89,21 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
     )
 
     assert subscription.id
+
+    # Waiting for the subscription notification to be sent
     time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
+
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}")
     assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
     subscription.delete()
 
 def test_creating_connectivity_subscription_with_expiration(client, device, notification_base_url):
     subscription = client.connectivity.subscribe(
-        event_type="org.camaraproject.device-status.v0.connectivity-data",
+        event_type=EventType.CONNECTIVITY_DATA,
         device=device, 
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
         notification_url=f"{notification_base_url}/notify", 
@@ -81,13 +111,15 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
     )
 
     assert subscription.id
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/device-status/get/{subscription.id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/device-status/delete/{subscription.id}")
-    assert notification.json() 
-    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
+    # Waiting for the subscription notification to be sent
+    time.sleep(5)
+
+    # Fetching and deleting the subscription notification
+    notification = httpx.get(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json()[0]['id'] is not None
+    notification = httpx.delete(f"{notification_base_url}/device-status/{subscription.id}") 
+    assert notification.json() == [{'message': 'Notification deleted'}, 200] 
 
     subscription.delete()
 
@@ -129,19 +161,43 @@ def test_get_subscriptions(client, device):
 
     assert isinstance(subscriptions, list)
 
-def test_get_connectivity_status(client, device):
+def test_get_connectivity_status_sms(client):
+    device = client.devices.get(phone_number="+99999991000")
+
+    status = device.get_connectivity()
+
+    assert status == "CONNECTED_SMS"
+
+def test_get_connectivity_status_connected(client):
+    device = client.devices.get(phone_number="+99999991001")
+
     status = device.get_connectivity()
 
     assert status == "CONNECTED_DATA"
 
-def test_get_roaming_status(client, device):
+def test_get_connectivity_status_not_connected(client):
+    device = client.devices.get(phone_number="+99999991002")
+
+    status = device.get_connectivity()
+
+    assert status == "NOT_CONNECTED"
+
+def test_get_roaming_status_true(client):
+    device = client.devices.get(phone_number="+99999991000")
+
     status = device.get_roaming()
 
     assert status.roaming
 
-@pytest.mark.skip(reason="the API currently gives a 400 error for this")
+def test_get_roaming_status_false(client):
+    device = client.devices.get(phone_number="+99999991001")
+
+    status = device.get_roaming()
+
+    assert not status.roaming
+
 def test_subscribe_device_not_found(client):
-    device = client.devices.get("non-existent@device.net")
+    device = client.devices.get(phone_number="+99999990404")
 
     with pytest.raises(NotFound):
         client.connectivity.subscribe(

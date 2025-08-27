@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
-from ..models.location import CivicAddress, Location, VerificationResult
+from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
 from ..models.number_verification import AccessToken
 from ..api.utils import tokenizer
@@ -29,28 +29,14 @@ class RoamingStatus(BaseModel):
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
 
-
-class Event(BaseModel):
-    """
-    A class representing the `Event` model.
-
-    #### Public Attributes:
-            target (float): the `target` of an event object.
-            atUnix (float): the `atUnix` of an event object.
-    """
-
-    target: str
-    atUnix: int
-
-
 class DeviceIpv4Addr(BaseModel):
     """
     A class representing the `DeviceIpv4Addr` model.
 
     #### Public Attributes:
-            public_address (float): the `public_address` of a device IPv4 address object.
-            private_address (float): the `private_address` of a device IPv4 address object.
-            public_port (Optional[CivicAddress]): the `public_port` of a device IPv4 address object.
+            public_address Optional[str]: the `public_address` of a device IPv4 address object.
+            private_address Optional[str]: the `private_address` of a device IPv4 address object.
+            public_port (Optional[int]): the `public_port` of a device IPv4 address object.
     """
 
     public_address: Optional[str] = Field(None, serialization_alias="publicAddress")
@@ -71,6 +57,7 @@ class Device(BaseModel):
         phone_number(str): Phone Number string
         ipv4_address (DeviceIpv4Addr): Ipv4 address of the device.
         ipv6_address (str): Ipv6 address of the device.
+        imsi (Optional[int]): International Mobile Subscriber Identity (IMSI) of the device.
 
     #### Public Methods:
         create_session (Session): Creates a session for the device.
@@ -94,6 +81,7 @@ class Device(BaseModel):
         None, serialization_alias="ipv4Address"
     )
     ipv6_address: Union[str, None] = Field(None, serialization_alias="ipv6Address")
+    imsi: Optional[int] = Field(None, serialization_alias="imsi")
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
@@ -150,8 +138,6 @@ class Device(BaseModel):
             notification_url,
             notification_auth_token,
         )
-        # Convert response body to an Event model
-        # Event(target=session.json().get('id'), atUnix=session.json().get('expiresAt'))
         return QoDSession.convert_session_model(self._api, self, session.json())
 
     def sessions(self) -> List[QoDSession]:
@@ -199,53 +185,10 @@ class Device(BaseModel):
         longitude = body["area"]["center"]["longitude"]
         latitude = body["area"]["center"]["latitude"]
         radius = body["area"]["radius"]
-        civic_address = None
-
-        if "civicAddress" in body.keys():
-            civic_address = CivicAddress(
-                country=body["civicAddress"]["country"],
-                a1=(
-                    body["civicAddress"]["A1"]
-                    if "A1" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A1"], str)
-                    else None
-                ),
-                a2=(
-                    body["civicAddress"]["A2"]
-                    if "A2" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A2"], str)
-                    else None
-                ),
-                a3=(
-                    body["civicAddress"]["A3"]
-                    if "A3" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A3"], str)
-                    else None
-                ),
-                a4=(
-                    body["civicAddress"]["A4"]
-                    if "A4" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A4"], str)
-                    else None
-                ),
-                a5=(
-                    body["civicAddress"]["A5"]
-                    if "A5" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A5"], str)
-                    else None
-                ),
-                a6=(
-                    body["civicAddress"]["A6"]
-                    if "A6" in body["civicAddress"].keys()
-                    and isinstance(body["civicAddress"]["A6"], str)
-                    else None
-                ),
-            )
 
         return Location(
             longitude=longitude,
             latitude=latitude,
-            civic_address=civic_address,
             radius=radius,
         )
 
@@ -425,12 +368,35 @@ class Device(BaseModel):
 
         return self._api.number_verification.get_phone_number(headers=headers)
 
+    def get_call_forwarding(self) -> List:
+        """Gets information about Call Forwarding Services active for the given device.
+
+        #### Returns
+             List of string descriptions about active Call Forwarding Services for the given device.
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+
+        return self._api.call_forwarding.retrieve_call_forwarding(self.phone_number)
+
+    def verify_unconditional_forwarding(self) -> bool:
+        """Verify if device has unconditional call forwarding active.
+
+        #### Returns
+             True/False
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+
+        return self._api.call_forwarding.verify_unconditional_forwarding(self.phone_number)
+
     @staticmethod
     def convert_to_device_model(api, device_json):
         device = Device(api=api)
         device.network_access_identifier = device_json.get("networkAccessIdentifier")
         device.phone_number = device_json.get("phoneNumber")
         device.ipv6_address = device_json.get("ipv6Address")
+        device.imsi = device_json.get("imsi")
         if "ipv4Address" in device_json:
             device.ipv4_address = DeviceIpv4Addr(
                 public_address=device_json["ipv4Address"].get("publicAddress"),

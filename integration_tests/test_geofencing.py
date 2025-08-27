@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta, timezone
-from network_as_code.errors import error_handler
 from network_as_code.errors import APIError
-from network_as_code.models.device import Device, DeviceIpv4Addr
-from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
+from network_as_code.models.device import Device
+from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential, EventType
 
 import pytest
 import time
@@ -13,7 +12,6 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -23,53 +21,62 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
         longitude=-180,
         radius=2001,
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
-        subscription_max_events=1,
+        subscription_max_events=5,
         initial_event=False
     )
     assert subscription.event_subscription_id
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
+
+    # Waiting for the notification subscription to be sent
+    time.sleep(15)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+    assert notification.json()[0]['id'] is not None
+    # Deleting the subscription notification
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
-        types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
+        types=[EventType["AREA_LEFT"]],
         latitude=-90,
         longitude=-180,
         radius=2001
     )
     
     assert subscription.event_subscription_id
-    time.sleep(5)
-    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
+
+    # Waiting for the notification subscription to be sent
+    time.sleep(15)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+    assert notification.json()[0]['id'] is not None
+    # Deleting the subscription notification
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
-@pytest.mark.skip
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
         sink=f"{notification_base_url}/notify",
-        types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
+        types=[EventType.AREA_LEFT],
         latitude=-90,
         longitude=-180,
         radius=2001,
         sink_credential=PlainCredential(identifier="client-id",secret="client-secret")
     )
     assert subscription.event_subscription_id
-    time.sleep(10)
-    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
+
+    # Waiting for the notification subscription to be sent
+    time.sleep(15)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+    assert notification.json()[0]['id'] is not None
+    # Deleting the subscription notification
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -78,16 +85,19 @@ def test_creating_geofencing_subscription_sink_credential_bearer(client, device,
         latitude=-90,
         longitude=-180,
         radius=2001,
-        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= "2025-07-01T14:15:16.789Z",access_token_type="bearer")
+        sink_credential=AccessTokenCredential(access_token= "some-access-token",access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),access_token_type="bearer")
     )
     assert subscription.event_subscription_id
-    time.sleep(10)
-    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/get/{subscription.event_subscription_id}") 
-    assert notification.json() is not None
-    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/delete/{subscription.event_subscription_id}")
+
+    # Waiting for the notification subscription to be sent
+    time.sleep(15)
+    notification = httpx.get(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+    assert notification.json()[0]['id'] is not None
+    # Deleting the subscription notification
+    notification = httpx.delete(f"{notification_base_url}/geofencing-subscriptions/{subscription.event_subscription_id}")
+
     subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_getting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -102,7 +112,6 @@ def test_getting_geofencing_subscription(client, device):
 
     subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_getting_geofencing_subscriptions(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -129,7 +138,6 @@ def test_getting_geofencing_subscriptions(client, device):
     for subscription in subscriptions:
         subscription.delete()
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_deleting_geofencing_subscription(client, device):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -147,7 +155,6 @@ def test_deleting_geofencing_subscription(client, device):
     except:
         assert True
 
-@pytest.mark.skip # skipping for 404 Not Found error in pipeline
 def test_subscribe_invalid_parameter(client, device):
     with pytest.raises(APIError):
         client.geofencing.subscribe(

@@ -16,14 +16,14 @@ from typing import List, Union, Optional
 from datetime import datetime
 from . import Namespace
 from ..models.device import Device
-from ..models.geofencing import GeofencingSubscription, PlainCredential, AccessTokenCredential
+from ..models.geofencing import GeofencingSubscription, PlainCredential, AccessTokenCredential, EventType
 
 class Geofencing(Namespace):
 
     def subscribe(
         self, device: Device,
         sink: str,
-        types: List[str],
+        types: Union[List[EventType] | List[str]],
         latitude: float,
         longitude: float,
         radius: Union[int, float],
@@ -39,10 +39,17 @@ class Geofencing(Namespace):
             else subscription_expire_time
         )
 
+        typelist = []
+        for item in types:
+            if isinstance(item, EventType):
+                typelist.append(item.value)
+            else:
+                typelist.append(item)
+
         json_data = self.api.geofencing.create_subscription(
             device,
             sink,
-            types,
+            typelist,
             latitude,
             longitude,
             radius,

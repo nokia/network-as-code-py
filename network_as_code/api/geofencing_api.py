@@ -14,12 +14,9 @@
 
 from datetime import datetime
 
-from typing import TYPE_CHECKING, List, Union, Optional, Any
+from typing import List, Union, Optional, Any
 from network_as_code.api.utils import httpx_client
 from ..errors import error_handler
-
-if TYPE_CHECKING:
-    from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential
 
 class GeofencingAPI:
 
@@ -30,7 +27,7 @@ class GeofencingAPI:
         self,
         device,
         sink: str,
-        types: List[str],
+        typelist: List[str],
         latitude: float,
         longitude: float,
         radius: Union[int, float],
@@ -43,7 +40,7 @@ class GeofencingAPI:
         body: dict = {
             "protocol": "HTTP",
             "sink": sink,
-            "types": types,
+            "types": typelist,
             "config": {
                 "subscriptionDetail": {
                     "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),

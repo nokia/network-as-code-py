@@ -1,4 +1,3 @@
-import json
 import pytest
 from unittest.mock import patch
 from network_as_code.models.number_verification import AccessToken
