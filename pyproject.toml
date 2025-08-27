@@ -10,7 +10,7 @@ dependencies = [
     "httpx<1.0.0,>=0.27.0",
 ]
 name = "network_as_code"
-version = "6.0.0"
+version = "6.1.0"
 description = ""
 
 [dependency-groups]
