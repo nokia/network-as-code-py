@@ -28,9 +28,7 @@ class GeofencingAPI:
         device,
         sink: str,
         typelist: List[str],
-        latitude: float,
-        longitude: float,
-        radius: Union[int, float],
+        area,
         sink_credential: Any = None,
         subscription_expire_time: Union[datetime , str, None] = None,
         subscription_max_events: Optional[int] = None,
@@ -44,14 +42,7 @@ class GeofencingAPI:
             "config": {
                 "subscriptionDetail": {
                     "device": device.model_dump(mode='json', by_alias=True, exclude_none=True),
-                    "area": {
-                        "areaType": "CIRCLE",
-                        "center": {
-                            "latitude": latitude,
-                            "longitude": longitude
-                        },
-                        "radius": radius
-                    }
+                    "area": area.model_dump(mode="json", by_alias=True, exclude_none=True)
                 }
             }
         }

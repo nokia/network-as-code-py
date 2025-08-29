@@ -1,7 +1,7 @@
 import pytest
 
 from network_as_code.models.device import DeviceIpv4Addr, Device
-from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential, EventType
+from network_as_code.models.geofencing import PlainCredential, AccessTokenCredential, EventType, Circle, Center, POI
 from network_as_code.errors import NotFound, AuthenticationException, APIError, ServiceError
 
 
@@ -88,9 +88,7 @@ def test_creating_geofencing_subscription_area_entered_type(httpx_mock, client):
         device=device,
         sink="https://example.com/",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
-        latitude=-90,
-        longitude=-180,
-        radius=2001,
+        area=Circle(center=Center(latitude=-90, longitude=-180), radius=2001),
         subscription_expire_time="2025-01-23T10:40:30.616Z",
         subscription_max_events=1,
         initial_event=False
@@ -120,12 +118,8 @@ def test_creating_geofencing_subscription_area_entered_event_type(httpx_mock, cl
                         "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                     },
                     "area": {
-                        "areaType": "CIRCLE",
-                        "center": {
-                            "latitude": -90,
-                            "longitude": -180
-                        },
-                        "radius": 2001
+                        "areaType": "POI",
+                        "poiName": "StatueOfLiberty" 
                     }
                 },
                 "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
@@ -154,12 +148,8 @@ def test_creating_geofencing_subscription_area_entered_event_type(httpx_mock, cl
                         "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                     },
                     "area": {
-                        "areaType": "CIRCLE",
-                        "center": {
-                            "latitude": -90,
-                            "longitude": -180
-                        },
-                        "radius": 2001
+                        "areaType": "POI",
+                        "poiName": "StatueOfLiberty" 
                     }
                 },
                 "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
@@ -175,9 +165,7 @@ def test_creating_geofencing_subscription_area_entered_event_type(httpx_mock, cl
         device=device,
         sink="https://example.com/",
         types=[EventType["AREA_ENTERED"]],
-        latitude=-90,
-        longitude=-180,
-        radius=2001,
+        area=POI(poi_name="StatueOfLiberty"),
         subscription_expire_time="2025-01-23T10:40:30.616Z",
         subscription_max_events=1,
         initial_event=False
@@ -263,9 +251,7 @@ def test_creating_geofencing_subscription_area_left_type(httpx_mock,device, clie
         device=device,
         sink="https://example.com/",
         types=[EventType.AREA_LEFT],
-        latitude=-90,
-        longitude=-180,
-        radius=2001,
+        area=Circle(center=Center(latitude=-90, longitude=-180), radius=2001),
         subscription_expire_time="2025-01-23T10:40:30.616Z",
         subscription_max_events=1,
         initial_event=False
@@ -298,12 +284,8 @@ def test_creating_geofencing_subscription_sink_credential_plain(httpx_mock, clie
                     "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 },
                 "area": {
-                    "areaType": "CIRCLE",
-                    "center": {
-                    "latitude": -90,
-                    "longitude": -180
-                    },
-                    "radius": 2001
+                    "areaType": "POI",
+                    "poiName": "StatueOfLiberty" 
                 }
                 },
                 "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
@@ -331,12 +313,8 @@ def test_creating_geofencing_subscription_sink_credential_plain(httpx_mock, clie
                         "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                     },
                     "area": {
-                        "areaType": "CIRCLE",
-                        "center": {
-                            "latitude": -90,
-                            "longitude": -180
-                        },
-                        "radius": 2001
+                        "areaType": "POI",
+                        "poiName": "StatueOfLiberty" 
                     }
                 },
                 "subscriptionExpireTime": "2025-01-23T10:40:30.616Z",
@@ -357,9 +335,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(httpx_mock, clie
         device=device,
         sink="https://example.com/",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
-        latitude=-90,
-        longitude=-180,
-        radius=2001,
+        area=POI(poi_name="StatueOfLiberty"),
         sink_credential=PlainCredential(
                 identifier = "client-id",
                 secret =  "client-secret"
@@ -456,9 +432,7 @@ def test_creating_geofencing_subscription_sink_credential_bearer(httpx_mock, cli
         device=device,
         sink="https://example.com/",
         types=["org.camaraproject.geofencing-subscriptions.v0.area-left"],
-        latitude=-90,
-        longitude=-180,
-        radius=2001,
+        area=Circle(center=Center(latitude=-90, longitude=-180), radius=2001),
         sink_credential= AccessTokenCredential(
             access_token= "some-access-token",
             access_token_expires_utc = "2025-07-01T14:15:16.789Z",
@@ -653,9 +627,7 @@ def test_subscribe_authentication_exception(httpx_mock, device, client):
             device=device,
             sink="https://example.com/",
             types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
-            latitude=-90,
-            longitude=-180,
-            radius=2001,
+            area=POI(poi_name="StatueOfLiberty"),
             subscription_expire_time="2025-01-23T10:40:30.616Z",
             subscription_max_events=1,
             initial_event=False
@@ -672,9 +644,7 @@ def test_subscribe_not_found(httpx_mock, device, client):
             device=device,
             sink="https://example.com/",
             types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
-            latitude=-90,
-            longitude=-180,
-            radius=2001,
+            area=Circle(center=Center(latitude=-90, longitude=-180), radius=2001),
             subscription_expire_time="2025-01-23T10:40:30.616Z",
             subscription_max_events=1,
             initial_event=False
@@ -691,9 +661,7 @@ def test_subscribe_service_error(httpx_mock, device, client):
             device=device,
             sink="https://example.com/",
             types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
-            latitude=-90,
-            longitude=-180,
-            radius=2001,
+            area=Circle(center=Center(latitude=-90, longitude=-180), radius=2001),
             subscription_expire_time="2025-01-23T10:40:30.616Z",
             subscription_max_events=1,
             initial_event=False
@@ -710,9 +678,7 @@ def test_subscribe_api_error(httpx_mock, device, client):
             device=device,
             sink="https://example.com/",
             types=["org.camaraproject.geofencing-subscriptions.v0.area-entered"],
-            latitude=-90,
-            longitude=-180,
-            radius=2001,
+            area=POI(poi_name="StatueOfLiberty"),
             subscription_expire_time="2025-01-23T10:40:30.616Z",
             subscription_max_events=1,
             initial_event=False
