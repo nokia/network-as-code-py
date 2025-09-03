@@ -16,7 +16,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional, List, Union
-from pydantic import BaseModel, PrivateAttr, Field
+from pydantic import BaseModel, PrivateAttr, Field, ConfigDict
 from network_as_code.api.client import APIClient
 
 class EventType(Enum):
@@ -38,15 +38,27 @@ class PlainCredential(BaseModel):
     identifier: str = Field(..., serialization_alias="identifier")
     secret: str = Field(..., serialization_alias="secret")
 
+class Center(BaseModel):
+    latitude: float = Field(..., serialization_alias="latitude")
+    longitude: float = Field(..., serialization_alias="longitude")
+
+class Circle(BaseModel):
+    area_type: str = Field(default="CIRCLE", serialization_alias="areaType")
+    center: Center
+    radius: Union[int, float] = Field(..., serialization_alias="radius")
+
+class POI(BaseModel):
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    area_type: str = Field(default="POI", serialization_alias="areaType")
+    poi_name: str = Field(..., validation_alias="poiName", serialization_alias="poiName")
+
 class GeofencingSubscription(BaseModel):
     event_subscription_id: str
     _api: APIClient = PrivateAttr()
     protocol: Optional[str] = None
     sink: str
     types: List[str]
-    latitude: float
-    longitude: float
-    radius: Union[int, float]
+    area: Union[Circle, POI]
     starts_at: datetime
     sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None
     def __init__(self, api: APIClient, **data):
@@ -69,8 +81,6 @@ class GeofencingSubscription(BaseModel):
             api=api,
             sink=json_data["sink"],
             types=json_data["types"],
-            latitude =json_data["config"].get("subscriptionDetail").get("area").get("center").get("latitude"),
-            longitude=json_data["config"].get("subscriptionDetail").get("area").get("center").get("longitude"),
-            radius=json_data["config"].get("subscriptionDetail").get("area").get("radius"),
+            area=json_data["config"].get("subscriptionDetail").get("area"),
             starts_at=starts_at,
         )
