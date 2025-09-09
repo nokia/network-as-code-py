@@ -25,6 +25,7 @@ from .credentials_api import CredentialsAPI
 from .authorization_api import AuthorizationAPI
 from. number_verification_api import NumberVerificationAPI
 from .call_forwarding_api import CallForwardingAPI
+from.device_swap_api import DeviceSwapAPI
 
 QOS_URL = "/qod/v0"
 
@@ -51,6 +52,8 @@ CREDENTIALS_URL = "/oauth2/v1"
 AUTHORIZATION_URL = "/.well-known"
 
 CALL_FORWARDING_URL = "/passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3"
+
+DEVICE_SWAP_URL = "/passthrough/camara/v1/device-swap/device-swap/v0"
 
 # RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 
@@ -100,6 +103,7 @@ class APIClient:
         authorization_base_url: Optional[str] = None,
         number_verification_base_url: Optional[str] = None,
         call_forwarding_base_url: Optional[str] = None,
+        device_swap_base_url: Optional[str] = None,
         env_mode: Optional[str] = None,
     ):
         base_url = environment_base_url(env_mode)
@@ -144,6 +148,9 @@ class APIClient:
 
         if not call_forwarding_base_url:
             call_forwarding_base_url = f"{base_url}{CALL_FORWARDING_URL}"
+
+        if not device_swap_base_url:
+            device_swap_base_url = f"{base_url}{DEVICE_SWAP_URL}"
 
         self.sessions = QodAPI(
             base_url=qos_base_url,
@@ -218,6 +225,12 @@ class APIClient:
 
         self.call_forwarding = CallForwardingAPI(
             base_url = call_forwarding_base_url,
+            rapid_key = token,
+            rapid_host=hostname,
+        )
+
+        self.device_swap = DeviceSwapAPI(
+            base_url = device_swap_base_url,
             rapid_key = token,
             rapid_host=hostname,
         )
