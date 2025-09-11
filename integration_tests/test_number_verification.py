@@ -20,18 +20,39 @@ def test_get_auth_endpoints(client):
 
     assert auth_endpoints.authorization_endpoint
     assert auth_endpoints.token_endpoint
+    assert auth_endpoints.fast_flow_csp_auth_endpoint
     assert type(auth_endpoints.authorization_endpoint) is str
+    assert type(auth_endpoints.fast_flow_csp_auth_endpoint) is str
 
-def test_authentication_link(client):
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
+def test_fast_flow_link(client):
+    auth_link = client.authorization.create_fast_flow_authentication_link(redirect_uri='https://example.com/redirect', state='foobar', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
     
     response = httpx.get(url= auth_link)
     
     assert response.status_code == 302
 
-def test_number_verification_true(client, notification_base_url):
-    device = client.devices.get(phone_number="+99999991000")
 
+def test_authentication_link(client):
+    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/test', state='foobar', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
+    
+    response = httpx.get(url= auth_link)
+    
+    assert response.status_code == 302
+
+def test_number_verification_fast_flow(client, device, notification_base_url):
+    auth_link = client.authorization.create_fast_flow_authentication_link(redirect_uri=f'{notification_base_url}/nv', state='foobar', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
+
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
+
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
+
+    code = response.json().get('code')
+
+    assert device.verify_number(code= code, state= 'foobar')
+
+def test_number_verification_slow_flow(client, device, notification_base_url):
     auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
 
     with httpx.Client(follow_redirects=True) as client:
@@ -44,7 +65,7 @@ def test_number_verification_true(client, notification_base_url):
 
     assert device.verify_number(code= code)
 
-def test_number_verification_false(client, notification_base_url):
+def test_number_verification_returns_false(client, notification_base_url):
     device = client.devices.get(phone_number="+99999991001")
 
     auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991001")
@@ -59,7 +80,20 @@ def test_number_verification_false(client, notification_base_url):
 
     assert not device.verify_number(code= code)
 
-def test_get_device_phone_number(client, device, notification_base_url):
+def test_number_verification_slow_flow_with_state(client, device, notification_base_url):
+    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', state='foobar', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
+
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
+
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
+
+    code = response.json().get('code')
+
+    assert device.verify_number(code= code)
+
+def test_get_device_phone_number_slow_flow(client, device, notification_base_url):
 
     auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='number-verification:device-phone-number:read', login_hint="+99999991000")
 
@@ -72,3 +106,16 @@ def test_get_device_phone_number(client, device, notification_base_url):
     code = response.json().get('code')
 
     assert device.get_phone_number(code=code)
+
+def test_get_device_phone_number_fast_flow(client, device, notification_base_url):
+    auth_link = client.authorization.create_fast_flow_authentication_link(redirect_uri=f'{notification_base_url}/nv', state='foobar', scope='number-verification:device-phone-number:read', login_hint="+99999991000")
+
+    with httpx.Client(follow_redirects=True) as client:
+        response = client.get(auth_link)
+
+    time.sleep(2)
+    response = httpx.get(f'{notification_base_url}/nv-get-code')
+
+    code = response.json().get('code')
+
+    assert device.get_phone_number(code= code, state= 'foobar')

@@ -338,37 +338,43 @@ class Device(BaseModel):
         )
         return single_use_token
 
-    def verify_number(self, code: str) -> bool:
+    def verify_number(self, code: str, state: Optional[str] = None) -> bool:
         """Verifies users phone number.
 
         #### Args:
-             code (str): Changes the code for Access Token through  _get_single_use_access_token
+             code (str): Changes the code for Access Token through  _get_single_use_access_token.
+             state (Optional[str]): If using fast flow implementation, state value is required.
         #### Returns
              True/False
         """
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
-        authenticator = self._get_single_use_access_token(code=code)
         payload = {
             "phoneNumber": self.phone_number,
         }
-        headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
 
-        return self._api.number_verification.verify_number(payload=payload, headers=headers)
+        if not state:
+            authenticator = self._get_single_use_access_token(code=code)
+            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
+            return self._api.number_verification.verify_number(payload=payload, headers=headers)
 
-    def get_phone_number(self, code: str) -> str:
+        return self._api.number_verification.verify_number(payload=payload, code= code, state= state)
+
+    def get_phone_number(self, code: str, state: Optional[str] = None) -> str:
         """Gets the users phone number.
 
         #### Args:
              code (str): Changes the code for Access Token through  _get_single_use_access_token
+             state (Optional[str]): If using fast flow implementation, state value is required.
         #### Returns:
              String 
         """
+        if not state:
+            authenticator = self._get_single_use_access_token(code=code)
+            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
+            return self._api.number_verification.get_phone_number(headers=headers)
 
-        authenticator = self._get_single_use_access_token(code=code)
-        headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-
-        return self._api.number_verification.get_phone_number(headers=headers)
+        return self._api.number_verification.get_phone_number(code= code, state= state)
 
     def get_call_forwarding(self) -> List:
         """Gets information about Call Forwarding Services active for the given device.

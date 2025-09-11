@@ -36,6 +36,22 @@ def test_verify_number(httpx_mock, device):
 
         assert device.verify_number(code='your-code') == True
 
+def test_verify_number_fast_flow(httpx_mock, device):
+    mock_response={
+        "devicePhoneNumberVerified": True
+    }
+
+    httpx_mock.add_response(
+        url= "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/verify?code=your-code&state=foobar",
+        method= 'POST',
+        match_json={
+            "phoneNumber": "3637123456"
+        },
+        json=mock_response,
+    )
+
+    assert device.verify_number(code='your-code', state='foobar') == True
+
 def test_get_device_phone_number(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
 
@@ -50,6 +66,19 @@ def test_get_device_phone_number(httpx_mock, device):
         )
 
         assert device.get_phone_number(code='your-code') == "+123456789"
+
+def test_get_device_phone_number_fast_flow(httpx_mock, device):
+    mock_response={
+        "devicePhoneNumber": "+123456789"
+    }
+
+    httpx_mock.add_response(
+        url= "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number?code=your-code&state=foobar",
+        method= 'GET',
+        json= mock_response,
+    )
+
+    assert device.get_phone_number(code='your-code', state="foobar") == "+123456789"
 
 def test_verify_number_unauthenticated(httpx_mock, device):
     with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='invalid-token', token_type='Bearer', expires_in=12345)):

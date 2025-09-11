@@ -18,9 +18,11 @@ class Endpoints(BaseModel):
     #### Public Attributes:
             authorization_endpoint (str): The Authorization Server endpoint. Used to build login URL.
             token_endpoint (str): The Authorization Server endpoint. Used for fetching Access Token.
+            fast_flow_csp_auth_endpoint (str): Faster authorization flow server endpoint. Used to build login URL.
     """
     authorization_endpoint: str
     token_endpoint: str
+    fast_flow_csp_auth_endpoint: str
 
 class AccessToken(BaseModel):
     """

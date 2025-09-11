@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Union
+from typing import Optional
 from urllib.parse import urlencode
 
 from . import Namespace
@@ -46,17 +46,19 @@ class Authorization(Namespace):
         body = response
         authorization_endpoint = body["authorization_endpoint"]
         token_endpoint = body["token_endpoint"]
+        fast_flow_csp_auth_endpoint = body["fast_flow_csp_auth_endpoint"]
 
         authorization_endpoints = Endpoints(
             authorization_endpoint=authorization_endpoint,
-            token_endpoint=token_endpoint
+            token_endpoint=token_endpoint,
+            fast_flow_csp_auth_endpoint=fast_flow_csp_auth_endpoint
         )
         return authorization_endpoints
 
     def create_authentication_link(self,
                             redirect_uri: str,
                             scope: str,
-                            login_hint: Union[str, None],
+                            login_hint: str,
                             state: Optional[str] = None,
                             )-> str:
         """Create authentication link for user
@@ -82,4 +84,34 @@ class Authorization(Namespace):
         }
         params = {k: v for k, v in params.items() if v is not None}
         auth_url = f'{auth_endpoint.authorization_endpoint}?{urlencode(params)}'
+        return auth_url
+
+    def create_fast_flow_authentication_link(self,
+                            redirect_uri: str,
+                            scope: str,
+                            login_hint: str,
+                            state: str,
+                            )-> str:
+        """Create fast flow authentication link for user
+
+        #### Args:
+             redirect_uri (str):  redirection URI where the auth code is to be sent
+             scope (str): service the application is requesting access to
+             login_hint (str): hint about the login identifier to the authorization endpoint
+             state (str): value used to maintain state between request and callback
+        #### Returns:
+             authentication URL"""
+
+        credentials = self.credentials()
+        auth_endpoint = self.auth_endpoints()
+        response_type = "code"
+        params = {
+            "scope": scope,
+            "state": state,
+            "response_type": response_type,
+            "client_id": credentials.client_id,
+            "redirect_uri": redirect_uri,
+            "login_hint": login_hint
+        }
+        auth_url = f'{auth_endpoint.fast_flow_csp_auth_endpoint}?{urlencode(params)}'
         return auth_url

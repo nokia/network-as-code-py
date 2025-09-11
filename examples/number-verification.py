@@ -30,7 +30,16 @@ my_device = client.devices.get(
 callback = client.authorization.create_authentication_link(
     redirect_uri= "https://my-example/redirect",
     login_hint= my_device.phone_number,
-    scope= "number-verification:verify", # "number-verification:device-phone-number:read" In case of getting the device phone number.
+    scope= "dpv:FraudPreventionAndDetection number-verification:verify", # "number-verification:device-phone-number:read" In case of getting the device phone number.
+    state= "foobar"
+)
+
+# You can alternatively create a callbacklink using the fast flow functionality
+# In fast flow implementation, the state parameter is mandatory
+callback = client.authorization.create_fast_flow_authentication_link(
+    redirect_uri= "https://my-example/redirect",
+    login_hint= my_device.phone_number,
+    scope= "dpv:FraudPreventionAndDetection number-verification:verify", # "number-verification:device-phone-number:read" In case of getting the device phone number.
     state= "foobar"
 )
 
@@ -40,10 +49,11 @@ app = FastAPI()
 
 @app.get("/redirect")
 async def get_authorization_code(code: str, state: Optional[str]=None):
-    return (f"This is you authorization code: {code}.")
+    return (f"This is you authorization code: {code}. This is your state variable, if set: {state}.")
 
 # Add your authorization code here.
 code = "NaC-authorization-code"
+state = "App-state"
 
 
 # You can use the Number Verification API with the obtained authorization code and verify device's phone number.
@@ -52,8 +62,19 @@ verify_number_result = my_device.verify_number(code= code)
 
 print(verify_number_result)
 
+# If you are using the fast flow method, state parameter should go to the verification call
+verify_number_fast_flow = my_device.verify_number(code= code, state= state)
+
+print(verify_number_fast_flow)
+
 # The Number Verification API retieves the phone number of the used device.
 
 device_phone_number = my_device.get_phone_number(code = code)
 
 print(device_phone_number) # e.g. "+123456789"
+
+# Or with fast flow method
+
+device_phone_number_fast_flow = my_device.get_phone_number(code= code, state= state)
+
+print(device_phone_number_fast_flow) # e.g. "+123456789"

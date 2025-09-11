@@ -57,7 +57,8 @@ def test_get_auth_endpoints(httpx_mock, client):
 
     mock_response = {
         "authorization_endpoint": "authorization-endpoint",
-        "token_endpoint": "token-endpoint"
+        "token_endpoint": "token-endpoint",
+        "fast_flow_csp_auth_endpoint": "fast-flow-endpoint"
     }
 
     httpx_mock.add_response(
@@ -70,6 +71,7 @@ def test_get_auth_endpoints(httpx_mock, client):
 
     assert endpoints.authorization_endpoint == "authorization-endpoint"
     assert endpoints.token_endpoint == "token-endpoint"
+    assert endpoints.fast_flow_csp_auth_endpoint == "fast-flow-endpoint"
 
 def test_get_auth_endpoints_raises_exception_if_server_fails(httpx_mock, client):
     url = "https://network-as-code.p-eu.rapidapi.com/.well-known/openid-configuration"
@@ -101,10 +103,10 @@ def test_get_auth_endpoints_api_error(httpx_mock, client):
         client.authorization.auth_endpoints()
 
 
-def test_create_authentication_link_with_login_hint(client):
+def test_create_authentication_link(client):
     url = "https://some-auth-server.example.com/oauth2/v1/authorize"
     with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
-        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint")):
+        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint= "fast-flow-endpoint")):
 
             authentication_link = client.authorization.create_authentication_link(
             redirect_uri= "https://example.com/redirect",
@@ -115,24 +117,24 @@ def test_create_authentication_link_with_login_hint(client):
 
             assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
 
-def test_create_authentication_link_without_login_hint(client):
-    url = "https://some-auth-server.example.com/oauth2/v1/authorize"
+def test_create_fast_flow_authentication_link(client):
+    url = "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url"
     with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
-        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint")):
+        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= "auth-endpoint", token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint= url)):
 
-            authentication_link = client.authorization.create_authentication_link(
+            authentication_link = client.authorization.create_fast_flow_authentication_link(
             redirect_uri= "https://example.com/redirect",
-            login_hint= None,
-            scope= "number-verification:device-phone-number:read",
+            login_hint= "+3637123456",
+            scope= "number-verification:verify",
             state= "foobar"
             )
 
-            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Adevice-phone-number%3Aread&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect"
+            assert authentication_link == "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
 
 def test_create_authentication_link_without_optionals(client):
     url = "https://some-auth-server.example.com/oauth2/v1/authorize"
     with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
-        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint")):
+        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint='fast-flow-endpoint')):
 
             authentication_link = client.authorization.create_authentication_link(
             redirect_uri= "https://example.com/redirect",

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+from typing import Optional
 from network_as_code.api.utils import httpx_client
 from ..errors import error_handler
 
@@ -20,17 +20,34 @@ class NumberVerificationAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
         self.client = httpx_client(base_url, rapid_key, rapid_host)
 
-    def verify_number(self, payload: dict, headers: dict) -> bool:
+    def verify_number(
+            self,
+            payload: dict,
+            headers: Optional[dict] = None,
+            code: Optional[str] = None,
+            state: Optional[str] = None
+            ) -> bool:
 
-        response = self.client.post(url="/verify", json=payload, headers=headers)
+        if state:
+            response = self.client.post(url=f"/verify?code={code}&state={state}", json=payload)
+        else:
+            response = self.client.post(url="/verify", json=payload, headers=headers)
 
         error_handler(response)
 
         return bool(response.json()["devicePhoneNumberVerified"])
 
-    def get_phone_number(self, headers:dict) -> str:
+    def get_phone_number(
+            self,
+            headers: Optional[dict] = None,
+            code: Optional[str] = None,
+            state: Optional[str] = None
+            ) -> str:
 
-        response = self.client.get(url="/device-phone-number", headers=headers)
+        if state:
+            response = self.client.get(url=f"/device-phone-number?code={code}&state={state}")
+        else:
+            response = self.client.get(url="/device-phone-number", headers=headers)
 
         error_handler(response)
 
