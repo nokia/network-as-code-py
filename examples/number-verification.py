@@ -67,7 +67,7 @@ verify_number_fast_flow = my_device.verify_number(code= code, state= state)
 
 print(verify_number_fast_flow)
 
-# The Number Verification API retieves the phone number of the used device.
+# The Number Verification API retrieves the phone number of the used device.
 
 device_phone_number = my_device.get_phone_number(code = code)
 

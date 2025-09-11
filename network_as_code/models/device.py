@@ -343,7 +343,7 @@ class Device(BaseModel):
 
         #### Args:
              code (str): Changes the code for Access Token through  _get_single_use_access_token.
-             state (Optional[str]): If using fast flow implementation, state value is required.
+             state (Optional[str]): In fast flow implementation, state stores request-specific data and is required.
         #### Returns
              True/False
         """
@@ -365,7 +365,7 @@ class Device(BaseModel):
 
         #### Args:
              code (str): Changes the code for Access Token through  _get_single_use_access_token
-             state (Optional[str]): If using fast flow implementation, state value is required.
+             state (Optional[str]): In fast flow implementation, state stores request-specific data and is required.
         #### Returns:
              String 
         """

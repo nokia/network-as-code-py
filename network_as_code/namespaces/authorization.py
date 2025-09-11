@@ -67,7 +67,7 @@ class Authorization(Namespace):
              redirect_uri (str):  redirection URI where the auth code is to be sent
              scope (str): service the application is requesting access to
              login_hint (str): hint about the login identifier to the authorization endpoint
-             state (Optional[str]): value used to maintain state between request and callback
+             state (Optional[str]): value used to maintain state between request and callback and prevent CSRF attacks
         #### Returns:
              authentication URL"""
 
@@ -98,7 +98,7 @@ class Authorization(Namespace):
              redirect_uri (str):  redirection URI where the auth code is to be sent
              scope (str): service the application is requesting access to
              login_hint (str): hint about the login identifier to the authorization endpoint
-             state (str): value used to maintain state between request and callback
+             state (str): value used to maintain state between request and callback and prevent CSRF attacks
         #### Returns:
              authentication URL"""
 
