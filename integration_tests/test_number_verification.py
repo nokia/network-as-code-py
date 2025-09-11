@@ -49,8 +49,9 @@ def test_number_verification_fast_flow(client, device, notification_base_url):
     response = httpx.get(f'{notification_base_url}/nv-get-code')
 
     code = response.json().get('code')
+    state = response.json().get('state')
 
-    assert device.verify_number(code= code, state= 'foobar')
+    assert device.verify_number(code= code, state= state)
 
 def test_number_verification_slow_flow(client, device, notification_base_url):
     auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/nv', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+99999991000")
@@ -117,5 +118,6 @@ def test_get_device_phone_number_fast_flow(client, device, notification_base_url
     response = httpx.get(f'{notification_base_url}/nv-get-code')
 
     code = response.json().get('code')
+    state = response.json().get('state')
 
-    assert device.get_phone_number(code= code, state= 'foobar')
+    assert device.get_phone_number(code= code, state= state)
