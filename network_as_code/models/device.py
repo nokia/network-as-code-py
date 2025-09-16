@@ -389,7 +389,7 @@ class Device(BaseModel):
             raise InvalidParameter("Device phone number is required.")
 
         return self._api.call_forwarding.verify_unconditional_forwarding(self.phone_number)
-    
+
     def get_device_swap_date(self) -> Union[datetime, None]:
         """Get the latest Device swap date.
 
@@ -420,8 +420,6 @@ class Device(BaseModel):
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
         return self._api.device_swap.verify_device_swap(self.phone_number, max_age)
-    
-
 
     @staticmethod
     def convert_to_device_model(api, device_json):

@@ -18,7 +18,7 @@ from network_as_code.api.utils import httpx_client
 
 from ..errors import error_handler
 
-
+# pylint: disable=duplicate-code
 class DeviceSwapAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
         self.client = httpx_client(base_url, rapid_key, rapid_host)
@@ -31,7 +31,7 @@ class DeviceSwapAPI:
         error_handler(response)
 
         return response.json()
-    
+
     def verify_device_swap(self, phone_number: str, max_age: Optional[int]) -> bool:
         body: dict[str, Any] = {
             "phoneNumber": phone_number,
@@ -45,3 +45,4 @@ class DeviceSwapAPI:
         error_handler(response)
 
         return bool(response.json()['swapped'])
+# pylint: enable=duplicate-code

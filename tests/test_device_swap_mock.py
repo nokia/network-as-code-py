@@ -77,7 +77,7 @@ def test_verify_device_swap_without_max_age(httpx_mock, device):
         }
     )
 
-    assert device.verify_device_swap(max_age=None) == True
+    assert device.verify_device_swap() == True
 
 def test_verify_device_swap_with_max_age(httpx_mock, device):
     url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/check"
@@ -105,7 +105,7 @@ def test_error_trace_info(httpx_mock, device):
         url=url,
         match_json={
             "phoneNumber": "+3637123456",
-            "maxAge": 120
+            "maxAge": 2401
         },
         method="POST",
         status_code=422,
@@ -114,6 +114,6 @@ def test_error_trace_info(httpx_mock, device):
 
     
     with pytest.raises(APIError) as exc_info:
-        device.verify_device_swap(max_age=120)
+        device.verify_device_swap(max_age=2401)
         
     assert str(exc_info.value) == "Status Code: 422, Response Body: {'detail': [{'msg': 'Input should be less than or equal to 2400'}]}"
