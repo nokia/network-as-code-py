@@ -27,7 +27,7 @@ def test_get_auth_endpoints(client):
 
 @pytest.mark.skip
 def test_authentication_link(client):
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='dpv:FraudPreventionAndDetection number-verification:verify', login_hint="+3637123456")
+    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='dpv:FraudPreventionAndDetection kyc-match:match', login_hint="+3637123456")
     
     response = httpx.get(url= auth_link)
     

@@ -1,5 +1,5 @@
 import pytest
-from network_as_code.errors import AuthenticationException, InvalidParameter, ServiceError
+from network_as_code.errors import InvalidParameter
 from network_as_code.models.device import Device
 from unittest.mock import patch
 from network_as_code.models.number_verification import AccessToken
@@ -200,7 +200,7 @@ def test_kyc_match_with_auth_token(httpx_mock, device):
         assert result.country_match == "true"
         assert not result.name_kana_zenkaku_match
 
-def test_kyc_match_without_any_authorization(httpx_mock, client):
+def test_kyc_match_without_any_authorization(client):
     device = client.devices.get(network_access_identifier="testuser@open5glab.net")
 
     with pytest.raises(InvalidParameter):

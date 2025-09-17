@@ -426,29 +426,39 @@ class Device(BaseModel):
             self,
             code: Optional[str] = None,
             phone_number: Optional[str] = None,
-            id_document: Optional[str] =  None,
-            name: Optional[str] =  None,
-            given_name: Optional[str] =  None,
+            id_document: Optional[str] = None,
+            name: Optional[str] = None,
+            given_name: Optional[str] = None,
             family_name: Optional[str] = None,
-            name_kana_hankaku: Optional[str] =  None,
-            name_kana_zenkaku: Optional[str] =  None,
-            middle_names: Optional[str] =  None,
-            family_name_at_birth: Optional[str] =  None,
-            address: Optional[str] =  None,
-            street_name: Optional[str] =  None,
-            street_number: Optional[str] =  None,
-            postal_code: Optional[str] =  None,
-            region: Optional[str] =  None,
-            locality: Optional[str] =  None,
-            country: Optional[str] =  None,
+            name_kana_hankaku: Optional[str] = None,
+            name_kana_zenkaku: Optional[str] = None,
+            middle_names: Optional[str] = None,
+            family_name_at_birth: Optional[str] = None,
+            address: Optional[str] = None,
+            street_name: Optional[str] = None,
+            street_number: Optional[str] = None,
+            postal_code: Optional[str] = None,
+            region: Optional[str] = None,
+            locality: Optional[str] = None,
+            country: Optional[str] = None,
             house_number_extension: Optional[str] = None,
-            birthdate: Optional[str] =  None,
-            email: Optional[str] =  None,
-            gender: Optional[str] =  None,
+            birthdate: Optional[str] = None,
+            email: Optional[str] = None,
+            gender: Optional[str] = None,
             ) -> KYCMatchResult:
+        """Match a customer identity against the account data bound to their phone number.
+        #### Args
+             match_customer parameters: A customers data that will be compared to data bound to their 
+                                        phone number in the operator systems.
+             code (string): The previously obtained authorization code. Can be used for authorization
+                            independently or with phone_number
+        #### Returns
+             KYCMatchResult: Contains the result of matching the provided parameter values to the data 
+                             in the operator system.
+        """
 
         params = KYCMatch(
-            phone_number=phone_number,
+            phone_number = phone_number,
             id_document = id_document,
             name = name,
             given_name = given_name,
