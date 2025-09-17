@@ -53,7 +53,7 @@ AUTHORIZATION_URL = "/.well-known"
 
 CALL_FORWARDING_URL = "/passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3"
 
-DEVICE_SWAP_URL = "/passthrough/camara/v1/device-swap/device-swap/v0"
+DEVICE_SWAP_URL = "/passthrough/camara/v1/device-swap/device-swap/v1"
 
 # RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 

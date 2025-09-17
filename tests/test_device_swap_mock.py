@@ -12,7 +12,7 @@ def device(client) -> Device:
     return device
 
 def test_get_device_swap_date(httpx_mock, device):
-    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/retrieve-date"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date"
 
     mock_response = {
         "latestDeviceChange": "2024-06-19T10:36:59.976Z",
@@ -32,7 +32,7 @@ def test_get_device_swap_date(httpx_mock, device):
     assert latest_device_swap_date == datetime.fromisoformat("2024-06-19T10:36:59.976+00:00")
 
 def test_get_device_swap_date_no_response(httpx_mock, device):
-    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/retrieve-date"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date"
 
     mock_response = {}
 
@@ -62,7 +62,7 @@ def test_verify_device_swap_with_no_phone_number(client):
         device.verify_device_swap()
 
 def test_verify_device_swap_without_max_age(httpx_mock, device):
-    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v1/check"
 
     mock_response = {
         "swapped": True,
@@ -80,7 +80,7 @@ def test_verify_device_swap_without_max_age(httpx_mock, device):
     assert device.verify_device_swap() == True
 
 def test_verify_device_swap_with_max_age(httpx_mock, device):
-    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v1/check"
 
     mock_response = {
         "swapped": True,
@@ -92,15 +92,15 @@ def test_verify_device_swap_with_max_age(httpx_mock, device):
         json=mock_response,
         match_json={
             "phoneNumber": "+3637123456",
-            "maxAge": 120
+            "maxAge": 240
         }
     )
 
-    assert device.verify_device_swap(max_age=120) == True
+    assert device.verify_device_swap(max_age=240) == True
 
 # This test actually tests the error handler class by taking deviceswap as use-case
 def test_error_trace_info(httpx_mock, device):
-    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v0/check"
+    url = "https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/device-swap/device-swap/v1/check"
     httpx_mock.add_response(
         url=url,
         match_json={
