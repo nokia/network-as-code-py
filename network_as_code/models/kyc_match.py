@@ -13,11 +13,14 @@
 # limitations under the License.
 
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PrivateAttr
+
+from ..api import APIClient
 from ..api.utils import to_camel
 
-class KYCMatch(BaseModel):
+class CustomerMatch(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    _api: APIClient = PrivateAttr()
     phone_number: Optional[str] = None
     id_document: Optional[str] = None
     name: Optional[str] = None
@@ -39,7 +42,11 @@ class KYCMatch(BaseModel):
     email: Optional[str] = None
     gender: Optional[str] = None
 
-class KYCMatchResult(BaseModel):
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
+class CustomerMatchResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
     id_document_match: Optional[str] = None
     name_match: Optional[str] = None
