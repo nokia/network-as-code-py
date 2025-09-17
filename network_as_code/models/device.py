@@ -390,6 +390,37 @@ class Device(BaseModel):
 
         return self._api.call_forwarding.verify_unconditional_forwarding(self.phone_number)
 
+    def get_device_swap_date(self) -> Union[datetime, None]:
+        """Get the latest Device swap date.
+
+        #### Returns
+             datetime object containing the date of last Device swap OR the activation date OR None
+             if date is not available
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+
+        response = self._api.device_swap.fetch_device_swap_date(self.phone_number).get(
+            "latestDeviceChange"
+        )
+
+        if response:
+            return datetime.fromisoformat(response)
+
+        return None
+
+    def verify_device_swap(self, max_age: Optional[int] = None) -> bool:
+        """Verify if there was Device swap.
+
+        #### Args:
+             max_age (Optional[int]): Max acceptable age for Device swap verification info in hours
+        #### Returns
+             True/False
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+        return self._api.device_swap.verify_device_swap(self.phone_number, max_age)
+
     @staticmethod
     def convert_to_device_model(api, device_json):
         device = Device(api=api)
