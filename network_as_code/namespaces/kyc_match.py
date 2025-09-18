@@ -1,6 +1,6 @@
 from typing import Optional
 from . import Namespace
-from ..models.device import Device
+from ..models.verification import AccessToken
 from ..models.kyc_match import CustomerMatch, CustomerMatchResult
 from ..errors import InvalidParameter
 
@@ -68,7 +68,7 @@ class KYCMatch(Namespace):
             raise InvalidParameter("Either device phone number or authorization code is required.")
 
         if code:
-            authenticator = Device.get_single_use_access_token(self, code=code)
+            authenticator = AccessToken.create(self, code=code)
             headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
             match_params = self.api.kyc_match.match_customer(
                 params.model_dump(by_alias=True, exclude_none=True),
@@ -76,5 +76,5 @@ class KYCMatch(Namespace):
                 )
         else:
             match_params = self.api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
-
+        
         return CustomerMatchResult.model_validate(match_params)

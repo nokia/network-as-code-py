@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from urllib.parse import urlencode
-
 from . import Namespace
 from ..models.authorization import Credentials, Endpoints
 

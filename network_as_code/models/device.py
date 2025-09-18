@@ -360,6 +360,7 @@ class Device(BaseModel):
         #### Returns
              True/False
         """
+
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
         payload = {

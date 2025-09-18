@@ -155,7 +155,7 @@ def test_kyc_match_without_added_phone_number(httpx_mock, device):
 def test_kyc_match_with_auth_token(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/v0.3/match"
 
-    with patch.object(Device, 'get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
+    with patch.object(AccessToken, 'create', return_value= AccessToken(api=fake_instance, access_token='my-token', token_type='Bearer', expires_in=12345)):
         mock_response = {
 >>>>>>> 072b707 (client option for kyc-match)
             "idDocumentMatch": "true",
