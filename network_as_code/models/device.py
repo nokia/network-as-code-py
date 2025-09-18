@@ -22,6 +22,7 @@ from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
 from ..models.number_verification import AccessToken
 from ..models.kyc_match import KYCMatch, KYCMatchResult
+from ..models.kyc_age import KYCAge, KYCAgeResult
 from ..api.utils import tokenizer
 from ..errors import InvalidParameter, NotFound
 
@@ -484,6 +485,62 @@ class Device(BaseModel):
         match_params = self._api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
 
         return KYCMatchResult.model_validate(match_params)
+
+    def verify_age(
+            self,
+            age_threshold: int,
+            code: Optional[str] = None,
+            phone_number: Optional[str] = None,
+            id_document: Optional[str] = None,
+            name: Optional[str] = None,
+            given_name: Optional[str] = None,
+            family_name: Optional[str] = None,
+            middle_names: Optional[str] = None,
+            family_name_at_birth: Optional[str] = None,
+            birthdate: Optional[str] = None,
+            email: Optional[str] = None,
+            include_content_lock: Optional[bool] = None,
+            include_parental_control: Optional[bool] = None,
+            ) -> KYCAgeResult:
+        """Match a customer identity against the account data bound to their phone number.
+        #### Args
+             match_customer parameters: A customers data that will be compared to data bound to their 
+                                        phone number in the operator systems.
+             code (string): The previously obtained authorization code. Can be used for authorization
+                            independently or with phone_number
+        #### Returns
+             KYCMatchResult: Contains the result of matching the provided parameter values to the data 
+                             in the operator system.
+        """
+        params = KYCAge(
+            age_threshold=age_threshold,
+            phone_number = phone_number,
+            id_document = id_document,
+            name = name,
+            given_name = given_name,
+            family_name = family_name,
+            middle_names = middle_names,
+            family_name_at_birth = family_name_at_birth,
+            birthdate = birthdate,
+            email = email,
+            include_content_lock=include_content_lock,
+            include_parental_control=include_parental_control
+        )
+        if code is None and phone_number is None:
+            raise InvalidParameter("Either device phone number or authorization code is required.")
+
+        if code:
+            authenticator = self._get_single_use_access_token(code=code)
+            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
+            params.phone_number = None
+            match_params = self._api.kyc_age.verify_age(
+                params.model_dump(by_alias=True, exclude_none=True),
+                headers=headers
+                )
+        else:
+            match_params = self._api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
+
+        return KYCAgeResult.model_validate(match_params)
 
     @staticmethod
     def convert_to_device_model(api, device_json):
