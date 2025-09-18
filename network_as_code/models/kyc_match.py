@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, TypedDict, NotRequired
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 from ..api.utils import to_camel
 
@@ -38,28 +38,6 @@ class KYCMatch(BaseModel):
     birthdate: Optional[str] = None
     email: Optional[str] = None
     gender: Optional[str] = None
-
-#class KYCMatchDict(TypedDict):
-#    phone_number: Optional[str]
-#    id_document: Optional[str]
-#    name: Optional[str]
-#    given_name: Optional[str]
-#    family_name: Optional[str]
-#    name_kana_hankaku: Optional[str]
-#    name_kana_zenkaku: Optional[str]
-#    middle_names: Optional[str]
-#    family_name_at_birth: Optional[str]
-#    address: Optional[str]
-#    street_name: Optional[str]
-#    street_number: Optional[str]
-#    postal_code: Optional[str]
-#    region: Optional[str]
-#    locality: Optional[str]
-#    country: Optional[str]
-#    house_number_extension: Optional[str]
-#    birthdate: Optional[str]
-#    email: Optional[str]
-#    gender: Optional[str]
 
 class KYCMatchResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)

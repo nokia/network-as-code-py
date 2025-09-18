@@ -33,20 +33,39 @@ def test_authentication_link(client):
     
     assert response.status_code == 302
 
-@pytest.mark.skip
 def test_kyc_match_with_phone_number(device):
     result = device.match_customer(
             phone_number="+99999991000",
-            id_document="123456",
+            id_document="66666666q",
             name="TestName",
             family_name="TestFamilyName",
             address="TestAddress",
             postal_code="TestPostalCode",
-            email="TestEmail"
+            email="test@email.com"
     )
-    #assert result something
+    
+    assert result.id_document_match == "true"
+    assert result.name_match
+    assert result.address_match == "false"
 
-@pytest.mark.skip
+def test_kyc_match_and_match_score(device):
+    result = device.match_customer(
+            phone_number="+99999991000",
+            id_document="66666666q",
+            name="TestName",
+            family_name="TestFamilyName",
+            family_name_at_birth="BirthFamily",
+            address="TestAddress",
+            postal_code="TestPostalCode",
+            email="test@email.com"
+    )
+    
+    assert result.id_document_match
+    assert result.name_match
+    if result.family_name_at_birth_match == "false":
+        assert result.family_name_at_birth_match_score >= 0
+
+@pytest.mark.skip # Implementation not working yet
 def test_kyc_match_with_token(client, device, notification_base_url):
     auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/kyc', scope='dpv:FraudPreventionAndDetection kyc-match:match', login_hint="+99999991000")
 
@@ -72,7 +91,6 @@ def test_kyc_match_with_token(client, device, notification_base_url):
     )
     #assert result something
 
-@pytest.mark.skip
 def test_APIError(device):
     with pytest.raises(APIError):
         device.match_customer(
@@ -83,7 +101,6 @@ def test_APIError(device):
                 middle_names="TestNames"
         )
 
-@pytest.mark.skip
 def test_AuthenticationExeption(device):
     with pytest.raises(AuthenticationException):
         device.match_customer(

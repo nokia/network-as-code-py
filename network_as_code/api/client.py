@@ -56,7 +56,7 @@ CALL_FORWARDING_URL = "/passthrough/camara/v1/call-forwarding-signal/call-forwar
 
 DEVICE_SWAP_URL = "/passthrough/camara/v1/device-swap/device-swap/v1"
 
-KYC_MATCH_URL = "/passthrough/camara/v1/kyc-match/v0.3"
+KYC_MATCH_URL = "/passthrough/camara/v1/passthrough/kyc-match/v0.3"
 
 # RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 
