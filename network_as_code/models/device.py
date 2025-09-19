@@ -424,7 +424,6 @@ class Device(BaseModel):
 
     def match_customer(
             self,
-            code: Optional[str] = None,
             phone_number: Optional[str] = None,
             id_document: Optional[str] = None,
             name: Optional[str] = None,
@@ -450,8 +449,8 @@ class Device(BaseModel):
         #### Args
              match_customer parameters: A customers data that will be compared to data bound to their 
                                         phone number in the operator systems.
-             code (Optional[str]): The previously obtained authorization code. Can be used 
-                                   for authorization independently or with phone_number
+             phone_number (Optional[str]): Used for identifying the telephone subscription. If not provided,
+                                           will use the phone_number of the device that is used for the request.
         #### Returns
              KYCMatchResult: Contains the result of matching the provided parameter values to the data 
                              in the operator system.
@@ -479,18 +478,10 @@ class Device(BaseModel):
             email = email,
             gender = gender
         )
-        if code is None and phone_number is None:
-            raise InvalidParameter("Either device phone number or authorization code is required.")
+        if phone_number is None:
+            params.phone_number = self.phone_number
 
-        if code:
-            authenticator = self._get_single_use_access_token(code=code)
-            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-            match_params = self._api.kyc_match.match_customer(
-                params.model_dump(by_alias=True, exclude_none=True),
-                headers=headers
-                )
-        else:
-            match_params = self._api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
+        match_params = self._api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
 
         return KYCMatchResult.model_validate(match_params)
 

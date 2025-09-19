@@ -145,76 +145,57 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
     assert result.family_name_match == "false"
     assert result.family_name_match_score == 87
 
-def test_kyc_match_with_auth_token(httpx_mock, device):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-match/v0.3/match"
 
-    with patch.object(Device, '_get_single_use_access_token', return_value= AccessToken(access_token='my-token', token_type='Bearer', expires_in=12345)):
-        mock_response = {
+def test_kyc_match_without_added_phone_number(httpx_mock, device):
+
+    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-match/v0.3/match"
+    
+    mock_response = {
             "idDocumentMatch": "true",
-            "givenNameMatch": "true",
-            "nameKanaHankakuMatch": "false",
-            "nameKanaHankakuMatchScore": 92,
-            "middleNamesMatch": "true",
-            "streetNameMatch": "false",
-            "streetNameMatchScore": 76,
-            "streetNumberMatch":"true",
-            "postalCodeMatch":"true",
-            "regionMatch":"false",
-            "regionMatchScore": 98,
-            "localityMatch":"true",
-            "countryMatch":"true"
+            "nameMatch": "true",
+            "familyNameMatch": "false",
+            "familyNameMatchScore": 87,
+            "addressMatch": "true",
+            "streetNameMatch": "true",
+            "streetNumberMatch": "true",
+            "postalCodeMatch": "true",
+            "regionMatch": "true",
+            "emailMatch": "true",
+            "genderMatch": "true"
             }
-        
-        httpx_mock.add_response(
+    
+    httpx_mock.add_response(
         url=url, 
         method='POST', 
         json=mock_response,
         match_json={
+            "phoneNumber":"+999999991000",
             "idDocument":"TestIdDocument",
-            "givenName":"TestGivenName",
-            "nameKanaHankaku":"TestKanaHankakuName",
-            "middleNames":"TestNames",
+            "name":"TestName",
+            "familyName":"TestFamilyName",
+            "address":"TestAddress",
             "streetName":"TestStreetName",
             "streetNumber":"1",
             "postalCode":"11111",
             "region":"TestRegion",
-            "locality":"SomeLocality",
-            "country":"SomeCountry"
+            "email":"abc@example.com",
+            "gender":"OTHER"
             })
-        
-        result = device.match_customer(
-                code="my-code",
-                id_document="TestIdDocument",
-                given_name="TestGivenName",
-                name_kana_hankaku="TestKanaHankakuName",
-                middle_names="TestNames",
-                street_name="TestStreetName",
-                street_number="1",
-                postal_code="11111",
-                region="TestRegion",
-                locality="SomeLocality",
-                country="SomeCountry"
-        )
-
-        assert result.id_document_match
-        assert result.country_match == "true"
-        assert not result.name_kana_zenkaku_match
-
-def test_kyc_match_without_any_authorization(client):
-    device = client.devices.get(network_access_identifier="testuser@open5glab.net")
-
-    with pytest.raises(InvalidParameter):
-        device.match_customer(
-                id_document="TestIdDocument",
-                given_name="TestGivenName",
-                name_kana_hankaku="TestKanaHankakuName",
-                middle_names="TestNames",
-                street_name="TestStreetName",
-                street_number="1",
-                postal_code="11111",
-                region="TestRegion",
-                locality="SomeLocality",
-                country="SomeCountry"
-        )
+    
+    result = device.match_customer(
+            id_document="TestIdDocument",
+            name="TestName",
+            family_name="TestFamilyName",
+            address="TestAddress",
+            street_name="TestStreetName",
+            street_number="1",
+            postal_code="11111",
+            region="TestRegion",
+            email="abc@example.com",
+            gender="OTHER"
+    )
+    assert not result.house_number_extension_match
+    assert result.family_name_match == "false"
+    assert result.family_name_match_score == 87
 
         
