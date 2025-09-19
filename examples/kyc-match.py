@@ -41,9 +41,15 @@ customer_match_result = my_device.match_customer(
                 email= "abc@example.com",
                 gender= "OTHER")
 
+# If successful, you can access the results like so:
 print(customer_match_result)
 
-# Alternativelly you can retrieve an authorization code and use the code in the matchCustomer method. 
+# Or
+print(customer_match_result.name_match)
+print(customer_match_result.name_match_score) # if provided and name_match "false"
+print(customer_match_result.address_match)
+
+# Alternativelly you can retrieve an authorization code and use the code in the match_customer method. 
 # In this case, no device phone number is required to be provided in the parameters.
 
 # This authorization_endpoint should be requested by the end user device and not in the backend
@@ -57,7 +63,6 @@ print(customer_match_result)
 # that the state value given to the authorization endpoint matches the one returned to the redirect uri.
 # If the state values do not match, there has likely been a CSRF attack. In this case your application
 # should return a 401 Unauthorized error code.
-
 
 # create callbacklink
 callback = client.authorization.create_authentication_link(

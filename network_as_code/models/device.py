@@ -450,8 +450,8 @@ class Device(BaseModel):
         #### Args
              match_customer parameters: A customers data that will be compared to data bound to their 
                                         phone number in the operator systems.
-             code (string): The previously obtained authorization code. Can be used for authorization
-                            independently or with phone_number
+             code (Optional[str]): The previously obtained authorization code. Can be used 
+                                   for authorization independently or with phone_number
         #### Returns
              KYCMatchResult: Contains the result of matching the provided parameter values to the data 
                              in the operator system.
