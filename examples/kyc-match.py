@@ -11,9 +11,9 @@ my_device = client.devices.get(
     phone_number="+999999991000"
 )
 
-# You can use the match_customer method with device's or custom phone number .
-# If you don't provide the phone_number parameter, the code will automaticly
-# use phone_number from my_device variable
+# You can use the match_customer method with device's or custom phone number.
+# If you don't provide the phone_number parameter, the code will
+# use phone_number from my_device variable by default.
 
 # Add the customer identity data, which is to be used in matching
 # a customer against the account data bound to their phone number.
