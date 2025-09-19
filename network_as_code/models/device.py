@@ -502,15 +502,21 @@ class Device(BaseModel):
             include_content_lock: Optional[bool] = None,
             include_parental_control: Optional[bool] = None,
             ) -> KYCAgeResult:
-        """Match a customer identity against the account data bound to their phone number.
+        """Checks if the age of the subscriber is older than the age threshold in the request.
         #### Args
-             match_customer parameters: A customers data that will be compared to data bound to their 
-                                        phone number in the operator systems.
-             code (string): The previously obtained authorization code. Can be used for authorization
-                            independently or with phone_number
+             age_threshold (int): The age threshold from which the age of the user must be compared
+             code (Optional[str]): The previously obtained authorization code. Can be used for
+                                   authorization instead of a phone number
+             phone_number (Optional[str]): If not using authorization code, must be used as an 
+                                           identifier for the request
+             additional verify_age parameters: E.g. name, birthdate, include_parental_control. 
+                                               Confirms that the subscriber is the contract's 
+                                               owner or if the subscription has any kind of parental 
+                                               or content control activated.
         #### Returns
-             KYCMatchResult: Contains the result of matching the provided parameter values to the data 
-                             in the operator system.
+             KYCAgeResult: Object containing the result of age threshold check and verification 
+                           status. Might also hold information about parental or content control 
+                           status and score result of additional checks.
         """
         params = KYCAge(
             age_threshold=age_threshold,
@@ -532,7 +538,6 @@ class Device(BaseModel):
         if code:
             authenticator = self._get_single_use_access_token(code=code)
             headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-            params.phone_number = None
             match_params = self._api.kyc_age.verify_age(
                 params.model_dump(by_alias=True, exclude_none=True),
                 headers=headers
