@@ -489,7 +489,6 @@ class Device(BaseModel):
     def verify_age(
             self,
             age_threshold: int,
-            code: Optional[str] = None,
             phone_number: Optional[str] = None,
             id_document: Optional[str] = None,
             name: Optional[str] = None,
@@ -505,10 +504,8 @@ class Device(BaseModel):
         """Checks if the age of the subscriber is older than the age threshold in the request.
         #### Args
              age_threshold (int): The age threshold from which the age of the user must be compared
-             code (Optional[str]): The previously obtained authorization code. Can be used for
-                                   authorization instead of a phone number
-             phone_number (Optional[str]): If not using authorization code, must be used as an 
-                                           identifier for the request
+             phone_number (Optional[str]): Used as an identifier for the request. If not provided,
+                                           will use the phone_number of the device that is used for the request.
              additional verify_age parameters: E.g. name, birthdate, include_parental_control. 
                                                Confirms that the subscriber is the contract's 
                                                owner or if the subscription has any kind of parental 
@@ -519,7 +516,7 @@ class Device(BaseModel):
                            status and score result of additional checks.
         """
         params = KYCAge(
-            age_threshold=age_threshold,
+            age_threshold = age_threshold,
             phone_number = phone_number,
             id_document = id_document,
             name = name,
@@ -529,21 +526,13 @@ class Device(BaseModel):
             family_name_at_birth = family_name_at_birth,
             birthdate = birthdate,
             email = email,
-            include_content_lock=include_content_lock,
-            include_parental_control=include_parental_control
+            include_content_lock = include_content_lock,
+            include_parental_control = include_parental_control
         )
-        if code is None and phone_number is None:
-            raise InvalidParameter("Either device phone number or authorization code is required.")
+        if phone_number is None:
+            params.phone_number = self.phone_number
 
-        if code:
-            authenticator = self._get_single_use_access_token(code=code)
-            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-            match_params = self._api.kyc_age.verify_age(
-                params.model_dump(by_alias=True, exclude_none=True),
-                headers=headers
-                )
-        else:
-            match_params = self._api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
+        match_params = self._api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
 
         return KYCAgeResult.model_validate(match_params)
 
