@@ -32,3 +32,7 @@ def tokenizer(base_url: str, data: dict):
     response = httpx.post(url=base_url, data=data)
     error_handler(response)
     return response
+
+def to_camel(string: str) -> str:
+    fracs = string.split('_')
+    return fracs[0] + ''.join(word.capitalize() for word in fracs[1:])
