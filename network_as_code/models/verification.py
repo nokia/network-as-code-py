@@ -1,5 +1,4 @@
-from pydantic import BaseModel, PrivateAttr
-from network_as_code.api.client import APIClient
+from pydantic import BaseModel
 from ..api.utils import tokenizer
 
 class Credentials(BaseModel):
@@ -33,17 +32,12 @@ class AccessToken(BaseModel):
             token_type (str): Authentication scheme.
             expires_in (str): The lifetime of access token
     """
-    _api: APIClient = PrivateAttr()
     access_token: str
     token_type: str
     expires_in: int
 
-    def __init__(self, api: APIClient, **data) -> None:
-        super().__init__(**data)
-        self._api = api
-
     @staticmethod
-    def create(instance, code: str) -> "AccessToken":
+    def create(api, code: str) -> "AccessToken":
         """Get Access Token for number verification API
 
         #### Args:
@@ -52,8 +46,8 @@ class AccessToken(BaseModel):
              AccessToken object containing access token, token type and expiration time
         """
         grant_type = "authorization_code"
-        credentials = instance._api.credentials.fetch_credentials()
-        token_endpoint = instance._api.authorization.fetch_endpoints().get(
+        credentials = api.credentials.fetch_credentials()
+        token_endpoint = api.authorization.fetch_endpoints().get(
             "token_endpoint"
         )
         data = {
@@ -69,7 +63,6 @@ class AccessToken(BaseModel):
         expires_in = body["expires_in"]
 
         return AccessToken(
-            api=instance._api,
             access_token=access_token,
             token_type=token_type,
             expires_in=expires_in

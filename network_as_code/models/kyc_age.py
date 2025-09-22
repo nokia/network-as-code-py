@@ -13,11 +13,13 @@
 # limitations under the License.
 
 from typing import Optional, Union
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PrivateAttr
+from ..api import APIClient
 from ..api.utils import to_camel
 
-class KYCAge(BaseModel):
+class AgeVerification(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    _api: APIClient = PrivateAttr()
     age_threshold: int
     phone_number: Optional[str] = None
     id_document: Optional[str] = None
@@ -31,7 +33,11 @@ class KYCAge(BaseModel):
     include_content_lock: Optional[bool] = None
     include_parental_control: Optional[bool] = None
 
-class KYCAgeResult(BaseModel):
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
+class AgeVerificationResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
     age_check: str
     verified_status: Union[bool, str, None] = None

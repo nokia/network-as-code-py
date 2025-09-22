@@ -20,4 +20,4 @@ from .device_status import DeviceStatus
 from .insights import NetworkInsights
 from .geofencing import Geofencing
 from .authorization import Authorization
-from .kyc_match import KYCMatch
+from .kyc import KYC

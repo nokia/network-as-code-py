@@ -63,7 +63,7 @@ def test_get_kyc_match(httpx_mock, device):
             "gender":"MALE"
             })
     
-    result = client.kyc_match.match_customer(
+    result = client.kyc.match_customer(
             phone_number="+999999991000",
             id_document = "66666666q",
             name = "Federica Sanchez Arjona",
@@ -85,7 +85,6 @@ def test_get_kyc_match(httpx_mock, device):
             email = "abc@example.com",
             gender = "MALE"
             )
-    
     assert result.name_match and result.name_match == "true"
     assert result.birthdate_match == "false"
     if result.email_match == "false":
@@ -127,7 +126,7 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
             "gender":"OTHER"
             })
     
-    result = client.kyc_match.match_customer(
+    result = client.kyc.match_customer(
             phone_number="+999999991000",
             id_document="TestIdDocument",
             name="TestName",
@@ -157,7 +156,6 @@ def test_kyc_match_with_auth_token(httpx_mock, client):
 
     with patch.object(AccessToken, 'create', return_value= AccessToken(api=fake_instance, access_token='my-token', token_type='Bearer', expires_in=12345)):
         mock_response = {
->>>>>>> 072b707 (client option for kyc-match)
             "idDocumentMatch": "true",
             "nameMatch": "true",
             "familyNameMatch": "false",
@@ -171,64 +169,43 @@ def test_kyc_match_with_auth_token(httpx_mock, client):
             "genderMatch": "true"
             }
     
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        json=mock_response,
-        match_json={
-            "phoneNumber":"+999999991000",
-            "idDocument":"TestIdDocument",
-            "name":"TestName",
-            "familyName":"TestFamilyName",
-            "address":"TestAddress",
-            "streetName":"TestStreetName",
-            "streetNumber":"1",
-            "postalCode":"11111",
-            "region":"TestRegion",
-            "email":"abc@example.com",
-            "gender":"OTHER"
-            })
-<<<<<<< HEAD
-    
-    result = device.match_customer(
-            id_document="TestIdDocument",
-            name="TestName",
-            family_name="TestFamilyName",
-            address="TestAddress",
-            street_name="TestStreetName",
-            street_number="1",
-            postal_code="11111",
-            region="TestRegion",
-            email="abc@example.com",
-            gender="OTHER"
-    )
-    assert not result.house_number_extension_match
-    assert result.family_name_match == "false"
-    assert result.family_name_match_score == 87
-=======
+        httpx_mock.add_response(
+                url=url, 
+                method='POST', 
+                json=mock_response,
+                match_json={
+                "idDocument":"TestIdDocument",
+                "name":"TestName",
+                "familyName":"TestFamilyName",
+                "address":"TestAddress",
+                "streetName":"TestStreetName",
+                "streetNumber":"1",
+                "postalCode":"11111",
+                "region":"TestRegion",
+                "email":"abc@example.com",
+                "gender":"OTHER"
+                })
         
-        result = client.kyc_match.match_customer(
+        result = client.kyc.match_customer(
                 code="my-code",
                 id_document="TestIdDocument",
-                given_name="TestGivenName",
-                name_kana_hankaku="TestKanaHankakuName",
-                middle_names="TestNames",
+                name="TestName",
+                family_name="TestFamilyName",
+                address="TestAddress",
                 street_name="TestStreetName",
                 street_number="1",
                 postal_code="11111",
                 region="TestRegion",
-                locality="SomeLocality",
-                country="SomeCountry"
+                email="abc@example.com",
+                gender="OTHER"
         )
-
         assert result.id_document_match
-        assert result.country_match == "true"
+        assert result.address_match == "true"
         assert not result.name_kana_zenkaku_match
 
-def test_kyc_match_without_any_authorization(client):
-    
+def test_kyc_without_any_authorization(client):
     with pytest.raises(InvalidParameter):
-        client.kyc_match.match_customer(
+        client.kyc.match_customer(
                 id_document="TestIdDocument",
                 given_name="TestGivenName",
                 name_kana_hankaku="TestKanaHankakuName",
@@ -240,6 +217,5 @@ def test_kyc_match_without_any_authorization(client):
                 locality="SomeLocality",
                 country="SomeCountry"
         )
->>>>>>> 072b707 (client option for kyc-match)
 
         
