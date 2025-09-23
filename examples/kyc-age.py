@@ -16,7 +16,7 @@ my_device = client.devices.get(
 # use phone_number from my_device variable by default
 
 # Add age_threshold in the request to check if the age of the subscriber is older than that
-# Other additional indetifying parameters can be used to confirm that the subscriber is the contract's owner
+# Other additional identifying parameters can be used to confirm that the subscriber is the contract's owner
 
 result = my_device.verify_age(
     age_threshold=18,
