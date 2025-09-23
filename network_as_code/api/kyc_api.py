@@ -16,6 +16,21 @@ from typing import Optional
 from .utils import httpx_client
 from ..errors import error_handler
 
+class KYCMatchAPI:
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
+
+    def match_customer(self, body: dict, headers: Optional[dict] = None):
+
+        if headers:
+            res = self.client.post("/match", json=body, headers=headers)
+        else:
+            res = self.client.post("/match", json=body)
+
+        error_handler(res)
+
+        return res.json()
+    
 class KYCAgeAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
         self.client = httpx_client(base_url, rapid_key, rapid_host)
