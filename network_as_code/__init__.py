@@ -1,4 +1,4 @@
-# Copyright 2023 Nokia
+# Copyright 2025 Nokia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,4 +14,4 @@
 
 from .client import NetworkAsCodeClient
 
-__version__ = "6.1.0"
+__version__ = "6.2.0"

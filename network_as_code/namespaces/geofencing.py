@@ -16,17 +16,15 @@ from typing import List, Union, Optional
 from datetime import datetime
 from . import Namespace
 from ..models.device import Device
-from ..models.geofencing import GeofencingSubscription, PlainCredential, AccessTokenCredential, EventType
+from ..models.geofencing import GeofencingSubscription, PlainCredential, AccessTokenCredential, EventType, Circle, POI
 
 class Geofencing(Namespace):
 
     def subscribe(
         self, device: Device,
         sink: str,
-        types: Union[List[EventType] | List[str]],
-        latitude: float,
-        longitude: float,
-        radius: Union[int, float],
+        types: Union[List[EventType], List[str]],
+        area: Union[Circle, POI],
         sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None,
         subscription_expire_time: Union[datetime , str, None] = None,
         subscription_max_events: Optional[int] = None,
@@ -50,9 +48,7 @@ class Geofencing(Namespace):
             device,
             sink,
             typelist,
-            latitude,
-            longitude,
-            radius,
+            area,
             sink_credential,
             subscription_expire_time,
             subscription_max_events,

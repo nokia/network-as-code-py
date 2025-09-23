@@ -21,6 +21,8 @@ from ..models.session import QoDSession, PortsSpec
 from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
 from ..models.number_verification import AccessToken
+from ..models.kyc_match import KYCMatch, KYCMatchResult
+from ..models.kyc_age import KYCAge, KYCAgeResult
 from ..api.utils import tokenizer
 from ..errors import InvalidParameter, NotFound
 
@@ -389,6 +391,150 @@ class Device(BaseModel):
             raise InvalidParameter("Device phone number is required.")
 
         return self._api.call_forwarding.verify_unconditional_forwarding(self.phone_number)
+
+    def get_device_swap_date(self) -> Union[datetime, None]:
+        """Get the latest Device swap date.
+
+        #### Returns
+             datetime object containing the date of last Device swap OR the activation date OR None
+             if date is not available
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+
+        response = self._api.device_swap.fetch_device_swap_date(self.phone_number).get(
+            "latestDeviceChange"
+        )
+
+        if response:
+            return datetime.fromisoformat(response)
+
+        return None
+
+    def verify_device_swap(self, max_age: Optional[int] = None) -> bool:
+        """Verify if there was Device swap.
+
+        #### Args:
+             max_age (Optional[int]): Max acceptable age for Device swap verification info in hours
+        #### Returns
+             True/False
+        """
+        if self.phone_number is None:
+            raise InvalidParameter("Device phone number is required.")
+        return self._api.device_swap.verify_device_swap(self.phone_number, max_age)
+
+    def match_customer(
+            self,
+            phone_number: Optional[str] = None,
+            id_document: Optional[str] = None,
+            name: Optional[str] = None,
+            given_name: Optional[str] = None,
+            family_name: Optional[str] = None,
+            name_kana_hankaku: Optional[str] = None,
+            name_kana_zenkaku: Optional[str] = None,
+            middle_names: Optional[str] = None,
+            family_name_at_birth: Optional[str] = None,
+            address: Optional[str] = None,
+            street_name: Optional[str] = None,
+            street_number: Optional[str] = None,
+            postal_code: Optional[str] = None,
+            region: Optional[str] = None,
+            locality: Optional[str] = None,
+            country: Optional[str] = None,
+            house_number_extension: Optional[str] = None,
+            birthdate: Optional[str] = None,
+            email: Optional[str] = None,
+            gender: Optional[str] = None,
+            ) -> KYCMatchResult:
+        """Match a customer identity against the account data bound to their phone number.
+        #### Args
+             match_customer parameters: A customers data that will be compared to data bound to their 
+                                        phone number in the operator systems.
+             phone_number (Optional[str]): Used for identifying the telephone subscription. If not provided,
+                                           will use the phone_number of the device that is used for the request.
+        #### Returns
+             KYCMatchResult: Contains the result of matching the provided parameter values to the data 
+                             in the operator system.
+        """
+
+        params = KYCMatch(
+            phone_number = phone_number,
+            id_document = id_document,
+            name = name,
+            given_name = given_name,
+            family_name = family_name,
+            name_kana_hankaku = name_kana_hankaku,
+            name_kana_zenkaku = name_kana_zenkaku,
+            middle_names = middle_names,
+            family_name_at_birth = family_name_at_birth,
+            address = address,
+            street_name = street_name,
+            street_number = street_number,
+            postal_code = postal_code,
+            region = region,
+            locality = locality,
+            country = country,
+            house_number_extension = house_number_extension,
+            birthdate = birthdate,
+            email = email,
+            gender = gender
+        )
+        if phone_number is None:
+            params.phone_number = self.phone_number
+
+        match_params = self._api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
+
+        return KYCMatchResult.model_validate(match_params)
+
+    def verify_age(
+            self,
+            age_threshold: int,
+            phone_number: Optional[str] = None,
+            id_document: Optional[str] = None,
+            name: Optional[str] = None,
+            given_name: Optional[str] = None,
+            family_name: Optional[str] = None,
+            middle_names: Optional[str] = None,
+            family_name_at_birth: Optional[str] = None,
+            birthdate: Optional[str] = None,
+            email: Optional[str] = None,
+            include_content_lock: Optional[bool] = None,
+            include_parental_control: Optional[bool] = None,
+            ) -> KYCAgeResult:
+        """Checks if the age of the subscriber is older than the age threshold in the request.
+        #### Args
+             age_threshold (int): The age threshold from which the age of the user must be compared
+             phone_number (Optional[str]): Used as an identifier for the request. If not provided,
+                                           will use the phone_number of the device that is used for the request.
+             additional verify_age parameters: E.g. name, birthdate, include_parental_control. 
+                                               Confirms that the subscriber is the contract's 
+                                               owner or if the subscription has any kind of parental 
+                                               or content control activated.
+        #### Returns
+             KYCAgeResult: Object containing the result of age threshold check and verification 
+                           status. Might also hold information about parental or content control 
+                           status and score result of additional checks.
+        """
+        params = KYCAge(
+            age_threshold = age_threshold,
+            phone_number = phone_number,
+            id_document = id_document,
+            name = name,
+            given_name = given_name,
+            family_name = family_name,
+            middle_names = middle_names,
+            family_name_at_birth = family_name_at_birth,
+            birthdate = birthdate,
+            email = email,
+            include_content_lock = include_content_lock,
+            include_parental_control = include_parental_control
+        )
+        if phone_number is None:
+            params.phone_number = self.phone_number
+
+        match_params = self._api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
+
+        return KYCAgeResult.model_validate(match_params)
 
     @staticmethod
     def convert_to_device_model(api, device_json):
