@@ -582,7 +582,7 @@ wheels = [
 
 [[package]]
 name = "network-as-code"
-version = "6.1.0"
+version = "6.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
