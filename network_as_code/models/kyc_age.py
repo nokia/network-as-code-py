@@ -34,7 +34,7 @@ class KYCAge(BaseModel):
 class KYCAgeResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
     age_check: str
-    verified_status: bool
+    verified_status: Union[bool, str, None] = None
     identity_match_score: Optional[int] = None
     content_lock: Union[bool, str, None] = None
     parental_control: Union[bool, str, None] = None
