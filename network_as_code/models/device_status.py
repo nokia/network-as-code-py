@@ -14,8 +14,10 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
-from pydantic import BaseModel, PrivateAttr
+from typing import List, Optional, Union
+from pydantic import BaseModel, ConfigDict, PrivateAttr
+
+from network_as_code.api.utils import to_camel
 
 from ..api import APIClient
 from ..models.device import Device
@@ -26,14 +28,29 @@ class EventType(Enum):
     Enum class containing the string constant values for the different supported event types.
     """
 
-    CONNECTIVITY_DATA = "org.camaraproject.device-status.v0.connectivity-data"
-    CONNECTIVITY_SMS = "org.camaraproject.device-status.v0.connectivity-sms"
-    CONNECTIVITY_DISCONNECTED = "org.camaraproject.device-status.v0.connectivity-disconnected"
-    ROAMING_STATUS = "org.camaraproject.device-status.v0.roaming-status"
-    ROAMING_ON = "org.camaraproject.device-status.v0.roaming-on"
-    ROAMING_OFF = "org.camaraproject.device-status.v0.roaming-off"
-    ROAMING_CHANGE_COUNTRY = "org.camaraproject.device-status.v0.roaming-change-country"
+    #CONNECTIVITY_DATA = "org.camaraproject.device-status.v0.connectivity-data"
+    #CONNECTIVITY_SMS = "org.camaraproject.device-status.v0.connectivity-sms"
+    #CONNECTIVITY_DISCONNECTED = "org.camaraproject.device-status.v0.connectivity-disconnected"
+    ROAMING_STATUS= "org.camaraproject.device-status.v0.roaming-status"
+    ROAMING_ON= "org.camaraproject.device-status.v0.roaming-on"
+    ROAMING_OFF= "org.camaraproject.device-status.v0.roaming-off"
+    ROAMING_CHANGE_COUNTRY= "org.camaraproject.device-status.v0.roaming-change-country"
+    REACHABILITY_DATA= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
+    REACHABILITY_SMS= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms"
+    REACHABILITY_DISCONNECTED= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"
 
+class AccessTokenCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "ACCESSTOKEN"
+    access_token: str
+    access_token_expires_utc: Union[datetime, str]
+    access_token_type: str
+
+class PlainCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "PLAIN"
+    identifier: str
+    secret: str
 
 class EventSubscription(BaseModel):
     """
@@ -57,20 +74,31 @@ class EventSubscription(BaseModel):
 
     id: str = ''
     _api: APIClient = PrivateAttr()
+    protocol: Optional[str] = None
     max_num_of_reports: Optional[int] = None
-    event_type: str
-    notification_url: str
-    notification_auth_token: Optional[str] = None
+    event_type: List[str]
+    sink: str
     device: Device
     starts_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None
+    sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
 
-    def delete(self) -> None:
-        """Delete device connectivity status"""
+#    def delete(self) -> None:
+#        """Delete device connectivity status"""
+#
+#        # Error Case: Delete connectivity status
+#        self._api.devicestatus.delete_subscription(self.id)
 
-        # Error Case: Delete connectivity status
-        self._api.devicestatus.delete_subscription(self.id)
+    def delete_reachability(self) -> None:
+        """Delete device reachability status"""
+
+        self._api.reachability_status.delete_subscription(self.id)
+
+    def delete_roaming(self) -> None:
+        """Delete device roaming status"""
+
+        self._api.roaming_status.delete_subscription(self.id)

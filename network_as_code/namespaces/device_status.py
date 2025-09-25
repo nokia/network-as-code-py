@@ -14,9 +14,10 @@
 
 from datetime import datetime
 from typing import List, Union, Optional
+
 from . import Namespace
 from ..models.device import Device
-from ..models.device_status import EventSubscription, EventType
+from ..models.device_status import PlainCredential, AccessTokenCredential, EventSubscription, EventType
 
 
 class Connectivity(Namespace):
@@ -28,12 +29,13 @@ class Connectivity(Namespace):
 
     def subscribe(
         self,
-        event_type: Union[EventType, str],
-        notification_url: str,
+        event_type: Union[List[EventType], List[str]],
+        sink: str,
         device: Device,
         max_num_of_reports: Optional[int] = None,
-        notification_auth_token: Optional[str] = None,
+        sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None,
         subscription_expire_time: Union[datetime, str, None] = None,
+        initial_event: Optional[bool] = None
     ) -> EventSubscription:
         """Create subscription for device connectivity status.
 
@@ -53,24 +55,39 @@ class Connectivity(Namespace):
         if isinstance(subscription_expire_time, datetime):
             subscription_expire_time = subscription_expire_time.isoformat()
 
-        if isinstance(event_type, EventType):
-            event_type = event_type.value
+        typelist = []
+        for item in event_type:
+            if isinstance(item, EventType):
+                typelist.append(item.value)
+            else:
+                typelist.append(item)
 
-        connectivity_data = self.api.devicestatus.create_subscription(
+        api_type = self.api.reachability_status
+
+        if typelist[0] in (
+            EventType.ROAMING_CHANGE_COUNTRY,
+            EventType.ROAMING_OFF,
+            EventType.ROAMING_ON,
+            EventType.ROAMING_STATUS
+            ):
+            api_type = self.api.roaming_status
+
+        connectivity_data = api_type.create_subscription(
             device,
-            event_type,
-            notification_url,
-            notification_auth_token,
-            max_num_of_reports,
+            sink,
+            typelist,
+            sink_credential,
             subscription_expire_time,
+            max_num_of_reports,
+            initial_event
         )
         connectivity_subscription = EventSubscription(
             api=self.api,
             max_num_of_reports=max_num_of_reports,
-            event_type = event_type,
-            notification_url=notification_url,
-            notification_auth_token=notification_auth_token,
+            event_type = typelist,
+            sink=sink,
             device=device,
+            sink_credential=sink_credential,
             starts_at=(connectivity_data["startsAt"] if "startsAt" in connectivity_data else None),
             expires_at=(
                 connectivity_data["expiresAt"] if "expiresAt" in connectivity_data else None
@@ -81,7 +98,7 @@ class Connectivity(Namespace):
 
         return connectivity_subscription
 
-    def get_subscription(self, id: str) -> EventSubscription:
+    def get_reachability_subscription(self, id: str) -> EventSubscription:
         """Retrieve a single Device Status event subscription by ID
 
         #### Args:
@@ -93,7 +110,23 @@ class Connectivity(Namespace):
             ```
         """
 
-        connectivity_data = self.api.devicestatus.get_subscription(id)
+        connectivity_data = self.api.reachability_status.get_subscription(id)
+
+        return self.__parse_event_subscription(connectivity_data)
+
+    def get_roaming_subscription(self, id: str) -> EventSubscription:
+        """Retrieve a single Device Status event subscription by ID
+
+        #### Args:
+            id (str): Resource ID
+
+        #### Example:
+            ```python
+            subscription = client.connectivity.get_subscription(id="some-subscription-id")
+            ```
+        """
+
+        connectivity_data = self.api.roaming_status.get_subscription(id)
 
         return self.__parse_event_subscription(connectivity_data)
 
@@ -107,7 +140,9 @@ class Connectivity(Namespace):
 
         Returns: List[EventSubscription]
         """
-        json = self.api.devicestatus.get_subscriptions()
+        reachability_json = self.api.reachability_status.get_subscriptions()
+        roaming_json = self.api.roaming_status.get_subscriptions()
+        json = reachability_json + roaming_json
 
         return list(map(self.__parse_event_subscription, json))
 
@@ -117,11 +152,10 @@ class Connectivity(Namespace):
         device = Device.convert_to_device_model(self.api, device_data)
 
         return EventSubscription(
-            id=data["subscriptionId"],
+            id=data["id"],
             api=self.api,
-            max_num_of_reports=data.get("maxNumberOfReports"),
-            event_type=data['subscriptionDetail'].get("type"),
-            notification_url=data["webhook"].get("notificationUrl"),
-            notification_auth_token=data["webhook"].get("notificationAuthToken"),
-            device=device,
+            max_num_of_reports=data["config"].get("subscriptionMaxEvents"),
+            event_type=data["types"],
+            sink=data["sink"],
+            device=device
         )

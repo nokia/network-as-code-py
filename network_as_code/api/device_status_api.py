@@ -12,48 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
-
+from datetime import datetime
+from typing import List, Union, Optional, Any
 
 from ..errors import error_handler
-from .utils import delete_none, httpx_client
+from .utils import httpx_client
 
 
-
-
-class DeviceStatusAPI:
+class DeviceStatus:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str) -> None:
         self.client = httpx_client(base_url, rapid_key, rapid_host)
-
 
     def create_subscription(
         self,
         device,
-        event_type: str,
-        notification_url: str,
-        notification_auth_token: Optional[str],
-        max_number_of_reports: Optional[int] = None,
-        subscription_expire_time: Optional[str] = None,
+        sink: str,
+        event_type: List[str],
+        sink_credential: Any = None,
+        subscription_expire_time: Union[datetime , str, None] = None,
+        subscription_max_events: Optional[int] = None,
+        initial_event: Optional[bool] = None
     ):
         assert device.network_access_id != "None"
 
-        res = self.client.post(
-            "/subscriptions",
-            json=delete_none(
-                {
-                    "subscriptionDetail": {
-                        "device": device.model_dump(mode='json', by_alias=True),
-                        "type": event_type,
-                    },
-                    "maxNumberOfReports": max_number_of_reports,
-                    "subscriptionExpireTime": subscription_expire_time,
-                    "webhook": {
-                        "notificationUrl": notification_url,
-                        "notificationAuthToken": notification_auth_token,
-                    },
+        body: dict = {
+            "protocol": "HTTP",
+            "sink": sink,
+            "types": event_type,
+            "config": {
+                "subscriptionDetail": {
+                    "device": device.model_dump(mode='json', by_alias=True, exclude_none=True)
                 }
-            ),
-        )
+            }
+        }
+        if sink_credential:
+            body["sinkCredential"] = {
+                **sink_credential.model_dump(mode='json', by_alias=True)
+            }
+
+        if subscription_expire_time:
+            body["config"]["subscriptionExpireTime"] = subscription_expire_time
+
+        if subscription_max_events:
+            body["config"]["subscriptionMaxEvents"] = subscription_max_events
+
+        if initial_event is not None:
+            body["config"]["initialEvent"] = initial_event
+
+        res = self.client.post(url="/subscriptions", json=body)
+
         error_handler(res)
 
         return res.json()
@@ -77,15 +84,27 @@ class DeviceStatusAPI:
 
         error_handler(res)
 
-    def get_connectivity(self, device: dict):
-        res = self.client.post("/connectivity", json={"device": device})
+#    def get_connectivity(self, device: dict):
+#        res = self.client.post("/connectivity", json={"device": device})
+#
+#        error_handler(res)
+#
+#        return res.json()
+
+
+class ReachabilityAPI(DeviceStatus):
+
+    def get_reachability(self, device: dict):
+        res = self.client.post("/retrieve", json={"device": device})
 
         error_handler(res)
 
         return res.json()
 
+class RoamingAPI(DeviceStatus):
+
     def get_roaming(self, device: dict):
-        res = self.client.post("/roaming", json={"device": device})
+        res = self.client.post("/retrieve", json={"device": device})
 
         error_handler(res)
 

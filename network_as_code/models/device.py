@@ -39,9 +39,15 @@ class PlainCredential(BaseModel):
     secret: str
 
 class RoamingStatus(BaseModel):
+    last_status_time: Union[datetime, str, None] = None
     roaming: bool
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
+
+class ReachabilityStatus(BaseModel):
+    last_status_time: Union[datetime, str, None] = None
+    reachable: bool
+    connectivity: Optional[List[str]] = None
 
 class DeviceIpv4Addr(BaseModel):
     """
@@ -237,13 +243,13 @@ class Device(BaseModel):
             last_location_time = last_location_time
         )
 
-    def get_connectivity(self):
-        """Get the connectivity status for the device as a string"""
-        status = self._api.devicestatus.get_connectivity(
-            self.model_dump(mode="json", by_alias=True, exclude_none=True)
-        )["connectivityStatus"]
-
-        return status
+#    def get_connectivity(self):
+#        """Get the connectivity status for the device as a string"""
+#        status = self._api.devicestatus.get_connectivity(
+#            self.model_dump(mode="json", by_alias=True, exclude_none=True)
+#        )["connectivityStatus"]
+#
+#        return status
 
     def get_roaming(self) -> RoamingStatus:
         """Get the roaming status for the device
@@ -251,14 +257,31 @@ class Device(BaseModel):
         #### Returns
         Object of RoamingStatus class, which contains the roaming status, country code and country name
         """
-        status = self._api.devicestatus.get_roaming(
+        status = self._api.roaming_status.get_roaming(
             self.model_dump(mode="json", by_alias=True, exclude_none=True)
         )
 
         return RoamingStatus(
+            last_status_time=status["lastStatusTime"],
             roaming=status["roaming"],
             country_code=status.get("countryCode"),
             country_name=status.get("countryName"),
+        )
+
+    def get_reachability(self) -> ReachabilityStatus:
+        """Get the roaming status for the device
+
+        #### Returns
+        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        """
+        status = self._api.reachability_status.get_reachability(
+            self.model_dump(mode="json", by_alias=True, exclude_none=True)
+        )
+
+        return ReachabilityStatus(
+            last_status_time=status["lastStatusTime"],
+            reachable=status["reachable"],
+            connectivity=status["connectivity"]
         )
 
     # TODO:                                                              # pylint: disable=fixme
