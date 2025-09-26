@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Any
 
 from . import Namespace
 from ..models.device import Device
@@ -62,15 +62,15 @@ class Connectivity(Namespace):
             else:
                 typelist.append(item)
 
-        api_type = self.api.reachability_status
-
         if typelist[0] in (
             EventType.ROAMING_CHANGE_COUNTRY,
             EventType.ROAMING_OFF,
             EventType.ROAMING_ON,
             EventType.ROAMING_STATUS
             ):
-            api_type = self.api.roaming_status
+            api_type: Any = self.api.roaming_status
+        else:
+            api_type = self.api.reachability_status
 
         connectivity_data = api_type.create_subscription(
             device,

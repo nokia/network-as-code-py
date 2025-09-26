@@ -40,9 +40,9 @@ SLICE_URL= "/slice/v1"
 SLICE_ATTACH_URL = "/device-attach/v0"
 
 #DEVICE_STATUS_URL = "/device-status/v0"
-REACHABILITY_URL = "SPLIISPLÄÄ"
+REACHABILITY_URL = "/device-reachability-status-subscriptions/v0.7"
 
-ROAMING_URL = "SPLÄÄSPLII"
+ROAMING_URL = "/device-roaming-status-subscriptions/v0.7"
 
 CONGESTION_URL = "/congestion-insights/v0"
 
