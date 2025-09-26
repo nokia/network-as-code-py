@@ -756,11 +756,10 @@ def test_subscribe_authentication_exception(httpx_mock, device, client):
     
     with pytest.raises(AuthenticationException):
         client.connectivity.subscribe(
-            event_type="org.camaraproject.device-status.v0.connectivity-data",
+            event_type="org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data",
             device=device, 
             max_num_of_reports=5, 
-            notification_url="http://localhost:9090/notify", 
-            notification_auth_token="INVALID_TOKEN", 
+            sink="http://localhost:9090/notify"
         )
 
 def test_subscribe_not_found(httpx_mock, device, client):
@@ -771,11 +770,10 @@ def test_subscribe_not_found(httpx_mock, device, client):
     
     with pytest.raises(NotFound):
         client.connectivity.subscribe(
-            event_type="org.camaraproject.device-status.v0.connectivity-sms",
+            event_type="org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms",
             device=device,  
             max_num_of_reports=5, 
-            notification_url="http://localhost:9090/notify", 
-            notification_auth_token="my-token"
+            sink="http://localhost:9090/notify"
         )
 
 def test_subscribe_service_error(httpx_mock, device, client):
@@ -786,11 +784,10 @@ def test_subscribe_service_error(httpx_mock, device, client):
     
     with pytest.raises(ServiceError):
         client.connectivity.subscribe(
-            event_type="org.camaraproject.device-status.v0.connectivity_disconnected",
+            event_type="org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected",
             device=device, 
             max_num_of_reports=5, 
-            notification_url="http://localhost:9090/notify", 
-            notification_auth_token="my-token"
+            sink="http://localhost:9090/notify"
         )
 
 def test_subscribe_api_error(httpx_mock, device, client):
@@ -801,9 +798,8 @@ def test_subscribe_api_error(httpx_mock, device, client):
     
     with pytest.raises(APIError):
         client.connectivity.subscribe(
-            event_type="org.camaraproject.device-status.v0.connectivity-sms",
+            event_type="org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status",
             device=device, 
             max_num_of_reports=5, 
-            notification_url="http://localhost:9090/notify", 
-            notification_auth_token="my-token"
+            sink="http://localhost:9090/notify"
         )
