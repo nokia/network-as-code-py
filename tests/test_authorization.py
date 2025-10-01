@@ -1,5 +1,5 @@
 from network_as_code.errors import ServiceError, APIError
-from network_as_code.models.number_verification import Credentials, Endpoints
+from network_as_code.models.authorization import Credentials, Endpoints
 from network_as_code.namespaces.authorization import Authorization
 import pytest
 from unittest.mock import patch
@@ -102,27 +102,12 @@ def test_get_auth_endpoints_api_error(httpx_mock, client):
     with pytest.raises(APIError):
         client.authorization.auth_endpoints()
 
-
-def test_create_authentication_link(client):
-    url = "https://some-auth-server.example.com/oauth2/v1/authorize"
-    with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
-        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint= "fast-flow-endpoint")):
-
-            authentication_link = client.authorization.create_authentication_link(
-            redirect_uri= "https://example.com/redirect",
-            login_hint= "+3637123456",
-            scope= "number-verification:verify",
-            state= "foobar"
-            )
-
-            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
-
-def test_create_fast_flow_authentication_link(client):
+def test_create_authorization_link(client):
     url = "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url"
     with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
         with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= "auth-endpoint", token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint= url)):
 
-            authentication_link = client.authorization.create_fast_flow_authentication_link(
+            authentication_link = client.authorization.create_authorization_link(
             redirect_uri= "https://example.com/redirect",
             login_hint= "+3637123456",
             scope= "number-verification:verify",
@@ -130,16 +115,3 @@ def test_create_fast_flow_authentication_link(client):
             )
 
             assert authentication_link == "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
-
-def test_create_authentication_link_without_optionals(client):
-    url = "https://some-auth-server.example.com/oauth2/v1/authorize"
-    with patch.object(Authorization, 'credentials', return_value= Credentials(client_id= "my-client-id", client_secret= "my-client-secret")):
-        with patch.object(Authorization, 'auth_endpoints', return_value= Endpoints(authorization_endpoint= url, token_endpoint= "token-endpoint", fast_flow_csp_auth_endpoint='fast-flow-endpoint')):
-
-            authentication_link = client.authorization.create_authentication_link(
-            redirect_uri= "https://example.com/redirect",
-            scope= "number-verification:verify",
-            login_hint="+3637123456"
-            )
-
-            assert authentication_link == "https://some-auth-server.example.com/oauth2/v1/authorize?scope=number-verification%3Averify&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
