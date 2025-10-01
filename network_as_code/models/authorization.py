@@ -23,16 +23,3 @@ class Endpoints(BaseModel):
     authorization_endpoint: str
     token_endpoint: str
     fast_flow_csp_auth_endpoint: str
-
-class AccessToken(BaseModel):
-    """
-    A class representing the `AccessToken` model.
-
-    #### Public Attributes:
-            access_token (str): String representation of the access token.
-            token_type (str): Authentication scheme.
-            expires_in (str): The lifetime of access token
-    """
-    access_token: str
-    token_type: str
-    expires_in: int

@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
 from urllib.parse import urlencode
 
 from . import Namespace
-from ..models.number_verification import Credentials, Endpoints
+from ..models.authorization import Credentials, Endpoints
 
 class Authorization(Namespace):
     """Gain essential components for authentication methods"""
@@ -55,52 +54,21 @@ class Authorization(Namespace):
         )
         return authorization_endpoints
 
-    def create_authentication_link(self,
-                            redirect_uri: str,
-                            scope: str,
-                            login_hint: str,
-                            state: Optional[str] = None,
-                            )-> str:
-        """Create authentication link for user
-
-        #### Args:
-             redirect_uri (str):  redirection URI where the auth code is to be sent
-             scope (str): service the application is requesting access to
-             login_hint (str): hint about the login identifier to the authorization endpoint
-             state (Optional[str]): value used to maintain state between request and callback and prevent CSRF attacks
-        #### Returns:
-             authentication URL"""
-
-        credentials = self.credentials()
-        auth_endpoint = self.auth_endpoints()
-        response_type = "code"
-        params = {
-            "scope": scope,
-            "state": state,
-            "response_type": response_type,
-            "client_id": credentials.client_id,
-            "redirect_uri": redirect_uri,
-            "login_hint": login_hint
-        }
-        params = {k: v for k, v in params.items() if v is not None}
-        auth_url = f'{auth_endpoint.authorization_endpoint}?{urlencode(params)}'
-        return auth_url
-
-    def create_fast_flow_authentication_link(self,
+    def create_authorization_link(self,
                             redirect_uri: str,
                             scope: str,
                             login_hint: str,
                             state: str,
                             )-> str:
-        """Create fast flow authentication link for user
+        """Create authorization link for user
 
         #### Args:
-             redirect_uri (str):  redirection URI where the auth code is to be sent
-             scope (str): service the application is requesting access to
-             login_hint (str): hint about the login identifier to the authorization endpoint
-             state (str): value used to maintain state between request and callback and prevent CSRF attacks
+             redirect_uri (str): Redirection URI where the auth code and state is to be sent.
+             scope (str): Service the application is requesting access to.
+             login_hint (str): Hint about the login identifier to the authorization endpoint.
+             state (str): Value used to store request-specific data and maintain state between request and callback.
         #### Returns:
-             authentication URL"""
+             authorization URL"""
 
         credentials = self.credentials()
         auth_endpoint = self.auth_endpoints()
