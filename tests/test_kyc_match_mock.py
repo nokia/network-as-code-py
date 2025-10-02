@@ -1,5 +1,4 @@
-import pytest
-from network_as_code.models.device import Device
+from network_as_code.errors import InvalidParameter
 
 import pytest
 
@@ -13,27 +12,27 @@ def test_get_kyc_match(httpx_mock, device):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
+            "idDocumentMatch": True,
+            "nameMatch": True,
             "givenNameMatch": "not_available",
             "familyNameMatch": "not_available",
-            "nameKanaHankakuMatch": "true",
-            "nameKanaZenkakuMatch": "false",
-            "middleNamesMatch": "true",
-            "familyNameAtBirthMatch": "false",
+            "nameKanaHankakuMatch": True,
+            "nameKanaZenkakuMatch": False,
+            "middleNamesMatch": True,
+            "familyNameAtBirthMatch": False,
             "familyNameAtBirthMatchScore": 90,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
+            "addressMatch": True,
+            "streetNameMatch": True,
+            "streetNumberMatch": True,
+            "postalCodeMatch": True,
+            "regionMatch": True,
             "localityMatch": "not_available",
-            "countryMatch": "true",
+            "countryMatch": True,
             "houseNumberExtensionMatch": "not_available",
-            "birthdateMatch": "false",
-            "emailMatch": "false",
+            "birthdateMatch": False,
+            "emailMatch": False,
             "emailMatchScore": 87,
-            "genderMatch": "false"
+            "genderMatch": False
             }
     
     httpx_mock.add_response(
@@ -85,9 +84,9 @@ def test_get_kyc_match(httpx_mock, device):
             email = "abc@example.com",
             gender = "MALE"
             )
-    assert result.name_match and result.name_match == "true"
-    assert result.birthdate_match == "false"
-    if result.email_match == "false":
+    assert result.name_match and result.name_match is True
+    assert result.birthdate_match is False
+    if not result.email_match:
         assert result.email_match_score
 
 <<<<<<< HEAD
@@ -95,17 +94,17 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
-            "familyNameMatch": "false",
+            "idDocumentMatch": True,
+            "nameMatch": True,
+            "familyNameMatch": False,
             "familyNameMatchScore": 87,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
-            "emailMatch": "true",
-            "genderMatch": "true"
+            "addressMatch": True,
+            "streetNameMatch": True,
+            "streetNumberMatch": True,
+            "postalCodeMatch": True,
+            "regionMatch": True,
+            "emailMatch": True,
+            "genderMatch": True
             }
     
     httpx_mock.add_response(
@@ -140,82 +139,7 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
             gender="OTHER"
     )
     assert not result.house_number_extension_match
-    assert result.family_name_match == "false"
+    assert result.family_name_match is False
     assert result.family_name_match_score == 87
-
-<<<<<<< HEAD
-
-def test_kyc_match_without_added_phone_number(httpx_mock, device):
-
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
-    
-    mock_response = {
-=======
-def test_kyc_match_with_auth_token(httpx_mock, client):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/v0.3/match"
-
-    with patch.object(AccessToken, 'create', return_value= AccessToken(api=fake_instance, access_token='my-token', token_type='Bearer', expires_in=12345)):
-        mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
-            "familyNameMatch": "false",
-            "familyNameMatchScore": 87,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
-            "emailMatch": "true",
-            "genderMatch": "true"
-            }
-    
-        httpx_mock.add_response(
-                url=url, 
-                method='POST', 
-                json=mock_response,
-                match_json={
-                "idDocument":"TestIdDocument",
-                "name":"TestName",
-                "familyName":"TestFamilyName",
-                "address":"TestAddress",
-                "streetName":"TestStreetName",
-                "streetNumber":"1",
-                "postalCode":"11111",
-                "region":"TestRegion",
-                "email":"abc@example.com",
-                "gender":"OTHER"
-                })
-        
-        result = client.kyc.match_customer(
-                code="my-code",
-                id_document="TestIdDocument",
-                name="TestName",
-                family_name="TestFamilyName",
-                address="TestAddress",
-                street_name="TestStreetName",
-                street_number="1",
-                postal_code="11111",
-                region="TestRegion",
-                email="abc@example.com",
-                gender="OTHER"
-        )
-        assert result.id_document_match
-        assert result.address_match == "true"
-        assert not result.name_kana_zenkaku_match
-
-def test_kyc_without_any_authorization(client):
-    with pytest.raises(InvalidParameter):
-        client.kyc.match_customer(
-                id_document="TestIdDocument",
-                given_name="TestGivenName",
-                name_kana_hankaku="TestKanaHankakuName",
-                middle_names="TestNames",
-                street_name="TestStreetName",
-                street_number="1",
-                postal_code="11111",
-                region="TestRegion",
-                locality="SomeLocality",
-                country="SomeCountry"
-        )
 
         

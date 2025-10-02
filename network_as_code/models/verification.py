@@ -22,6 +22,7 @@ class Endpoints(BaseModel):
     """
     authorization_endpoint: str
     token_endpoint: str
+    fast_flow_csp_auth_endpoint: str
 
 class AccessToken(BaseModel):
     """

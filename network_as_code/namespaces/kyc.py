@@ -1,16 +1,13 @@
 from typing import Optional
 from . import Namespace
-from ..models.verification import AccessToken
 from ..models.kyc_match import CustomerMatch, CustomerMatchResult
 from ..models.kyc_age import AgeVerification, AgeVerificationResult
-from ..errors import InvalidParameter
 
 class KYC(Namespace):
 
     def match_customer(
             self,
-            code: Optional[str] = None,
-            phone_number: Optional[str] = None,
+            phone_number: str,
             id_document: Optional[str] = None,
             name: Optional[str] = None,
             given_name: Optional[str] = None,
@@ -33,10 +30,9 @@ class KYC(Namespace):
             ) -> CustomerMatchResult:
         """Match a customer identity against the account data bound to their phone number.
         #### Args
+             phone_number (str): Used as an identifier for the request.
              match_customer parameters: A customers data that will be compared to data bound to their 
                                         phone number in the operator systems.
-             code (string): The previously obtained authorization code. Can be used for authorization
-                            independently or with phone_number
         #### Returns
              KYCMatchResult: Contains the result of matching the provided parameter values to the data 
                              in the operator system.
@@ -65,29 +61,14 @@ class KYC(Namespace):
             email = email,
             gender = gender
         )
-        if code is None and phone_number is None:
-            raise InvalidParameter("Either device phone number or authorization code is required.")
-
-        if code:
-            authenticator = AccessToken.create(
-                self.api,
-                code
-                )
-            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-            match_params = self.api.kyc_match.match_customer(
-                params.model_dump(by_alias=True, exclude_none=True),
-                headers=headers
-                )
-        else:
-            match_params = self.api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
+        match_params = self.api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
 
         return CustomerMatchResult.model_validate(match_params)
 
     def verify_age(
             self,
             age_threshold: int,
-            code: Optional[str] = None,
-            phone_number: Optional[str] = None,
+            phone_number: str,
             id_document: Optional[str] = None,
             name: Optional[str] = None,
             given_name: Optional[str] = None,
@@ -102,8 +83,7 @@ class KYC(Namespace):
         """Checks if the age of the subscriber is older than the age threshold in the request.
         #### Args
              age_threshold (int): The age threshold from which the age of the user must be compared
-             phone_number (Optional[str]): Used as an identifier for the request. If not provided,
-                                           will use the phone_number of the device that is used for the request.
+             phone_number (str): Used as an identifier for the request.
              additional verify_age parameters: E.g. name, birthdate, include_parental_control. 
                                                Confirms that the subscriber is the contract's 
                                                owner or if the subscription has any kind of parental 
@@ -128,20 +108,6 @@ class KYC(Namespace):
             include_content_lock = include_content_lock,
             include_parental_control = include_parental_control
         )
-        if code is None and phone_number is None:
-            raise InvalidParameter("Either device phone number or authorization code is required.")
-
-        if code:
-            authenticator = AccessToken.create(
-                self.api,
-                code
-                )
-            headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-            match_params = self.api.kyc_age.verify_age(
-                params.model_dump(by_alias=True, exclude_none=True),
-                headers=headers
-                )
-        else:
-            match_params = self.api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
+        match_params = self.api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
 
         return AgeVerificationResult.model_validate(match_params)

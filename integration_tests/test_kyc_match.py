@@ -1,31 +1,5 @@
 import pytest
-import httpx
-import time
-from network_as_code.errors import APIError, AuthenticationException
-
-@pytest.mark.skip
-def test_get_client_credentials(client):
-    credentials = client.authorization.credentials()
-
-    assert credentials.client_id
-    assert credentials.client_secret
-    assert type(credentials.client_id) is str
-
-@pytest.mark.skip
-def test_get_auth_endpoints(client):
-    auth_endpoints = client.authorization.auth_endpoints()
-
-    assert auth_endpoints.authorization_endpoint
-    assert auth_endpoints.token_endpoint
-    assert type(auth_endpoints.authorization_endpoint) is str
-
-@pytest.mark.skip
-def test_authentication_link(client):
-    auth_link = client.authorization.create_authentication_link(redirect_uri='https://example.com/redirect', scope='dpv:FraudPreventionAndDetection kyc-match:match', login_hint="+3637123456")
-    
-    response = httpx.get(url= auth_link)
-    
-    assert response.status_code == 302
+from network_as_code.errors import AuthenticationException
 
 def test_kyc_match_with_phone_number(client):
     result = client.kyc.match_customer(
@@ -33,13 +7,16 @@ def test_kyc_match_with_phone_number(client):
             id_document="66666666q",
             name="TestName",
             family_name="TestFamilyName",
+            family_name_at_birth="MyFamilyName",
+            name_kana_hankaku="TestChickenName",
             address="TestAddress",
             postal_code="TestPostalCode",
             email="test@email.com"
     )
-    assert result.id_document_match == "true"
-    assert result.name_match
-    assert result.address_match == "false"
+    assert result.id_document_match is True
+    assert result.name_kana_hankaku_match == "not_available"
+    assert not result.name_kana_zenkaku_match
+    assert result.address_match is False
 
 def test_kyc_match_and_match_score(client):
     result = client.kyc.match_customer(
@@ -52,47 +29,37 @@ def test_kyc_match_and_match_score(client):
             postal_code="TestPostalCode",
             email="test@email.com"
     )
-    
-    assert result.id_document_match
-    assert result.name_match
-    if result.family_name_at_birth_match == "false":
+    assert result.id_document_match is True
+    assert result.name_match is False
+    if not result.family_name_at_birth_match:
         assert result.family_name_at_birth_match_score >= 0
 
-@pytest.mark.skip
-def test_kyc_match_with_token(client, notification_base_url):
-    auth_link = client.authorization.create_authentication_link(redirect_uri=f'{notification_base_url}/kyc', scope='dpv:FraudPreventionAndDetection kyc-match:match', login_hint="+99999991000")
-
-    with httpx.Client(follow_redirects=True) as client:
-        response = client.get(auth_link)
-
-    time.sleep(2)
-    response = httpx.get(f'{notification_base_url}/kyc-get-code')
-
-    code = response.json().get('code')
-
+def test_kyc_match_with_all_params(client):
     result = client.kyc.match_customer(
-            code=code,
-            id_document="123456",
-            given_name="TestGivenName",
-            name_kana_hankaku="TestNameKanaHankaku",
-            family_name_at_birth="TestFamilyNameAtBirth",
-            street_name="TestStreetName",
-            street_number="TestStreetNumber",
-            region="TestRegion",
-            country="TestCountry",
-            gender="OTHER"
+        phone_number="+99999991000",
+        id_document="66666666q",
+        name="TestName",
+        given_name="TestGiven",
+        family_name="TestFamily",
+        name_kana_hankaku="TestKana",
+        name_kana_zenkaku="TestZenKana",
+        middle_names="TestNames",
+        family_name_at_birth="TestFamilyNameBirth",
+        address="TestAddress",
+        street_name="TestStreet",
+        street_number="12",
+        postal_code="654321",
+        region="TestRegion",
+        locality="TestLocality",
+        country="TestCountry",
+        house_number_extension="B",
+        birthdate="1212-12-12",
+        email="some@email.com",
+        gender="OTHER"
     )
-    #assert result
-
-def test_APIError(client):
-    with pytest.raises(APIError):
-        client.kyc.match_customer(
-                code="wrong-code",
-                id_document="TestIdDocument",
-                given_name="TestGivenName",
-                name_kana_hankaku="TestKanaHankakuName",
-                middle_names="TestNames"
-        )
+    for k, v in vars(result).items():
+        if "score" not in k:
+            assert v is not None
 
 def test_AuthenticationExeption(client):
     with pytest.raises(AuthenticationException):
