@@ -318,8 +318,11 @@ class Device(BaseModel):
         payload = {
             "phoneNumber": self.phone_number,
         }
-
-        return self._api.number_verification.verify_number(payload=payload, code= code, state= state)
+        params = {
+            "code": code,
+            "state": state
+        }
+        return self._api.number_verification.verify_number(payload=payload, params=params)
 
     def get_phone_number(self, code: str, state: str) -> str:
         """Gets the users phone number.
@@ -330,8 +333,11 @@ class Device(BaseModel):
         #### Returns:
              String 
         """
-
-        return self._api.number_verification.get_phone_number(code= code, state= state)
+        params = {
+            "code": code,
+            "state": state
+        }
+        return self._api.number_verification.get_phone_number(params=params)
 
     def get_call_forwarding(self) -> List:
         """Gets information about Call Forwarding Services active for the given device.

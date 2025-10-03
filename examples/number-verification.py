@@ -41,7 +41,7 @@ callback = client.authorization.create_authorization_link(
 app = FastAPI()
 
 @app.get("/redirect")
-async def get_authorization_code(code: str, state: Optional[str]=None):
+async def get_authorization_code(code: str, state: str):
     return (f"This is you authorization code: {code}. This is your state variable: {state}.")
 
 # Add your authorization code here.

@@ -19,26 +19,17 @@ class NumberVerificationAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
         self.client = httpx_client(base_url, rapid_key, rapid_host)
 
-    def verify_number(
-            self,
-            payload: dict,
-            code: str,
-            state: str
-            ) -> bool:
+    def verify_number(self, payload: dict, params: dict) -> bool:
 
-        response = self.client.post(url=f"/verify?code={code}&state={state}", json=payload)
+        response = self.client.post(url="/verify", params=params, json=payload)
 
         error_handler(response)
 
         return bool(response.json()["devicePhoneNumberVerified"])
 
-    def get_phone_number(
-            self,
-            code: str,
-            state: str
-            ) -> str:
+    def get_phone_number(self, params: dict) -> str:
 
-        response = self.client.get(url=f"/device-phone-number?code={code}&state={state}")
+        response = self.client.get(url="/device-phone-number", params=params)
 
         error_handler(response)
 
