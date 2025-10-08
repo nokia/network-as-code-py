@@ -1,10 +1,11 @@
 
+from datetime import datetime, timedelta, timezone
 import pytest
 import httpx
 import time
 
 from network_as_code.models.session import PortsSpec, PortRange
-from network_as_code.models.device import Device, DeviceIpv4Addr
+from network_as_code.models.device import Device, DeviceIpv4Addr, AccessTokenCredential
 import random
 
 @pytest.fixture()
@@ -129,8 +130,18 @@ def test_creating_a_qos_flow_with_duration(device):
 
     assert session.duration == 60
 
-def test_creating_a_qos_flow_with_notification_url(device, notification_base_url):
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
+def test_creating_a_qos_flow_with_sink_and_credential(device, notification_base_url):
+    session = device.create_qod_session(
+        service_ipv4="5.6.7.8",
+        profile="QOS_L",
+        sink=f"{notification_base_url}/notify", 
+        sink_credential=AccessTokenCredential(
+            access_token= "some-access-token",
+            access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
+            access_token_type="bearer"
+            ),
+        duration=3600
+        )
     assert session.id
 
     # Waiting for the session creation notification to be sent
@@ -155,7 +166,7 @@ def test_creating_a_qos_flow_with_notification_url(device, notification_base_url
     assert notification.json() == [{'message': 'Notification deleted'}, 200]
 
 def test_qos_session_info_changes_from_deletion(device, notification_base_url):
-    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", notification_url=f"{notification_base_url}/notify", duration=3600)
+    session = device.create_qod_session(service_ipv4="5.6.7.8", profile="QOS_L", sink=f"{notification_base_url}/notify", duration=3600)
     assert session.id
 
     # Waiting for the session creation notification to be sent

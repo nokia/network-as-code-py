@@ -14,7 +14,7 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
@@ -22,7 +22,21 @@ from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
 from ..models.kyc_match import KYCMatch, KYCMatchResult
 from ..models.kyc_age import KYCAge, KYCAgeResult
+from ..api.utils import to_camel
 from ..errors import InvalidParameter, NotFound
+
+class AccessTokenCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "ACCESSTOKEN"
+    access_token: str
+    access_token_expires_utc: Union[datetime, str]
+    access_token_type: str
+
+class PlainCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "PLAIN"
+    identifier: str
+    secret: str
 
 class RoamingStatus(BaseModel):
     roaming: bool
@@ -100,8 +114,8 @@ class Device(BaseModel):
         service_ipv6=None,
         device_ports: Union[None, PortsSpec] = None,
         service_ports: Union[None, PortsSpec] = None,
-        notification_url=None,
-        notification_auth_token=None,
+        sink: Optional[str] = None,
+        sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None,
     ) -> QoDSession:
         """Creates a session for the device.
 
@@ -112,8 +126,8 @@ class Device(BaseModel):
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            notification_url (optional): Notification URL for session-related events.
-            notification_token (optional): Security bearer token to authenticate registration of session.
+            sink (optional): Notification URL for session-related events.
+            sink_credential (optional): Authorization token for notification sending.
 
         #### Example:
             ```python
@@ -135,8 +149,8 @@ class Device(BaseModel):
             service_ipv6,
             device_ports,
             service_ports,
-            notification_url,
-            notification_auth_token,
+            sink,
+            sink_credential,
         )
         return QoDSession.convert_session_model(self._api, self, session.json())
 
