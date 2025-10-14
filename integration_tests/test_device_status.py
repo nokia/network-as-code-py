@@ -14,7 +14,7 @@ def device(client) -> Device:
     return device
 
 def test_creating_connectivity_subscription_with_notification(client, device, notification_base_url):
-    subscription = client.connectivity.subscribe(
+    subscription = client.device_status.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
@@ -36,7 +36,7 @@ def test_creating_connectivity_subscription_with_notification(client, device, no
     subscription.delete()
 
 def test_creating_connectivity_subscription_with_notification_and_type_string_constant(client, device, notification_base_url):
-    subscription = client.connectivity.subscribe(
+    subscription = client.device_status.subscribe(
         event_type=EventType["CONNECTIVITY_DATA"],
         device=device, 
         max_num_of_reports=5, 
@@ -58,7 +58,7 @@ def test_creating_connectivity_subscription_with_notification_and_type_string_co
     subscription.delete()
 
 def test_creating_connectivity_subscription_roaming(client, device, notification_base_url):
-    subscription = client.connectivity.subscribe(
+    subscription = client.device_status.subscribe(
         event_type=EventType.ROAMING_STATUS,
         device=device, 
         max_num_of_reports=5, 
@@ -80,7 +80,7 @@ def test_creating_connectivity_subscription_roaming(client, device, notification
     subscription.delete()
 
 def test_creating_connectivity_subscription_with_notification_with_auth_token(client, device, notification_base_url):
-    subscription = client.connectivity.subscribe(
+    subscription = client.device_status.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
@@ -102,7 +102,7 @@ def test_creating_connectivity_subscription_with_notification_with_auth_token(cl
     subscription.delete()
 
 def test_creating_connectivity_subscription_with_expiration(client, device, notification_base_url):
-    subscription = client.connectivity.subscribe(
+    subscription = client.device_status.subscribe(
         event_type=EventType.CONNECTIVITY_DATA,
         device=device, 
         subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
@@ -124,7 +124,7 @@ def test_creating_connectivity_subscription_with_expiration(client, device, noti
     subscription.delete()
 
 def test_getting_connectivity(client, device):
-    connectivity_subscription = client.connectivity.subscribe(
+    connectivity_subscription = client.device_status.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
@@ -132,14 +132,14 @@ def test_getting_connectivity(client, device):
         notification_auth_token="c8974e592c2fa383d4a3960714",
     )
 
-    response = client.connectivity.get_subscription(connectivity_subscription.id)
+    response = client.device_status.get_subscription(connectivity_subscription.id)
 
     assert response.device.network_access_id == device.network_access_id
 
     connectivity_subscription.delete()
 
 def test_delete_connectivity(client, device):
-    connectivity_subscription = client.connectivity.subscribe(
+    connectivity_subscription = client.device_status.subscribe(
         event_type="org.camaraproject.device-status.v0.connectivity-data",
         device=device, 
         max_num_of_reports=5, 
@@ -150,7 +150,7 @@ def test_delete_connectivity(client, device):
     connectivity_subscription.delete()
 
     try:
-        response = client.connectivity.get_subscription(connectivity_subscription.id)
+        response = client.device_status.get_subscription(connectivity_subscription.id)
         assert False
     except:
         # We expect 404
@@ -158,7 +158,7 @@ def test_delete_connectivity(client, device):
         
 @pytest.mark.skip
 def test_get_subscriptions(client, device):
-    subscriptions = client.connectivity.get_subscriptions()
+    subscriptions = client.device_status.get_subscriptions()
 
     assert isinstance(subscriptions, list)
 
@@ -201,7 +201,7 @@ def test_subscribe_device_not_found(client):
     device = client.devices.get(phone_number="+99999990404")
 
     with pytest.raises(NotFound):
-        client.connectivity.subscribe(
+        client.device_status.subscribe(
             event_type="org.camaraproject.device-status.v0.connectivity-data",
             device=device,
             max_num_of_reports=5, 
@@ -211,7 +211,7 @@ def test_subscribe_device_not_found(client):
 
 def test_subscribe_invalid_parameter(client, device):
     with pytest.raises(APIError):
-        client.connectivity.subscribe(
+        client.device_status.subscribe(
             event_type="",  # An empty event type might trigger a validation error.
             device=device, 
             max_num_of_reports=5, 

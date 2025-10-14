@@ -28,13 +28,10 @@ class EventType(Enum):
     Enum class containing the string constant values for the different supported event types.
     """
 
-    #CONNECTIVITY_DATA = "org.camaraproject.device-status.v0.connectivity-data"
-    #CONNECTIVITY_SMS = "org.camaraproject.device-status.v0.connectivity-sms"
-    #CONNECTIVITY_DISCONNECTED = "org.camaraproject.device-status.v0.connectivity-disconnected"
-    ROAMING_STATUS= "org.camaraproject.device-status.v0.roaming-status"
-    ROAMING_ON= "org.camaraproject.device-status.v0.roaming-on"
-    ROAMING_OFF= "org.camaraproject.device-status.v0.roaming-off"
-    ROAMING_CHANGE_COUNTRY= "org.camaraproject.device-status.v0.roaming-change-country"
+    ROAMING_STATUS= "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status"
+    ROAMING_ON= "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on"
+    ROAMING_OFF= "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off"
+    ROAMING_CHANGE_COUNTRY= "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country"
     REACHABILITY_DATA= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
     REACHABILITY_SMS= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms"
     REACHABILITY_DISCONNECTED= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"
@@ -54,22 +51,23 @@ class PlainCredential(BaseModel):
 
 class EventSubscription(BaseModel):
     """
-    A class representing the `ConnectivitySubscription` model.
+    A class representing the `EventSubscription` model.
 
     #### Private Attributes:
         _api(APIClient): An API client object.
 
     #### Public Attributes:
         id (str): It represents the subscription identifier.
-        max_num_of_reports (str): Number of notifications until the subscription is available
-        event_type (str): The status type you want to check, which can be connectivity or roaming.
-        notification_url (str): Notification URL for session-related events.
-        notification_auth_token (optional): Authorization token for notification sending.
+        max_num_of_reports (int): Number of notifications until the subscription is available
+        event_type (List[str]): The status type you want to check, which can be reachability or roaming.
+        sink (str): Notification URL for session-related events.
+        sink_credential (optional): Authorization token for notification sending.
         device (Device): Identifier of the device
         starts_at (optional): It represents when this subscription started.
         expires_at (optional): It represents when this subscription should expire.
+        status (optional): Current status of the subscription.
     #### Public Methods:
-        delete (None): Deletes device connectivity status subscription.
+        delete (None): Deletes device status event subscription.
     """
 
     id: str = ''
@@ -82,23 +80,28 @@ class EventSubscription(BaseModel):
     starts_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None
     sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None
+    status: Optional[str] = None
 
     def __init__(self, api: APIClient, **data) -> None:
         super().__init__(**data)
         self._api = api
 
-#    def delete(self) -> None:
-#        """Delete device connectivity status"""
-#
-#        # Error Case: Delete connectivity status
-#        self._api.devicestatus.delete_subscription(self.id)
+class ReachabilitySubscription(EventSubscription):
 
-    def delete_reachability(self) -> None:
+    def __init__(self, *args, **kwargs): # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+    def delete(self) -> None:
         """Delete device reachability status"""
 
         self._api.reachability_status.delete_subscription(self.id)
 
-    def delete_roaming(self) -> None:
+class RoamingSubscription(EventSubscription):
+
+    def __init__(self, *args, **kwargs): # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+    def delete(self) -> None:
         """Delete device roaming status"""
 
         self._api.roaming_status.delete_subscription(self.id)

@@ -39,12 +39,29 @@ class PlainCredential(BaseModel):
     secret: str
 
 class RoamingStatus(BaseModel):
+    """
+    A class representing the `RoamingStatus` model.
+
+    ### Public Attributes
+            last_status_time (Union[datetime, str, None]): Last time that the roaming status was updated.
+            roaming (bool): Is the associated device roaming.
+            country_code (Optional[int]): The Mobile country code (MCC).
+            country_name (Optional[List[str]]): List of country names of mapped to mobile country code (MCC).
+    """
     last_status_time: Union[datetime, str, None] = None
     roaming: bool
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
 
 class ReachabilityStatus(BaseModel):
+    """
+    A class representing the `ReachabilityStatus` model.
+
+    ### Public Attributes
+            last_status_time (Union[datetime, str, None]): Last time that the reachability status was updated.
+            reachable (bool): Indicates overall device reachability.
+            connectivity (Optional[List[str]]): Indicates if the device is connected to the network for DATA/SMS usage.                                  
+    """
     last_status_time: Union[datetime, str, None] = None
     reachable: bool
     connectivity: Optional[List[str]] = None
@@ -85,9 +102,8 @@ class Device(BaseModel):
         clear_sessions (): Deletes all the sessions created by the device network_access_id.
         location (Location): Gets the location of the device and returns a Location client object.
         verify_location (bool): Verifies if a device is located in a given location point.
-        get_connectivity (ConnectivityData): Retrieve device connectivity status data
-        update_connectivity (ConnectivityData): Update device connectivity status data
-        delete_connectivity (): Delete device connectivity status
+        get_reachability (ReachabilityStatus): Retrieve device reachability status data.
+        get_roaming (RoamingStatus): Retrieve device roaming status data.
         get_sim_swap_date (): Retrieve the latest sim swap date
         verify_sim_swap (): Verify if there was sim swap
     """
@@ -243,19 +259,12 @@ class Device(BaseModel):
             last_location_time = last_location_time
         )
 
-#    def get_connectivity(self):
-#        """Get the connectivity status for the device as a string"""
-#        status = self._api.devicestatus.get_connectivity(
-#            self.model_dump(mode="json", by_alias=True, exclude_none=True)
-#        )["connectivityStatus"]
-#
-#        return status
-
     def get_roaming(self) -> RoamingStatus:
         """Get the roaming status for the device
 
         #### Returns
-        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        Object of RoamingStatus class, which contains the roaming status, 
+        last time the status was updated, country code and country name
         """
         status = self._api.roaming_status.get_roaming(
             self.model_dump(mode="json", by_alias=True, exclude_none=True)
@@ -269,10 +278,11 @@ class Device(BaseModel):
         )
 
     def get_reachability(self) -> ReachabilityStatus:
-        """Get the roaming status for the device
+        """Get the reachability status for the device
 
         #### Returns
-        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        Object of ReachabilityStatus class, which contains the reachability status, 
+        last time the status was updated and the connectivity type
         """
         status = self._api.reachability_status.get_reachability(
             self.model_dump(mode="json", by_alias=True, exclude_none=True)

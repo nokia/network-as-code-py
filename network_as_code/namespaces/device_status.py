@@ -17,10 +17,17 @@ from typing import List, Union, Optional, Any
 
 from . import Namespace
 from ..models.device import Device
-from ..models.device_status import PlainCredential, AccessTokenCredential, EventSubscription, EventType
+from ..models.device_status import (
+    PlainCredential,
+    AccessTokenCredential,
+    EventSubscription,
+    ReachabilitySubscription,
+    RoamingSubscription,
+    EventType
+    )
 
 
-class Connectivity(Namespace):
+class DeviceStatus(Namespace):
     """Representation of the status of a device.
 
     Through this class many of the parameters of a
@@ -37,14 +44,16 @@ class Connectivity(Namespace):
         subscription_expire_time: Union[datetime, str, None] = None,
         initial_event: Optional[bool] = None
     ) -> EventSubscription:
-        """Create subscription for device connectivity status.
+        """Create subscription for device reachabilty or roaming status.
 
         Args:
             event_type (Union[EventType, str]): Event type of the subscription.
-            notification_url (str): Notification URL for session-related events.
-            notification_auth_token (optional): Authorization token for notification sending.
-            device (Device): Identifier of the device
-            max_num_of_reports (Optional[int]) (deprecated): Number of notifications until the subscription is available
+            sink (str): Notification URL for session-related events.
+            sink_credential (optional): Authorization token for notification sending.
+            device (Device): Identifier of the device.
+            max_num_of_reports (Optional[int]): Number of notifications until the subscription is available.
+            initial_event (Optional[bool]): Set to `True` to get an event as soon as the subscription is created 
+            and current situation reflects event request.
             subscription_expire_time (Union[datetime, str, None]): The expiry time of the subscription. 
             Either a datetime object or ISO formatted date string
 
@@ -61,16 +70,17 @@ class Connectivity(Namespace):
                 typelist.append(item.value)
             else:
                 typelist.append(item)
-
         if typelist[0] in (
-            EventType.ROAMING_CHANGE_COUNTRY,
-            EventType.ROAMING_OFF,
-            EventType.ROAMING_ON,
-            EventType.ROAMING_STATUS
+            EventType.ROAMING_CHANGE_COUNTRY.value,
+            EventType.ROAMING_OFF.value,
+            EventType.ROAMING_ON.value,
+            EventType.ROAMING_STATUS.value
             ):
             api_type: Any = self.api.roaming_status
+            subscription_type: Any = RoamingSubscription
         else:
             api_type = self.api.reachability_status
+            subscription_type = ReachabilitySubscription
 
         connectivity_data = api_type.create_subscription(
             device,
@@ -81,7 +91,7 @@ class Connectivity(Namespace):
             max_num_of_reports,
             initial_event
         )
-        connectivity_subscription = EventSubscription(
+        connectivity_subscription = subscription_type(
             api=self.api,
             max_num_of_reports=max_num_of_reports,
             event_type = typelist,
@@ -94,19 +104,19 @@ class Connectivity(Namespace):
             ),
         )
 
-        connectivity_subscription.id = connectivity_data["subscriptionId"]
+        connectivity_subscription.id = connectivity_data["id"]
 
         return connectivity_subscription
 
     def get_reachability_subscription(self, id: str) -> EventSubscription:
-        """Retrieve a single Device Status event subscription by ID
+        """Retrieve a single Device Status reachability event subscription by ID
 
         #### Args:
             id (str): Resource ID
 
         #### Example:
             ```python
-            subscription = client.connectivity.get_subscription(id="some-subscription-id")
+            subscription = client.device_status.get_reachability_subscription(id="some-subscription-id")
             ```
         """
 
@@ -115,14 +125,14 @@ class Connectivity(Namespace):
         return self.__parse_event_subscription(connectivity_data)
 
     def get_roaming_subscription(self, id: str) -> EventSubscription:
-        """Retrieve a single Device Status event subscription by ID
+        """Retrieve a single Device Status roaming event subscription by ID
 
         #### Args:
             id (str): Resource ID
 
         #### Example:
             ```python
-            subscription = client.connectivity.get_subscription(id="some-subscription-id")
+            subscription = client.device_status.get_roaming_subscription(id="some-subscription-id")
             ```
         """
 
@@ -135,7 +145,7 @@ class Connectivity(Namespace):
 
         #### Example:
              '''python
-             subscriptions = client.connectivity.get_subscriptions()
+             subscriptions = client.device_status.get_subscriptions()
              '''
 
         Returns: List[EventSubscription]
@@ -147,15 +157,33 @@ class Connectivity(Namespace):
         return list(map(self.__parse_event_subscription, json))
 
     def __parse_event_subscription(self, data: dict) -> EventSubscription:
-        device_data = data["subscriptionDetail"]["device"]
+        device_data = data["config"].get("subscriptionDetail").get("device")
 
         device = Device.convert_to_device_model(self.api, device_data)
 
-        return EventSubscription(
-            id=data["id"],
-            api=self.api,
-            max_num_of_reports=data["config"].get("subscriptionMaxEvents"),
-            event_type=data["types"],
-            sink=data["sink"],
-            device=device
+        subscription_roaming = data["types"][0] in (
+            EventType.ROAMING_CHANGE_COUNTRY.value,
+            EventType.ROAMING_OFF.value,
+            EventType.ROAMING_ON.value,
+            EventType.ROAMING_STATUS.value
         )
+
+        if subscription_roaming:
+            return RoamingSubscription(
+                id=data["id"],
+                api=self.api,
+                max_num_of_reports=data["config"].get("subscriptionMaxEvents"),
+                event_type=data["types"],
+                sink=data["sink"],
+                device=device,
+                status=data["status"]
+            )
+        return ReachabilitySubscription(
+                id=data["id"],
+                api=self.api,
+                max_num_of_reports=data["config"].get("subscriptionMaxEvents"),
+                event_type=data["types"],
+                sink=data["sink"],
+                device=device,
+                status=data["status"]
+            )

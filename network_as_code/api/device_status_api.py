@@ -84,19 +84,11 @@ class DeviceStatus:
 
         error_handler(res)
 
-#    def get_connectivity(self, device: dict):
-#        res = self.client.post("/connectivity", json={"device": device})
-#
-#        error_handler(res)
-#
-#        return res.json()
-
-
 class ReachabilityAPI(DeviceStatus):
 
     def get_reachability(self, device: dict):
         status_url = str(self.client.base_url).replace(
-            "/device-reachability-status-subscriptions/v0.7",
+            "/device-reachability-status-subscriptions/v0.7/",
             "/device-reachability-status/v1")
         res = self.client.post(f"{status_url}/retrieve", json={"device": device})
 
@@ -108,7 +100,7 @@ class RoamingAPI(DeviceStatus):
 
     def get_roaming(self, device: dict):
         status_url = str(self.client.base_url).replace(
-            "/device-roaming-status-subscriptions/v0.7",
+            "/device-roaming-status-subscriptions/v0.7/",
             "/device-roaming-status/v1")
         res = self.client.post(f"{status_url}/retrieve", json={"device": device})
 

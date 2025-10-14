@@ -17,7 +17,7 @@ from typing import Optional
 from network_as_code.api.qod_api import QodAPI
 from ..api.slice_api import AttachAPI, SliceAPI
 from .location_api import LocationVerifyAPI, LocationRetrievalAPI
-from .device_status_api import ReachabilityAPI, RoamingAPI#, DeviceStatusAPI
+from .device_status_api import ReachabilityAPI, RoamingAPI
 from .congestion_api import CongestionAPI
 from .sim_swap_api import SimSwapAPI
 from .geofencing_api import GeofencingAPI
@@ -39,7 +39,6 @@ SLICE_URL= "/slice/v1"
 
 SLICE_ATTACH_URL = "/device-attach/v0"
 
-#DEVICE_STATUS_URL = "/device-status/v0"
 REACHABILITY_URL = "/device-reachability-status-subscriptions/v0.7"
 
 ROAMING_URL = "/device-roaming-status-subscriptions/v0.7"
@@ -104,7 +103,6 @@ class APIClient:
         location_retrieve_base_url: Optional[str] = None,
         slice_base_url: Optional[str] = None,
         slice_attach_base_url: Optional[str] = None,
-        #device_status_base_url: Optional[str] = None,
         reachability_base_url: Optional[str] = None,
         roaming_base_url: Optional[str] = None,
         congestion_base_url: Optional[str] = None,
@@ -137,9 +135,6 @@ class APIClient:
 
         if not slice_attach_base_url:
             slice_attach_base_url = f"{base_url}{SLICE_ATTACH_URL}"
-
- #       if not device_status_base_url:
- #           device_status_base_url = f"{base_url}{DEVICE_STATUS_URL}"
 
         if not reachability_base_url:
             reachability_base_url = f"{base_url}{REACHABILITY_URL}"
@@ -182,12 +177,6 @@ class APIClient:
             rapid_key=token,
             rapid_host=hostname,
         )
-
- #       self.devicestatus = DeviceStatusAPI(
- #           base_url=device_status_base_url,
- #           rapid_key=token,
- #           rapid_host=hostname,
- #       )
 
         self.reachability_status = ReachabilityAPI(
             base_url=reachability_base_url,
