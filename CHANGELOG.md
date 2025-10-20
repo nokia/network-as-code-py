@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 7.0.0
+
+Breaking changes:
+- Number Verification now utilizes fast auth flow and requires the state parameter to be passed in the call
+
 ## Version 6.2.0
 
 Changes:
