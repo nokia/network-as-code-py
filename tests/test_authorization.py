@@ -110,8 +110,9 @@ def test_create_authorization_link(client):
             authentication_link = client.authorization.create_authorization_link(
             redirect_uri= "https://example.com/redirect",
             login_hint= "+3637123456",
-            scope= "number-verification:verify",
+            scope= "dpv:FraudPreventionAndDetection number-verification:verify",
             state= "foobar"
             )
 
-            assert authentication_link == "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url?scope=number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
+            assert authentication_link == "https://fast-flow-csp-endpoint/oauth2/v1/retrieve_csp_auth_url?scope=dpv%3AFraudPreventionAndDetection+number-verification%3Averify&state=foobar&response_type=code&client_id=my-client-id&redirect_uri=https%3A%2F%2Fexample.com%2Fredirect&login_hint=%2B3637123456"
+
