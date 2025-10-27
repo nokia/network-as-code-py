@@ -20,10 +20,8 @@ from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
-from ..models.number_verification import AccessToken
 from ..models.kyc_match import KYCMatch, KYCMatchResult
 from ..models.kyc_age import KYCAge, KYCAgeResult
-from ..api.utils import tokenizer
 from ..errors import InvalidParameter, NotFound
 
 class RoamingStatus(BaseModel):
@@ -306,69 +304,40 @@ class Device(BaseModel):
             raise InvalidParameter("Device phone number is required.")
         return self._api.sim_swap.verify_sim_swap(self.phone_number, max_age)
 
-    def _get_single_use_access_token(self, code: str) -> AccessToken:
-        """Get Access Token for number verification API
-
-        #### Args:
-             code (str): Changes the code for Access Token from Authorization Servers token_endpoint
-        #### Returns
-             AccessToken object containing access token, token type and expiration time
-        """
-        grant_type = "authorization_code"
-        credentials = self._api.credentials.fetch_credentials()
-        token_endpoint = self._api.authorization.fetch_endpoints().get(
-            "token_endpoint"
-        )
-        data = {
-            "client_id": credentials['client_id'],
-            "client_secret": credentials['client_secret'],
-            "grant_type": grant_type,
-            "code": code,
-        }
-        response = tokenizer(token_endpoint, data=data)
-        body = response.json()
-        access_token = body["access_token"]
-        token_type = body["token_type"]
-        expires_in = body["expires_in"]
-
-        single_use_token = AccessToken(
-            access_token=access_token,
-            token_type=token_type,
-            expires_in=expires_in
-        )
-        return single_use_token
-
-    def verify_number(self, code: str) -> bool:
+    def verify_number(self, code: str, state: str) -> bool:
         """Verifies users phone number.
 
         #### Args:
-             code (str): Changes the code for Access Token through  _get_single_use_access_token
+             code (str): Changes the received auth code for a token, which is then used in the request.
+             state (str): Uses the value to find request-specific data previously saved based on the state reference.
         #### Returns
              True/False
         """
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
-        authenticator = self._get_single_use_access_token(code=code)
         payload = {
             "phoneNumber": self.phone_number,
         }
-        headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
+        params = {
+            "code": code,
+            "state": state
+        }
+        return self._api.number_verification.verify_number(payload=payload, params=params)
 
-        return self._api.number_verification.verify_number(payload=payload, headers=headers)
-
-    def get_phone_number(self, code: str) -> str:
+    def get_phone_number(self, code: str, state: str) -> str:
         """Gets the users phone number.
 
         #### Args:
-             code (str): Changes the code for Access Token through  _get_single_use_access_token
+             code (str): Changes the received auth code for a token, which is then used in the request.
+             state (str): Uses the value to find request-specific data previously saved based on the state reference.
         #### Returns:
              String 
         """
-
-        authenticator = self._get_single_use_access_token(code=code)
-        headers = {'Authorization': f'{authenticator.token_type} {authenticator.access_token}'}
-
-        return self._api.number_verification.get_phone_number(headers=headers)
+        params = {
+            "code": code,
+            "state": state
+        }
+        return self._api.number_verification.get_phone_number(params=params)
 
     def get_call_forwarding(self) -> List:
         """Gets information about Call Forwarding Services active for the given device.

@@ -1,8 +1,5 @@
 import pytest
-from network_as_code.errors import InvalidParameter
 from network_as_code.models.device import Device
-from unittest.mock import patch
-from network_as_code.models.number_verification import AccessToken
 
 import pytest
 

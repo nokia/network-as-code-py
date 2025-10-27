@@ -1,5 +1,4 @@
 import pytest
-from network_as_code.errors import InvalidParameter
 from network_as_code.models.device import Device
 
 import pytest
