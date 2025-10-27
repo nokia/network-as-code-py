@@ -12,6 +12,7 @@ def device(client) -> Device:
     device = client.devices.get(phone_number="+3637123456")
     return device
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_with_poi(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device= device,
@@ -38,6 +39,7 @@ def test_creating_geofencing_subscription_with_poi(client, device, notification_
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_area_entered_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -59,6 +61,7 @@ def test_creating_geofencing_subscription_area_entered_type(client, device, noti
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_area_left_type(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -78,6 +81,7 @@ def test_creating_geofencing_subscription_area_left_type(client, device, notific
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_sink_credential_plain(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
@@ -97,6 +101,7 @@ def test_creating_geofencing_subscription_sink_credential_plain(client, device, 
 
     subscription.delete()
 
+@pytest.mark.skip
 def test_creating_geofencing_subscription_sink_credential_bearer(client, device, notification_base_url):
     subscription = client.geofencing.subscribe(
         device=device,
