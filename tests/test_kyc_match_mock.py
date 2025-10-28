@@ -9,7 +9,7 @@ def device(client) -> Device:
     return device
 
 def test_get_kyc_match(httpx_mock, device):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-match/v0.3/match"
+    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
             "idDocumentMatch": "true",
@@ -91,7 +91,7 @@ def test_get_kyc_match(httpx_mock, device):
         assert result.email_match_score
 
 def test_get_kyc_match_without_all_fields(httpx_mock, device):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-match/v0.3/match"
+    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
             "idDocumentMatch": "true",
@@ -145,7 +145,7 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
 
 def test_kyc_match_without_added_phone_number(httpx_mock, device):
 
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-match/v0.3/match"
+    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
             "idDocumentMatch": "true",
