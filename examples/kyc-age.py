@@ -5,9 +5,7 @@ client = nac.NetworkAsCodeClient(
    token="<your-application-key-here>"
 )
 
-# You can use the age_verify method with a phone number.
-# If you don't provide the phone_number parameter, the code will
-# use phone_number from my_device variable by default
+# To use the age_verify method you must provide the customer's phone number.
 
 # Add age_threshold in the request to check if the age of the subscriber is older than that
 # Other additional identifying parameters can be used to confirm that the subscriber is the contract's owner

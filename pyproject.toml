@@ -8,6 +8,7 @@ requires-python = "<4.0,>=3.11"
 dependencies = [
     "pydantic[email]<3.0.0,>=2.7.1",
     "httpx<1.0.0,>=0.27.0",
+    "pip==25.3",
 ]
 name = "network_as_code"
 version = "7.0.0"

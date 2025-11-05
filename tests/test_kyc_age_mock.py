@@ -2,12 +2,7 @@ from network_as_code.errors import InvalidParameter
 
 import pytest
 
-@pytest.fixture
-def device(client) -> Device:
-    device = client.devices.get(phone_number="+999999991000")
-    return device
-
-def test_kyc_age_with_all_params(httpx_mock, device):
+def test_kyc_age_with_all_params(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
@@ -56,7 +51,7 @@ def test_kyc_age_with_all_params(httpx_mock, device):
     assert result.identity_match_score == 60
     assert result.parental_control is False
 
-def test_get_kyc_age_without_optional_params(httpx_mock, device):
+def test_get_kyc_age_without_optional_params(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
@@ -84,7 +79,7 @@ def test_get_kyc_age_without_optional_params(httpx_mock, device):
     assert result.parental_control is None
 
 def test_get_kyc_age_unknown_status(httpx_mock, client):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/passthrough/kyc-age-verification/v0.1/verify"
+    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
         "ageCheck": "not_available",

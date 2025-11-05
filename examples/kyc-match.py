@@ -5,11 +5,9 @@ client = nac.NetworkAsCodeClient(
    token="<your-application-key-here>"
 )
 
-# You can use the match_customer method with a phone number.
-# If you don't provide the phone_number parameter, the code will
-# use phone_number from my_device variable by default.
+# To match customer records, you must provide the customer's phone number.
 
-# Add the customer identity data, which is to be used in matching
+# Add additional customer identity data, which is to be used in matching
 # a customer against the account data bound to their phone number.
 
 customer_match_result = client.kyc.match_customer(

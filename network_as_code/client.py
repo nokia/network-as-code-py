@@ -109,8 +109,8 @@ class NetworkAsCodeClient:
 
     @property
     def kyc(self):
-        """Namespace containing functionalities related to kyc match.
+        """Namespace containing functionalities related to know your customer.
 
-        Returns NAC kyc_match
+        Returns NAC kyc
         """
         return self._kyc

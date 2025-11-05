@@ -2,13 +2,7 @@ from network_as_code.errors import InvalidParameter
 
 import pytest
 
-<<<<<<< HEAD
-@pytest.fixture
-def device(client) -> Device:
-    device = client.devices.get(phone_number="+999999991000")
-    return device
-
-def test_get_kyc_match(httpx_mock, device):
+def test_get_kyc_match(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
@@ -89,8 +83,7 @@ def test_get_kyc_match(httpx_mock, device):
     if not result.email_match:
         assert result.email_match_score
 
-<<<<<<< HEAD
-def test_get_kyc_match_without_all_fields(httpx_mock, device):
+def test_get_kyc_without_all_fields(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
