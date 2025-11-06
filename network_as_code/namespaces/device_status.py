@@ -147,9 +147,9 @@ class DeviceStatus(Namespace):
         """
         reachability_json = self.api.reachability_status.get_subscriptions()
         roaming_json = self.api.roaming_status.get_subscriptions()
-        json = reachability_json + roaming_json
+        subscriptions = reachability_json + roaming_json
 
-        return list(map(self.__parse_event_subscription, json))
+        return list(map(self.__parse_event_subscription, subscriptions))
 
     def __is_roaming(self, types: List) -> bool:
         return types[0] in (
