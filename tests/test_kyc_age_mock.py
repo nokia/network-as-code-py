@@ -82,8 +82,8 @@ def test_get_kyc_age_unknown_status(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
-        "ageCheck": "not_available",
-        "verifiedStatus": 'unknown',
+        "ageCheck": None,
+        "verifiedStatus": None,
         "contentLock": None,
         "parentalControl": None
         }
@@ -101,5 +101,5 @@ def test_get_kyc_age_unknown_status(httpx_mock, client):
             age_threshold=18,
             phone_number="+999999991000"
         )
-    assert isinstance(result.verified_status, str)
-    assert isinstance(result.age_check, str)
+    assert result.age_check is None
+    assert result.verified_status is None

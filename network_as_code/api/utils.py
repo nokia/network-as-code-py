@@ -30,11 +30,3 @@ def httpx_client(base_url: str, rapid_key: str, rapid_host: str):
 def to_camel(string: str) -> str:
     fracs = string.split('_')
     return fracs[0] + ''.join(word.capitalize() for word in fracs[1:])
-
-def str_to_bool(val):
-    if isinstance(val, str):
-        if val.lower() == "true":
-            return True
-        if val.lower() == "false":
-            return False
-    return val

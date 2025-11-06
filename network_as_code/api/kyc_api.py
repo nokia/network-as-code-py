@@ -24,8 +24,13 @@ class KYCMatchAPI:
         res = self.client.post("/match", json=body)
 
         error_handler(res)
+        response = res.json()
 
-        return res.json()
+        for k, v in response.items():
+            if v in ["not_available", "unknown"]:
+                response[k] = None
+
+        return response
 
 class KYCAgeAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
@@ -37,4 +42,10 @@ class KYCAgeAPI:
 
         error_handler(res)
 
-        return res.json()
+        response = res.json()
+
+        for k, v in response.items():
+            if v in ["not_available", "unknown"]:
+                response[k] = None
+
+        return response

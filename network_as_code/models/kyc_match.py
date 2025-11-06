@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Optional, Union
-from pydantic import BaseModel, ConfigDict, PrivateAttr, model_validator
+from typing import Optional
+from pydantic import BaseModel, ConfigDict, PrivateAttr
 
 from ..api import APIClient
-from ..api.utils import to_camel, str_to_bool
+from ..api.utils import to_camel
 
 class CustomerMatch(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
@@ -48,42 +48,42 @@ class CustomerMatch(BaseModel):
 
 class CustomerMatchResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
-    id_document_match: Union[bool, str, None] = None
-    name_match: Union[bool, str, None] = None
+    id_document_match: Optional[bool] = None
+    name_match: Optional[bool] = None
     name_match_score: Optional[int] = None
-    given_name_match: Union[bool, str, None] = None
+    given_name_match: Optional[bool] = None
     given_name_match_score: Optional[int] = None
-    family_name_match: Union[bool, str, None] = None
+    family_name_match: Optional[bool] = None
     family_name_match_score: Optional[int] = None
-    name_kana_hankaku_match: Union[bool, str, None] = None
+    name_kana_hankaku_match: Optional[bool] = None
     name_kana_hankaku_match_score: Optional[int] = None
-    name_kana_zenkaku_match: Union[bool, str, None] = None
+    name_kana_zenkaku_match: Optional[bool] = None
     name_kana_zenkaku_match_score: Optional[int] = None
-    middle_names_match: Union[bool, str, None] = None
+    middle_names_match: Optional[bool] = None
     middle_names_match_score: Optional[int] = None
-    family_name_at_birth_match: Union[bool, str, None] = None
+    family_name_at_birth_match: Optional[bool] = None
     family_name_at_birth_match_score: Optional[int] = None
-    address_match: Union[bool, str, None] = None
+    address_match: Optional[bool] = None
     address_match_score: Optional[int] = None
-    street_name_match: Union[bool, str, None] = None
+    street_name_match: Optional[bool] = None
     street_name_match_score: Optional[int] = None
-    street_number_match: Union[bool, str, None] = None
+    street_number_match: Optional[bool] = None
     street_number_match_score: Optional[int] = None
-    postal_code_match: Union[bool, str, None] = None
-    region_match: Union[bool, str, None] = None
+    postal_code_match: Optional[bool] = None
+    region_match: Optional[bool] = None
     region_match_score: Optional[int] = None
-    locality_match: Union[bool, str, None] = None
+    locality_match: Optional[bool] = None
     locality_match_score: Optional[int] = None
-    country_match: Union[bool, str, None] = None
-    house_number_extension_match: Union[bool, str, None] = None
-    birthdate_match: Union[bool, str, None] = None
-    email_match: Union[bool, str, None] = None
+    country_match: Optional[bool] = None
+    house_number_extension_match: Optional[bool] = None
+    birthdate_match: Optional[bool] = None
+    email_match: Optional[bool] = None
     email_match_score: Optional[int] = None
-    gender_match: Union[bool, str, None] = None
+    gender_match: Optional[bool] = None
 
-    @model_validator(mode='before')
-    @classmethod
-    def compile_params(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            return {k: str_to_bool(v) for k, v in data.items()}
-        return data
+#    @model_validator(mode='before')
+#    @classmethod
+#    def compile_params(cls, data: Any) -> Any:
+#        if isinstance(data, dict):
+#            return {k: str_to_bool(v) for k, v in data.items()}
+#        return data

@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Optional, Union
-from pydantic import BaseModel, ConfigDict, PrivateAttr, model_validator
+from typing import Optional
+from pydantic import BaseModel, ConfigDict, PrivateAttr
+
 from ..api import APIClient
-from ..api.utils import str_to_bool, to_camel
+from ..api.utils import to_camel
 
 class AgeVerification(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
@@ -39,15 +40,8 @@ class AgeVerification(BaseModel):
 
 class AgeVerificationResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
-    age_check: Union[bool, str]
-    verified_status: Union[bool, str, None] = None
+    age_check: Optional[bool] = None
+    verified_status: Optional[bool] = None
     identity_match_score: Optional[int] = None
-    content_lock: Union[bool, str, None] = None
-    parental_control: Union[bool, str, None] = None
-
-    @model_validator(mode='before')
-    @classmethod
-    def compile_params(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            return {k: str_to_bool(v) for k, v in data.items()}
-        return data
+    content_lock: Optional[bool] = None
+    parental_control: Optional[bool] = None

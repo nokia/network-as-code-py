@@ -14,8 +14,8 @@ def test_kyc_match_with_phone_number(client):
             email="test@email.com"
     )
     assert result.id_document_match is True
-    assert result.name_kana_hankaku_match == "not_available"
-    assert not result.name_kana_zenkaku_match
+    assert result.name_kana_hankaku_match is None
+    assert result.name_kana_zenkaku_match is None
     assert result.address_match is False
 
 def test_kyc_match_and_match_score(client):
@@ -59,7 +59,7 @@ def test_kyc_match_with_all_params(client):
     )
     for k, v in vars(result).items():
         if "score" not in k:
-            assert v is not None
+            assert v in {True, False, None}
 
 def test_AuthenticationExeption(client):
     with pytest.raises(AuthenticationException):
