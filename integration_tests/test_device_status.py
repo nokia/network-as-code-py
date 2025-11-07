@@ -256,6 +256,8 @@ def test_get_subscriptions(client, device):
     subscriptions = client.device_status.get_subscriptions()
 
     assert isinstance(subscriptions, list)
+    assert len(subscriptions) > 0
+    connectivity_subscription.delete()
 
 def test_get_reachability_status_sms(client):
     device = client.devices.get(phone_number="+99999991000")
