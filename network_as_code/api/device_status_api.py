@@ -72,14 +72,12 @@ class DeviceStatus:
 
         return res.json()
 
-    def get_subscriptions(self) -> list:
+    def get_subscriptions(self):
         res = self.client.get("/subscriptions")
 
         error_handler(res)
 
-        subscription_list: List[dict] = res.json()
-
-        return subscription_list
+        return res.json()
 
     def delete_subscription(self, id: str):
         res = self.client.delete(f"/subscriptions/{id}")
