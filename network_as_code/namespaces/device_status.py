@@ -70,12 +70,7 @@ class DeviceStatus(Namespace):
                 typelist.append(item.value)
             else:
                 typelist.append(item)
-        if typelist[0] in (
-            EventType.ROAMING_CHANGE_COUNTRY.value,
-            EventType.ROAMING_OFF.value,
-            EventType.ROAMING_ON.value,
-            EventType.ROAMING_STATUS.value
-            ):
+        if self._is_roaming(typelist):
             api_type: Any = self.api.roaming_status
             subscription_type: Any = RoamingSubscription
         else:
@@ -161,14 +156,7 @@ class DeviceStatus(Namespace):
 
         device = Device.convert_to_device_model(self.api, device_data)
 
-        subscription_roaming = data["types"][0] in (
-            EventType.ROAMING_CHANGE_COUNTRY.value,
-            EventType.ROAMING_OFF.value,
-            EventType.ROAMING_ON.value,
-            EventType.ROAMING_STATUS.value
-        )
-
-        if subscription_roaming:
+        if self._is_roaming(data["types"]):
             return RoamingSubscription(
                 id=data["id"],
                 api=self.api,
@@ -186,4 +174,12 @@ class DeviceStatus(Namespace):
                 sink=data["sink"],
                 device=device,
                 status=data["status"]
+            )
+
+    def _is_roaming(self, types: List) -> bool:
+        return types[0] in (
+            EventType.ROAMING_CHANGE_COUNTRY.value,
+            EventType.ROAMING_OFF.value,
+            EventType.ROAMING_ON.value,
+            EventType.ROAMING_STATUS.value
             )

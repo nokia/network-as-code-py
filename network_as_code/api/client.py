@@ -39,9 +39,9 @@ SLICE_URL= "/slice/v1"
 
 SLICE_ATTACH_URL = "/device-attach/v0"
 
-REACHABILITY_URL = "/device-reachability-status-subscriptions/v0.7"
+REACHABILITY_URL = "/device-status/device-reachability-status-subscriptions/v0.7"
 
-ROAMING_URL = "/device-roaming-status-subscriptions/v0.7"
+ROAMING_URL = "/device-status/device-roaming-status-subscriptions/v0.7"
 
 CONGESTION_URL = "/congestion-insights/v0"
 
