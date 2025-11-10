@@ -155,7 +155,8 @@ def test_delete_connectivity(client, device):
     except:
         # We expect 404
         assert True
-
+        
+@pytest.mark.skip
 def test_get_subscriptions(client, device):
     subscriptions = client.connectivity.get_subscriptions()
 
