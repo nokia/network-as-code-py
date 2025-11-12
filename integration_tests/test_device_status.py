@@ -190,7 +190,7 @@ def test_delete_reachability(client, device):
         event_type=[EventType.REACHABILITY_DATA],
         device=device, 
         max_num_of_reports=5, 
-        sink="https://thisisexample.com/notify", 
+        sink="https://example.com/notify", 
         sink_credential=AccessTokenCredential(
             access_token= "some-access-token",
             access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
@@ -213,7 +213,7 @@ def test_getting_roaming_subscription(client, device):
         event_type=[EventType.ROAMING_STATUS],
         device=device, 
         max_num_of_reports=5, 
-        sink="https://thisisexample.com/notify", 
+        sink="https://example.com/notify", 
         sink_credential=AccessTokenCredential(
             access_token= "some-access-token",
             access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
