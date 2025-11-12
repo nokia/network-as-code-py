@@ -36,6 +36,7 @@ class EventType(Enum):
     REACHABILITY_SMS= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms"
     REACHABILITY_DISCONNECTED= "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"
 
+# pylint: disable=duplicate-code
 class AccessTokenCredential(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
     credential_type: str = "ACCESSTOKEN"
@@ -48,6 +49,7 @@ class PlainCredential(BaseModel):
     credential_type: str = "PLAIN"
     identifier: str
     secret: str
+# pylint: enable=duplicate-code
 
 class EventSubscription(BaseModel):
     """
