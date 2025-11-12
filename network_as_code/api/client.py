@@ -29,7 +29,7 @@ from .device_swap_api import DeviceSwapAPI
 from .kyc_match_api import KYCMatchAPI
 from .kyc_age_api import KYCAgeAPI
 
-QOS_URL = "/qod/v0"
+QOS_URL = "/quality-on-demand/v1"
 
 LOCATION_VERIFY_URL = "/location-verification/v1"
 

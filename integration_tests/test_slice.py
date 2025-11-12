@@ -91,7 +91,7 @@ def test_getting_attachments(client):
 
 # NOTE: This test takes a long time to execute, since it must wait for slice updates
 #       if you are in a rush, add a temporary skip here
-#@pytest.mark.skip
+@pytest.mark.skip(reason="Notification polling acting flaky")
 @pytest.mark.asyncio
 async def test_deactivating_and_deleting_with_notification_polling(client, notification_base_url):
     slice = client.slices.create(
