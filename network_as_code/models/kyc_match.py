@@ -80,10 +80,3 @@ class CustomerMatchResult(BaseModel):
     email_match: Optional[bool] = None
     email_match_score: Optional[int] = None
     gender_match: Optional[bool] = None
-
-#    @model_validator(mode='before')
-#    @classmethod
-#    def compile_params(cls, data: Any) -> Any:
-#        if isinstance(data, dict):
-#            return {k: str_to_bool(v) for k, v in data.items()}
-#        return data

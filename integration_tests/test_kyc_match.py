@@ -34,7 +34,7 @@ def test_kyc_match_and_match_score(client):
     if not result.family_name_at_birth_match:
         assert result.family_name_at_birth_match_score >= 0
 
-def test_kyc_match_with_all_params(client):
+def test_kyc_match_with_all_params_and_result_conversion(client):
     result = client.kyc.match_customer(
         phone_number="+99999991000",
         id_document="66666666q",
