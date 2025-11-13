@@ -20,8 +20,6 @@ from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
-from ..models.kyc_match import KYCMatch, KYCMatchResult
-from ..models.kyc_age import KYCAge, KYCAgeResult
 from ..api.utils import to_camel
 from ..errors import InvalidParameter, NotFound
 

@@ -251,13 +251,24 @@ def test_delete_roaming(client, device):
         # We expect 404
         assert True
         
-@pytest.mark.skip
 def test_get_subscriptions(client, device):
+    reachability_subscription = client.device_status.subscribe(
+        event_type=[EventType.REACHABILITY_DATA],
+        device=device, 
+        max_num_of_reports=5, 
+        sink="https://example.com/notify", 
+        sink_credential=AccessTokenCredential(
+            access_token= "some-access-token",
+            access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
+            access_token_type="bearer"
+        ),
+        initial_event=True
+    )
     subscriptions = client.device_status.get_subscriptions()
 
     assert isinstance(subscriptions, list)
     assert len(subscriptions) > 0
-    connectivity_subscription.delete()
+    reachability_subscription.delete()
 
 def test_get_reachability_status_sms(client):
     device = client.devices.get(phone_number="+99999991000")
