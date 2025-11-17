@@ -63,7 +63,7 @@ class KYC(Namespace):
         )
         match_params = self.api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
 
-        return CustomerMatchResult.model_validate(match_params)
+        return CustomerMatchResult.model_validate(self.__parse_string_params(match_params))
 
     def verify_age(
             self,
@@ -110,4 +110,11 @@ class KYC(Namespace):
         )
         match_params = self.api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
 
-        return AgeVerificationResult.model_validate(match_params)
+        return AgeVerificationResult.model_validate(self.__parse_string_params(match_params))
+
+    def __parse_string_params(self, params: dict) -> dict:
+        for k, v in params.items():
+            if v in ["not_available", "unknown"]:
+                params[k] = None
+
+        return params

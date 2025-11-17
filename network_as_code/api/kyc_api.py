@@ -21,16 +21,11 @@ class KYCMatchAPI:
 
     def match_customer(self, body: dict):
 
-        res = self.client.post("/match", json=body)
+        response = self.client.post("/match", json=body)
 
-        error_handler(res)
-        response = res.json()
+        error_handler(response)
 
-        for k, v in response.items():
-            if v in ["not_available", "unknown"]:
-                response[k] = None
-
-        return response
+        return response.json()
 
 class KYCAgeAPI:
     def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
@@ -38,14 +33,8 @@ class KYCAgeAPI:
 
     def verify_age(self, body: dict):
 
-        res = self.client.post("/verify", json=body)
+        response = self.client.post("/verify", json=body)
 
-        error_handler(res)
+        error_handler(response)
 
-        response = res.json()
-
-        for k, v in response.items():
-            if v in ["not_available", "unknown"]:
-                response[k] = None
-
-        return response
+        return response.json()
