@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from typing import Optional
-from pydantic import BaseModel, ConfigDict 
+from pydantic import BaseModel, ConfigDict
 
 from ..api.utils import to_camel
 

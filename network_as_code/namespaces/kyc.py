@@ -116,12 +116,13 @@ class KYC(Namespace):
         phone_number: str,
         tenure_date: str
     ) -> TenureCheckResult:
-        """Checks if the network subscriber has been a customer of the service provider for the specified amount of time.
+        """Check if the network subscriber has been a customer of the service provider for the specified amount of time.
         #### Args
              phone_number (str): Used as an identifier for the request.
              tenure_date (str): The specified minimum tenure date from which the continuous tenure is to be confirmed.
         #### Returns
-             TenureCheckResult: Object containing boolean value for the tenure date check and optional contract type, if known.
+             TenureCheckResult: Object containing boolean value for the tenure date 
+                                check and optional contract type, if known.
         """
         params = TenureCheck(
             phone_number = phone_number,
