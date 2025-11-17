@@ -38,3 +38,15 @@ class KYCAgeAPI:
         error_handler(response)
 
         return response.json()
+
+class KYCTenureAPI:
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
+
+    def check_tenure(self, body: dict):
+
+        response = self.client.post("/check-tenure", json=body)
+
+        error_handler(response)
+
+        return response.json()

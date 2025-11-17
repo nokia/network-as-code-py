@@ -2,6 +2,7 @@ from typing import Optional
 from . import Namespace
 from ..models.kyc_match import CustomerMatch, CustomerMatchResult
 from ..models.kyc_age import AgeVerification, AgeVerificationResult
+from ..models.kyc_tenure import TenureCheck, TenureCheckResult
 
 class KYC(Namespace):
 
@@ -39,7 +40,6 @@ class KYC(Namespace):
         """
 
         params = CustomerMatch(
-            api=self.api,
             phone_number = phone_number,
             id_document = id_document,
             name = name,
@@ -94,7 +94,6 @@ class KYC(Namespace):
                            status and score result of additional checks.
         """
         params = AgeVerification(
-            api=self.api,
             age_threshold = age_threshold,
             phone_number = phone_number,
             id_document = id_document,
@@ -111,6 +110,27 @@ class KYC(Namespace):
         match_params = self.api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
 
         return AgeVerificationResult.model_validate(self.__parse_string_params(match_params))
+
+    def check_tenure(
+        self,
+        phone_number: str,
+        tenure_date: str
+    ) -> TenureCheckResult:
+        """Checks if the network subscriber has been a customer of the service provider for the specified amount of time.
+        #### Args
+             phone_number (str): Used as an identifier for the request.
+             tenure_date (str): The specified minimum tenure date from which the continuous tenure is to be confirmed.
+        #### Returns
+             TenureCheckResult: Object containing boolean value for the tenure date check and optional contract type, if known.
+        """
+        params = TenureCheck(
+            phone_number = phone_number,
+            tenure_date = tenure_date
+        )
+        match_params = self.api.kyc_tenure.check_tenure(params.model_dump(by_alias=True))
+
+        return TenureCheckResult.model_validate(match_params)
+
 
     def __parse_string_params(self, params: dict) -> dict:
         for k, v in params.items():
