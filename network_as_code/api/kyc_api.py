@@ -21,8 +21,20 @@ class KYCMatchAPI:
 
     def match_customer(self, body: dict):
 
-        res = self.client.post("/match", json=body)
+        response = self.client.post("/match", json=body)
 
-        error_handler(res)
+        error_handler(response)
 
-        return res.json()
+        return response.json()
+
+class KYCAgeAPI:
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
+
+    def verify_age(self, body: dict):
+
+        response = self.client.post("/verify", json=body)
+
+        error_handler(response)
+
+        return response.json()

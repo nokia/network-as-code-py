@@ -13,12 +13,15 @@
 # limitations under the License.
 
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PrivateAttr
+
+from ..api import APIClient
 from ..api.utils import to_camel
 
-class KYCMatch(BaseModel):
+class CustomerMatch(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
-    phone_number: Optional[str] = None
+    _api: APIClient = PrivateAttr()
+    phone_number: str
     id_document: Optional[str] = None
     name: Optional[str] = None
     given_name: Optional[str] = None
@@ -39,37 +42,41 @@ class KYCMatch(BaseModel):
     email: Optional[str] = None
     gender: Optional[str] = None
 
-class KYCMatchResult(BaseModel):
+    def __init__(self, api: APIClient, **data) -> None:
+        super().__init__(**data)
+        self._api = api
+
+class CustomerMatchResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
-    id_document_match: Optional[str] = None
-    name_match: Optional[str] = None
+    id_document_match: Optional[bool] = None
+    name_match: Optional[bool] = None
     name_match_score: Optional[int] = None
-    given_name_match: Optional[str] = None
+    given_name_match: Optional[bool] = None
     given_name_match_score: Optional[int] = None
-    family_name_match: Optional[str] = None
+    family_name_match: Optional[bool] = None
     family_name_match_score: Optional[int] = None
-    name_kana_hankaku_match: Optional[str] = None
+    name_kana_hankaku_match: Optional[bool] = None
     name_kana_hankaku_match_score: Optional[int] = None
-    name_kana_zenkaku_match: Optional[str] = None
+    name_kana_zenkaku_match: Optional[bool] = None
     name_kana_zenkaku_match_score: Optional[int] = None
-    middle_names_match: Optional[str] = None
+    middle_names_match: Optional[bool] = None
     middle_names_match_score: Optional[int] = None
-    family_name_at_birth_match: Optional[str] = None
+    family_name_at_birth_match: Optional[bool] = None
     family_name_at_birth_match_score: Optional[int] = None
-    address_match: Optional[str] = None
+    address_match: Optional[bool] = None
     address_match_score: Optional[int] = None
-    street_name_match: Optional[str] = None
+    street_name_match: Optional[bool] = None
     street_name_match_score: Optional[int] = None
-    street_number_match: Optional[str] = None
+    street_number_match: Optional[bool] = None
     street_number_match_score: Optional[int] = None
-    postal_code_match: Optional[str] = None
-    region_match: Optional[str] = None
+    postal_code_match: Optional[bool] = None
+    region_match: Optional[bool] = None
     region_match_score: Optional[int] = None
-    locality_match: Optional[str] = None
+    locality_match: Optional[bool] = None
     locality_match_score: Optional[int] = None
-    country_match: Optional[str] = None
-    house_number_extension_match: Optional[str] = None
-    birthdate_match: Optional[str] = None
-    email_match: Optional[str] = None
+    country_match: Optional[bool] = None
+    house_number_extension_match: Optional[bool] = None
+    birthdate_match: Optional[bool] = None
+    email_match: Optional[bool] = None
     email_match_score: Optional[int] = None
-    gender_match: Optional[str] = None
+    gender_match: Optional[bool] = None

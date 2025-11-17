@@ -26,8 +26,7 @@ from .authorization_api import AuthorizationAPI
 from. number_verification_api import NumberVerificationAPI
 from .call_forwarding_api import CallForwardingAPI
 from .device_swap_api import DeviceSwapAPI
-from .kyc_match_api import KYCMatchAPI
-from .kyc_age_api import KYCAgeAPI
+from .kyc_api import KYCMatchAPI, KYCAgeAPI
 
 QOS_URL = "/quality-on-demand/v1"
 

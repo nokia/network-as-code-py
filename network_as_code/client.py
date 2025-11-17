@@ -20,6 +20,7 @@ from .namespaces import DeviceStatus
 from .namespaces import NetworkInsights
 from .namespaces import Geofencing
 from .namespaces import Authorization
+from .namespaces import KYC
 
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
@@ -47,6 +48,7 @@ class NetworkAsCodeClient:
         self._insights = NetworkInsights(self._api)
         self._geofencing = Geofencing(self._api)
         self._authorization = Authorization(self._api)
+        self._kyc = KYC(self._api)
     #### NAMESPACES
 
     @property
@@ -104,3 +106,11 @@ class NetworkAsCodeClient:
         Returns NAC authorization
         """
         return self._authorization
+
+    @property
+    def kyc(self):
+        """Namespace containing functionalities related to know your customer.
+
+        Returns NAC kyc
+        """
+        return self._kyc
