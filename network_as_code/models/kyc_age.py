@@ -13,14 +13,12 @@
 # limitations under the License.
 
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, PrivateAttr
+from pydantic import BaseModel, ConfigDict
 
-from ..api import APIClient
 from ..api.utils import to_camel
 
 class AgeVerification(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
-    _api: APIClient = PrivateAttr()
     age_threshold: int
     phone_number: str
     id_document: Optional[str] = None
@@ -33,10 +31,6 @@ class AgeVerification(BaseModel):
     email: Optional[str] = None
     include_content_lock: Optional[bool] = None
     include_parental_control: Optional[bool] = None
-
-    def __init__(self, api: APIClient, **data) -> None:
-        super().__init__(**data)
-        self._api = api
 
 class AgeVerificationResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)

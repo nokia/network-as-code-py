@@ -13,14 +13,12 @@
 # limitations under the License.
 
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, PrivateAttr
+from pydantic import BaseModel, ConfigDict
 
-from ..api import APIClient
 from ..api.utils import to_camel
 
 class CustomerMatch(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
-    _api: APIClient = PrivateAttr()
     phone_number: str
     id_document: Optional[str] = None
     name: Optional[str] = None
@@ -41,10 +39,6 @@ class CustomerMatch(BaseModel):
     birthdate: Optional[str] = None
     email: Optional[str] = None
     gender: Optional[str] = None
-
-    def __init__(self, api: APIClient, **data) -> None:
-        super().__init__(**data)
-        self._api = api
 
 class CustomerMatchResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)

@@ -16,7 +16,6 @@ def test_kyc_age_with_all_params(client):
             include_content_lock=True,
             include_parental_control=True
     )
-    print(result)
     assert result.age_check is True
     assert result.verified_status is True
     assert result.content_lock is not None
