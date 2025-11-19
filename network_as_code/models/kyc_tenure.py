@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
+from datetime import datetime, date
+from typing import Optional, Union
 from pydantic import BaseModel, ConfigDict
 
 from ..api.utils import to_camel
@@ -21,7 +22,7 @@ from ..api.utils import to_camel
 class TenureCheck(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
     phone_number: str
-    tenure_date: str
+    tenure_date: Union[str, datetime, date]
 
 class TenureCheckResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)

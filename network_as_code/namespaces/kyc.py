@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, Union
+from datetime import datetime, date
 from . import Namespace
 from ..models.kyc_match import CustomerMatch, CustomerMatchResult
 from ..models.kyc_age import AgeVerification, AgeVerificationResult
@@ -114,16 +115,24 @@ class KYC(Namespace):
     def check_tenure(
         self,
         phone_number: str,
-        tenure_date: str
+        tenure_date: Union[str, datetime, date]
     ) -> TenureCheckResult:
         """Check if the network subscriber has been a customer of the service provider for the specified amount of time.
         #### Args
              phone_number (str): Used as an identifier for the request.
-             tenure_date (str): The specified minimum tenure date from which the continuous tenure is to be confirmed.
+             tenure_date (Union[str, datetime, date]): The specified minimum tenure date from which the 
+             continuous tenure is to be confirmed.
         #### Returns
              TenureCheckResult: Object containing boolean value for the tenure date 
                                 check and optional contract type, if known.
         """
+
+        tenure_date = (
+            tenure_date.date().isoformat()
+            if isinstance(tenure_date, datetime)
+            else tenure_date.isoformat() if isinstance(tenure_date, date)
+            else tenure_date
+        )
         params = TenureCheck(
             phone_number = phone_number,
             tenure_date = tenure_date
