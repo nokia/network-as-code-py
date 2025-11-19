@@ -4,6 +4,7 @@ from . import Namespace
 from ..models.kyc_match import CustomerMatch, CustomerMatchResult
 from ..models.kyc_age import AgeVerification, AgeVerificationResult
 from ..models.kyc_tenure import TenureCheck, TenureCheckResult
+from ..models.kyc_fill import FillInResult
 
 class KYC(Namespace):
 
@@ -141,6 +142,17 @@ class KYC(Namespace):
 
         return TenureCheckResult.model_validate(match_params)
 
+
+    def request_customer_info(self, phone_number: str) -> FillInResult:
+        """Request customer information against the account data bound to their phone number.
+        #### Args
+             phone_number (str): Used as an identifier for the request.
+        #### Returns
+             FillInResult: Contains the user information available on file by the user's Operator KYC records.
+        """
+        fill_params = self.api.kyc_fill.request_customer_info(phone_number)
+
+        return FillInResult.model_validate(self.__parse_string_params(fill_params))
 
     def __parse_string_params(self, params: dict) -> dict:
         for k, v in params.items():
