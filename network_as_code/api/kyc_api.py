@@ -50,3 +50,18 @@ class KYCTenureAPI:
         error_handler(response)
 
         return response.json()
+
+class KYCFillInAPI:
+    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
+        self.client = httpx_client(base_url, rapid_key, rapid_host)
+
+    def request_customer_info(self, phone_number: str):
+        body: dict = {
+            "phoneNumber": phone_number
+        }
+
+        response = self.client.post("/fill-in", json=body)
+
+        error_handler(response)
+
+        return response.json()
