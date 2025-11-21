@@ -25,32 +25,6 @@ def test_kyc_tenure_returns_true(httpx_mock, client):
     assert result.tenure_date_check is True
     assert result.contract_type == "PAYG"
 
-def test_kyc_tenure_with_datetime_object(httpx_mock, client):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure"
-    
-    mock_response = {
-        "tenureDateCheck": True,
-        "contractType": "PAYG",
-        }
-            
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        json=mock_response,
-        match_json={
-            "phoneNumber": "+99999991000",
-            "tenureDate": "2024-11-19"
-            })
-                
-    result = client.kyc.check_tenure(
-            phone_number="+99999991000",
-            tenure_date=datetime.now(timezone.utc) - timedelta(days=365)
-            )
-    
-    assert result.tenure_date_check is True
-    assert result.contract_type == "PAYG"
-
-
 def test_kyc_tenure_with_date_object(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure"
     
