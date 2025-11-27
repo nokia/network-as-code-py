@@ -11,7 +11,7 @@ dependencies = [
     "pip==25.3",
 ]
 name = "network_as_code"
-version = "7.0.0"
+version = "8.0.0"
 description = ""
 
 [dependency-groups]
