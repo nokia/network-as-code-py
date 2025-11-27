@@ -14,7 +14,7 @@ pipeline {
         spec:
           containers:
           - name: python
-            image: nex-nef-docker-inprogress.repo.cci.nokia.net/nmp-sdk-python-container:0.0.3-331a656
+            image: nex-nef-docker-candidates.repo.cci.nokia.net/nmp-sdk-python-container:latest
             workingDir: /home/jenkins
             tty: true
             command:
@@ -73,6 +73,18 @@ pipeline {
     }
 
     stages {
+        stage('Setup tools') {
+            steps {
+                container('python') {
+                    script {
+                        sh """
+                        uv sync
+                        """
+                    }
+                }        
+            }
+        }
+
         stage('Linting') {
             steps {
                 container('python') {
