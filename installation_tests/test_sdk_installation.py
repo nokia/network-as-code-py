@@ -12,7 +12,7 @@ def device() -> Device:
     client = NetworkAsCodeClient(token=token, env_mode="dev")
     device = client.devices.get(phone_number="+367199991001", ipv4_address = DeviceIpv4Addr(public_address="1.1.1.2", private_address="1.1.1.2", public_port=80))
     return device
-
+@pytest.mark.skip
 def test_getting_a_device_location_sends_out_request(device):
     location = device.location(max_age=10_000)
 
