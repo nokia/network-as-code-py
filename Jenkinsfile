@@ -14,7 +14,7 @@ pipeline {
         spec:
           containers:
           - name: python
-            image: docker-registry-remote.artifactory-espoo1.int.net.nokia.com/python:3.11-slim
+            image: nex-nef-docker-candidates.repo.cci.nokia.net/nmp-sdk-python-container:latest
             workingDir: /home/jenkins
             tty: true
             command:
@@ -78,13 +78,13 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                        pip install uv
                         uv sync
                         """
                     }
                 }        
             }
         }
+
         stage('Linting') {
             steps {
                 container('python') {
