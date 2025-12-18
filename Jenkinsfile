@@ -14,7 +14,7 @@ pipeline {
         spec:
           containers:
           - name: python
-            image: nex-nef-docker-candidates.repo.cci.nokia.net/nmp-sdk-python-container:0.0.6-331a656
+            image: nex-nef-docker-releases.repo.cci.nokia.net/nmp-sdk-python-container:0.0.6-331a656
             workingDir: /home/jenkins
             tty: true
             command:

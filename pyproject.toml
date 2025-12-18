@@ -9,6 +9,8 @@ dependencies = [
     "pydantic[email]<3.0.0,>=2.7.1",
     "httpx<1.0.0,>=0.27.0",
     "pip==25.3",
+    "urllib3>=2.6.0",
+    "filelock>=3.20.1",
 ]
 name = "network_as_code"
 version = "8.0.0"
