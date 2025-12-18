@@ -14,7 +14,7 @@ pipeline {
         spec:
           containers:
           - name: python
-            image: docker-registry-remote.artifactory-espoo1.int.net.nokia.com/python:3.11-slim
+            image: nex-nef-docker-candidates.repo.cci.nokia.net/nmp-sdk-python-container:latest
             workingDir: /home/jenkins
             tty: true
             command:
@@ -63,7 +63,6 @@ pipeline {
         SDK_NOTIFICATION_SERVER_URL = credentials('SDK_NOTIFICATION_SERVER_URL')
         SONAR_PATH = "/opt/sonar-scanner/bin"
         SONAR_TOKEN = "sonar-token"
-        IGNORE_VULNS = "--ignore-vuln GHSA-4xh5-x5gv-qwph" // Ignore pip, because it's not a runtime dependency
     }
     options {
         gitLabConnection('gitlab-ee2')  // the GitLab connection name defined in Jenkins, check the value from pipeline configure UI
@@ -79,13 +78,13 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                        pip install uv
                         uv sync
                         """
                     }
                 }        
             }
         }
+
         stage('Linting') {
             steps {
                 container('python') {
@@ -114,7 +113,7 @@ pipeline {
                 container('python') {
                     script {
                         sh """
-                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pip-audit ${IGNORE_VULNS}
+                            https_proxy="http://fihel1d-proxy.emea.nsn-net.net:8080" python3 -m uv run pip-audit
                         """
                     }
                 }

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Any
+from typing import Union, Optional, List, Any
 from .utils import httpx_client
 
 
@@ -43,8 +43,8 @@ class QodAPI:
         service_ipv6=None,
         device_ports: Union[None, Any] = None,
         service_ports: Union[None, Any] = None,
-        notification_url=None,
-        notification_auth_token=None,
+        sink: Optional[str] = None,
+        sink_credential: Any = None,
     ):
         """Function that hits the create session endpoint with the data
 
@@ -56,8 +56,8 @@ class QodAPI:
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            notification_url (optional): Notification URL for session-related events.
-            notification_token (optional): Security bearer token to authenticate registration of session.
+            sink (optional): Notification URL for session-related events.
+            sink_credential (optional): Authorization token for notification sending.
 
         Returns:
             Session: response of the endpoint, ideally a Session
@@ -78,11 +78,13 @@ class QodAPI:
         if service_ipv6:
             session_resource["applicationServer"]["ipv6Address"] = service_ipv6
 
-        if notification_url:
-            session_resource["webhook"] = { "notificationUrl": notification_url }
+        if sink:
+            session_resource["sink"] = sink
 
-            if notification_auth_token:
-                session_resource["webhook"]["notificationAuthToken"] = "Bearer " + notification_auth_token
+            if sink_credential:
+                session_resource["sinkCredential"] = {
+                **sink_credential.model_dump(mode='json', by_alias=True)
+            }
 
         response = self.client.post(url="/sessions", json=session_resource)
         errors.error_handler(response)

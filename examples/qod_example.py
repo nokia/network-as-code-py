@@ -1,10 +1,12 @@
 # QoD functionalities
 
-# QoS session examples:
+# QoD session examples:
 
 import network_as_code as nac
+from network_as_code.models.device import DeviceIpv4Addr, AccessTokenCredential
 
-from network_as_code.models.device import DeviceIpv4Addr
+from datetime import datetime, timedelta, timezone
+
 
 client = nac.NetworkAsCodeClient("<your-application-key-here>")
 
@@ -25,6 +27,13 @@ device = client.devices.get(
 my_session = device.create_qod_session(
     service_ipv4="233.252.0.2",
     service_ipv6="2001:db8:1234:5678:9abc:def0:fedc:ba98",
+    # Use HTTPS to send or subscribe to notifications
+    sink="https://example.com/notifications",
+    sink_credential=AccessTokenCredential(
+        access_token= "some-access-token",
+        access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
+        access_token_type="bearer"
+        ),
     profile="QOS_L",
     duration=3600
 )

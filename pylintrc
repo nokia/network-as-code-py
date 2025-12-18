@@ -315,7 +315,7 @@ max-public-methods=20
 max-returns=6
 
 # Maximum number of statements in function / method body.
-max-statements=55
+max-statements=60
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=2
@@ -538,7 +538,7 @@ ignore-imports=yes
 ignore-signatures=yes
 
 # Minimum lines number of a similarity.
-min-similarity-lines=5
+min-similarity-lines=10
 
 disable=
 

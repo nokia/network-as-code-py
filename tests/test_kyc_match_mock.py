@@ -1,38 +1,32 @@
-import pytest
-from network_as_code.models.device import Device
+from network_as_code.errors import InvalidParameter
 
 import pytest
 
-@pytest.fixture
-def device(client) -> Device:
-    device = client.devices.get(phone_number="+999999991000")
-    return device
-
-def test_get_kyc_match(httpx_mock, device):
+def test_get_kyc_match(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
-            "givenNameMatch": "not_available",
-            "familyNameMatch": "not_available",
-            "nameKanaHankakuMatch": "true",
-            "nameKanaZenkakuMatch": "false",
-            "middleNamesMatch": "true",
-            "familyNameAtBirthMatch": "false",
+            "idDocumentMatch": True,
+            "nameMatch": True,
+            "givenNameMatch": None,
+            "familyNameMatch": None,
+            "nameKanaHankakuMatch": True,
+            "nameKanaZenkakuMatch": False,
+            "middleNamesMatch": True,
+            "familyNameAtBirthMatch": False,
             "familyNameAtBirthMatchScore": 90,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
-            "localityMatch": "not_available",
-            "countryMatch": "true",
-            "houseNumberExtensionMatch": "not_available",
-            "birthdateMatch": "false",
-            "emailMatch": "false",
+            "addressMatch": True,
+            "streetNameMatch": True,
+            "streetNumberMatch": True,
+            "postalCodeMatch": True,
+            "regionMatch": True,
+            "localityMatch": None,
+            "countryMatch": True,
+            "houseNumberExtensionMatch": None,
+            "birthdateMatch": False,
+            "emailMatch": False,
             "emailMatchScore": 87,
-            "genderMatch": "false"
+            "genderMatch": False
             }
     
     httpx_mock.add_response(
@@ -62,7 +56,7 @@ def test_get_kyc_match(httpx_mock, device):
             "gender":"MALE"
             })
     
-    result = device.match_customer(
+    result = client.kyc.match_customer(
             phone_number="+999999991000",
             id_document = "66666666q",
             name = "Federica Sanchez Arjona",
@@ -84,27 +78,26 @@ def test_get_kyc_match(httpx_mock, device):
             email = "abc@example.com",
             gender = "MALE"
             )
-    
-    assert result.name_match and result.name_match == "true"
-    assert result.birthdate_match == "false"
-    if result.email_match == "false":
+    assert result.name_match and result.name_match is True
+    assert result.birthdate_match is False
+    if not result.email_match:
         assert result.email_match_score
 
-def test_get_kyc_match_without_all_fields(httpx_mock, device):
+def test_get_kyc_without_all_fields(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
     
     mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
-            "familyNameMatch": "false",
+            "idDocumentMatch": True,
+            "nameMatch": True,
+            "familyNameMatch": False,
             "familyNameMatchScore": 87,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
-            "emailMatch": "true",
-            "genderMatch": "true"
+            "addressMatch": True,
+            "streetNameMatch": True,
+            "streetNumberMatch": True,
+            "postalCodeMatch": True,
+            "regionMatch": True,
+            "emailMatch": True,
+            "genderMatch": True
             }
     
     httpx_mock.add_response(
@@ -125,7 +118,7 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
             "gender":"OTHER"
             })
     
-    result = device.match_customer(
+    result = client.kyc.match_customer(
             phone_number="+999999991000",
             id_document="TestIdDocument",
             name="TestName",
@@ -139,60 +132,7 @@ def test_get_kyc_match_without_all_fields(httpx_mock, device):
             gender="OTHER"
     )
     assert not result.house_number_extension_match
-    assert result.family_name_match == "false"
-    assert result.family_name_match_score == 87
-
-
-def test_kyc_match_without_added_phone_number(httpx_mock, device):
-
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match"
-    
-    mock_response = {
-            "idDocumentMatch": "true",
-            "nameMatch": "true",
-            "familyNameMatch": "false",
-            "familyNameMatchScore": 87,
-            "addressMatch": "true",
-            "streetNameMatch": "true",
-            "streetNumberMatch": "true",
-            "postalCodeMatch": "true",
-            "regionMatch": "true",
-            "emailMatch": "true",
-            "genderMatch": "true"
-            }
-    
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        json=mock_response,
-        match_json={
-            "phoneNumber":"+999999991000",
-            "idDocument":"TestIdDocument",
-            "name":"TestName",
-            "familyName":"TestFamilyName",
-            "address":"TestAddress",
-            "streetName":"TestStreetName",
-            "streetNumber":"1",
-            "postalCode":"11111",
-            "region":"TestRegion",
-            "email":"abc@example.com",
-            "gender":"OTHER"
-            })
-    
-    result = device.match_customer(
-            id_document="TestIdDocument",
-            name="TestName",
-            family_name="TestFamilyName",
-            address="TestAddress",
-            street_name="TestStreetName",
-            street_number="1",
-            postal_code="11111",
-            region="TestRegion",
-            email="abc@example.com",
-            gender="OTHER"
-    )
-    assert not result.house_number_extension_match
-    assert result.family_name_match == "false"
+    assert result.family_name_match is False
     assert result.family_name_match_score == 87
 
         

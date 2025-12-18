@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .utils import httpx_client
-from ..errors import error_handler
+from typing import Optional
+from pydantic import ConfigDict
+from .kyc_match import CustomerMatch
+from ..api.utils import to_camel
 
-class KYCAgeAPI:
-    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
-        self.client = httpx_client(base_url, rapid_key, rapid_host)
-
-    def verify_age(self, body: dict):
-
-        res = self.client.post("/verify", json=body)
-
-        error_handler(res)
-
-        return res.json()
+class FillInResult(CustomerMatch):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    phone_number: Optional[str] = None # type: ignore
+    id_document_type: Optional[str] = None
+    id_document_expiry_date: Optional[str] = None
+    city_of_birth: Optional[str] = None
+    country_of_birth: Optional[str] = None
+    nationality: Optional[str] = None

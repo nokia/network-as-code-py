@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Union
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
+
 from ..api.utils import to_camel
 
-class KYCAge(BaseModel):
+class AgeVerification(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
     age_threshold: int
-    phone_number: Optional[str] = None
+    phone_number: str
     id_document: Optional[str] = None
     name: Optional[str] = None
     given_name: Optional[str] = None
@@ -31,10 +32,10 @@ class KYCAge(BaseModel):
     include_content_lock: Optional[bool] = None
     include_parental_control: Optional[bool] = None
 
-class KYCAgeResult(BaseModel):
+class AgeVerificationResult(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
-    age_check: str
-    verified_status: Union[bool, str, None] = None
+    age_check: Optional[bool] = None
+    verified_status: Optional[bool] = None
     identity_match_score: Optional[int] = None
-    content_lock: Union[bool, str, None] = None
-    parental_control: Union[bool, str, None] = None
+    content_lock: Optional[bool] = None
+    parental_control: Optional[bool] = None

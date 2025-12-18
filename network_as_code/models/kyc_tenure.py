@@ -1,3 +1,4 @@
+
 # Copyright 2025 Nokia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .utils import httpx_client
-from ..errors import error_handler
+from datetime import datetime, date
+from typing import Optional, Union
+from pydantic import BaseModel, ConfigDict
 
-class KYCMatchAPI:
-    def __init__(self, base_url: str, rapid_key: str, rapid_host: str):
-        self.client = httpx_client(base_url, rapid_key, rapid_host)
+from ..api.utils import to_camel
 
-    def match_customer(self, body: dict):
+class TenureCheck(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    phone_number: str
+    tenure_date: Union[str, datetime, date]
 
-        res = self.client.post("/match", json=body)
-
-        error_handler(res)
-
-        return res.json()
+class TenureCheckResult(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True, validate_by_alias=True)
+    tenure_date_check: bool
+    contract_type: Optional[str] = None

@@ -1,18 +1,12 @@
-import pytest
-from network_as_code.models.device import Device
+from network_as_code.errors import InvalidParameter
 
 import pytest
 
-@pytest.fixture
-def device(client) -> Device:
-    device = client.devices.get(phone_number="+999999991000")
-    return device
-
-def test_kyc_age_with_all_params(httpx_mock, device):
+def test_kyc_age_with_all_params(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
-        "ageCheck": "true",
+        "ageCheck": True,
         "verifiedStatus": True,
         "identityMatchScore": 60,
         "contentLock": False,
@@ -38,7 +32,7 @@ def test_kyc_age_with_all_params(httpx_mock, device):
             "includeParentalControl": True
             })
                 
-    result = device.verify_age(
+    result = client.kyc.verify_age(
             age_threshold=18,
             phone_number="+99999991000",
             id_document="123456",
@@ -53,15 +47,15 @@ def test_kyc_age_with_all_params(httpx_mock, device):
             include_parental_control=True
             )
     
-    assert result.age_check == "true"
+    assert result.age_check is True
     assert result.identity_match_score == 60
     assert result.parental_control is False
 
-def test_get_kyc_age_without_optional_params(httpx_mock, device):
+def test_get_kyc_age_without_optional_params(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
-        "ageCheck": "true",
+        "ageCheck": True,
         "verifiedStatus": True,
         "contentLock": None,
         "parentalControl": None
@@ -76,7 +70,7 @@ def test_get_kyc_age_without_optional_params(httpx_mock, device):
             "phoneNumber":"+99999991000"
             })
     
-    result = device.verify_age(
+    result = client.kyc.verify_age(
             age_threshold=18,
             phone_number="+99999991000"
         )
@@ -84,12 +78,12 @@ def test_get_kyc_age_without_optional_params(httpx_mock, device):
     assert result.content_lock is None
     assert result.parental_control is None
 
-def test_get_kyc_age_with_devices_phone_number(httpx_mock, device):
+def test_get_kyc_age_unknown_status(httpx_mock, client):
     url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
     
     mock_response = {
-        "ageCheck": "true",
-        "verifiedStatus": True,
+        "ageCheck": None,
+        "verifiedStatus": None,
         "contentLock": None,
         "parentalControl": None
         }
@@ -103,33 +97,9 @@ def test_get_kyc_age_with_devices_phone_number(httpx_mock, device):
             "phoneNumber":"+999999991000"
             })
     
-    result = device.verify_age(
-            age_threshold=18
+    result = client.kyc.verify_age(
+            age_threshold=18,
+            phone_number="+999999991000"
         )
-    assert result.verified_status is True
-    assert result.content_lock is None
-    assert result.parental_control is None
-
-def test_get_kyc_age_unknown_status(httpx_mock, device):
-    url = f"https://network-as-code.p-eu.rapidapi.com/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify"
-    
-    mock_response = {
-        "ageCheck": "not_available",
-        "verifiedStatus": 'unknown',
-        "contentLock": None,
-        "parentalControl": None
-        }
-    
-    httpx_mock.add_response(
-        url=url, 
-        method='POST', 
-        json=mock_response,
-        match_json={
-            "ageThreshold":18,
-            "phoneNumber":"+999999991000"
-            })
-    
-    result = device.verify_age(
-            age_threshold=18
-        )
-    assert isinstance(result.verified_status, str)
+    assert result.age_check is None
+    assert result.verified_status is None

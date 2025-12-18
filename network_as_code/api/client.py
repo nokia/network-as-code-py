@@ -17,7 +17,7 @@ from typing import Optional
 from network_as_code.api.qod_api import QodAPI
 from ..api.slice_api import AttachAPI, SliceAPI
 from .location_api import LocationVerifyAPI, LocationRetrievalAPI
-from .device_status_api import DeviceStatusAPI
+from .device_status_api import ReachabilityAPI, RoamingAPI
 from .congestion_api import CongestionAPI
 from .sim_swap_api import SimSwapAPI
 from .geofencing_api import GeofencingAPI
@@ -26,10 +26,9 @@ from .authorization_api import AuthorizationAPI
 from. number_verification_api import NumberVerificationAPI
 from .call_forwarding_api import CallForwardingAPI
 from .device_swap_api import DeviceSwapAPI
-from .kyc_match_api import KYCMatchAPI
-from .kyc_age_api import KYCAgeAPI
+from .kyc_api import KYCMatchAPI, KYCAgeAPI, KYCTenureAPI, KYCFillInAPI
 
-QOS_URL = "/qod/v0"
+QOS_URL = "/quality-on-demand/v1"
 
 LOCATION_VERIFY_URL = "/location-verification/v1"
 
@@ -39,7 +38,9 @@ SLICE_URL= "/slice/v1"
 
 SLICE_ATTACH_URL = "/device-attach/v0"
 
-DEVICE_STATUS_URL = "/device-status/v0"
+REACHABILITY_URL = "/device-status/device-reachability-status-subscriptions/v0.7"
+
+ROAMING_URL = "/device-status/device-roaming-status-subscriptions/v0.7"
 
 CONGESTION_URL = "/congestion-insights/v0"
 
@@ -60,6 +61,10 @@ DEVICE_SWAP_URL = "/passthrough/camara/v1/device-swap/device-swap/v1"
 KYC_MATCH_URL = "/passthrough/camara/v1/kyc-match/kyc-match/v0.3"
 
 KYC_AGE_URL = "/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1"
+
+KYC_TENURE_URL = "/passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1"
+
+KYC_FILL_URL = "/passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4"
 
 # RAPID_HOST_PROD = "network-as-code.nokia.rapidapi.com"
 
@@ -101,7 +106,8 @@ class APIClient:
         location_retrieve_base_url: Optional[str] = None,
         slice_base_url: Optional[str] = None,
         slice_attach_base_url: Optional[str] = None,
-        device_status_base_url: Optional[str] = None,
+        reachability_base_url: Optional[str] = None,
+        roaming_base_url: Optional[str] = None,
         congestion_base_url: Optional[str] = None,
         sim_swap_base_url: Optional[str] = None,
         geofencing_base_url: Optional[str] = None,
@@ -112,6 +118,8 @@ class APIClient:
         device_swap_base_url: Optional[str] = None,
         kyc_match_base_url: Optional[str] = None,
         kyc_age_base_url: Optional[str] = None,
+        kyc_tenure_base_url: Optional[str] = None,
+        kyc_fill_base_url: Optional[str] = None,
         env_mode: Optional[str] = None,
     ):
         base_url = environment_base_url(env_mode)
@@ -133,8 +141,11 @@ class APIClient:
         if not slice_attach_base_url:
             slice_attach_base_url = f"{base_url}{SLICE_ATTACH_URL}"
 
-        if not device_status_base_url:
-            device_status_base_url = f"{base_url}{DEVICE_STATUS_URL}"
+        if not reachability_base_url:
+            reachability_base_url = f"{base_url}{REACHABILITY_URL}"
+
+        if not roaming_base_url:
+            roaming_base_url = f"{base_url}{ROAMING_URL}"
 
         if not congestion_base_url:
             congestion_base_url = f"{base_url}{CONGESTION_URL}"
@@ -166,14 +177,26 @@ class APIClient:
         if not kyc_age_base_url:
             kyc_age_base_url = f"{base_url}{KYC_AGE_URL}"
 
+        if not kyc_tenure_base_url:
+            kyc_tenure_base_url = f"{base_url}{KYC_TENURE_URL}"
+
+        if not kyc_fill_base_url:
+            kyc_fill_base_url = f"{base_url}{KYC_FILL_URL}"
+
         self.sessions = QodAPI(
             base_url=qos_base_url,
             rapid_key=token,
             rapid_host=hostname,
         )
 
-        self.devicestatus = DeviceStatusAPI(
-            base_url=device_status_base_url,
+        self.reachability_status = ReachabilityAPI(
+            base_url=reachability_base_url,
+            rapid_key=token,
+            rapid_host=hostname,
+        )
+
+        self.roaming_status = RoamingAPI(
+            base_url=roaming_base_url,
             rapid_key=token,
             rapid_host=hostname,
         )
@@ -257,6 +280,18 @@ class APIClient:
 
         self.kyc_age = KYCAgeAPI(
             base_url = kyc_age_base_url,
+            rapid_key = token,
+            rapid_host=hostname,
+        )
+
+        self.kyc_tenure = KYCTenureAPI(
+            base_url = kyc_tenure_base_url,
+            rapid_key = token,
+            rapid_host=hostname,
+        )
+
+        self.kyc_fill = KYCFillInAPI(
+            base_url = kyc_fill_base_url,
             rapid_key = token,
             rapid_host=hostname,
         )

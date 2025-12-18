@@ -1,31 +1,25 @@
 import pytest
-import httpx
-import time
-from network_as_code.models.device import Device
-from network_as_code.errors import APIError, AuthenticationException
+from network_as_code.errors import AuthenticationException
 
-@pytest.fixture
-def device(client) -> Device:
-    device = client.devices.get(phone_number="+99999991000")
-    return device
-
-def test_kyc_match_with_phone_number(device):
-    result = device.match_customer(
+def test_kyc_match_with_phone_number(client):
+    result = client.kyc.match_customer(
             phone_number="+99999991000",
             id_document="66666666q",
             name="TestName",
             family_name="TestFamilyName",
+            family_name_at_birth="MyFamilyName",
+            name_kana_hankaku="TestChickenName",
             address="TestAddress",
             postal_code="TestPostalCode",
             email="test@email.com"
     )
-    
-    assert result.id_document_match == "true"
-    assert result.name_match
-    assert result.address_match == "false"
+    assert result.id_document_match is True
+    assert result.name_kana_hankaku_match is None
+    assert result.name_kana_zenkaku_match is None
+    assert result.address_match is False
 
-def test_kyc_match_and_match_score(device):
-    result = device.match_customer(
+def test_kyc_match_and_match_score(client):
+    result = client.kyc.match_customer(
             phone_number="+99999991000",
             id_document="66666666q",
             name="TestName",
@@ -35,29 +29,41 @@ def test_kyc_match_and_match_score(device):
             postal_code="TestPostalCode",
             email="test@email.com"
     )
-    
-    assert result.id_document_match
-    assert result.name_match
-    if result.family_name_at_birth_match == "false":
+    assert result.id_document_match is True
+    assert result.name_match is False
+    if not result.family_name_at_birth_match:
         assert result.family_name_at_birth_match_score >= 0
 
-def test_kyc_match_with_devices_phone_number(device):
-    result = device.match_customer(
-            id_document="66666666q",
-            name="TestName",
-            family_name="TestFamilyName",
-            family_name_at_birth="BirthFamily",
-            address="TestAddress",
-            postal_code="TestPostalCode",
-            email="test@email.com"
+def test_kyc_match_with_all_params_and_result_conversion(client):
+    result = client.kyc.match_customer(
+        phone_number="+99999991000",
+        id_document="66666666q",
+        name="TestName",
+        given_name="TestGiven",
+        family_name="TestFamily",
+        name_kana_hankaku="TestKana",
+        name_kana_zenkaku="TestZenKana",
+        middle_names="TestNames",
+        family_name_at_birth="TestFamilyNameBirth",
+        address="TestAddress",
+        street_name="TestStreet",
+        street_number="12",
+        postal_code="654321",
+        region="TestRegion",
+        locality="TestLocality",
+        country="TestCountry",
+        house_number_extension="B",
+        birthdate="1212-12-12",
+        email="some@email.com",
+        gender="OTHER"
     )
+    for k, v in vars(result).items():
+        if "score" not in k:
+            assert v in {True, False, None}
 
-    assert result.id_document_match
-    assert result.name_match
-
-def test_AuthenticationExeption(device):
+def test_AuthenticationExeption(client):
     with pytest.raises(AuthenticationException):
-        device.match_customer(
+        client.kyc.match_customer(
                 phone_number="+12345678",
                 id_document="TestIdDocument",
                 given_name="TestGivenName",

@@ -1,6 +1,7 @@
 import network_as_code as nac
 from datetime import datetime, timedelta, timezone
 from network_as_code.models.device import DeviceIpv4Addr
+from network_as_code.models.device_status import EventType, AccessTokenCredential
 
 # We begin by creating a Network as Code client
 client = nac.NetworkAsCodeClient(
@@ -21,27 +22,36 @@ my_device = client.devices.get(
 )
 
 # Simply change the event_type to
-# "org.camaraproject.device-status.v0.roaming-status" whenever needed.
-my_subscription = client.connectivity.subscribe(
-    event_type="org.camaraproject.device-status.v0.connectivity-data",
+# [EventType.ROAMING_STATUS] whenever needed.
+my_subscription = client.device_status.subscribe(
+    event_type=[EventType.REACHABILITY_DATA],
     device=my_device,
+    max_num_of_reports=5,
     # You can tell when the subscription is supposed to expire
     # with a date-time object
     subscription_expire_time=datetime.now(timezone.utc) + timedelta(days=1),
     # Use HTTPS to send notifications
-    notification_url="https://example.com/notifications",
-    notification_auth_token="replace-with-your-auth-token"
+    sink="https://example.com/notifications",
+    sink_credential=AccessTokenCredential(
+        access_token= "some-access-token",
+        access_token_expires_utc= datetime.now(timezone.utc) + timedelta(days=1),
+        access_token_type="bearer"
+        ),
+    initial_event=True
 )
 
-# Use this to show the roaming subscription status
+# Use this to show the subscription status
 print(my_subscription)
 
 # You can also get a subscription by its ID
-subscription = client.connectivity.get_subscription(my_subscription.id)
+reachability_subscription = client.device_status.get_reachability_subscription(my_subscription.id)
+
+# Alternatively, if you created a roaming subscription
+roaming_subscription = client.device_status.get_roaming_subscription(my_subscription.id)
 
 # Or check when your subscription starts/expires:
-print(subscription.starts_at)
-print(subscription.expires_at)
+print(my_subscription.starts_at)
+print(my_subscription.expires_at)
 
 # Delete a subscription
-subscription.delete()
+my_subscription.delete()

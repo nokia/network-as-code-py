@@ -16,10 +16,11 @@ from .api import APIClient
 from .namespaces import Devices
 from .namespaces import Sessions
 from .namespaces import Slices
-from .namespaces import Connectivity
+from .namespaces import DeviceStatus
 from .namespaces import NetworkInsights
 from .namespaces import Geofencing
 from .namespaces import Authorization
+from .namespaces import KYC
 
 class NetworkAsCodeClient:
     """A client for working with Network as Code.
@@ -43,10 +44,11 @@ class NetworkAsCodeClient:
         self._devices = Devices(self._api)
         self._sessions = Sessions(self._api)
         self._slices = Slices(self._api)
-        self._connectivity = Connectivity(self._api)
+        self._device_status = DeviceStatus(self._api)
         self._insights = NetworkInsights(self._api)
         self._geofencing = Geofencing(self._api)
         self._authorization = Authorization(self._api)
+        self._kyc = KYC(self._api)
     #### NAMESPACES
 
     @property
@@ -74,12 +76,12 @@ class NetworkAsCodeClient:
         return self._slices
 
     @property
-    def connectivity(self):
+    def device_status(self):
         """Namespace containing functionalities related to device status.
 
         Returns NAC device status
         """
-        return self._connectivity
+        return self._device_status
 
     @property
     def insights(self):
@@ -104,3 +106,11 @@ class NetworkAsCodeClient:
         Returns NAC authorization
         """
         return self._authorization
+
+    @property
+    def kyc(self):
+        """Namespace containing functionalities related to know your customer.
+
+        Returns NAC kyc
+        """
+        return self._kyc

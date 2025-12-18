@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 8.0.0
+
+Breaking changes:
+- KYC functionality is now accessed via `NetworkAsCodeClient.kyc.*` namespace instead of via `Device`
+
+Changes:
+- Introduced KYC Fill-in functionality
+- Introduced KYC Tenure functionality
+- Updated Quality-on-Demand for compatibility with V1
+- Updated Device Status functionality for Device Reachability V1 and Device Roaming V1
+
 ## Version 7.0.0
 
 Breaking changes:

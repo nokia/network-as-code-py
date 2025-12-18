@@ -14,20 +14,55 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from ..api import APIClient
 from ..models.session import QoDSession, PortsSpec
 from ..models.location import Location, VerificationResult
 from ..models.congestion import Congestion
-from ..models.kyc_match import KYCMatch, KYCMatchResult
-from ..models.kyc_age import KYCAge, KYCAgeResult
+from ..api.utils import to_camel
 from ..errors import InvalidParameter, NotFound
 
+class AccessTokenCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "ACCESSTOKEN"
+    access_token: str
+    access_token_expires_utc: Union[datetime, str]
+    access_token_type: str
+
+class PlainCredential(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, validate_by_name=True)
+    credential_type: str = "PLAIN"
+    identifier: str
+    secret: str
+
 class RoamingStatus(BaseModel):
+    """
+    A class representing the `RoamingStatus` model.
+
+    ### Public Attributes
+            last_status_time (Union[datetime, str, None]): Last time that the roaming status was updated.
+            roaming (bool): Is the associated device roaming.
+            country_code (Optional[int]): The Mobile country code (MCC).
+            country_name (Optional[List[str]]): List of country names of mapped to mobile country code (MCC).
+    """
+    last_status_time: Union[datetime, str, None] = None
     roaming: bool
     country_code: Optional[int] = None
     country_name: Optional[List[str]] = None
+
+class ReachabilityStatus(BaseModel):
+    """
+    A class representing the `ReachabilityStatus` model.
+
+    ### Public Attributes
+            last_status_time (Union[datetime, str, None]): Last time that the reachability status was updated.
+            reachable (bool): Indicates overall device reachability.
+            connectivity (Optional[List[str]]): Indicates if the device is connected to the network for DATA/SMS usage.                                  
+    """
+    last_status_time: Union[datetime, str, None] = None
+    reachable: bool
+    connectivity: Optional[List[str]] = None
 
 class DeviceIpv4Addr(BaseModel):
     """
@@ -65,9 +100,8 @@ class Device(BaseModel):
         clear_sessions (): Deletes all the sessions created by the device network_access_id.
         location (Location): Gets the location of the device and returns a Location client object.
         verify_location (bool): Verifies if a device is located in a given location point.
-        get_connectivity (ConnectivityData): Retrieve device connectivity status data
-        update_connectivity (ConnectivityData): Update device connectivity status data
-        delete_connectivity (): Delete device connectivity status
+        get_reachability (ReachabilityStatus): Retrieve device reachability status data.
+        get_roaming (RoamingStatus): Retrieve device roaming status data.
         get_sim_swap_date (): Retrieve the latest sim swap date
         verify_sim_swap (): Verify if there was sim swap
     """
@@ -100,8 +134,8 @@ class Device(BaseModel):
         service_ipv6=None,
         device_ports: Union[None, PortsSpec] = None,
         service_ports: Union[None, PortsSpec] = None,
-        notification_url=None,
-        notification_auth_token=None,
+        sink: Optional[str] = None,
+        sink_credential: Union[PlainCredential, AccessTokenCredential, None] = None,
     ) -> QoDSession:
         """Creates a session for the device.
 
@@ -112,8 +146,8 @@ class Device(BaseModel):
             service_ipv6 (optional): IPv6 address of the service.
             device_ports (optional): List of the device ports.
             service_ports (optional): List of the application server ports.
-            notification_url (optional): Notification URL for session-related events.
-            notification_token (optional): Security bearer token to authenticate registration of session.
+            sink (optional): Notification URL for session-related events.
+            sink_credential (optional): Authorization token for notification sending.
 
         #### Example:
             ```python
@@ -135,8 +169,8 @@ class Device(BaseModel):
             service_ipv6,
             device_ports,
             service_ports,
-            notification_url,
-            notification_auth_token,
+            sink,
+            sink_credential,
         )
         return QoDSession.convert_session_model(self._api, self, session.json())
 
@@ -223,28 +257,39 @@ class Device(BaseModel):
             last_location_time = last_location_time
         )
 
-    def get_connectivity(self):
-        """Get the connectivity status for the device as a string"""
-        status = self._api.devicestatus.get_connectivity(
-            self.model_dump(mode="json", by_alias=True, exclude_none=True)
-        )["connectivityStatus"]
-
-        return status
-
     def get_roaming(self) -> RoamingStatus:
         """Get the roaming status for the device
 
         #### Returns
-        Object of RoamingStatus class, which contains the roaming status, country code and country name
+        Object of RoamingStatus class, which contains the roaming status, 
+        last time the status was updated, country code and country name
         """
-        status = self._api.devicestatus.get_roaming(
+        status = self._api.roaming_status.get_roaming(
             self.model_dump(mode="json", by_alias=True, exclude_none=True)
         )
 
         return RoamingStatus(
+            last_status_time=status["lastStatusTime"],
             roaming=status["roaming"],
             country_code=status.get("countryCode"),
             country_name=status.get("countryName"),
+        )
+
+    def get_reachability(self) -> ReachabilityStatus:
+        """Get the reachability status for the device
+
+        #### Returns
+        Object of ReachabilityStatus class, which contains the reachability status, 
+        last time the status was updated and the connectivity type
+        """
+        status = self._api.reachability_status.get_reachability(
+            self.model_dump(mode="json", by_alias=True, exclude_none=True)
+        )
+
+        return ReachabilityStatus(
+            last_status_time=status["lastStatusTime"],
+            reachable=status["reachable"],
+            connectivity=status["connectivity"]
         )
 
     # TODO:                                                              # pylint: disable=fixme
@@ -313,6 +358,7 @@ class Device(BaseModel):
         #### Returns
              True/False
         """
+
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
         payload = {
@@ -391,119 +437,6 @@ class Device(BaseModel):
         if self.phone_number is None:
             raise InvalidParameter("Device phone number is required.")
         return self._api.device_swap.verify_device_swap(self.phone_number, max_age)
-
-    def match_customer(
-            self,
-            phone_number: Optional[str] = None,
-            id_document: Optional[str] = None,
-            name: Optional[str] = None,
-            given_name: Optional[str] = None,
-            family_name: Optional[str] = None,
-            name_kana_hankaku: Optional[str] = None,
-            name_kana_zenkaku: Optional[str] = None,
-            middle_names: Optional[str] = None,
-            family_name_at_birth: Optional[str] = None,
-            address: Optional[str] = None,
-            street_name: Optional[str] = None,
-            street_number: Optional[str] = None,
-            postal_code: Optional[str] = None,
-            region: Optional[str] = None,
-            locality: Optional[str] = None,
-            country: Optional[str] = None,
-            house_number_extension: Optional[str] = None,
-            birthdate: Optional[str] = None,
-            email: Optional[str] = None,
-            gender: Optional[str] = None,
-            ) -> KYCMatchResult:
-        """Match a customer identity against the account data bound to their phone number.
-        #### Args
-             match_customer parameters: A customers data that will be compared to data bound to their 
-                                        phone number in the operator systems.
-             phone_number (Optional[str]): Used for identifying the telephone subscription. If not provided,
-                                           will use the phone_number of the device that is used for the request.
-        #### Returns
-             KYCMatchResult: Contains the result of matching the provided parameter values to the data 
-                             in the operator system.
-        """
-
-        params = KYCMatch(
-            phone_number = phone_number,
-            id_document = id_document,
-            name = name,
-            given_name = given_name,
-            family_name = family_name,
-            name_kana_hankaku = name_kana_hankaku,
-            name_kana_zenkaku = name_kana_zenkaku,
-            middle_names = middle_names,
-            family_name_at_birth = family_name_at_birth,
-            address = address,
-            street_name = street_name,
-            street_number = street_number,
-            postal_code = postal_code,
-            region = region,
-            locality = locality,
-            country = country,
-            house_number_extension = house_number_extension,
-            birthdate = birthdate,
-            email = email,
-            gender = gender
-        )
-        if phone_number is None:
-            params.phone_number = self.phone_number
-
-        match_params = self._api.kyc_match.match_customer(params.model_dump(by_alias=True, exclude_none=True))
-
-        return KYCMatchResult.model_validate(match_params)
-
-    def verify_age(
-            self,
-            age_threshold: int,
-            phone_number: Optional[str] = None,
-            id_document: Optional[str] = None,
-            name: Optional[str] = None,
-            given_name: Optional[str] = None,
-            family_name: Optional[str] = None,
-            middle_names: Optional[str] = None,
-            family_name_at_birth: Optional[str] = None,
-            birthdate: Optional[str] = None,
-            email: Optional[str] = None,
-            include_content_lock: Optional[bool] = None,
-            include_parental_control: Optional[bool] = None,
-            ) -> KYCAgeResult:
-        """Checks if the age of the subscriber is older than the age threshold in the request.
-        #### Args
-             age_threshold (int): The age threshold from which the age of the user must be compared
-             phone_number (Optional[str]): Used as an identifier for the request. If not provided,
-                                           will use the phone_number of the device that is used for the request.
-             additional verify_age parameters: E.g. name, birthdate, include_parental_control. 
-                                               Confirms that the subscriber is the contract's 
-                                               owner or if the subscription has any kind of parental 
-                                               or content control activated.
-        #### Returns
-             KYCAgeResult: Object containing the result of age threshold check and verification 
-                           status. Might also hold information about parental or content control 
-                           status and score result of additional checks.
-        """
-        params = KYCAge(
-            age_threshold = age_threshold,
-            phone_number = phone_number,
-            id_document = id_document,
-            name = name,
-            given_name = given_name,
-            family_name = family_name,
-            middle_names = middle_names,
-            family_name_at_birth = family_name_at_birth,
-            birthdate = birthdate,
-            email = email,
-            include_content_lock = include_content_lock,
-            include_parental_control = include_parental_control
-        )
-        if phone_number is None:
-            params.phone_number = self.phone_number
-
-        match_params = self._api.kyc_age.verify_age(params.model_dump(by_alias=True, exclude_none=True))
-
-        return KYCAgeResult.model_validate(match_params)
 
     @staticmethod
     def convert_to_device_model(api, device_json):

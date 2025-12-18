@@ -5,20 +5,12 @@ client = nac.NetworkAsCodeClient(
    token="<your-application-key-here>"
 )
 
-# Then, create a device object for the phone number you want to check
-my_device = client.devices.get(
-    # The phone number accepts the "+" sign, but not spaces or "()" marks
-    phone_number="+999999991000"
-)
+# To match customer records, you must provide the customer's phone number.
 
-# You can use the match_customer method with device's or custom phone number.
-# If you don't provide the phone_number parameter, the code will
-# use phone_number from my_device variable by default.
-
-# Add the customer identity data, which is to be used in matching
+# Add additional customer identity data, which is to be used in matching
 # a customer against the account data bound to their phone number.
 
-customer_match_result = my_device.match_customer(
+customer_match_result = client.kyc.match_customer(
                 phone_number= '+99999991000',
                 id_document= "66666666q",
                 name= "Federica Sanchez Arjona",
