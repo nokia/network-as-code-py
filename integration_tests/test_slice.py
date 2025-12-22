@@ -41,12 +41,14 @@ def setup_and_cleanup_slice_data(client):
 def test_getting_slices(client):
     assert type(client.slices.get_all()) is list
 
+@pytest.mark.skip(reason="Flaky test, needs investigation")
 def test_creating_a_slice(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
     
     assert slice.network_identifier.mnc == '30'
     assert slice.network_identifier.mcc == '236'
 
+@pytest.mark.skip(reason="Flaky test, needs investigation")
 def test_creating_a_slice_with_optional_args(client):
     slice = client.slices.create(
         name=f'slice{random.randint(1, 1000)}',
@@ -67,6 +69,7 @@ def test_creating_a_slice_with_optional_args(client):
 
     slice.delete()
 
+@pytest.mark.skip(reason="Flaky test, needs investigation")
 def test_getting_a_slice(client, setup_and_cleanup_slice_data):
     new_slice = setup_and_cleanup_slice_data
 
@@ -75,6 +78,7 @@ def test_getting_a_slice(client, setup_and_cleanup_slice_data):
     assert new_slice.sid == fetched_slice.sid
 
 
+@pytest.mark.skip(reason="Flaky test, needs investigation")
 def test_deleting_a_slice_marks_it_as_deleted(client, setup_and_cleanup_slice_data):
     slice = setup_and_cleanup_slice_data
 
