@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
+api:
+  specs:
+    - openapi: ../openapi/rapid-spec-oas.json
+default-group: local
+groups:
+  local:
+    generators:
+      - name: fernapi/fern-typescript-sdk
+        output:
+          location: local-file-system
+          path: ../network-as-code-ts/network_as_code
+        version: 3.46.3
+        smart-casing: false
+      - name: fernapi/fern-python-sdk
+        version: 4.53.1
+        output:
+          location: local-file-system
+          path: ../network-as-code-py/network_as_code
+        smart-casing: false

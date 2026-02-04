@@ -1,0 +1,188 @@
+# BASE PATH
+servers:
+  - url: https://network-as-code.p-eu.rapidapi.com
+
+# API KEY CONF
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: x-rapidapi-key
+      x-fern-header:
+        name: nac_token
+
+# FUNCTION METHOD NAMING CONF
+
+# Geofencing
+paths:
+
+  /geofencing-subscriptions/v0.3/subscriptions:
+    post:
+      x-fern-sdk-group-name: geofencing
+      x-fern-sdk-method-name: subscribe
+    get:
+      x-fern-sdk-group-name: geofencing
+      x-fern-sdk-method-name: get_subscriptions
+  /geofencing-subscriptions/v0.3/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name: geofencing
+      x-fern-sdk-method-name: get_subscription
+    delete:
+      x-fern-sdk-group-name: geofencing
+      x-fern-sdk-method-name: delete_subscription
+
+# Location Retrieval
+
+  /location-retrieval/v0/retrieve:
+    post:
+      x-fern-sdk-group-name: location
+      x-fern-sdk-method-name: retrieve
+
+# Location Verification
+
+  /location-verification/v1/verify:
+    post:
+      x-fern-sdk-group-name: location
+      x-fern-sdk-method-name: verify
+
+# Device Status
+
+  /device-status/v0/connectivity:
+    post:
+      x-fern-sdk-group-name:
+        - device_status
+        - connectivity
+      x-fern-sdk-method-name: get
+  /device-status/v0/roaming:
+    post:
+      x-fern-sdk-group-name:
+        - device_status
+        - roaming
+      x-fern-sdk-method-name: get
+  /device-status/v0/subscriptions:
+    post:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: subscribe
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: get_subscriptions
+  /device-status/v0/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: get_subscription
+    delete:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: delete_subscriptions
+
+# SKIPPED NUMBER VERIFICATION FOR NOW
+
+# Sim Swap
+
+  /passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date:
+    post:
+      x-fern-sdk-group-name: sim_swap
+      x-fern-sdk-method-name: get_sim_swap_date
+  /passthrough/camara/v1/sim-swap/sim-swap/v0/check:
+    post:
+      x-fern-sdk-group-name: sim_swap
+      x-fern-sdk-method-name: verify_sim_swap
+
+# QoD
+
+  /qod/v0/sessions:
+    post:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: create_session
+    get:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: get_sessions
+  /qod/v0/sessions/{sessionId}:
+    get:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: get_session
+    delete:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: delete_session
+  /qod/v0/sessions/{sessionId}/extend:
+    post:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: extend_session
+  /qod/v0/retrieve-sessions:
+    post:
+      x-fern-sdk-group-name: quality_on_demand
+      x-fern-sdk-method-name: get_device_sessions
+
+# Call Forwarding Signal
+
+  /passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings:
+    post:
+      x-fern-sdk-group-name: call_forwarding_signal
+      x-fern-sdk-method-name: verify_unconditional
+  /passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings:
+    post:
+      x-fern-sdk-group-name: call_forwarding_signal
+      x-fern-sdk-method-name: get_active_services
+
+# Slicing
+
+  /slice/v1/slices:
+    post:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: create
+    get:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: get_all
+  /slice/v1/slices/{id}:
+    get:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: get
+    delete:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: delete
+  /slice/v1/slices/{id}/activate:
+    post:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: activate
+  /slice/v1/slices/{id}/deactivate:
+    post:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: deactivate
+  /device-attach/v0/attachments:
+    post:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: attach_device
+    get:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: get_attachments
+  /device-attach/v0/attachments/{resource_id}:
+    get:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: get_attachment
+    delete:
+      x-fern-sdk-group-name: slices
+      x-fern-sdk-method-name: delete_attachment
+  # Do we add the subscriber thing?
+
+# Congestion Insights
+
+  /congestion-insights/v0/subscriptions:
+    post:
+      x-fern-sdk-group-name: insights
+      x-fern-sdk-method-name: subscribe_to_congestion_info
+    get:
+      x-fern-sdk-group-name: insights
+      x-fern-sdk-method-name: get_congestion_subscriptions
+  /congestion-insights/v0/subscriptions/{resource_id}:
+    get:
+      x-fern-sdk-group-name: insights
+      x-fern-sdk-method-name: get_congestion_subscription
+    delete:
+      x-fern-sdk-group-name: insights
+      x-fern-sdk-method-name: delete_congestion_subscription
+  /congestion-insights/v0/query:
+    post:
+      x-fern-sdk-group-name: insights
+      x-fern-sdk-method-name: get_congestion
+
+
