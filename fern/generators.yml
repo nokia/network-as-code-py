@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
 api:
   specs:
-    - openapi: ../openapi/rapid-spec-oas.json
+    - openapi: ../openapi/rapid-spec-oas-no-schemas.json
 default-group: local
 groups:
   local:
@@ -12,6 +12,8 @@ groups:
           path: ../network-as-code-ts/network_as_code
         version: 3.46.3
         smart-casing: false
+        config:
+            outputEsm: true
       - name: fernapi/fern-python-sdk
         version: 4.53.1
         output:
