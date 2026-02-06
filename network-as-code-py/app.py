@@ -2,7 +2,7 @@
 import os
 
 from network_as_code import NetworkAsCodeApi
-from network_as_code.location_retrieval_v_020 import (
+from network_as_code.location import (
     RetrieveLocationRequestDevice,
 )    
 
@@ -11,9 +11,9 @@ client = NetworkAsCodeApi(
     api_key=os.environ["API_KEY"]
 )
 
-print(client.location_retrieval_v_020.retrieve_location(
-    device=RetrieveLocationRequestDevice(
-        phone_number="+99999991000"
-    ),
+print(client.location.retrieve(
+    device={
+        "phone_number": "+99999991000"
+    },
     max_age=60
 ))

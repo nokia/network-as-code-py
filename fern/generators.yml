@@ -2,6 +2,7 @@
 api:
   specs:
     - openapi: ../openapi/rapid-spec-oas-no-schemas.json
+      overrides: ../openapi/overrides.yml
 default-group: local
 groups:
   local:
@@ -20,3 +21,5 @@ groups:
           location: local-file-system
           path: ../network-as-code-py/network_as_code
         smart-casing: false
+        config:
+            use_typeddict_requests: true

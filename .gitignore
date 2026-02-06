@@ -6,7 +6,5 @@ htmlcov/
 .hypothesis/
 .env
 network-as-code-py/dist/
-network-as-code-py/network_as_code
 network-as-code-ts/dist
-network-as-code-ts/network_as_code
 network-as-code-ts/node_modules

@@ -6,7 +6,7 @@ const client = new NetworkAsCodeApiClient({
   apiKey: process.env.API_KEY
 })
 
-console.log(await client.locationRetrievalV020.retrieveLocation({
+console.log(await client.location.retrieve({
   device: {
     phoneNumber: "+99999991000"
   },
