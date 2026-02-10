@@ -1,0 +1,56 @@
+[project]
+authors = [
+    {name = "Sami Lahtinen", email = "sami.lahtinen@nokia.com"},
+    {name = "Pavel Garmuyev", email = "pavel.garmuyev@nokia.com"},
+]
+license = {text = "Apache-2.0"}
+requires-python = "<4.0,>=3.11"
+dependencies = [
+    "pydantic[email]<3.0.0,>=2.7.1",
+    "httpx<1.0.0,>=0.27.0",
+    "pip==25.3",
+    "urllib3>=2.6.0",
+    "filelock>=3.20.1",
+]
+name = "network_as_code"
+version = "10.0.0"
+description = ""
+
+[dependency-groups]
+dev = [
+    "pylint<4.0.0,>=3.2.2",
+    "pyright<2.0.0,>=1.1.271",
+    "pytest-asyncio<2.0.0,>=0.19.0",
+    "pdoc<16.0.0,>=14.5.1",
+    "pytest<9.0.0,>=8.3.3",
+    "pytest-cov<7.0.0,>=4.0.0",
+    "black<26.0.0,>=24.3.0",
+    "pyyaml<7.0,>=6.0",
+    "python-dotenv<2.0.0,>=0.19.2",
+    "pytest-env<2.0.0,>=0.8.2",
+    "pytest-httpx<1.0.0,>=0.34.0",
+    "pip-audit<3.0.0,>=2.6.1",
+    "pipdeptree<3.0.0,>=2.13.2",
+    "toml<1.0.0,>=0.10.2",
+    "pytest-xdist<4.0.0,>=3.6.1",
+    "mypy<2.0.0,>=1.14.1",
+]
+
+[tool.pyright]
+include = ["network_as_code"]
+exclude = ["**/__pycache__", "**/.pytest_cache", "**/.*"]
+pythonVersion = "^3.11"
+pythonPlatform = "Linux"
+
+[tool.pdm.build]
+includes = ["network_as_code"]
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pytest.ini_options]
+testpaths = [
+    #"tests",
+    #"integration_tests"
+]
+xfail_strict = true

@@ -1,8 +1,8 @@
-# NaC-py - Python SDK for controlling 5G network through code
+# Network as Code SDKs - Control 5G networks through code
 
-This repository contains the Python library for Nokia's Network as Code platform,
-allowing Python programs to easily call network APIs to query information or to
-manage mobile network elements.
+This repository contains the programming language libraries for Nokia's Network as Code
+platform, allowing third-party programs to easily call network APIs to query information
+or to manage mobile network elements.
 
 ## What is Network as Code?
 
@@ -18,86 +18,43 @@ or by going directly to the developer portal: https://developer.networkascode.no
 
 You can find a full Getting Started guide on the developer portal: https://developer.networkascode.nokia.io/docs/getting-started
 
-If you just want to install the Python library, you can install it with Pip:
-```bash
-pip install network_as_code
-```
-
-Do note that use of Network as Code capabilities requires an API token to be provided:
-
-```python
-import network_as_code as nac
-
-client = nac.NetworkAsCodeClient(
-    token="<MY-TOKEN>",
-)
-```
-
-You can get your API tokens by registering on the developer portal and accessing them on
-the developer dashboard.
-
 ## Documentation and Examples
 
 Full documentation is available on the developer portal: https://developer.networkascode.nokia.io/docs
 
-We also provide some basic usage examples in the [examples](./examples) directory. 
-
 ## License
 
-The Network as Code Python SDK is open-source software available under the Apache 2.0 license.
+The Network as Code SDKs are open-source software available under the Apache 2.0 license.
 
 ## Development
 
+The SDKs are generated using the Fern code generation tool from OpenAPI specifications.
+The Network as Code API spec needs to be populated in the `openapi/` directory for
+generating SDKs.
+
 ### Commands
 
-- `uv sync` - install project dependencies
-- `uv run pytest` - run unit tests against mocks
-- `uv run pytest integration_tests` - run integration tests against development APIs
-
-### Architecture
-
-This project is structured into `models`, `api` and `namespaces`
-modules. The `models` and `namespaces` modules represent the public
-API of the SDK and provide abstractions that allow data to be queried
-and modified on the Network as Code platform. The `api` module implements
-the communication layer that will actually talk to the NaC web APIs and
-handle transmission and receipt of data to and from the platform.
-
-The basic design principle is that functionality should be discoverable
-and logically organized. To achieve that, most actions are carried out
-through the `NetworkAsCodeClient` object, which provides access to the
-namespaces in the `namespaces` module. These namespaces typically provide
-ways to query and create different types of data objects in the NaC
-platform. The data objects themselves have representations in the `models`
-module, and are enriched with methods that operate on the individual
-data object.
-
-New features typically require modifications to at least the `models`
-and `api` modules. New namespaces are introduced as required, typically
-when a new API product is launched. However, the namespaces are intended
-to be an organizational tool and as such should be used whenever a concept
-falls into a new kind of category and to avoid clutter.
+- `./cleanup-spec.sh` - Produce a cleaned up API spec from the raw Rapid OpenAPI specification
+- `./generate-sdks.sh` - Call the SDK code generation tools to create a new version of the SDKsxs
 
 ### Development process
 
-This project is developed using principles from Test-Driven Development.
-This means that for new bugs fixed and features implemented, there should
-be matching test cases written.
+The development process is based on automation and modification of the results via the ingested
+API specification files.
 
-Main chunk of tests are located under `tests` and are run against
-mocks and intended to work offline and without need to actually
-connect to an external system.  We also have `integration-tests` which
-use a development version of the APIs to track compatibility. Both
-test suites are run in CI/CD and failures are considered blocking.
+New features are introduced by taking a new OpenAPI specification file and feeding it to the
+generation process. The default expected filename is `./openapi/rapid-spec-oas.json`, which
+is turned into `./openapi/rapid-spec-oas-no-models.json` by the `cleanup-spec.sh` script.
 
-Test cases should be added to as part of regular development activity and
-old test cases should be kept up-to-date. 
+The SDK method and namespace naming conventions are controlled via the `./openapi/overrides.yml`
+file, which will assign namespaces and method names to the API endpoints specified by the OpenAPI
+specification file.
 
-New features and changes to old ones should also be documented as soon
-as possible. This means that developers ought to be in contact with the
-technical writers whenever a change is introduced. It is also recommended
-to add an example or update old examples in the `examples` folder to help
-communicate functionality and changes to the documentation writers. If
-no technical writer is present then the responsibility of writing documentation 
-falls on the developers. Developers also need to be able to provide input
-to the technical writers to ensure accurate and high-quality documentation.
+The SDK package metadata and test programs are found under the following directories:
+
+- `./network-as-code-ts`
+- `./network-as-code-py`
+
+All of these folders have a `network_as_code` subfolder into which the generated code is placed.
+The source code in that folder should not be modified by hand, as it will be overwritten by the
+code generation process. The project metadata and tests can be modified by hand as needed.

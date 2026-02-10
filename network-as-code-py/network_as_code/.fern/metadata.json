@@ -1,0 +1,8 @@
+{
+  "cliVersion": "3.60.1",
+  "generatorName": "fernapi/fern-python-sdk",
+  "generatorVersion": "4.53.1",
+  "generatorConfig": {
+    "use_typeddict_requests": true
+  }
+}
