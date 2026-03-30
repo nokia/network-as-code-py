@@ -6,13 +6,11 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import PhoneNumberShareResponse, PhoneNumberVerifyResponse
-    from .requests import PhoneNumberShareResponseParams, PhoneNumberVerifyResponseParams
+    from .types import PhoneNumberShareResponse
+    from .requests import PhoneNumberShareResponseParams
 _dynamic_imports: typing.Dict[str, str] = {
     "PhoneNumberShareResponse": ".types",
     "PhoneNumberShareResponseParams": ".requests",
-    "PhoneNumberVerifyResponse": ".types",
-    "PhoneNumberVerifyResponseParams": ".requests",
 }
 
 
@@ -37,9 +35,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "PhoneNumberShareResponse",
-    "PhoneNumberShareResponseParams",
-    "PhoneNumberVerifyResponse",
-    "PhoneNumberVerifyResponseParams",
-]
+__all__ = ["PhoneNumberShareResponse", "PhoneNumberShareResponseParams"]

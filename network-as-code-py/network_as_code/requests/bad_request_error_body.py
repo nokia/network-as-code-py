@@ -6,7 +6,7 @@ import typing_extensions
 class BadRequestErrorBodyParams(typing_extensions.TypedDict):
     status: int
     """
-    HTTP response status code
+    HTTP status code returned along with this error response
     """
 
     code: str

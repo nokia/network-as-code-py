@@ -9,7 +9,7 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 class ForbiddenErrorBody(UniversalBaseModel):
     status: int = pydantic.Field()
     """
-    HTTP response status code
+    HTTP status code returned along with this error response
     """
 
     code: str = pydantic.Field()

@@ -23,100 +23,22 @@ export class QodClient {
     }
 
     /**
-     * Return all QoD sessions related to the specified device.
-     *
-     * @param {NetworkAsCodeApi.RetrieveSessionsQodRequest} request
-     * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.qod.retrieveSessions({
-     *         device: {
-     *             phoneNumber: "+99999991001"
-     *         }
-     *     })
-     */
-    public retrieveSessions(
-        request: NetworkAsCodeApi.RetrieveSessionsQodRequest,
-        requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveSessionsQodResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieveSessions(request, requestOptions));
-    }
-
-    private async __retrieveSessions(
-        request: NetworkAsCodeApi.RetrieveSessionsQodRequest,
-        requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveSessionsQodResponseItem[]>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "qod/v0/retrieve-sessions",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.RetrieveSessionsQodResponseItem[],
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/qod/v0/retrieve-sessions");
-    }
-
-    /**
      * Return device communication Quality-on-Demand settings for your devices.
      *
      * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.qod.listSessions()
+     *     await client.qod.listSessionsV1()
      */
-    public listSessions(
+    public listSessionsV1(
         requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSessionsQodResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__listSessions(requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSessionsV1QodResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listSessionsV1(requestOptions));
     }
 
-    private async __listSessions(
+    private async __listSessionsV1(
         requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSessionsQodResponseItem[]>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSessionsV1QodResponseItem[]>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -129,7 +51,7 @@ export class QodClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "qod/v0/sessions",
+                "quality-on-demand/v1/sessions",
             ),
             method: "GET",
             headers: _headers,
@@ -142,7 +64,7 @@ export class QodClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.ListSessionsQodResponseItem[],
+                data: _response.body as NetworkAsCodeApi.ListSessionsV1QodResponseItem[],
                 rawResponse: _response.rawResponse,
             };
         }
@@ -155,13 +77,18 @@ export class QodClient {
             });
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/qod/v0/sessions");
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/quality-on-demand/v1/sessions",
+        );
     }
 
     /**
      * Create QoS Session to manage latency/throughput priorities
      *
-     * If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+     * If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
      * `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
      *
      * If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
@@ -176,7 +103,7 @@ export class QodClient {
      * the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
      * for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
      *
-     * @param {NetworkAsCodeApi.CreateSessionQodRequest} request
+     * @param {NetworkAsCodeApi.CreateSessionV1QodRequest} request
      * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -188,7 +115,7 @@ export class QodClient {
      * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.qod.createSession({
+     *     await client.qod.createSessionV1({
      *         device: {
      *             phoneNumber: "+99999991001",
      *             ipv4Address: {
@@ -204,17 +131,17 @@ export class QodClient {
      *         duration: 60
      *     })
      */
-    public createSession(
-        request: NetworkAsCodeApi.CreateSessionQodRequest,
+    public createSessionV1(
+        request: NetworkAsCodeApi.CreateSessionV1QodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSessionQodResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__createSession(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSessionV1QodResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createSessionV1(request, requestOptions));
     }
 
-    private async __createSession(
-        request: NetworkAsCodeApi.CreateSessionQodRequest,
+    private async __createSessionV1(
+        request: NetworkAsCodeApi.CreateSessionV1QodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSessionQodResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSessionV1QodResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -227,7 +154,7 @@ export class QodClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "qod/v0/sessions",
+                "quality-on-demand/v1/sessions",
             ),
             method: "POST",
             headers: _headers,
@@ -243,7 +170,7 @@ export class QodClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.CreateSessionQodResponse,
+                data: _response.body as NetworkAsCodeApi.CreateSessionV1QodResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -285,7 +212,123 @@ export class QodClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/qod/v0/sessions");
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/quality-on-demand/v1/sessions",
+        );
+    }
+
+    /**
+     * Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+     * The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+     * An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+     * - Original duration: 80,000 seconds
+     * - Elapsed time: 10,000 seconds
+     * - Remaining duration: 70,000 seconds
+     * - New remaining duration: 86,400 seconds (the maximum allowed)
+     * - New overall session duration: 96,400 seconds
+     *
+     * @param {NetworkAsCodeApi.ExtendSessionV1QodRequest} request
+     * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.qod.extendSessionV1({
+     *         sessionId: "sessionId",
+     *         requestedAdditionalDuration: 60
+     *     })
+     */
+    public extendSessionV1(
+        request: NetworkAsCodeApi.ExtendSessionV1QodRequest,
+        requestOptions?: QodClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ExtendSessionV1QodResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__extendSessionV1(request, requestOptions));
+    }
+
+    private async __extendSessionV1(
+        request: NetworkAsCodeApi.ExtendSessionV1QodRequest,
+        requestOptions?: QodClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ExtendSessionV1QodResponse>> {
+        const { sessionId, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `quality-on-demand/v1/sessions/${core.url.encodePathParam(sessionId)}/extend`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.ExtendSessionV1QodResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/quality-on-demand/v1/sessions/{sessionId}/extend",
+        );
     }
 
     /**
@@ -688,43 +731,31 @@ export class QodClient {
     }
 
     /**
-     * Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-     * The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-     * An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-     * - Original duration: 80,000 seconds
-     * - Elapsed time: 10,000 seconds
-     * - Remaining duration: 70,000 seconds
-     * - New remaining duration: 86,400 seconds (the maximum allowed)
-     * - New overall session duration: 96,400 seconds
+     * Return all QoD sessions related to the specified device.
      *
-     * @param {NetworkAsCodeApi.ExtendSessionV1QodRequest} request
+     * @param {NetworkAsCodeApi.RetrieveSessionsV1QodRequest} request
      * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
      *
      * @example
-     *     await client.qod.extendSessionV1({
-     *         sessionId: "sessionId",
-     *         requestedAdditionalDuration: 60
+     *     await client.qod.retrieveSessionsV1({
+     *         device: {
+     *             phoneNumber: "+99999991001"
+     *         }
      *     })
      */
-    public extendSessionV1(
-        request: NetworkAsCodeApi.ExtendSessionV1QodRequest,
+    public retrieveSessionsV1(
+        request: NetworkAsCodeApi.RetrieveSessionsV1QodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.ExtendSessionV1QodResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__extendSessionV1(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieveSessionsV1(request, requestOptions));
     }
 
-    private async __extendSessionV1(
-        request: NetworkAsCodeApi.ExtendSessionV1QodRequest,
+    private async __retrieveSessionsV1(
+        request: NetworkAsCodeApi.RetrieveSessionsV1QodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ExtendSessionV1QodResponse>> {
-        const { sessionId, ..._body } = request;
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[]>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -737,14 +768,14 @@ export class QodClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                `quality-on-demand/v1/sessions/${core.url.encodePathParam(sessionId)}/extend`,
+                "quality-on-demand/v1/retrieve-sessions",
             ),
             method: "POST",
             headers: _headers,
             contentType: "application/json",
             queryParameters: requestOptions?.queryParams,
             requestType: "json",
-            body: _body,
+            body: request,
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -753,31 +784,15 @@ export class QodClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.ExtendSessionV1QodResponse,
+                data: _response.body as NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[],
                 rawResponse: _response.rawResponse,
             };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
                         _response.error.body as unknown,
                         _response.rawResponse,
                     );
@@ -794,7 +809,7 @@ export class QodClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/quality-on-demand/v1/sessions/{sessionId}/extend",
+            "/quality-on-demand/v1/retrieve-sessions",
         );
     }
 
@@ -910,105 +925,22 @@ export class QodClient {
     }
 
     /**
-     * Return all QoD sessions related to the specified device.
-     *
-     * @param {NetworkAsCodeApi.RetrieveSessionsV1QodRequest} request
-     * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.qod.retrieveSessionsV1({
-     *         device: {
-     *             phoneNumber: "+99999991001"
-     *         }
-     *     })
-     */
-    public retrieveSessionsV1(
-        request: NetworkAsCodeApi.RetrieveSessionsV1QodRequest,
-        requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieveSessionsV1(request, requestOptions));
-    }
-
-    private async __retrieveSessionsV1(
-        request: NetworkAsCodeApi.RetrieveSessionsV1QodRequest,
-        requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[]>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "quality-on-demand/v1/retrieve-sessions",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.RetrieveSessionsV1QodResponseItem[],
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/quality-on-demand/v1/retrieve-sessions",
-        );
-    }
-
-    /**
      * Return device communication Quality-on-Demand settings for your devices.
      *
      * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.qod.listSessionsV1()
+     *     await client.qod.listSessions()
      */
-    public listSessionsV1(
+    public listSessions(
         requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSessionsV1QodResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__listSessionsV1(requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSessionsQodResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listSessions(requestOptions));
     }
 
-    private async __listSessionsV1(
+    private async __listSessions(
         requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSessionsV1QodResponseItem[]>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSessionsQodResponseItem[]>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -1021,7 +953,7 @@ export class QodClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "quality-on-demand/v1/sessions",
+                "qod/v0/sessions",
             ),
             method: "GET",
             headers: _headers,
@@ -1034,7 +966,7 @@ export class QodClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.ListSessionsV1QodResponseItem[],
+                data: _response.body as NetworkAsCodeApi.ListSessionsQodResponseItem[],
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1047,18 +979,13 @@ export class QodClient {
             });
         }
 
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/quality-on-demand/v1/sessions",
-        );
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/qod/v0/sessions");
     }
 
     /**
      * Create QoS Session to manage latency/throughput priorities
      *
-     * If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
+     * If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
      * `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
      *
      * If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
@@ -1073,7 +1000,7 @@ export class QodClient {
      * the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
      * for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
      *
-     * @param {NetworkAsCodeApi.CreateSessionV1QodRequest} request
+     * @param {NetworkAsCodeApi.CreateSessionQodRequest} request
      * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -1085,7 +1012,7 @@ export class QodClient {
      * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.qod.createSessionV1({
+     *     await client.qod.createSession({
      *         device: {
      *             phoneNumber: "+99999991001",
      *             ipv4Address: {
@@ -1101,17 +1028,17 @@ export class QodClient {
      *         duration: 60
      *     })
      */
-    public createSessionV1(
-        request: NetworkAsCodeApi.CreateSessionV1QodRequest,
+    public createSession(
+        request: NetworkAsCodeApi.CreateSessionQodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSessionV1QodResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__createSessionV1(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSessionQodResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createSession(request, requestOptions));
     }
 
-    private async __createSessionV1(
-        request: NetworkAsCodeApi.CreateSessionV1QodRequest,
+    private async __createSession(
+        request: NetworkAsCodeApi.CreateSessionQodRequest,
         requestOptions?: QodClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSessionV1QodResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSessionQodResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -1124,7 +1051,7 @@ export class QodClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "quality-on-demand/v1/sessions",
+                "qod/v0/sessions",
             ),
             method: "POST",
             headers: _headers,
@@ -1140,7 +1067,7 @@ export class QodClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.CreateSessionV1QodResponse,
+                data: _response.body as NetworkAsCodeApi.CreateSessionQodResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1182,11 +1109,84 @@ export class QodClient {
             }
         }
 
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/quality-on-demand/v1/sessions",
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/qod/v0/sessions");
+    }
+
+    /**
+     * Return all QoD sessions related to the specified device.
+     *
+     * @param {NetworkAsCodeApi.RetrieveSessionsQodRequest} request
+     * @param {QodClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.qod.retrieveSessions({
+     *         device: {
+     *             phoneNumber: "+99999991001"
+     *         }
+     *     })
+     */
+    public retrieveSessions(
+        request: NetworkAsCodeApi.RetrieveSessionsQodRequest,
+        requestOptions?: QodClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveSessionsQodResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieveSessions(request, requestOptions));
+    }
+
+    private async __retrieveSessions(
+        request: NetworkAsCodeApi.RetrieveSessionsQodRequest,
+        requestOptions?: QodClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveSessionsQodResponseItem[]>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
         );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "qod/v0/retrieve-sessions",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.RetrieveSessionsQodResponseItem[],
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/qod/v0/retrieve-sessions");
     }
 }

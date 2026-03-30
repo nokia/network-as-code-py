@@ -9,21 +9,24 @@ from .core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from .environment import NetworkAsCodeApiEnvironment
 
 if typing.TYPE_CHECKING:
-    from .call_forwarding_signal_v_030.client import AsyncCallForwardingSignalV030Client, CallForwardingSignalV030Client
+    from .call_forwarding_signal.client import AsyncCallForwardingSignalClient, CallForwardingSignalClient
     from .congestion_insights.client import AsyncCongestionInsightsClient, CongestionInsightsClient
+    from .consent_info.client import AsyncConsentInfoClient, ConsentInfoClient
     from .device_status.client import AsyncDeviceStatusClient, DeviceStatusClient
-    from .device_swap_v_100.client import AsyncDeviceSwapV100Client, DeviceSwapV100Client
+    from .device_swap.client import AsyncDeviceSwapClient, DeviceSwapClient
     from .geofencing.client import AsyncGeofencingClient, GeofencingClient
-    from .kyc_age_verification_v_01.client import AsyncKycAgeVerificationV01Client, KycAgeVerificationV01Client
-    from .kyc_f_ill_in_v_04.client import AsyncKycFIllInV04Client, KycFIllInV04Client
-    from .kyc_match_v_03.client import AsyncKycMatchV03Client, KycMatchV03Client
-    from .kyc_tenure_v_01.client import AsyncKycTenureV01Client, KycTenureV01Client
+    from .kyc_age_verification.client import AsyncKycAgeVerificationClient, KycAgeVerificationClient
+    from .kyc_fill_in.client import AsyncKycFillInClient, KycFillInClient
+    from .kyc_match.client import AsyncKycMatchClient, KycMatchClient
+    from .kyc_tenure.client import AsyncKycTenureClient, KycTenureClient
     from .location.client import AsyncLocationClient, LocationClient
     from .na_c_authorization_server.client import AsyncNaCAuthorizationServerClient, NaCAuthorizationServerClient
+    from .number_recycling.client import AsyncNumberRecyclingClient, NumberRecyclingClient
+    from .number_verification.client import AsyncNumberVerificationClient, NumberVerificationClient
     from .number_verification_v_100.client import AsyncNumberVerificationV100Client, NumberVerificationV100Client
     from .oauth.client import AsyncOauthClient, OauthClient
     from .qod.client import AsyncQodClient, QodClient
-    from .sim_swap_v_100.client import AsyncSimSwapV100Client, SimSwapV100Client
+    from .sim_swap.client import AsyncSimSwapClient, SimSwapClient
     from .slice.client import AsyncSliceClient, SliceClient
     from .well_known_metadata.client import AsyncWellKnownMetadataClient, WellKnownMetadataClient
 
@@ -46,7 +49,7 @@ class NetworkAsCodeApi:
 
 
 
-    rapidapi_host : str
+    rapidapi_host : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
@@ -75,7 +78,7 @@ class NetworkAsCodeApi:
         *,
         base_url: typing.Optional[str] = None,
         environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT,
-        rapidapi_host: str,
+        rapidapi_host: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         timeout: typing.Optional[float] = None,
@@ -97,103 +100,26 @@ class NetworkAsCodeApi:
             else httpx.Client(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self._congestion_insights: typing.Optional[CongestionInsightsClient] = None
-        self._qod: typing.Optional[QodClient] = None
-        self._sim_swap_v_100: typing.Optional[SimSwapV100Client] = None
-        self._device_status: typing.Optional[DeviceStatusClient] = None
-        self._slice: typing.Optional[SliceClient] = None
-        self._kyc_f_ill_in_v_04: typing.Optional[KycFIllInV04Client] = None
-        self._location: typing.Optional[LocationClient] = None
-        self._geofencing: typing.Optional[GeofencingClient] = None
-        self._number_verification_v_100: typing.Optional[NumberVerificationV100Client] = None
-        self._oauth: typing.Optional[OauthClient] = None
         self._well_known_metadata: typing.Optional[WellKnownMetadataClient] = None
-        self._kyc_tenure_v_01: typing.Optional[KycTenureV01Client] = None
-        self._device_swap_v_100: typing.Optional[DeviceSwapV100Client] = None
-        self._kyc_match_v_03: typing.Optional[KycMatchV03Client] = None
-        self._kyc_age_verification_v_01: typing.Optional[KycAgeVerificationV01Client] = None
-        self._call_forwarding_signal_v_030: typing.Optional[CallForwardingSignalV030Client] = None
+        self._congestion_insights: typing.Optional[CongestionInsightsClient] = None
+        self._number_recycling: typing.Optional[NumberRecyclingClient] = None
+        self._qod: typing.Optional[QodClient] = None
+        self._slice: typing.Optional[SliceClient] = None
+        self._device_status: typing.Optional[DeviceStatusClient] = None
+        self._kyc_fill_in: typing.Optional[KycFillInClient] = None
         self._na_c_authorization_server: typing.Optional[NaCAuthorizationServerClient] = None
-
-    @property
-    def congestion_insights(self):
-        if self._congestion_insights is None:
-            from .congestion_insights.client import CongestionInsightsClient  # noqa: E402
-
-            self._congestion_insights = CongestionInsightsClient(client_wrapper=self._client_wrapper)
-        return self._congestion_insights
-
-    @property
-    def qod(self):
-        if self._qod is None:
-            from .qod.client import QodClient  # noqa: E402
-
-            self._qod = QodClient(client_wrapper=self._client_wrapper)
-        return self._qod
-
-    @property
-    def sim_swap_v_100(self):
-        if self._sim_swap_v_100 is None:
-            from .sim_swap_v_100.client import SimSwapV100Client  # noqa: E402
-
-            self._sim_swap_v_100 = SimSwapV100Client(client_wrapper=self._client_wrapper)
-        return self._sim_swap_v_100
-
-    @property
-    def device_status(self):
-        if self._device_status is None:
-            from .device_status.client import DeviceStatusClient  # noqa: E402
-
-            self._device_status = DeviceStatusClient(client_wrapper=self._client_wrapper)
-        return self._device_status
-
-    @property
-    def slice(self):
-        if self._slice is None:
-            from .slice.client import SliceClient  # noqa: E402
-
-            self._slice = SliceClient(client_wrapper=self._client_wrapper)
-        return self._slice
-
-    @property
-    def kyc_f_ill_in_v_04(self):
-        if self._kyc_f_ill_in_v_04 is None:
-            from .kyc_f_ill_in_v_04.client import KycFIllInV04Client  # noqa: E402
-
-            self._kyc_f_ill_in_v_04 = KycFIllInV04Client(client_wrapper=self._client_wrapper)
-        return self._kyc_f_ill_in_v_04
-
-    @property
-    def location(self):
-        if self._location is None:
-            from .location.client import LocationClient  # noqa: E402
-
-            self._location = LocationClient(client_wrapper=self._client_wrapper)
-        return self._location
-
-    @property
-    def geofencing(self):
-        if self._geofencing is None:
-            from .geofencing.client import GeofencingClient  # noqa: E402
-
-            self._geofencing = GeofencingClient(client_wrapper=self._client_wrapper)
-        return self._geofencing
-
-    @property
-    def number_verification_v_100(self):
-        if self._number_verification_v_100 is None:
-            from .number_verification_v_100.client import NumberVerificationV100Client  # noqa: E402
-
-            self._number_verification_v_100 = NumberVerificationV100Client(client_wrapper=self._client_wrapper)
-        return self._number_verification_v_100
-
-    @property
-    def oauth(self):
-        if self._oauth is None:
-            from .oauth.client import OauthClient  # noqa: E402
-
-            self._oauth = OauthClient(client_wrapper=self._client_wrapper)
-        return self._oauth
+        self._device_swap: typing.Optional[DeviceSwapClient] = None
+        self._geofencing: typing.Optional[GeofencingClient] = None
+        self._oauth: typing.Optional[OauthClient] = None
+        self._call_forwarding_signal: typing.Optional[CallForwardingSignalClient] = None
+        self._number_verification_v_100: typing.Optional[NumberVerificationV100Client] = None
+        self._number_verification: typing.Optional[NumberVerificationClient] = None
+        self._kyc_tenure: typing.Optional[KycTenureClient] = None
+        self._sim_swap: typing.Optional[SimSwapClient] = None
+        self._kyc_match: typing.Optional[KycMatchClient] = None
+        self._location: typing.Optional[LocationClient] = None
+        self._kyc_age_verification: typing.Optional[KycAgeVerificationClient] = None
+        self._consent_info: typing.Optional[ConsentInfoClient] = None
 
     @property
     def well_known_metadata(self):
@@ -204,44 +130,52 @@ class NetworkAsCodeApi:
         return self._well_known_metadata
 
     @property
-    def kyc_tenure_v_01(self):
-        if self._kyc_tenure_v_01 is None:
-            from .kyc_tenure_v_01.client import KycTenureV01Client  # noqa: E402
+    def congestion_insights(self):
+        if self._congestion_insights is None:
+            from .congestion_insights.client import CongestionInsightsClient  # noqa: E402
 
-            self._kyc_tenure_v_01 = KycTenureV01Client(client_wrapper=self._client_wrapper)
-        return self._kyc_tenure_v_01
-
-    @property
-    def device_swap_v_100(self):
-        if self._device_swap_v_100 is None:
-            from .device_swap_v_100.client import DeviceSwapV100Client  # noqa: E402
-
-            self._device_swap_v_100 = DeviceSwapV100Client(client_wrapper=self._client_wrapper)
-        return self._device_swap_v_100
+            self._congestion_insights = CongestionInsightsClient(client_wrapper=self._client_wrapper)
+        return self._congestion_insights
 
     @property
-    def kyc_match_v_03(self):
-        if self._kyc_match_v_03 is None:
-            from .kyc_match_v_03.client import KycMatchV03Client  # noqa: E402
+    def number_recycling(self):
+        if self._number_recycling is None:
+            from .number_recycling.client import NumberRecyclingClient  # noqa: E402
 
-            self._kyc_match_v_03 = KycMatchV03Client(client_wrapper=self._client_wrapper)
-        return self._kyc_match_v_03
-
-    @property
-    def kyc_age_verification_v_01(self):
-        if self._kyc_age_verification_v_01 is None:
-            from .kyc_age_verification_v_01.client import KycAgeVerificationV01Client  # noqa: E402
-
-            self._kyc_age_verification_v_01 = KycAgeVerificationV01Client(client_wrapper=self._client_wrapper)
-        return self._kyc_age_verification_v_01
+            self._number_recycling = NumberRecyclingClient(client_wrapper=self._client_wrapper)
+        return self._number_recycling
 
     @property
-    def call_forwarding_signal_v_030(self):
-        if self._call_forwarding_signal_v_030 is None:
-            from .call_forwarding_signal_v_030.client import CallForwardingSignalV030Client  # noqa: E402
+    def qod(self):
+        if self._qod is None:
+            from .qod.client import QodClient  # noqa: E402
 
-            self._call_forwarding_signal_v_030 = CallForwardingSignalV030Client(client_wrapper=self._client_wrapper)
-        return self._call_forwarding_signal_v_030
+            self._qod = QodClient(client_wrapper=self._client_wrapper)
+        return self._qod
+
+    @property
+    def slice(self):
+        if self._slice is None:
+            from .slice.client import SliceClient  # noqa: E402
+
+            self._slice = SliceClient(client_wrapper=self._client_wrapper)
+        return self._slice
+
+    @property
+    def device_status(self):
+        if self._device_status is None:
+            from .device_status.client import DeviceStatusClient  # noqa: E402
+
+            self._device_status = DeviceStatusClient(client_wrapper=self._client_wrapper)
+        return self._device_status
+
+    @property
+    def kyc_fill_in(self):
+        if self._kyc_fill_in is None:
+            from .kyc_fill_in.client import KycFillInClient  # noqa: E402
+
+            self._kyc_fill_in = KycFillInClient(client_wrapper=self._client_wrapper)
+        return self._kyc_fill_in
 
     @property
     def na_c_authorization_server(self):
@@ -250,6 +184,102 @@ class NetworkAsCodeApi:
 
             self._na_c_authorization_server = NaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
         return self._na_c_authorization_server
+
+    @property
+    def device_swap(self):
+        if self._device_swap is None:
+            from .device_swap.client import DeviceSwapClient  # noqa: E402
+
+            self._device_swap = DeviceSwapClient(client_wrapper=self._client_wrapper)
+        return self._device_swap
+
+    @property
+    def geofencing(self):
+        if self._geofencing is None:
+            from .geofencing.client import GeofencingClient  # noqa: E402
+
+            self._geofencing = GeofencingClient(client_wrapper=self._client_wrapper)
+        return self._geofencing
+
+    @property
+    def oauth(self):
+        if self._oauth is None:
+            from .oauth.client import OauthClient  # noqa: E402
+
+            self._oauth = OauthClient(client_wrapper=self._client_wrapper)
+        return self._oauth
+
+    @property
+    def call_forwarding_signal(self):
+        if self._call_forwarding_signal is None:
+            from .call_forwarding_signal.client import CallForwardingSignalClient  # noqa: E402
+
+            self._call_forwarding_signal = CallForwardingSignalClient(client_wrapper=self._client_wrapper)
+        return self._call_forwarding_signal
+
+    @property
+    def number_verification_v_100(self):
+        if self._number_verification_v_100 is None:
+            from .number_verification_v_100.client import NumberVerificationV100Client  # noqa: E402
+
+            self._number_verification_v_100 = NumberVerificationV100Client(client_wrapper=self._client_wrapper)
+        return self._number_verification_v_100
+
+    @property
+    def number_verification(self):
+        if self._number_verification is None:
+            from .number_verification.client import NumberVerificationClient  # noqa: E402
+
+            self._number_verification = NumberVerificationClient(client_wrapper=self._client_wrapper)
+        return self._number_verification
+
+    @property
+    def kyc_tenure(self):
+        if self._kyc_tenure is None:
+            from .kyc_tenure.client import KycTenureClient  # noqa: E402
+
+            self._kyc_tenure = KycTenureClient(client_wrapper=self._client_wrapper)
+        return self._kyc_tenure
+
+    @property
+    def sim_swap(self):
+        if self._sim_swap is None:
+            from .sim_swap.client import SimSwapClient  # noqa: E402
+
+            self._sim_swap = SimSwapClient(client_wrapper=self._client_wrapper)
+        return self._sim_swap
+
+    @property
+    def kyc_match(self):
+        if self._kyc_match is None:
+            from .kyc_match.client import KycMatchClient  # noqa: E402
+
+            self._kyc_match = KycMatchClient(client_wrapper=self._client_wrapper)
+        return self._kyc_match
+
+    @property
+    def location(self):
+        if self._location is None:
+            from .location.client import LocationClient  # noqa: E402
+
+            self._location = LocationClient(client_wrapper=self._client_wrapper)
+        return self._location
+
+    @property
+    def kyc_age_verification(self):
+        if self._kyc_age_verification is None:
+            from .kyc_age_verification.client import KycAgeVerificationClient  # noqa: E402
+
+            self._kyc_age_verification = KycAgeVerificationClient(client_wrapper=self._client_wrapper)
+        return self._kyc_age_verification
+
+    @property
+    def consent_info(self):
+        if self._consent_info is None:
+            from .consent_info.client import ConsentInfoClient  # noqa: E402
+
+            self._consent_info = ConsentInfoClient(client_wrapper=self._client_wrapper)
+        return self._consent_info
 
 
 class AsyncNetworkAsCodeApi:
@@ -270,7 +300,7 @@ class AsyncNetworkAsCodeApi:
 
 
 
-    rapidapi_host : str
+    rapidapi_host : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
@@ -299,7 +329,7 @@ class AsyncNetworkAsCodeApi:
         *,
         base_url: typing.Optional[str] = None,
         environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT,
-        rapidapi_host: str,
+        rapidapi_host: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         timeout: typing.Optional[float] = None,
@@ -321,103 +351,26 @@ class AsyncNetworkAsCodeApi:
             else httpx.AsyncClient(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self._congestion_insights: typing.Optional[AsyncCongestionInsightsClient] = None
-        self._qod: typing.Optional[AsyncQodClient] = None
-        self._sim_swap_v_100: typing.Optional[AsyncSimSwapV100Client] = None
-        self._device_status: typing.Optional[AsyncDeviceStatusClient] = None
-        self._slice: typing.Optional[AsyncSliceClient] = None
-        self._kyc_f_ill_in_v_04: typing.Optional[AsyncKycFIllInV04Client] = None
-        self._location: typing.Optional[AsyncLocationClient] = None
-        self._geofencing: typing.Optional[AsyncGeofencingClient] = None
-        self._number_verification_v_100: typing.Optional[AsyncNumberVerificationV100Client] = None
-        self._oauth: typing.Optional[AsyncOauthClient] = None
         self._well_known_metadata: typing.Optional[AsyncWellKnownMetadataClient] = None
-        self._kyc_tenure_v_01: typing.Optional[AsyncKycTenureV01Client] = None
-        self._device_swap_v_100: typing.Optional[AsyncDeviceSwapV100Client] = None
-        self._kyc_match_v_03: typing.Optional[AsyncKycMatchV03Client] = None
-        self._kyc_age_verification_v_01: typing.Optional[AsyncKycAgeVerificationV01Client] = None
-        self._call_forwarding_signal_v_030: typing.Optional[AsyncCallForwardingSignalV030Client] = None
+        self._congestion_insights: typing.Optional[AsyncCongestionInsightsClient] = None
+        self._number_recycling: typing.Optional[AsyncNumberRecyclingClient] = None
+        self._qod: typing.Optional[AsyncQodClient] = None
+        self._slice: typing.Optional[AsyncSliceClient] = None
+        self._device_status: typing.Optional[AsyncDeviceStatusClient] = None
+        self._kyc_fill_in: typing.Optional[AsyncKycFillInClient] = None
         self._na_c_authorization_server: typing.Optional[AsyncNaCAuthorizationServerClient] = None
-
-    @property
-    def congestion_insights(self):
-        if self._congestion_insights is None:
-            from .congestion_insights.client import AsyncCongestionInsightsClient  # noqa: E402
-
-            self._congestion_insights = AsyncCongestionInsightsClient(client_wrapper=self._client_wrapper)
-        return self._congestion_insights
-
-    @property
-    def qod(self):
-        if self._qod is None:
-            from .qod.client import AsyncQodClient  # noqa: E402
-
-            self._qod = AsyncQodClient(client_wrapper=self._client_wrapper)
-        return self._qod
-
-    @property
-    def sim_swap_v_100(self):
-        if self._sim_swap_v_100 is None:
-            from .sim_swap_v_100.client import AsyncSimSwapV100Client  # noqa: E402
-
-            self._sim_swap_v_100 = AsyncSimSwapV100Client(client_wrapper=self._client_wrapper)
-        return self._sim_swap_v_100
-
-    @property
-    def device_status(self):
-        if self._device_status is None:
-            from .device_status.client import AsyncDeviceStatusClient  # noqa: E402
-
-            self._device_status = AsyncDeviceStatusClient(client_wrapper=self._client_wrapper)
-        return self._device_status
-
-    @property
-    def slice(self):
-        if self._slice is None:
-            from .slice.client import AsyncSliceClient  # noqa: E402
-
-            self._slice = AsyncSliceClient(client_wrapper=self._client_wrapper)
-        return self._slice
-
-    @property
-    def kyc_f_ill_in_v_04(self):
-        if self._kyc_f_ill_in_v_04 is None:
-            from .kyc_f_ill_in_v_04.client import AsyncKycFIllInV04Client  # noqa: E402
-
-            self._kyc_f_ill_in_v_04 = AsyncKycFIllInV04Client(client_wrapper=self._client_wrapper)
-        return self._kyc_f_ill_in_v_04
-
-    @property
-    def location(self):
-        if self._location is None:
-            from .location.client import AsyncLocationClient  # noqa: E402
-
-            self._location = AsyncLocationClient(client_wrapper=self._client_wrapper)
-        return self._location
-
-    @property
-    def geofencing(self):
-        if self._geofencing is None:
-            from .geofencing.client import AsyncGeofencingClient  # noqa: E402
-
-            self._geofencing = AsyncGeofencingClient(client_wrapper=self._client_wrapper)
-        return self._geofencing
-
-    @property
-    def number_verification_v_100(self):
-        if self._number_verification_v_100 is None:
-            from .number_verification_v_100.client import AsyncNumberVerificationV100Client  # noqa: E402
-
-            self._number_verification_v_100 = AsyncNumberVerificationV100Client(client_wrapper=self._client_wrapper)
-        return self._number_verification_v_100
-
-    @property
-    def oauth(self):
-        if self._oauth is None:
-            from .oauth.client import AsyncOauthClient  # noqa: E402
-
-            self._oauth = AsyncOauthClient(client_wrapper=self._client_wrapper)
-        return self._oauth
+        self._device_swap: typing.Optional[AsyncDeviceSwapClient] = None
+        self._geofencing: typing.Optional[AsyncGeofencingClient] = None
+        self._oauth: typing.Optional[AsyncOauthClient] = None
+        self._call_forwarding_signal: typing.Optional[AsyncCallForwardingSignalClient] = None
+        self._number_verification_v_100: typing.Optional[AsyncNumberVerificationV100Client] = None
+        self._number_verification: typing.Optional[AsyncNumberVerificationClient] = None
+        self._kyc_tenure: typing.Optional[AsyncKycTenureClient] = None
+        self._sim_swap: typing.Optional[AsyncSimSwapClient] = None
+        self._kyc_match: typing.Optional[AsyncKycMatchClient] = None
+        self._location: typing.Optional[AsyncLocationClient] = None
+        self._kyc_age_verification: typing.Optional[AsyncKycAgeVerificationClient] = None
+        self._consent_info: typing.Optional[AsyncConsentInfoClient] = None
 
     @property
     def well_known_metadata(self):
@@ -428,46 +381,52 @@ class AsyncNetworkAsCodeApi:
         return self._well_known_metadata
 
     @property
-    def kyc_tenure_v_01(self):
-        if self._kyc_tenure_v_01 is None:
-            from .kyc_tenure_v_01.client import AsyncKycTenureV01Client  # noqa: E402
+    def congestion_insights(self):
+        if self._congestion_insights is None:
+            from .congestion_insights.client import AsyncCongestionInsightsClient  # noqa: E402
 
-            self._kyc_tenure_v_01 = AsyncKycTenureV01Client(client_wrapper=self._client_wrapper)
-        return self._kyc_tenure_v_01
-
-    @property
-    def device_swap_v_100(self):
-        if self._device_swap_v_100 is None:
-            from .device_swap_v_100.client import AsyncDeviceSwapV100Client  # noqa: E402
-
-            self._device_swap_v_100 = AsyncDeviceSwapV100Client(client_wrapper=self._client_wrapper)
-        return self._device_swap_v_100
+            self._congestion_insights = AsyncCongestionInsightsClient(client_wrapper=self._client_wrapper)
+        return self._congestion_insights
 
     @property
-    def kyc_match_v_03(self):
-        if self._kyc_match_v_03 is None:
-            from .kyc_match_v_03.client import AsyncKycMatchV03Client  # noqa: E402
+    def number_recycling(self):
+        if self._number_recycling is None:
+            from .number_recycling.client import AsyncNumberRecyclingClient  # noqa: E402
 
-            self._kyc_match_v_03 = AsyncKycMatchV03Client(client_wrapper=self._client_wrapper)
-        return self._kyc_match_v_03
-
-    @property
-    def kyc_age_verification_v_01(self):
-        if self._kyc_age_verification_v_01 is None:
-            from .kyc_age_verification_v_01.client import AsyncKycAgeVerificationV01Client  # noqa: E402
-
-            self._kyc_age_verification_v_01 = AsyncKycAgeVerificationV01Client(client_wrapper=self._client_wrapper)
-        return self._kyc_age_verification_v_01
+            self._number_recycling = AsyncNumberRecyclingClient(client_wrapper=self._client_wrapper)
+        return self._number_recycling
 
     @property
-    def call_forwarding_signal_v_030(self):
-        if self._call_forwarding_signal_v_030 is None:
-            from .call_forwarding_signal_v_030.client import AsyncCallForwardingSignalV030Client  # noqa: E402
+    def qod(self):
+        if self._qod is None:
+            from .qod.client import AsyncQodClient  # noqa: E402
 
-            self._call_forwarding_signal_v_030 = AsyncCallForwardingSignalV030Client(
-                client_wrapper=self._client_wrapper
-            )
-        return self._call_forwarding_signal_v_030
+            self._qod = AsyncQodClient(client_wrapper=self._client_wrapper)
+        return self._qod
+
+    @property
+    def slice(self):
+        if self._slice is None:
+            from .slice.client import AsyncSliceClient  # noqa: E402
+
+            self._slice = AsyncSliceClient(client_wrapper=self._client_wrapper)
+        return self._slice
+
+    @property
+    def device_status(self):
+        if self._device_status is None:
+            from .device_status.client import AsyncDeviceStatusClient  # noqa: E402
+
+            self._device_status = AsyncDeviceStatusClient(client_wrapper=self._client_wrapper)
+        return self._device_status
+
+    @property
+    def kyc_fill_in(self):
+        if self._kyc_fill_in is None:
+            from .kyc_fill_in.client import AsyncKycFillInClient  # noqa: E402
+
+            self._kyc_fill_in = AsyncKycFillInClient(client_wrapper=self._client_wrapper)
+        return self._kyc_fill_in
 
     @property
     def na_c_authorization_server(self):
@@ -476,6 +435,102 @@ class AsyncNetworkAsCodeApi:
 
             self._na_c_authorization_server = AsyncNaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
         return self._na_c_authorization_server
+
+    @property
+    def device_swap(self):
+        if self._device_swap is None:
+            from .device_swap.client import AsyncDeviceSwapClient  # noqa: E402
+
+            self._device_swap = AsyncDeviceSwapClient(client_wrapper=self._client_wrapper)
+        return self._device_swap
+
+    @property
+    def geofencing(self):
+        if self._geofencing is None:
+            from .geofencing.client import AsyncGeofencingClient  # noqa: E402
+
+            self._geofencing = AsyncGeofencingClient(client_wrapper=self._client_wrapper)
+        return self._geofencing
+
+    @property
+    def oauth(self):
+        if self._oauth is None:
+            from .oauth.client import AsyncOauthClient  # noqa: E402
+
+            self._oauth = AsyncOauthClient(client_wrapper=self._client_wrapper)
+        return self._oauth
+
+    @property
+    def call_forwarding_signal(self):
+        if self._call_forwarding_signal is None:
+            from .call_forwarding_signal.client import AsyncCallForwardingSignalClient  # noqa: E402
+
+            self._call_forwarding_signal = AsyncCallForwardingSignalClient(client_wrapper=self._client_wrapper)
+        return self._call_forwarding_signal
+
+    @property
+    def number_verification_v_100(self):
+        if self._number_verification_v_100 is None:
+            from .number_verification_v_100.client import AsyncNumberVerificationV100Client  # noqa: E402
+
+            self._number_verification_v_100 = AsyncNumberVerificationV100Client(client_wrapper=self._client_wrapper)
+        return self._number_verification_v_100
+
+    @property
+    def number_verification(self):
+        if self._number_verification is None:
+            from .number_verification.client import AsyncNumberVerificationClient  # noqa: E402
+
+            self._number_verification = AsyncNumberVerificationClient(client_wrapper=self._client_wrapper)
+        return self._number_verification
+
+    @property
+    def kyc_tenure(self):
+        if self._kyc_tenure is None:
+            from .kyc_tenure.client import AsyncKycTenureClient  # noqa: E402
+
+            self._kyc_tenure = AsyncKycTenureClient(client_wrapper=self._client_wrapper)
+        return self._kyc_tenure
+
+    @property
+    def sim_swap(self):
+        if self._sim_swap is None:
+            from .sim_swap.client import AsyncSimSwapClient  # noqa: E402
+
+            self._sim_swap = AsyncSimSwapClient(client_wrapper=self._client_wrapper)
+        return self._sim_swap
+
+    @property
+    def kyc_match(self):
+        if self._kyc_match is None:
+            from .kyc_match.client import AsyncKycMatchClient  # noqa: E402
+
+            self._kyc_match = AsyncKycMatchClient(client_wrapper=self._client_wrapper)
+        return self._kyc_match
+
+    @property
+    def location(self):
+        if self._location is None:
+            from .location.client import AsyncLocationClient  # noqa: E402
+
+            self._location = AsyncLocationClient(client_wrapper=self._client_wrapper)
+        return self._location
+
+    @property
+    def kyc_age_verification(self):
+        if self._kyc_age_verification is None:
+            from .kyc_age_verification.client import AsyncKycAgeVerificationClient  # noqa: E402
+
+            self._kyc_age_verification = AsyncKycAgeVerificationClient(client_wrapper=self._client_wrapper)
+        return self._kyc_age_verification
+
+    @property
+    def consent_info(self):
+        if self._consent_info is None:
+            from .consent_info.client import AsyncConsentInfoClient  # noqa: E402
+
+            self._consent_info = AsyncConsentInfoClient(client_wrapper=self._client_wrapper)
+        return self._consent_info
 
 
 def _get_base_url(*, base_url: typing.Optional[str] = None, environment: NetworkAsCodeApiEnvironment) -> str:

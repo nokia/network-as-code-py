@@ -42,6 +42,7 @@ class GetRoamingSubscriptionDeviceStatusResponseParams(typing_extensions.TypedDi
     
     
     
+    
      at API project level.
     """
 
@@ -77,6 +78,7 @@ class GetRoamingSubscriptionDeviceStatusResponseParams(typing_extensions.TypedDi
     status: typing_extensions.NotRequired[GetRoamingSubscriptionDeviceStatusResponseStatus]
     """
     Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+    
     
     
     

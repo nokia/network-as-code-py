@@ -33,6 +33,68 @@ class LocationClient:
         """
         return self._raw_client
 
+    def verify_v_1(
+        self,
+        *,
+        area: VerifyV1LocationRequestAreaParams,
+        correlator: typing.Optional[str] = None,
+        device: typing.Optional[VerifyV1LocationRequestDeviceParams] = OMIT,
+        max_age: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> VerifyV1LocationResponse:
+        """
+        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
+
+        Parameters
+        ----------
+        area : VerifyV1LocationRequestAreaParams
+            Base schema for all areas
+
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+
+        device : typing.Optional[VerifyV1LocationRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+
+            The developer can choose to provide the below specified device identifiers:
+
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+
+            NOTE1: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+            NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+
+        max_age : typing.Optional[int]
+            The maximum age (in seconds) for the location known by the implementation, which is accepted for the verification. Absence of maxAge means "any age" and maxAge=0 means a fresh calculation.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        VerifyV1LocationResponse
+
+
+        Examples
+        --------
+        from network_as_code import NetworkAsCodeApi
+
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.location.verify_v_1(
+            device={"phone_number": "+99999991000"},
+            area={"area_type": "CIRCLE"},
+        )
+        """
+        _response = self._raw_client.verify_v_1(
+            area=area, correlator=correlator, device=device, max_age=max_age, request_options=request_options
+        )
+        return _response.data
+
     def verify(
         self,
         *,
@@ -138,7 +200,23 @@ class LocationClient:
         _response = self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
         return _response.data
 
-    def verify_v_1(
+
+class AsyncLocationClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawLocationClient(client_wrapper=client_wrapper)
+
+    @property
+    def with_raw_response(self) -> AsyncRawLocationClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+
+        Returns
+        -------
+        AsyncRawLocationClient
+        """
+        return self._raw_client
+
+    async def verify_v_1(
         self,
         *,
         area: VerifyV1LocationRequestAreaParams,
@@ -184,37 +262,29 @@ class LocationClient:
 
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
+        import asyncio
 
-        client = NetworkAsCodeApi(
+        from network_as_code import AsyncNetworkAsCodeApi
+
+        client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.location.verify_v_1(
-            device={"phone_number": "+99999991000"},
-            area={"area_type": "CIRCLE"},
-        )
+
+
+        async def main() -> None:
+            await client.location.verify_v_1(
+                device={"phone_number": "+99999991000"},
+                area={"area_type": "CIRCLE"},
+            )
+
+
+        asyncio.run(main())
         """
-        _response = self._raw_client.verify_v_1(
+        _response = await self._raw_client.verify_v_1(
             area=area, correlator=correlator, device=device, max_age=max_age, request_options=request_options
         )
         return _response.data
-
-
-class AsyncLocationClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawLocationClient(client_wrapper=client_wrapper)
-
-    @property
-    def with_raw_response(self) -> AsyncRawLocationClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
-
-        Returns
-        -------
-        AsyncRawLocationClient
-        """
-        return self._raw_client
 
     async def verify(
         self,
@@ -337,74 +407,4 @@ class AsyncLocationClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
-        return _response.data
-
-    async def verify_v_1(
-        self,
-        *,
-        area: VerifyV1LocationRequestAreaParams,
-        correlator: typing.Optional[str] = None,
-        device: typing.Optional[VerifyV1LocationRequestDeviceParams] = OMIT,
-        max_age: typing.Optional[int] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> VerifyV1LocationResponse:
-        """
-        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
-
-        Parameters
-        ----------
-        area : VerifyV1LocationRequestAreaParams
-            Base schema for all areas
-
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-
-        device : typing.Optional[VerifyV1LocationRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-
-            NOTE1: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-            NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
-
-        max_age : typing.Optional[int]
-            The maximum age (in seconds) for the location known by the implementation, which is accepted for the verification. Absence of maxAge means "any age" and maxAge=0 means a fresh calculation.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        VerifyV1LocationResponse
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.location.verify_v_1(
-                device={"phone_number": "+99999991000"},
-                area={"area_type": "CIRCLE"},
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.verify_v_1(
-            area=area, correlator=correlator, device=device, max_age=max_age, request_options=request_options
-        )
         return _response.data

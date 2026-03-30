@@ -40,6 +40,7 @@ export interface CreateReachabilitySubscriptionDeviceStatusResponse {
      *
      *
      *
+     *
      *   - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
      *   - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
      *   - `INACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
@@ -157,6 +158,7 @@ export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
 
     /**
      * Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+     *
      *
      *
      *

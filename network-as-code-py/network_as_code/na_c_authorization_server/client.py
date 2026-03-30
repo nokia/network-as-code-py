@@ -22,9 +22,7 @@ class NaCAuthorizationServerClient:
         """
         return self._raw_client
 
-    def get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
-        self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
+    def get_jwks(self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Any:
         """
 
 
@@ -48,13 +46,11 @@ class NaCAuthorizationServerClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.na_c_authorization_server.get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
+        client.na_c_authorization_server.get_jwks(
             nac_app_ref="nac_app_ref",
         )
         """
-        _response = self._raw_client.get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
-            nac_app_ref, request_options=request_options
-        )
+        _response = self._raw_client.get_jwks(nac_app_ref, request_options=request_options)
         return _response.data
 
 
@@ -73,7 +69,7 @@ class AsyncNaCAuthorizationServerClient:
         """
         return self._raw_client
 
-    async def get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
+    async def get_jwks(
         self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.Any:
         """
@@ -104,14 +100,12 @@ class AsyncNaCAuthorizationServerClient:
 
 
         async def main() -> None:
-            await client.na_c_authorization_server.get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
+            await client.na_c_authorization_server.get_jwks(
                 nac_app_ref="nac_app_ref",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
-            nac_app_ref, request_options=request_options
-        )
+        _response = await self._raw_client.get_jwks(nac_app_ref, request_options=request_options)
         return _response.data

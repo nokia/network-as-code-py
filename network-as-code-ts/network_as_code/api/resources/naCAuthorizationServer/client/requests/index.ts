@@ -1,1 +1,1 @@
-export type { GetJwksAppsNacAppRefWellKnownJwksJsonGetRequest } from "./GetJwksAppsNacAppRefWellKnownJwksJsonGetRequest.js";
+export type { GetJwksNaCAuthorizationServerRequest } from "./GetJwksNaCAuthorizationServerRequest.js";
