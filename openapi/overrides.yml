@@ -205,8 +205,102 @@ paths:
       x-fern-sdk-group-name: slice
       x-fern-sdk-method-name: deactivate
 
+  # Call Forwarding Signal
+  /passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings:
+    post:
+      x-fern-sdk-group-name: call_forwarding_signal
+      x-fern-sdk-method-name: retrieve_call_forwarding
+  /passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings:
+    post:
+      x-fern-sdk-group-name: call_forwarding_signal
+      x-fern-sdk-method-name: retrieve_unconditional_call_forwarding
+
+  # Number Verification
+  /passthrough/camara/v1/number-verification/number-verification/v0/verify:
+    post:
+      x-fern-sdk-group-name: number_verification
+      x-fern-sdk-method-name: verify
+  /passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number:
+    post:
+      x-fern-sdk-group-name: number_verification
+      x-fern-sdk-method-name: get_device_phone_number
+
+  # KYC - Age Verification
+  /passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify:
+    post:
+      x-fern-sdk-group-name: kyc_age_verification
+      x-fern-sdk-method-name: verify
+
+  # KYC - Match
+  /passthrough/camara/v1/kyc-match/kyc-match/v0.3/match:
+    post:
+      x-fern-sdk-group-name: kyc_match
+      x-fern-sdk-method-name: match
+
+  # KYC - Tenure
+  /passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure:
+    post:
+      x-fern-sdk-group-name: kyc_tenure
+      x-fern-sdk-method-name: check_tenure
+
+  # KYC - Fill In
+  /passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in:
+    post:
+      x-fern-sdk-group-name: kyc_fill_in
+      x-fern-sdk-method-name: fill_in
+
+  # Number Recycling
+  /passthrough/camara/v1/number-recycling/number-recycling/v0.2/check:
+    post:
+      x-fern-sdk-group-name: number_recycling
+      x-fern-sdk-method-name: check
+
+  # SIM Swap
+  /passthrough/camara/v1/sim-swap/sim-swap/v0/retrieve-date:
+    post:
+      x-fern-sdk-group-name: sim_swap
+      x-fern-sdk-method-name: retrieve_date
+  /passthrough/camara/v1/sim-swap/sim-swap/v0/check:
+    post:
+      x-fern-sdk-group-name: sim_swap
+      x-fern-sdk-method-name: check
+
+  # Device Swap
+  /passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date:
+    post:
+      x-fern-sdk-group-name: device_swap
+      x-fern-sdk-method-name: retrieve_date
+  /passthrough/camara/v1/device-swap/device-swap/v1/check:
+    post:
+      x-fern-sdk-group-name: device_swap
+      x-fern-sdk-method-name: check
+
+  # Consent Info
+  /passthrough/camara/v1/consent-info/consent-info/v0.1/retrieve:
+    post:
+      x-fern-sdk-group-name: consent_info
+      x-fern-sdk-method-name: retrieve
+
   # OAuth
   /oauth2/v1/auth/clientcredentials:
     get:
       x-fern-sdk-group-name: oauth
       x-fern-sdk-method-name: get_client_credentials
+
+  # Well Known Metadata
+  /.well-known/openid-configuration:
+    get:
+      x-fern-sdk-group-name: well_known_metadata
+      x-fern-sdk-method-name: get_openid_configuration
+  /.well-known/oauth-authorization-server:
+    get:
+      x-fern-sdk-group-name: well_known_metadata
+      x-fern-sdk-method-name: get_oauth_authorization_server
+  /.well-known/security.txt:
+    get:
+      x-fern-sdk-group-name: well_known_metadata
+      x-fern-sdk-method-name: get_security_txt
+  /oauth2/v1/apps/{nac_app_ref}/.well-known/jwks.json:
+    get:
+      x-fern-sdk-group-name: na_c_authorization_server
+      x-fern-sdk-method-name: get_jwks
