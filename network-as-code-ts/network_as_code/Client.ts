@@ -6,10 +6,7 @@ import { ConsentInfoClient } from "./api/resources/consentInfo/client/Client.js"
 import { DeviceStatusClient } from "./api/resources/deviceStatus/client/Client.js";
 import { DeviceSwapClient } from "./api/resources/deviceSwap/client/Client.js";
 import { GeofencingClient } from "./api/resources/geofencing/client/Client.js";
-import { KycAgeVerificationClient } from "./api/resources/kycAgeVerification/client/Client.js";
-import { KycFillInClient } from "./api/resources/kycFillIn/client/Client.js";
-import { KycMatchClient } from "./api/resources/kycMatch/client/Client.js";
-import { KycTenureClient } from "./api/resources/kycTenure/client/Client.js";
+import { KycClient } from "./api/resources/kyc/client/Client.js";
 import { LocationClient } from "./api/resources/location/client/Client.js";
 import { NaCAuthorizationServerClient } from "./api/resources/naCAuthorizationServer/client/Client.js";
 import { NumberRecyclingClient } from "./api/resources/numberRecycling/client/Client.js";
@@ -37,7 +34,7 @@ export class NetworkAsCodeApiClient {
     protected _qod: QodClient | undefined;
     protected _slice: SliceClient | undefined;
     protected _deviceStatus: DeviceStatusClient | undefined;
-    protected _kycFillIn: KycFillInClient | undefined;
+    protected _kyc: KycClient | undefined;
     protected _naCAuthorizationServer: NaCAuthorizationServerClient | undefined;
     protected _deviceSwap: DeviceSwapClient | undefined;
     protected _geofencing: GeofencingClient | undefined;
@@ -45,11 +42,8 @@ export class NetworkAsCodeApiClient {
     protected _callForwardingSignal: CallForwardingSignalClient | undefined;
     protected _numberVerificationV100: NumberVerificationV100Client | undefined;
     protected _numberVerification: NumberVerificationClient | undefined;
-    protected _kycTenure: KycTenureClient | undefined;
     protected _simSwap: SimSwapClient | undefined;
-    protected _kycMatch: KycMatchClient | undefined;
     protected _location: LocationClient | undefined;
-    protected _kycAgeVerification: KycAgeVerificationClient | undefined;
     protected _consentInfo: ConsentInfoClient | undefined;
 
     constructor(options: NetworkAsCodeApiClient.Options) {
@@ -80,8 +74,8 @@ export class NetworkAsCodeApiClient {
         return (this._deviceStatus ??= new DeviceStatusClient(this._options));
     }
 
-    public get kycFillIn(): KycFillInClient {
-        return (this._kycFillIn ??= new KycFillInClient(this._options));
+    public get kyc(): KycClient {
+        return (this._kyc ??= new KycClient(this._options));
     }
 
     public get naCAuthorizationServer(): NaCAuthorizationServerClient {
@@ -112,24 +106,12 @@ export class NetworkAsCodeApiClient {
         return (this._numberVerification ??= new NumberVerificationClient(this._options));
     }
 
-    public get kycTenure(): KycTenureClient {
-        return (this._kycTenure ??= new KycTenureClient(this._options));
-    }
-
     public get simSwap(): SimSwapClient {
         return (this._simSwap ??= new SimSwapClient(this._options));
     }
 
-    public get kycMatch(): KycMatchClient {
-        return (this._kycMatch ??= new KycMatchClient(this._options));
-    }
-
     public get location(): LocationClient {
         return (this._location ??= new LocationClient(this._options));
-    }
-
-    public get kycAgeVerification(): KycAgeVerificationClient {
-        return (this._kycAgeVerification ??= new KycAgeVerificationClient(this._options));
     }
 
     public get consentInfo(): ConsentInfoClient {
