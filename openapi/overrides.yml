@@ -228,25 +228,25 @@ paths:
   # KYC - Age Verification
   /passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify:
     post:
-      x-fern-sdk-group-name: kyc_age_verification
-      x-fern-sdk-method-name: verify
+      x-fern-sdk-group-name: kyc
+      x-fern-sdk-method-name: verify_age
 
   # KYC - Match
   /passthrough/camara/v1/kyc-match/kyc-match/v0.3/match:
     post:
-      x-fern-sdk-group-name: kyc_match
+      x-fern-sdk-group-name: kyc
       x-fern-sdk-method-name: match
 
   # KYC - Tenure
   /passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure:
     post:
-      x-fern-sdk-group-name: kyc_tenure
+      x-fern-sdk-group-name: kyc
       x-fern-sdk-method-name: check_tenure
 
   # KYC - Fill In
   /passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in:
     post:
-      x-fern-sdk-group-name: kyc_fill_in
+      x-fern-sdk-group-name: kyc
       x-fern-sdk-method-name: fill_in
 
   # Number Recycling
