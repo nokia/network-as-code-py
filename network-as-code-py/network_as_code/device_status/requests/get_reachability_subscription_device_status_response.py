@@ -76,6 +76,7 @@ class GetReachabilitySubscriptionDeviceStatusResponseParams(typing_extensions.Ty
     
     
     
+    
       - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
       - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
       - `INACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.

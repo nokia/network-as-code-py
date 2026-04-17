@@ -28,80 +28,13 @@ export class WellKnownMetadataClient {
      * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.wellKnownMetadata.getWellKnownOauthOauthAuthorizationServerGet()
+     *     await client.wellKnownMetadata.getSecurityTxt()
      */
-    public getWellKnownOauthOauthAuthorizationServerGet(
-        requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetWellKnownOauthOauthAuthorizationServerGetResponse> {
-        return core.HttpResponsePromise.fromPromise(
-            this.__getWellKnownOauthOauthAuthorizationServerGet(requestOptions),
-        );
+    public getSecurityTxt(requestOptions?: WellKnownMetadataClient.RequestOptions): core.HttpResponsePromise<string> {
+        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxt(requestOptions));
     }
 
-    private async __getWellKnownOauthOauthAuthorizationServerGet(
-        requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetWellKnownOauthOauthAuthorizationServerGetResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                ".well-known/oauth-authorization-server",
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetWellKnownOauthOauthAuthorizationServerGetResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            throw new errors.NetworkAsCodeApiError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/.well-known/oauth-authorization-server",
-        );
-    }
-
-    /**
-     *
-     *
-     * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @example
-     *     await client.wellKnownMetadata.getSecurityTxtSecurityTxtGet()
-     */
-    public getSecurityTxtSecurityTxtGet(
-        requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): core.HttpResponsePromise<string> {
-        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxtSecurityTxtGet(requestOptions));
-    }
-
-    private async __getSecurityTxtSecurityTxtGet(
+    private async __getSecurityTxt(
         requestOptions?: WellKnownMetadataClient.RequestOptions,
     ): Promise<core.WithRawResponse<string>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -149,17 +82,80 @@ export class WellKnownMetadataClient {
      * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.wellKnownMetadata.getWellKnownOidcOpenidConfigurationGet()
+     *     await client.wellKnownMetadata.getOauthAuthorizationServer()
      */
-    public getWellKnownOidcOpenidConfigurationGet(
+    public getOauthAuthorizationServer(
         requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetWellKnownOidcOpenidConfigurationGetResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getWellKnownOidcOpenidConfigurationGet(requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetOauthAuthorizationServerWellKnownMetadataResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getOauthAuthorizationServer(requestOptions));
     }
 
-    private async __getWellKnownOidcOpenidConfigurationGet(
+    private async __getOauthAuthorizationServer(
         requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetWellKnownOidcOpenidConfigurationGetResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetOauthAuthorizationServerWellKnownMetadataResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                ".well-known/oauth-authorization-server",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetOauthAuthorizationServerWellKnownMetadataResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.NetworkAsCodeApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/.well-known/oauth-authorization-server",
+        );
+    }
+
+    /**
+     *
+     *
+     * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @example
+     *     await client.wellKnownMetadata.getOpenidConfiguration()
+     */
+    public getOpenidConfiguration(
+        requestOptions?: WellKnownMetadataClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getOpenidConfiguration(requestOptions));
+    }
+
+    private async __getOpenidConfiguration(
+        requestOptions?: WellKnownMetadataClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -185,7 +181,7 @@ export class WellKnownMetadataClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.GetWellKnownOidcOpenidConfigurationGetResponse,
+                data: _response.body as NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse,
                 rawResponse: _response.rawResponse,
             };
         }

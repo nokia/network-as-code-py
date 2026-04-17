@@ -51,7 +51,7 @@ export class NumberVerificationV100Client {
         request: NetworkAsCodeApi.PhoneNumberShareRequest = {},
         requestOptions?: NumberVerificationV100Client.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.PhoneNumberShareResponse>> {
-        const { state, code, authorization, "x-correlator": correlator } = request;
+        const { state, code, "x-correlator": correlator, authorization } = request;
         const _queryParams: Record<string, unknown> = {
             state,
             code,
@@ -61,8 +61,8 @@ export class NumberVerificationV100Client {
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                authorization: authorization,
                 "x-correlator": correlator,
+                authorization: authorization,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -130,129 +130,6 @@ export class NumberVerificationV100Client {
             _response.rawResponse,
             "GET",
             "/passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
-        );
-    }
-
-    /**
-     * Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
-     * - The number verification will be done for the user that has authenticated via mobile network
-     * - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
-     *
-     * @param {NetworkAsCodeApi.PhoneNumberVerifyRequest} request
-     * @param {NumberVerificationV100Client.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
-     * @throws {@link NetworkAsCodeApi.GatewayTimeoutError}
-     *
-     * @example
-     *     await client.numberVerificationV100.phoneNumberVerify({
-     *         authorization: "authorization",
-     *         phoneNumber: "+99999991000"
-     *     })
-     *
-     * @example
-     *     await client.numberVerificationV100.phoneNumberVerify({
-     *         authorization: "authorization",
-     *         phoneNumber: "+99999991001"
-     *     })
-     */
-    public phoneNumberVerify(
-        request: NetworkAsCodeApi.PhoneNumberVerifyRequest,
-        requestOptions?: NumberVerificationV100Client.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.PhoneNumberVerifyResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__phoneNumberVerify(request, requestOptions));
-    }
-
-    private async __phoneNumberVerify(
-        request: NetworkAsCodeApi.PhoneNumberVerifyRequest,
-        requestOptions?: NumberVerificationV100Client.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.PhoneNumberVerifyResponse>> {
-        const { state, code, authorization, "x-correlator": correlator, ..._body } = request;
-        const _queryParams: Record<string, unknown> = {
-            state,
-            code,
-        };
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                authorization: authorization,
-                "x-correlator": correlator,
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/number-verification/number-verification/v0/verify",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
-            requestType: "json",
-            body: _body,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.PhoneNumberVerifyResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 504:
-                    throw new NetworkAsCodeApi.GatewayTimeoutError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/passthrough/camara/v1/number-verification/number-verification/v0/verify",
         );
     }
 }

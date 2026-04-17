@@ -25,27 +25,25 @@ export class NaCAuthorizationServerClient {
     /**
      *
      *
-     * @param {NetworkAsCodeApi.GetJwksAppsNacAppRefWellKnownJwksJsonGetRequest} request
+     * @param {NetworkAsCodeApi.GetJwksNaCAuthorizationServerRequest} request
      * @param {NaCAuthorizationServerClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
      *
      * @example
-     *     await client.naCAuthorizationServer.getJwksAppsNacAppRefWellKnownJwksJsonGet({
+     *     await client.naCAuthorizationServer.getJwks({
      *         nac_app_ref: "nac_app_ref"
      *     })
      */
-    public getJwksAppsNacAppRefWellKnownJwksJsonGet(
-        request: NetworkAsCodeApi.GetJwksAppsNacAppRefWellKnownJwksJsonGetRequest,
+    public getJwks(
+        request: NetworkAsCodeApi.GetJwksNaCAuthorizationServerRequest,
         requestOptions?: NaCAuthorizationServerClient.RequestOptions,
     ): core.HttpResponsePromise<unknown> {
-        return core.HttpResponsePromise.fromPromise(
-            this.__getJwksAppsNacAppRefWellKnownJwksJsonGet(request, requestOptions),
-        );
+        return core.HttpResponsePromise.fromPromise(this.__getJwks(request, requestOptions));
     }
 
-    private async __getJwksAppsNacAppRefWellKnownJwksJsonGet(
-        request: NetworkAsCodeApi.GetJwksAppsNacAppRefWellKnownJwksJsonGetRequest,
+    private async __getJwks(
+        request: NetworkAsCodeApi.GetJwksNaCAuthorizationServerRequest,
         requestOptions?: NaCAuthorizationServerClient.RequestOptions,
     ): Promise<core.WithRawResponse<unknown>> {
         const { nac_app_ref: nacAppRef } = request;

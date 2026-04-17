@@ -6,13 +6,13 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .get_well_known_oauth_oauth_authorization_server_get_response import (
-        GetWellKnownOauthOauthAuthorizationServerGetResponse,
+    from .get_oauth_authorization_server_well_known_metadata_response import (
+        GetOauthAuthorizationServerWellKnownMetadataResponse,
     )
-    from .get_well_known_oidc_openid_configuration_get_response import GetWellKnownOidcOpenidConfigurationGetResponse
+    from .get_openid_configuration_well_known_metadata_response import GetOpenidConfigurationWellKnownMetadataResponse
 _dynamic_imports: typing.Dict[str, str] = {
-    "GetWellKnownOauthOauthAuthorizationServerGetResponse": ".get_well_known_oauth_oauth_authorization_server_get_response",
-    "GetWellKnownOidcOpenidConfigurationGetResponse": ".get_well_known_oidc_openid_configuration_get_response",
+    "GetOauthAuthorizationServerWellKnownMetadataResponse": ".get_oauth_authorization_server_well_known_metadata_response",
+    "GetOpenidConfigurationWellKnownMetadataResponse": ".get_openid_configuration_well_known_metadata_response",
 }
 
 
@@ -37,4 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["GetWellKnownOauthOauthAuthorizationServerGetResponse", "GetWellKnownOidcOpenidConfigurationGetResponse"]
+__all__ = ["GetOauthAuthorizationServerWellKnownMetadataResponse", "GetOpenidConfigurationWellKnownMetadataResponse"]

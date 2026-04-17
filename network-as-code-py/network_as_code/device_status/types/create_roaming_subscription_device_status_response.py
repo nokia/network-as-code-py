@@ -44,6 +44,7 @@ class CreateRoamingSubscriptionDeviceStatusResponse(UniversalBaseModel):
     
     
     
+    
      at API project level.
     """
 
@@ -81,6 +82,7 @@ class CreateRoamingSubscriptionDeviceStatusResponse(UniversalBaseModel):
     status: typing.Optional[CreateRoamingSubscriptionDeviceStatusResponseStatus] = pydantic.Field(default=None)
     """
     Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+    
     
     
     

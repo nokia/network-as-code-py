@@ -2,13 +2,4 @@
 
 import typing
 
-BadRequestErrorBodyCode = typing.Union[
-    typing.Literal[
-        "INVALID_ARGUMENT",
-        "OUT_OF_RANGE",
-        "QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE",
-        "INVALID_CREDENTIAL",
-        "INVALID_TOKEN",
-    ],
-    typing.Any,
-]
+BadRequestErrorBodyCode = typing.Union[typing.Literal["INVALID_ARGUMENT"], typing.Any]

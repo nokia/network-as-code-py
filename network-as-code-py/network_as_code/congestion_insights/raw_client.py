@@ -32,119 +32,6 @@ class RawCongestionInsightsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def list_subscriptions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]:
-        """
-        Get congestion subscriptions.
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]
-
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "congestion-insights/v0/subscriptions",
-            method="GET",
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListSubscriptionsCongestionInsightsResponseItem],
-                    parse_obj_as(
-                        type_=typing.List[ListSubscriptionsCongestionInsightsResponseItem],  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def create_subscription(
-        self,
-        *,
-        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
-        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
-        subscription_expire_time: dt.datetime,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CreateSubscriptionCongestionInsightsResponse]:
-        """
-        Create device congestion subscription. Notifies if congestion is high, medium, low or none.
-
-        Parameters
-        ----------
-        device : CreateSubscriptionCongestionInsightsRequestDeviceParams
-            Identifiers of the device
-
-        webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
-
-        subscription_expire_time : dt.datetime
-            Time when the subscription expires.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[CreateSubscriptionCongestionInsightsResponse]
-
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "congestion-insights/v0/subscriptions",
-            method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(
-                    object_=device,
-                    annotation=CreateSubscriptionCongestionInsightsRequestDeviceParams,
-                    direction="write",
-                ),
-                "webhook": convert_and_respect_annotation_metadata(
-                    object_=webhook,
-                    annotation=CreateSubscriptionCongestionInsightsRequestWebhookParams,
-                    direction="write",
-                ),
-                "subscriptionExpireTime": subscription_expire_time,
-            },
-            headers={
-                "content-type": "application/json",
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CreateSubscriptionCongestionInsightsResponse,
-                    parse_obj_as(
-                        type_=CreateSubscriptionCongestionInsightsResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
     def get_subscription(
         self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[GetSubscriptionCongestionInsightsResponse]:
@@ -316,14 +203,9 @@ class RawCongestionInsightsClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-
-class AsyncRawCongestionInsightsClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def list_subscriptions(
+    def list_subscriptions(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]:
+    ) -> HttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]:
         """
         Get congestion subscriptions.
 
@@ -334,10 +216,10 @@ class AsyncRawCongestionInsightsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]
+        HttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]
 
         """
-        _response = await self._client_wrapper.httpx_client.request(
+        _response = self._client_wrapper.httpx_client.request(
             "congestion-insights/v0/subscriptions",
             method="GET",
             request_options=request_options,
@@ -351,20 +233,20 @@ class AsyncRawCongestionInsightsClient:
                         object_=_response.json(),
                     ),
                 )
-                return AsyncHttpResponse(response=_response, data=_data)
+                return HttpResponse(response=_response, data=_data)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def create_subscription(
+    def create_subscription(
         self,
         *,
         device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
         webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
         subscription_expire_time: dt.datetime,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CreateSubscriptionCongestionInsightsResponse]:
+    ) -> HttpResponse[CreateSubscriptionCongestionInsightsResponse]:
         """
         Create device congestion subscription. Notifies if congestion is high, medium, low or none.
 
@@ -383,10 +265,10 @@ class AsyncRawCongestionInsightsClient:
 
         Returns
         -------
-        AsyncHttpResponse[CreateSubscriptionCongestionInsightsResponse]
+        HttpResponse[CreateSubscriptionCongestionInsightsResponse]
 
         """
-        _response = await self._client_wrapper.httpx_client.request(
+        _response = self._client_wrapper.httpx_client.request(
             "congestion-insights/v0/subscriptions",
             method="POST",
             json={
@@ -417,7 +299,7 @@ class AsyncRawCongestionInsightsClient:
                         object_=_response.json(),
                     ),
                 )
-                return AsyncHttpResponse(response=_response, data=_data)
+                return HttpResponse(response=_response, data=_data)
             if _response.status_code == 422:
                 raise UnprocessableEntityError(
                     headers=dict(_response.headers),
@@ -433,6 +315,11 @@ class AsyncRawCongestionInsightsClient:
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+
+class AsyncRawCongestionInsightsClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
 
     async def get_subscription(
         self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
@@ -585,6 +472,119 @@ class AsyncRawCongestionInsightsClient:
                     typing.List[QueryCongestionInsightsResponseItem],
                     parse_obj_as(
                         type_=typing.List[QueryCongestionInsightsResponseItem],  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def list_subscriptions(
+        self, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]:
+        """
+        Get congestion subscriptions.
+
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[ListSubscriptionsCongestionInsightsResponseItem]]
+
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "congestion-insights/v0/subscriptions",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListSubscriptionsCongestionInsightsResponseItem],
+                    parse_obj_as(
+                        type_=typing.List[ListSubscriptionsCongestionInsightsResponseItem],  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def create_subscription(
+        self,
+        *,
+        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
+        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
+        subscription_expire_time: dt.datetime,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[CreateSubscriptionCongestionInsightsResponse]:
+        """
+        Create device congestion subscription. Notifies if congestion is high, medium, low or none.
+
+        Parameters
+        ----------
+        device : CreateSubscriptionCongestionInsightsRequestDeviceParams
+            Identifiers of the device
+
+        webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
+
+        subscription_expire_time : dt.datetime
+            Time when the subscription expires.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[CreateSubscriptionCongestionInsightsResponse]
+
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "congestion-insights/v0/subscriptions",
+            method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(
+                    object_=device,
+                    annotation=CreateSubscriptionCongestionInsightsRequestDeviceParams,
+                    direction="write",
+                ),
+                "webhook": convert_and_respect_annotation_metadata(
+                    object_=webhook,
+                    annotation=CreateSubscriptionCongestionInsightsRequestWebhookParams,
+                    direction="write",
+                ),
+                "subscriptionExpireTime": subscription_expire_time,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateSubscriptionCongestionInsightsResponse,
+                    parse_obj_as(
+                        type_=CreateSubscriptionCongestionInsightsResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

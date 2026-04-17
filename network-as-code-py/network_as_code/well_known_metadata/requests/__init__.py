@@ -6,15 +6,15 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .get_well_known_oauth_oauth_authorization_server_get_response import (
-        GetWellKnownOauthOauthAuthorizationServerGetResponseParams,
+    from .get_oauth_authorization_server_well_known_metadata_response import (
+        GetOauthAuthorizationServerWellKnownMetadataResponseParams,
     )
-    from .get_well_known_oidc_openid_configuration_get_response import (
-        GetWellKnownOidcOpenidConfigurationGetResponseParams,
+    from .get_openid_configuration_well_known_metadata_response import (
+        GetOpenidConfigurationWellKnownMetadataResponseParams,
     )
 _dynamic_imports: typing.Dict[str, str] = {
-    "GetWellKnownOauthOauthAuthorizationServerGetResponseParams": ".get_well_known_oauth_oauth_authorization_server_get_response",
-    "GetWellKnownOidcOpenidConfigurationGetResponseParams": ".get_well_known_oidc_openid_configuration_get_response",
+    "GetOauthAuthorizationServerWellKnownMetadataResponseParams": ".get_oauth_authorization_server_well_known_metadata_response",
+    "GetOpenidConfigurationWellKnownMetadataResponseParams": ".get_openid_configuration_well_known_metadata_response",
 }
 
 
@@ -40,6 +40,6 @@ def __dir__():
 
 
 __all__ = [
-    "GetWellKnownOauthOauthAuthorizationServerGetResponseParams",
-    "GetWellKnownOidcOpenidConfigurationGetResponseParams",
+    "GetOauthAuthorizationServerWellKnownMetadataResponseParams",
+    "GetOpenidConfigurationWellKnownMetadataResponseParams",
 ]

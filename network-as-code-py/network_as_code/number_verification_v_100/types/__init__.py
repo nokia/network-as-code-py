@@ -7,11 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .phone_number_share_response import PhoneNumberShareResponse
-    from .phone_number_verify_response import PhoneNumberVerifyResponse
-_dynamic_imports: typing.Dict[str, str] = {
-    "PhoneNumberShareResponse": ".phone_number_share_response",
-    "PhoneNumberVerifyResponse": ".phone_number_verify_response",
-}
+_dynamic_imports: typing.Dict[str, str] = {"PhoneNumberShareResponse": ".phone_number_share_response"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -35,4 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["PhoneNumberShareResponse", "PhoneNumberVerifyResponse"]
+__all__ = ["PhoneNumberShareResponse"]

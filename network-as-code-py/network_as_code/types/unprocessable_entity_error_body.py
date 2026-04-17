@@ -4,17 +4,11 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .unprocessable_entity_error_body_code import UnprocessableEntityErrorBodyCode
+from .unprocessable_entity_error_body_detail_item import UnprocessableEntityErrorBodyDetailItem
 
 
 class UnprocessableEntityErrorBody(UniversalBaseModel):
-    message: str = pydantic.Field()
-    """
-    A human readable description of what the event represent
-    """
-
-    status: typing.Optional[str] = None
-    code: typing.Optional[UnprocessableEntityErrorBodyCode] = None
+    detail: typing.Optional[typing.List[UnprocessableEntityErrorBodyDetailItem]] = None
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

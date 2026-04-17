@@ -16,7 +16,7 @@ class RawNaCAuthorizationServerClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
+    def get_jwks(
         self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[typing.Any]:
         """
@@ -72,7 +72,7 @@ class AsyncRawNaCAuthorizationServerClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def get_jwks_apps_nac_app_ref_well_known_jwks_json_get(
+    async def get_jwks(
         self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[typing.Any]:
         """

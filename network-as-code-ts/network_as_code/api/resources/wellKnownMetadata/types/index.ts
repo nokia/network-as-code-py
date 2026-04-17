@@ -1,2 +1,2 @@
-export * from "./GetWellKnownOauthOauthAuthorizationServerGetResponse.js";
-export * from "./GetWellKnownOidcOpenidConfigurationGetResponse.js";
+export * from "./GetOauthAuthorizationServerWellKnownMetadataResponse.js";
+export * from "./GetOpenidConfigurationWellKnownMetadataResponse.js";

@@ -37,93 +37,6 @@ class CongestionInsightsClient:
         """
         return self._raw_client
 
-    def list_subscriptions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
-        """
-        Get congestion subscriptions.
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.List[ListSubscriptionsCongestionInsightsResponseItem]
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.congestion_insights.list_subscriptions()
-        """
-        _response = self._raw_client.list_subscriptions(request_options=request_options)
-        return _response.data
-
-    def create_subscription(
-        self,
-        *,
-        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
-        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
-        subscription_expire_time: dt.datetime,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSubscriptionCongestionInsightsResponse:
-        """
-        Create device congestion subscription. Notifies if congestion is high, medium, low or none.
-
-        Parameters
-        ----------
-        device : CreateSubscriptionCongestionInsightsRequestDeviceParams
-            Identifiers of the device
-
-        webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
-
-        subscription_expire_time : dt.datetime
-            Time when the subscription expires.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        CreateSubscriptionCongestionInsightsResponse
-
-
-        Examples
-        --------
-        import datetime
-
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.congestion_insights.create_subscription(
-            device={"phone_number": "+36719991000"},
-            webhook={
-                "notification_url": "http://example.com/notify",
-                "notification_auth_token": "c8974e592f9fh683d4a3960714",
-            },
-            subscription_expire_time=datetime.datetime.fromisoformat(
-                "2045-04-12 09:09:33+00:00",
-            ),
-        )
-        """
-        _response = self._raw_client.create_subscription(
-            device=device,
-            webhook=webhook,
-            subscription_expire_time=subscription_expire_time,
-            request_options=request_options,
-        )
-        return _response.data
-
     def get_subscription(
         self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> GetSubscriptionCongestionInsightsResponse:
@@ -234,23 +147,7 @@ class CongestionInsightsClient:
         _response = self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
         return _response.data
 
-
-class AsyncCongestionInsightsClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawCongestionInsightsClient(client_wrapper=client_wrapper)
-
-    @property
-    def with_raw_response(self) -> AsyncRawCongestionInsightsClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
-
-        Returns
-        -------
-        AsyncRawCongestionInsightsClient
-        """
-        return self._raw_client
-
-    async def list_subscriptions(
+    def list_subscriptions(
         self, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
         """
@@ -268,26 +165,18 @@ class AsyncCongestionInsightsClient:
 
         Examples
         --------
-        import asyncio
+        from network_as_code import NetworkAsCodeApi
 
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
+        client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
-        async def main() -> None:
-            await client.congestion_insights.list_subscriptions()
-
-
-        asyncio.run(main())
+        client.congestion_insights.list_subscriptions()
         """
-        _response = await self._raw_client.list_subscriptions(request_options=request_options)
+        _response = self._raw_client.list_subscriptions(request_options=request_options)
         return _response.data
 
-    async def create_subscription(
+    def create_subscription(
         self,
         *,
         device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
@@ -318,39 +207,48 @@ class AsyncCongestionInsightsClient:
 
         Examples
         --------
-        import asyncio
         import datetime
 
-        from network_as_code import AsyncNetworkAsCodeApi
+        from network_as_code import NetworkAsCodeApi
 
-        client = AsyncNetworkAsCodeApi(
+        client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
-        async def main() -> None:
-            await client.congestion_insights.create_subscription(
-                device={"phone_number": "+36719991000"},
-                webhook={
-                    "notification_url": "http://example.com/notify",
-                    "notification_auth_token": "c8974e592f9fh683d4a3960714",
-                },
-                subscription_expire_time=datetime.datetime.fromisoformat(
-                    "2045-04-12 09:09:33+00:00",
-                ),
-            )
-
-
-        asyncio.run(main())
+        client.congestion_insights.create_subscription(
+            device={"phone_number": "+36719991000"},
+            webhook={
+                "notification_url": "http://example.com/notify",
+                "notification_auth_token": "c8974e592f9fh683d4a3960714",
+            },
+            subscription_expire_time=datetime.datetime.fromisoformat(
+                "2045-04-12 09:09:33+00:00",
+            ),
+        )
         """
-        _response = await self._raw_client.create_subscription(
+        _response = self._raw_client.create_subscription(
             device=device,
             webhook=webhook,
             subscription_expire_time=subscription_expire_time,
             request_options=request_options,
         )
         return _response.data
+
+
+class AsyncCongestionInsightsClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawCongestionInsightsClient(client_wrapper=client_wrapper)
+
+    @property
+    def with_raw_response(self) -> AsyncRawCongestionInsightsClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+
+        Returns
+        -------
+        AsyncRawCongestionInsightsClient
+        """
+        return self._raw_client
 
     async def get_subscription(
         self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
@@ -484,4 +382,106 @@ class AsyncCongestionInsightsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
+        return _response.data
+
+    async def list_subscriptions(
+        self, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
+        """
+        Get congestion subscriptions.
+
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        typing.List[ListSubscriptionsCongestionInsightsResponseItem]
+
+
+        Examples
+        --------
+        import asyncio
+
+        from network_as_code import AsyncNetworkAsCodeApi
+
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.congestion_insights.list_subscriptions()
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_subscriptions(request_options=request_options)
+        return _response.data
+
+    async def create_subscription(
+        self,
+        *,
+        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
+        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
+        subscription_expire_time: dt.datetime,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> CreateSubscriptionCongestionInsightsResponse:
+        """
+        Create device congestion subscription. Notifies if congestion is high, medium, low or none.
+
+        Parameters
+        ----------
+        device : CreateSubscriptionCongestionInsightsRequestDeviceParams
+            Identifiers of the device
+
+        webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
+
+        subscription_expire_time : dt.datetime
+            Time when the subscription expires.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        CreateSubscriptionCongestionInsightsResponse
+
+
+        Examples
+        --------
+        import asyncio
+        import datetime
+
+        from network_as_code import AsyncNetworkAsCodeApi
+
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.congestion_insights.create_subscription(
+                device={"phone_number": "+36719991000"},
+                webhook={
+                    "notification_url": "http://example.com/notify",
+                    "notification_auth_token": "c8974e592f9fh683d4a3960714",
+                },
+                subscription_expire_time=datetime.datetime.fromisoformat(
+                    "2045-04-12 09:09:33+00:00",
+                ),
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.create_subscription(
+            device=device,
+            webhook=webhook,
+            subscription_expire_time=subscription_expire_time,
+            request_options=request_options,
+        )
         return _response.data

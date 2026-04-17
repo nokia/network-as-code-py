@@ -10,7 +10,7 @@ class BaseClientWrapper:
     def __init__(
         self,
         *,
-        rapidapi_host: str,
+        rapidapi_host: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
@@ -31,7 +31,8 @@ class BaseClientWrapper:
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             **(self.get_custom_headers() or {}),
         }
-        headers["x-rapidapi-host"] = self._rapidapi_host
+        if self._rapidapi_host is not None:
+            headers["x-rapidapi-host"] = self._rapidapi_host
         headers["x-rapidapi-key"] = self.api_key
         return headers
 
@@ -49,7 +50,7 @@ class SyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        rapidapi_host: str,
+        rapidapi_host: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
@@ -71,7 +72,7 @@ class AsyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        rapidapi_host: str,
+        rapidapi_host: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,

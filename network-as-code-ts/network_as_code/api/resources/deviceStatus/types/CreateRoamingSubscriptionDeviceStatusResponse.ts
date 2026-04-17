@@ -15,6 +15,7 @@ export interface CreateRoamingSubscriptionDeviceStatusResponse {
      *
      *
      *
+     *
      *  at API project level.
      */
     types: CreateRoamingSubscriptionDeviceStatusResponse.Types.Item[];
@@ -41,6 +42,7 @@ export interface CreateRoamingSubscriptionDeviceStatusResponse {
     expiresAt?: string;
     /**
      * Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+     *
      *
      *
      *
@@ -167,6 +169,7 @@ export namespace CreateRoamingSubscriptionDeviceStatusResponse {
 
     /**
      * Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+     *
      *
      *
      *
