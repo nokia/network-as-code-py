@@ -19,3 +19,4 @@ curl --request POST \
 # are all orphans and should not be reflected in the generated code.
 
 jq 'del(.components.schemas)' openapi/rapid-spec-oas.json > openapi/rapid-spec-oas-no-schemas.json 
+jq 'walk(if type == "object" and has("204") then .["204"] |= del(.content) else . end)' openapi/rapid-spec-oas-no-schemas.json > openapi/rapid-spec-oas-no-schemas-no-content.json 

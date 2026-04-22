@@ -4,7 +4,6 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .retrieve_location_request_device import RetrieveLocationRequestDeviceParams
     from .retrieve_location_response import RetrieveLocationResponseParams
@@ -12,22 +11,10 @@ if typing.TYPE_CHECKING:
     from .verify_location_request_area import VerifyLocationRequestAreaParams
     from .verify_location_request_device import VerifyLocationRequestDeviceParams
     from .verify_location_response import VerifyLocationResponseParams
-    from .verify_v_1_location_request_area import VerifyV1LocationRequestAreaParams
-    from .verify_v_1_location_request_device import VerifyV1LocationRequestDeviceParams
-    from .verify_v_1_location_response import VerifyV1LocationResponseParams
-_dynamic_imports: typing.Dict[str, str] = {
-    "RetrieveLocationRequestDeviceParams": ".retrieve_location_request_device",
-    "RetrieveLocationResponseAreaParams": ".retrieve_location_response_area",
-    "RetrieveLocationResponseParams": ".retrieve_location_response",
-    "VerifyLocationRequestAreaParams": ".verify_location_request_area",
-    "VerifyLocationRequestDeviceParams": ".verify_location_request_device",
-    "VerifyLocationResponseParams": ".verify_location_response",
-    "VerifyV1LocationRequestAreaParams": ".verify_v_1_location_request_area",
-    "VerifyV1LocationRequestDeviceParams": ".verify_v_1_location_request_device",
-    "VerifyV1LocationResponseParams": ".verify_v_1_location_response",
-}
-
-
+    from .verify_v1location_request_area import VerifyV1LocationRequestAreaParams
+    from .verify_v1location_request_device import VerifyV1LocationRequestDeviceParams
+    from .verify_v1location_response import VerifyV1LocationResponseParams
+_dynamic_imports: typing.Dict[str, str] = {"RetrieveLocationRequestDeviceParams": ".retrieve_location_request_device", "RetrieveLocationResponseAreaParams": ".retrieve_location_response_area", "RetrieveLocationResponseParams": ".retrieve_location_response", "VerifyLocationRequestAreaParams": ".verify_location_request_area", "VerifyLocationRequestDeviceParams": ".verify_location_request_device", "VerifyLocationResponseParams": ".verify_location_response", "VerifyV1LocationRequestAreaParams": ".verify_v1location_request_area", "VerifyV1LocationRequestDeviceParams": ".verify_v1location_request_device", "VerifyV1LocationResponseParams": ".verify_v1location_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -42,21 +29,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "RetrieveLocationRequestDeviceParams",
-    "RetrieveLocationResponseAreaParams",
-    "RetrieveLocationResponseParams",
-    "VerifyLocationRequestAreaParams",
-    "VerifyLocationRequestDeviceParams",
-    "VerifyLocationResponseParams",
-    "VerifyV1LocationRequestAreaParams",
-    "VerifyV1LocationRequestDeviceParams",
-    "VerifyV1LocationResponseParams",
-]
+__all__ = ["RetrieveLocationRequestDeviceParams", "RetrieveLocationResponseAreaParams", "RetrieveLocationResponseParams", "VerifyLocationRequestAreaParams", "VerifyLocationRequestDeviceParams", "VerifyLocationResponseParams", "VerifyV1LocationRequestAreaParams", "VerifyV1LocationRequestDeviceParams", "VerifyV1LocationResponseParams"]

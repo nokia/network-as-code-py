@@ -4,13 +4,9 @@ import typing_extensions
 
 
 class ListSlicesSliceResponseItemSliceNetworkIdentifierParams(typing_extensions.TypedDict):
-    """
-    PLMN ID with MCC and MNC codes.
-    """
-
     mcc: str
     """
     Country name, short name, or MCC code. One cannot use country names if a country has several MCC codes, such as the US.
     """
-
+    
     mnc: str

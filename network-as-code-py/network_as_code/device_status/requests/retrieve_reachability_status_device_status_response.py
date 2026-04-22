@@ -11,18 +11,14 @@ from ..types.retrieve_reachability_status_device_status_response_connectivity_it
 
 
 class RetrieveReachabilityStatusDeviceStatusResponseParams(typing_extensions.TypedDict):
-    last_status_time: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastStatusTime")]
-    ]
+    last_status_time: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastStatusTime")]]
     """
     Last time that the associated device reachability status was updated
     """
-
+    
     reachable: bool
     """
     Indicates overall device reachability
     """
-
-    connectivity: typing_extensions.NotRequired[
-        typing.Sequence[RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem]
-    ]
+    
+    connectivity: typing_extensions.NotRequired[typing.Sequence[RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem]]

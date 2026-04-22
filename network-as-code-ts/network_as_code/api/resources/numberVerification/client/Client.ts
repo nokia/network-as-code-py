@@ -23,64 +23,6 @@ export class NumberVerificationClient {
     }
 
     /**
-     * @param {NumberVerificationClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @example
-     *     await client.numberVerification.getDevicePhoneNumber()
-     */
-    public getDevicePhoneNumber(
-        requestOptions?: NumberVerificationClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
-        return core.HttpResponsePromise.fromPromise(this.__getDevicePhoneNumber(requestOptions));
-    }
-
-    private async __getDevicePhoneNumber(
-        requestOptions?: NumberVerificationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
-            ),
-            method: "POST",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            throw new errors.NetworkAsCodeApiError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
-        );
-    }
-
-    /**
      * Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
      * - The number verification will be done for the user that has authenticated via mobile network
      * - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
@@ -116,10 +58,10 @@ export class NumberVerificationClient {
         request: NetworkAsCodeApi.VerifyNumberVerificationRequest = {},
         requestOptions?: NumberVerificationClient.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyNumberVerificationResponse>> {
-        const { code, state, authorization, "x-correlator": correlator, ..._body } = request;
+        const { state, code, authorization, "x-correlator": correlator, ..._body } = request;
         const _queryParams: Record<string, unknown> = {
-            code,
             state,
+            code,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -143,6 +85,11 @@ export class NumberVerificationClient {
             headers: _headers,
             contentType: "application/json",
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             requestType: "json",
             body: _body,
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
@@ -198,6 +145,64 @@ export class NumberVerificationClient {
             _response.rawResponse,
             "POST",
             "/passthrough/camara/v1/number-verification/number-verification/v0/verify",
+        );
+    }
+
+    /**
+     * @param {NumberVerificationClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @example
+     *     await client.numberVerification.getDevicePhoneNumber()
+     */
+    public getDevicePhoneNumber(
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): core.HttpResponsePromise<void> {
+        return core.HttpResponsePromise.fromPromise(this.__getDevicePhoneNumber(requestOptions));
+    }
+
+    private async __getDevicePhoneNumber(
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): Promise<core.WithRawResponse<void>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
+            ),
+            method: "POST",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: undefined, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.NetworkAsCodeApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
         );
     }
 }

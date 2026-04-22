@@ -11,40 +11,18 @@ from ...core.serialization import FieldMetadata
 class CreateSessionQodRequestApplicationServer(UniversalBaseModel):
     """
     A server hosting backend applications to deliver some business logic to clients.
-
+    
     The developer can choose to provide the below specified device identifiers:
-
+    
     * `ipv4Address`
     * `ipv6Address`
     """
-
-    ipv_4_address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv4Address")] = (
-        pydantic.Field(alias="ipv4Address", default=None)
-    )
-    """
-    IPv4 address may be specified in form <address/mask> as:
-      - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
-      - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
-        In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
-    """
-
-    ipv_6_address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address")] = (
-        pydantic.Field(alias="ipv6Address", default=None)
-    )
-    """
-    IPv6 address may be specified in form <address/mask> as:
-      - address - The /128 subnet is optional for single addresses:
-        - 2001:db8:85a3:8d3:1319:8a2e:370:7344
-        - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
-      - address/mask - an IP v6 number with a mask:
-        - 2001:db8:85a3:8d3::0/64
-        - 2001:db8:85a3:8d3::/64
-    """
-
+    ipv4address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv4Address"), pydantic.Field(alias="ipv4Address", description="IPv4 address may be specified in form <address/mask> as:\n  - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.\n  - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.\n    In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.")] = None
+    ipv6address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address"), pydantic.Field(alias="ipv6Address", description="IPv6 address may be specified in form <address/mask> as:\n  - address - The /128 subnet is optional for single addresses:\n    - 2001:db8:85a3:8d3:1319:8a2e:370:7344\n    - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128\n  - address/mask - an IP v6 number with a mask:\n    - 2001:db8:85a3:8d3::0/64\n    - 2001:db8:85a3:8d3::/64")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

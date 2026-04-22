@@ -8,6 +8,3 @@ from .delete_device_attachment_slice_response_resource_traffic_categories_apps i
 
 class DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesParams(typing_extensions.TypedDict):
     apps: DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesAppsParams
-    """
-    Contains the operating system ID and the applications identifiers.
-    """

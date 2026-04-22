@@ -32,12 +32,10 @@ export interface CreateSliceSliceRequest {
     notificationUrl: string;
     /** Authorization token for notification sending. */
     notificationAuthToken?: string | null;
-    /** PLMN ID with MCC and MNC codes. */
     networkIdentifier: CreateSliceSliceRequest.NetworkIdentifier;
-    /** Slice Service type(SST) and slice differentiator(SD). */
     sliceInfo: CreateSliceSliceRequest.SliceInfo;
     /** Specifies the area where the slice can be used */
-    areaOfService?: CreateSliceSliceRequest.AreaOfService | null;
+    areaOfService?: CreateSliceSliceRequest.AreaOfService;
     /** Maximum number of data connection sessions in the slice. */
     maxDataConnections?: number | null;
     /** Maximum number of devices using the slice. */
@@ -47,48 +45,35 @@ export interface CreateSliceSliceRequest {
     /** ServicePriority attribute */
     servicePriority?: number | null;
     /** Data rate parameters (max/guaranteed) supported by the network slice for all devices together in downlink */
-    sliceDownlinkThroughput?: CreateSliceSliceRequest.SliceDownlinkThroughput | null;
+    sliceDownlinkThroughput?: CreateSliceSliceRequest.SliceDownlinkThroughput;
     /** Data rate parameters (max/guaranteed) supported by the network slice for all devices together in uplink */
-    sliceUplinkThroughput?: CreateSliceSliceRequest.SliceUplinkThroughput | null;
+    sliceUplinkThroughput?: CreateSliceSliceRequest.SliceUplinkThroughput;
     /** Data rate parameters (max/guaranteed) supported by the network slice per device in downlink */
-    deviceDownlinkThroughput?: CreateSliceSliceRequest.DeviceDownlinkThroughput | null;
+    deviceDownlinkThroughput?: CreateSliceSliceRequest.DeviceDownlinkThroughput;
     /** Data rate parameters (max/guaranteed) supported by the network slice per device in uplink */
-    deviceUplinkThroughput?: CreateSliceSliceRequest.DeviceUplinkThroughput | null;
+    deviceUplinkThroughput?: CreateSliceSliceRequest.DeviceUplinkThroughput;
     /** Parameter describing the isolation type */
-    isolationLevel?: CreateSliceSliceRequest.IsolationLevel | null;
+    isolationLevel?: CreateSliceSliceRequest.IsolationLevel;
     /** QoS Identifier */
     qos?: string | null;
     /** 5G QoS Identifier */
     udm5Qi?: string | null;
     /** Customer created the slice */
-    customer?: CreateSliceSliceRequest.Customer | null;
+    customer?: CreateSliceSliceRequest.Customer;
 }
 
 export namespace CreateSliceSliceRequest {
-    /**
-     * PLMN ID with MCC and MNC codes.
-     */
     export interface NetworkIdentifier {
         /** Country name, short name, or MCC code. One cannot use country names if a country has several MCC codes, such as the US. */
         mcc: string;
         mnc: string;
     }
 
-    /**
-     * Slice Service type(SST) and slice differentiator(SD).
-     */
     export interface SliceInfo {
-        /** Name or ID of slice type. */
-        serviceType: SliceInfo.ServiceType;
+        /** Name or ID of slice type (e.g. eMBB, URLLC, MIoT or numeric SST). */
+        serviceType: number;
         /** Differentiator identifies the slice within the type. */
-        differentiator?: string | null;
-    }
-
-    export namespace SliceInfo {
-        /**
-         * Name or ID of slice type.
-         */
-        export type ServiceType = ("eMBB" | "URLLC" | "MIoT") | number;
+        differentiator?: (string | null) | undefined;
     }
 
     export interface AreaOfService {
@@ -101,38 +86,38 @@ export namespace CreateSliceSliceRequest {
 
         export namespace Polygon {
             export interface Item {
-                lat?: number;
-                lon?: number;
+                lat?: number | undefined;
+                lon?: number | undefined;
             }
         }
     }
 
     export interface SliceDownlinkThroughput {
         /** Guaranteed throughput in kbps. */
-        guaranteed?: number | null;
+        guaranteed?: (number | null) | undefined;
         /** Maximum throughput in kbps. */
-        maximum?: number | null;
+        maximum?: (number | null) | undefined;
     }
 
     export interface SliceUplinkThroughput {
         /** Guaranteed throughput in kbps. */
-        guaranteed?: number | null;
+        guaranteed?: (number | null) | undefined;
         /** Maximum throughput in kbps. */
-        maximum?: number | null;
+        maximum?: (number | null) | undefined;
     }
 
     export interface DeviceDownlinkThroughput {
         /** Guaranteed throughput in kbps. */
-        guaranteed?: number | null;
+        guaranteed?: (number | null) | undefined;
         /** Maximum throughput in kbps. */
-        maximum?: number | null;
+        maximum?: (number | null) | undefined;
     }
 
     export interface DeviceUplinkThroughput {
         /** Guaranteed throughput in kbps. */
-        guaranteed?: number | null;
+        guaranteed?: (number | null) | undefined;
         /** Maximum throughput in kbps. */
-        maximum?: number | null;
+        maximum?: (number | null) | undefined;
     }
 
     export const IsolationLevel = {
@@ -145,10 +130,10 @@ export namespace CreateSliceSliceRequest {
     export interface Customer {
         name: string;
         /** Description of the slice, e.g. "B2B_5G_eMBB_Slice" */
-        description?: string | null;
+        description?: (string | null) | undefined;
         /** Address of the customer ordering slice creation. */
-        address?: string | null;
+        address?: (string | null) | undefined;
         /** Contact of the customer ordering slice creation. */
-        contact?: string | null;
+        contact?: (string | null) | undefined;
     }
 }

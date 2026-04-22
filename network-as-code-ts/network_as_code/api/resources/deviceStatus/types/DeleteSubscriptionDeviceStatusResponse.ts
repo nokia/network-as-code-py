@@ -5,5 +5,5 @@
  */
 export interface DeleteSubscriptionDeviceStatusResponse {
     /** The event subscription identifier. */
-    subscriptionId?: string;
+    subscriptionId?: string | undefined;
 }

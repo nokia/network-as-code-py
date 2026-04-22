@@ -16,37 +16,15 @@ class SubscriberOperationSliceResponse(UniversalBaseModel):
     """
     Resource identifier of the attachment data.
     """
-
-    resource: SubscriberOperationSliceResponseResource = pydantic.Field()
-    """
-    Original device attach request resources.
-    """
-
-    device_status: typing_extensions.Annotated[
-        typing.Optional[SubscriberOperationSliceResponseDeviceStatus], FieldMetadata(alias="deviceStatus")
-    ] = pydantic.Field(alias="deviceStatus", default=None)
-    """
-    Status of the device in relation to the given slice e.g. ATTACHED or DETACHED.
-    """
-
-    device_attach_state: typing_extensions.Annotated[
-        typing.Optional[SubscriberOperationSliceResponseDeviceAttachState], FieldMetadata(alias="deviceAttachState")
-    ] = pydantic.Field(alias="deviceAttachState", default=None)
-    """
-    Progress/state of the device attach order, e.g. Completed, Accepted, Rejected.
-    """
-
-    application_attach_successful: typing_extensions.Annotated[
-        typing.Optional[bool], FieldMetadata(alias="applicationAttachSuccessful")
-    ] = pydantic.Field(alias="applicationAttachSuccessful", default=None)
-    """
-    Denotes whether successful application attach subscription was subsequently sent.
-    """
-
+    
+    resource: SubscriberOperationSliceResponseResource
+    device_status: typing_extensions.Annotated[typing.Optional[SubscriberOperationSliceResponseDeviceStatus], FieldMetadata(alias="deviceStatus"), pydantic.Field(alias="deviceStatus", description="Status of the device in relation to the given slice e.g. ATTACHED or DETACHED.")] = None
+    device_attach_state: typing_extensions.Annotated[typing.Optional[SubscriberOperationSliceResponseDeviceAttachState], FieldMetadata(alias="deviceAttachState"), pydantic.Field(alias="deviceAttachState", description="Progress/state of the device attach order, e.g. Completed, Accepted, Rejected.")] = None
+    application_attach_successful: typing_extensions.Annotated[typing.Optional[bool], FieldMetadata(alias="applicationAttachSuccessful"), pydantic.Field(alias="applicationAttachSuccessful", description="Denotes whether successful application attach subscription was subsequently sent.")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

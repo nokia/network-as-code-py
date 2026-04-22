@@ -4,7 +4,6 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .bad_request_error import BadRequestError
     from .conflict_error import ConflictError
@@ -17,21 +16,7 @@ if typing.TYPE_CHECKING:
     from .too_many_requests_error import TooManyRequestsError
     from .unauthorized_error import UnauthorizedError
     from .unprocessable_entity_error import UnprocessableEntityError
-_dynamic_imports: typing.Dict[str, str] = {
-    "BadRequestError": ".bad_request_error",
-    "ConflictError": ".conflict_error",
-    "ForbiddenError": ".forbidden_error",
-    "GatewayTimeoutError": ".gateway_timeout_error",
-    "InternalServerError": ".internal_server_error",
-    "NotFoundError": ".not_found_error",
-    "NotImplementedError": ".not_implemented_error",
-    "ServiceUnavailableError": ".service_unavailable_error",
-    "TooManyRequestsError": ".too_many_requests_error",
-    "UnauthorizedError": ".unauthorized_error",
-    "UnprocessableEntityError": ".unprocessable_entity_error",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"BadRequestError": ".bad_request_error", "ConflictError": ".conflict_error", "ForbiddenError": ".forbidden_error", "GatewayTimeoutError": ".gateway_timeout_error", "InternalServerError": ".internal_server_error", "NotFoundError": ".not_found_error", "NotImplementedError": ".not_implemented_error", "ServiceUnavailableError": ".service_unavailable_error", "TooManyRequestsError": ".too_many_requests_error", "UnauthorizedError": ".unauthorized_error", "UnprocessableEntityError": ".unprocessable_entity_error"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -46,23 +31,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "BadRequestError",
-    "ConflictError",
-    "ForbiddenError",
-    "GatewayTimeoutError",
-    "InternalServerError",
-    "NotFoundError",
-    "NotImplementedError",
-    "ServiceUnavailableError",
-    "TooManyRequestsError",
-    "UnauthorizedError",
-    "UnprocessableEntityError",
-]
+__all__ = ["BadRequestError", "ConflictError", "ForbiddenError", "GatewayTimeoutError", "InternalServerError", "NotFoundError", "NotImplementedError", "ServiceUnavailableError", "TooManyRequestsError", "UnauthorizedError", "UnprocessableEntityError"]

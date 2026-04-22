@@ -10,19 +10,11 @@ from .retrieve_location_response_area_area_type import RetrieveLocationResponseA
 
 
 class RetrieveLocationResponseArea(UniversalBaseModel):
-    area_type: typing_extensions.Annotated[RetrieveLocationResponseAreaAreaType, FieldMetadata(alias="areaType")] = (
-        pydantic.Field(alias="areaType")
-    )
-    """
-    Type of this area.
-    CIRCLE - The area is defined as a circle.
-    POLYGON - The area is defined as a polygon.
-    """
-
+    area_type: typing_extensions.Annotated[RetrieveLocationResponseAreaAreaType, FieldMetadata(alias="areaType"), pydantic.Field(alias="areaType", description="Type of this area.\nCIRCLE - The area is defined as a circle.\nPOLYGON - The area is defined as a polygon.")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

@@ -4,38 +4,27 @@ import typing
 
 import typing_extensions
 from ...core.serialization import FieldMetadata
-from .query_congestion_insights_request_device_ipv_4_address import (
-    QueryCongestionInsightsRequestDeviceIpv4AddressParams,
-)
+from .query_congestion_insights_request_device_ipv4address import QueryCongestionInsightsRequestDeviceIpv4AddressParams
 
 
 class QueryCongestionInsightsRequestDeviceParams(typing_extensions.TypedDict):
-    phone_number: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="phoneNumber")]
-    ]
+    phone_number: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="phoneNumber")]]
     """
     Phone number of the subscription, if any. Optional.
     """
-
-    network_access_identifier: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="networkAccessIdentifier")]
-    ]
+    
+    network_access_identifier: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="networkAccessIdentifier")]]
     """
     Email address-like external identifier of the subscription registered at the operator. If both networkAccessIdentifier and phoneNumber are included, phoneNumber may be dropped and networkAccessIdentifier may be retained.
     """
-
-    ipv_4_address: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[QueryCongestionInsightsRequestDeviceIpv4AddressParams], FieldMetadata(alias="ipv4Address")
-        ]
-    ]
+    
+    ipv4address: typing_extensions.NotRequired[typing_extensions.Annotated[QueryCongestionInsightsRequestDeviceIpv4AddressParams, FieldMetadata(alias="ipv4Address")]]
     """
     IPv4 address of the device. IP address is needed for some flow-oriented services, such as QoD.
     """
-
-    ipv_6_address: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address")]
-    ]
+    
+    ipv6address: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address")]]
     """
     IPv6 address of the device. IP address is needed for some flow-oriented services, such as QoD.
     """
+    

@@ -9,10 +9,9 @@ class ExtendSessionQodResponseWebhookParams(typing_extensions.TypedDict):
     """
     Allows asynchronous delivery of session related events
     """
-
-    notification_auth_token: typing_extensions.NotRequired[
-        typing_extensions.Annotated[str, FieldMetadata(alias="notificationAuthToken")]
-    ]
+    
+    notification_auth_token: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="notificationAuthToken")]]
     """
     Authentication token for callback API
     """
+    

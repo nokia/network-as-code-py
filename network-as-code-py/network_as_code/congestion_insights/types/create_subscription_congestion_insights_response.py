@@ -14,40 +14,16 @@ from .create_subscription_congestion_insights_response_webhook import (
 
 
 class CreateSubscriptionCongestionInsightsResponse(UniversalBaseModel):
-    device: CreateSubscriptionCongestionInsightsResponseDevice = pydantic.Field()
-    """
-    Identifiers of the device
-    """
-
+    device: CreateSubscriptionCongestionInsightsResponseDevice
     webhook: CreateSubscriptionCongestionInsightsResponseWebhook
-    subscription_expire_time: typing_extensions.Annotated[
-        dt.datetime, FieldMetadata(alias="subscriptionExpireTime")
-    ] = pydantic.Field(alias="subscriptionExpireTime")
-    """
-    Time when the subscription expires.
-    """
-
-    subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")] = pydantic.Field(
-        alias="subscriptionId"
-    )
-    started_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startedAt")] = (
-        pydantic.Field(alias="startedAt", default=None)
-    )
-    """
-    Time when subscription started
-    """
-
-    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt")] = (
-        pydantic.Field(alias="expiresAt", default=None)
-    )
-    """
-    Time when subscription will expire or expired
-    """
-
+    subscription_expire_time: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime"), pydantic.Field(alias="subscriptionExpireTime", description="Time when the subscription expires.")]
+    subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId"), pydantic.Field(alias="subscriptionId")]
+    started_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt", description="Time when subscription started")] = None
+    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="Time when subscription will expire or expired")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

@@ -8,9 +8,8 @@ from ..types.list_subscriptions_geofencing_response_item_sink_credential_credent
 
 
 class ListSubscriptionsGeofencingResponseItemSinkCredentialParams(typing_extensions.TypedDict):
-    credential_type: typing_extensions.Annotated[
-        ListSubscriptionsGeofencingResponseItemSinkCredentialCredentialType, FieldMetadata(alias="credentialType")
-    ]
+    credential_type: typing_extensions.Annotated[ListSubscriptionsGeofencingResponseItemSinkCredentialCredentialType, FieldMetadata(alias="credentialType")]
     """
     The type of the credential.
     """
+    

@@ -17,25 +17,22 @@ class CreateSubscriptionGeofencingResponse(UniversalBaseModel):
     """
     Represents a event-type subscription.
     """
-
     protocol: CreateSubscriptionGeofencingResponseProtocol = pydantic.Field()
     """
     Identifier of a delivery protocol. Only HTTP is allowed for now
     """
-
+    
     sink: str = pydantic.Field()
     """
     The address to which events shall be delivered using the selected protocol.
     """
-
-    sink_credential: typing_extensions.Annotated[
-        typing.Optional[CreateSubscriptionGeofencingResponseSinkCredential], FieldMetadata(alias="sinkCredential")
-    ] = pydantic.Field(alias="sinkCredential", default=None)
+    
+    sink_credential: typing_extensions.Annotated[typing.Optional[CreateSubscriptionGeofencingResponseSinkCredential], FieldMetadata(alias="sinkCredential"), pydantic.Field(alias="sinkCredential")] = None
     types: typing.List[str] = pydantic.Field()
     """
     Camara Event types eligible to be delivered by this subscription.
     """
-
+    
     config: CreateSubscriptionGeofencingResponseConfig = pydantic.Field()
     """
     Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
@@ -43,26 +40,14 @@ class CreateSubscriptionGeofencingResponse(UniversalBaseModel):
     Specific event type attributes must be defined in `subscriptionDetail`
     Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
     """
-
+    
     id: str = pydantic.Field()
     """
     The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
     """
-
-    starts_at: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="startsAt")] = pydantic.Field(
-        alias="startsAt"
-    )
-    """
-    Date when the event subscription will begin/began
-    """
-
-    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt")] = (
-        pydantic.Field(alias="expiresAt", default=None)
-    )
-    """
-    Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
-    """
-
+    
+    starts_at: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="startsAt"), pydantic.Field(alias="startsAt", description="Date when the event subscription will begin/began")]
+    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.")] = None
     status: typing.Optional[CreateSubscriptionGeofencingResponseStatus] = pydantic.Field(default=None)
     """
     Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
@@ -77,11 +62,11 @@ class CreateSubscriptionGeofencingResponse(UniversalBaseModel):
       - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
       - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

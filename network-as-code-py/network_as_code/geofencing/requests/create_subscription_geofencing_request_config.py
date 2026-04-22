@@ -16,30 +16,24 @@ class CreateSubscriptionGeofencingRequestConfigParams(typing_extensions.TypedDic
     Specific event type attributes must be defined in `subscriptionDetail`
     Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
     """
-
-    subscription_detail: typing_extensions.Annotated[
-        CreateSubscriptionGeofencingRequestConfigSubscriptionDetailParams, FieldMetadata(alias="subscriptionDetail")
-    ]
+    subscription_detail: typing_extensions.Annotated[CreateSubscriptionGeofencingRequestConfigSubscriptionDetailParams, FieldMetadata(alias="subscriptionDetail")]
     """
     The detail of the requested event subscription
     """
-
-    subscription_expire_time: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime")]
-    ]
+    
+    subscription_expire_time: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime")]]
     """
     The subscription expiration time (in date-time format) requested by the API consumer.
     """
-
-    subscription_max_events: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="subscriptionMaxEvents")]
-    ]
+    
+    subscription_max_events: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="subscriptionMaxEvents")]]
     """
     Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.
     """
-
+    
     initial_event: typing_extensions.NotRequired[typing_extensions.Annotated[bool, FieldMetadata(alias="initialEvent")]]
     """
     Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
     Example: Consumer request area entered event. If consumer sets initialEvent to true and device is already in the geofence, an event is triggered
     """
+    

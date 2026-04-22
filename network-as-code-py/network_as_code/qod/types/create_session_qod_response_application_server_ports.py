@@ -12,11 +12,10 @@ from .create_session_qod_response_application_server_ports_ranges_item import (
 class CreateSessionQodResponseApplicationServerPorts(UniversalBaseModel):
     ranges: typing.Optional[typing.List[CreateSessionQodResponseApplicationServerPortsRangesItem]] = None
     ports: typing.Optional[typing.List[int]] = None
-
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

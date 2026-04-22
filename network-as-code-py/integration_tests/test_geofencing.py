@@ -12,7 +12,11 @@ class TestGeofencing:
             config={
                 "subscription_detail": {
                     "device": {"phone_number": "+99999991000"},
-                    "area": {"area_type": "CIRCLE"},
+                    "area": {
+                        "area_type": "CIRCLE",
+                        "center": {"latitude": 47.48627616952785, "longitude": 19.07915612501993},
+                        "radius": 2000,
+                    },
                 },
                 "initial_event": True,
             },
@@ -30,7 +34,11 @@ class TestGeofencing:
             config={
                 "subscription_detail": {
                     "device": {"phone_number": "+99999991000"},
-                    "area": {"area_type": "CIRCLE"},
+                    "area": {
+                        "area_type": "CIRCLE",
+                        "center": {"latitude": 47.48627616952785, "longitude": 19.07915612501993},
+                        "radius": 2000,
+                    },
                 },
             },
         )
@@ -53,7 +61,11 @@ class TestGeofencing:
             config={
                 "subscription_detail": {
                     "device": {"phone_number": "+99999991000"},
-                    "area": {"area_type": "CIRCLE"},
+                    "area": {
+                        "area_type": "CIRCLE",
+                        "center": {"latitude": 47.48627616952785, "longitude": 19.07915612501993},
+                        "radius": 2000,
+                    },
                 },
             },
         )

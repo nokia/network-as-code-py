@@ -17,51 +17,20 @@ class GetSubscriptionDeviceStatusResponse(UniversalBaseModel):
     """
     Represents a device status subscription.
     """
-
-    subscription_detail: typing_extensions.Annotated[
-        GetSubscriptionDeviceStatusResponseSubscriptionDetail, FieldMetadata(alias="subscriptionDetail")
-    ] = pydantic.Field(alias="subscriptionDetail")
-    """
-    The detail of the requested event subscription
-    """
-
-    subscription_expire_time: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="subscriptionExpireTime")
-    ] = pydantic.Field(alias="subscriptionExpireTime", default=None)
-    """
-    The subscription expiration time in date-time format.
-    """
-
+    subscription_detail: typing_extensions.Annotated[GetSubscriptionDeviceStatusResponseSubscriptionDetail, FieldMetadata(alias="subscriptionDetail"), pydantic.Field(alias="subscriptionDetail", description="The detail of the requested event subscription")]
+    subscription_expire_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="subscriptionExpireTime"), pydantic.Field(alias="subscriptionExpireTime", description="The subscription expiration time in date-time format.")] = None
     webhook: GetSubscriptionDeviceStatusResponseWebhook = pydantic.Field()
     """
     Webhook information for event channel
     """
-
-    subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")] = pydantic.Field(
-        alias="subscriptionId"
-    )
-    """
-    The event subscription identifier.
-    """
-
-    starts_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startsAt")] = (
-        pydantic.Field(alias="startsAt", default=None)
-    )
-    """
-    date time when subscription started
-    """
-
-    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt")] = (
-        pydantic.Field(alias="expiresAt", default=None)
-    )
-    """
-    date time when subscription will expire or expired
-    """
-
+    
+    subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId"), pydantic.Field(alias="subscriptionId", description="The event subscription identifier.")]
+    starts_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startsAt"), pydantic.Field(alias="startsAt", description="date time when subscription started")] = None
+    expires_at: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="date time when subscription will expire or expired")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

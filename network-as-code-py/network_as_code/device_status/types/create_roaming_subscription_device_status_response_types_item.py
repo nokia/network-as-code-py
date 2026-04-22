@@ -2,12 +2,4 @@
 
 import typing
 
-CreateRoamingSubscriptionDeviceStatusResponseTypesItem = typing.Union[
-    typing.Literal[
-        "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status",
-        "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on",
-        "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off",
-        "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country",
-    ],
-    typing.Any,
-]
+CreateRoamingSubscriptionDeviceStatusResponseTypesItem = typing.Union[typing.Literal["org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status", "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on", "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off", "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country"], typing.Any]

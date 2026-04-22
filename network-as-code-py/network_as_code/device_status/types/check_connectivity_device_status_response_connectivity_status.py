@@ -2,6 +2,4 @@
 
 import typing
 
-CheckConnectivityDeviceStatusResponseConnectivityStatus = typing.Union[
-    typing.Literal["CONNECTED_DATA", "CONNECTED_SMS", "NOT_CONNECTED"], typing.Any
-]
+CheckConnectivityDeviceStatusResponseConnectivityStatus = typing.Union[typing.Literal["CONNECTED_DATA", "CONNECTED_SMS", "NOT_CONNECTED"], typing.Any]

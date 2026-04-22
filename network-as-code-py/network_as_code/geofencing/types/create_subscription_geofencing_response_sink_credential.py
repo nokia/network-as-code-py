@@ -12,17 +12,11 @@ from .create_subscription_geofencing_response_sink_credential_credential_type im
 
 
 class CreateSubscriptionGeofencingResponseSinkCredential(UniversalBaseModel):
-    credential_type: typing_extensions.Annotated[
-        CreateSubscriptionGeofencingResponseSinkCredentialCredentialType, FieldMetadata(alias="credentialType")
-    ] = pydantic.Field(alias="credentialType")
-    """
-    The type of the credential.
-    """
-
+    credential_type: typing_extensions.Annotated[CreateSubscriptionGeofencingResponseSinkCredentialCredentialType, FieldMetadata(alias="credentialType"), pydantic.Field(alias="credentialType", description="The type of the credential.")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

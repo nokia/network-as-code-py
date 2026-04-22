@@ -7,6 +7,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
+from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
@@ -15,254 +16,201 @@ from ..errors.not_found_error import NotFoundError
 from ..errors.unauthorized_error import UnauthorizedError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from .types.check_number_recycling_response import CheckNumberRecyclingResponse
+from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class RawNumberRecyclingClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
-
-    def check(
-        self,
-        *,
-        specified_date: dt.date,
-        authorization: typing.Optional[str] = None,
-        correlator: typing.Optional[typing.Any] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[CheckNumberRecyclingResponse]:
+    
+    def check(self, *, specified_date: dt.date, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckNumberRecyclingResponse]:
         """
         Check whether the subscriber of the phone number has changed.
-
+        
         Parameters
         ----------
         specified_date : dt.date
             Specified date to check whether there has been a change in the subscriber associated with the specific phone number, in RFC 3339 calendar date format (YYYY-MM-DD).
-
+        
         authorization : typing.Optional[str]
             authorization header for token
-
+        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
-
+        
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         HttpResponse[CheckNumberRecyclingResponse]
-
+            
         """
         _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-recycling/number-recycling/v0.2/check",
-            method="POST",
+            "passthrough/camara/v1/number-recycling/number-recycling/v0.2/check",method="POST",
             json={
                 "phoneNumber": phone_number,
                 "specifiedDate": specified_date,
-            },
-            headers={
-                "content-type": "application/json",
-                "authorization": str(authorization) if authorization is not None else None,
-                "x-correlator": str(correlator) if correlator is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     CheckNumberRecyclingResponse,
                     parse_obj_as(
-                        type_=CheckNumberRecyclingResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =CheckNumberRecyclingResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-
 class AsyncRawNumberRecyclingClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
-
-    async def check(
-        self,
-        *,
-        specified_date: dt.date,
-        authorization: typing.Optional[str] = None,
-        correlator: typing.Optional[typing.Any] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[CheckNumberRecyclingResponse]:
+    
+    async def check(self, *, specified_date: dt.date, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckNumberRecyclingResponse]:
         """
         Check whether the subscriber of the phone number has changed.
-
+        
         Parameters
         ----------
         specified_date : dt.date
             Specified date to check whether there has been a change in the subscriber associated with the specific phone number, in RFC 3339 calendar date format (YYYY-MM-DD).
-
+        
         authorization : typing.Optional[str]
             authorization header for token
-
+        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
-
+        
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         AsyncHttpResponse[CheckNumberRecyclingResponse]
-
+            
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-recycling/number-recycling/v0.2/check",
-            method="POST",
+            "passthrough/camara/v1/number-recycling/number-recycling/v0.2/check",method="POST",
             json={
                 "phoneNumber": phone_number,
                 "specifiedDate": specified_date,
-            },
-            headers={
-                "content-type": "application/json",
-                "authorization": str(authorization) if authorization is not None else None,
-                "x-correlator": str(correlator) if correlator is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     CheckNumberRecyclingResponse,
                     parse_obj_as(
-                        type_=CheckNumberRecyclingResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =CheckNumberRecyclingResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)

@@ -8,15 +8,13 @@ class ListSubscriptionsDeviceStatusResponseItemWebhookParams(typing_extensions.T
     """
     Webhook information for event channel
     """
-
     notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl")]
     """
     https callback address where the event notification must be POST-ed
     """
-
-    notification_auth_token: typing_extensions.NotRequired[
-        typing_extensions.Annotated[str, FieldMetadata(alias="notificationAuthToken")]
-    ]
+    
+    notification_auth_token: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="notificationAuthToken")]]
     """
     OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken
     """
+    

@@ -10,16 +10,15 @@ class DeleteSubscriptionGeofencingResponse(UniversalBaseModel):
     """
     Response for a event-type subscription request managed asynchronously (Creation or Deletion)
     """
-
     id: typing.Optional[str] = pydantic.Field(default=None)
     """
     The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

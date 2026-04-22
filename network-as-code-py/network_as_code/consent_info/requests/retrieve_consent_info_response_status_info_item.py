@@ -15,24 +15,20 @@ class RetrieveConsentInfoResponseStatusInfoItemParams(typing_extensions.TypedDic
     """
     List of requested scopes. The scope is a string that represents the access rights that the API Consumer is requesting from the User.
     """
-
+    
     purpose: str
     """
     The reason for which personal data will be processed by the API Consumer. CAMARA defines a standard set of Purposes which can be used by API Consumers to specify the reason for their intended personal data processing. CAMARA uses the [W3C Data Privacy Vocabulary](https://w3c.github.io/dpv/2.0/dpv/) (DPV) to represent these purposes e.g. `dpv:FraudPreventionAndDetection` or `dpv:RequestedServiceProvision`.
     """
-
+    
     status_valid_for_processing: typing_extensions.Annotated[bool, FieldMetadata(alias="statusValidForProcessing")]
     """
     Boolean flag that shows the validity status of the requested data processing for the specified scope(s) and Purpose.
     * `true` - indicates that the current status is valid and permits the requested data processing.
     * `false` - indicates that the requested data processing is not permitted. The reason for this is provided in the `statusReason` field.
     """
-
-    status_reason: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            RetrieveConsentInfoResponseStatusInfoItemStatusReason, FieldMetadata(alias="statusReason")
-        ]
-    ]
+    
+    status_reason: typing_extensions.NotRequired[typing_extensions.Annotated[RetrieveConsentInfoResponseStatusInfoItemStatusReason, FieldMetadata(alias="statusReason")]]
     """
     This field must be present if `statusValidForProcessing` is `false`. It indicates the reason why the requested data processing is not permitted for the specified scope(s) and Purpose. It provides API Consumers with additional context on the current validity status, helping them to understand its applicability and the next steps they may need to take.
     
@@ -76,10 +72,8 @@ class RetrieveConsentInfoResponseStatusInfoItemParams(typing_extensions.TypedDic
     
                 This is common for time-limited Consents.
     """
-
-    expiration_date: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expirationDate")]
-    ]
+    
+    expiration_date: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expirationDate")]]
     """
     The date and time at which the validity of the data processing is set to expire or has expired.
     It applies mainly to time-limited Consents, or other cases where a specific duration of validity is defined for the data processing. This field is only applicable:
@@ -89,3 +83,4 @@ class RetrieveConsentInfoResponseStatusInfoItemParams(typing_extensions.TypedDic
     
     It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z).
     """
+    

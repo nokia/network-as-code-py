@@ -6,219 +6,209 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
+from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from .types.get_oauth_authorization_server_well_known_metadata_response import (
     GetOauthAuthorizationServerWellKnownMetadataResponse,
 )
 from .types.get_openid_configuration_well_known_metadata_response import GetOpenidConfigurationWellKnownMetadataResponse
+from pydantic import ValidationError
 
 
 class RawWellKnownMetadataClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
-
-    def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[str]:
+    
+    def get_openid_configuration(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]:
         """
-
-
+         
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[str]
-
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            ".well-known/security.txt",
-            method="GET",
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                return HttpResponse(response=_response, data=_response.text)  # type: ignore
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def get_oauth_authorization_server(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
-        """
-
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]
-
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            ".well-known/oauth-authorization-server",
-            method="GET",
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetOauthAuthorizationServerWellKnownMetadataResponse,
-                    parse_obj_as(
-                        type_=GetOauthAuthorizationServerWellKnownMetadataResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def get_openid_configuration(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]:
-        """
-
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
+        
         Returns
         -------
         HttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]
-
+            
         """
         _response = self._client_wrapper.httpx_client.request(
-            ".well-known/openid-configuration",
-            method="GET",
-            request_options=request_options,
-        )
+            ".well-known/openid-configuration",method="GET",
+            request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     GetOpenidConfigurationWellKnownMetadataResponse,
                     parse_obj_as(
-                        type_=GetOpenidConfigurationWellKnownMetadataResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =GetOpenidConfigurationWellKnownMetadataResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return HttpResponse(response=_response, data=_data)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-
-class AsyncRawWellKnownMetadataClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def get_security_txt(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[str]:
+    
+    def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
         """
-
-
+         
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        AsyncHttpResponse[str]
-
+        HttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]
+            
         """
-        _response = await self._client_wrapper.httpx_client.request(
-            ".well-known/security.txt",
-            method="GET",
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                return AsyncHttpResponse(response=_response, data=_response.text)  # type: ignore
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def get_oauth_authorization_server(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
-        """
-
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]
-
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            ".well-known/oauth-authorization-server",
-            method="GET",
-            request_options=request_options,
-        )
+        _response = self._client_wrapper.httpx_client.request(
+            ".well-known/oauth-authorization-server",method="GET",
+            request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     GetOauthAuthorizationServerWellKnownMetadataResponse,
                     parse_obj_as(
-                        type_=GetOauthAuthorizationServerWellKnownMetadataResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =GetOauthAuthorizationServerWellKnownMetadataResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
-                return AsyncHttpResponse(response=_response, data=_data)
+                return HttpResponse(response=_response, data=_data)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def get_openid_configuration(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]:
+    
+    def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[str]:
         """
-
-
+         
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
+        Returns
+        -------
+        HttpResponse[str]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            ".well-known/security.txt",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                return HttpResponse(response=_response, data=_response.text)  # type: ignore 
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+class AsyncRawWellKnownMetadataClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
+    
+    async def get_openid_configuration(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
         Returns
         -------
         AsyncHttpResponse[GetOpenidConfigurationWellKnownMetadataResponse]
-
+            
         """
         _response = await self._client_wrapper.httpx_client.request(
-            ".well-known/openid-configuration",
-            method="GET",
-            request_options=request_options,
-        )
+            ".well-known/openid-configuration",method="GET",
+            request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     GetOpenidConfigurationWellKnownMetadataResponse,
                     parse_obj_as(
-                        type_=GetOpenidConfigurationWellKnownMetadataResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =GetOpenidConfigurationWellKnownMetadataResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            ".well-known/oauth-authorization-server",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetOauthAuthorizationServerWellKnownMetadataResponse,
+                    parse_obj_as(
+                        type_ =GetOauthAuthorizationServerWellKnownMetadataResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[str]:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[str]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            ".well-known/security.txt",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                return AsyncHttpResponse(response=_response, data=_response.text)  # type: ignore 
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)

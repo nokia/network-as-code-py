@@ -12,209 +12,415 @@ from .requests.create_session_qod_request_application_server_ports import (
 from .requests.create_session_qod_request_device import CreateSessionQodRequestDeviceParams
 from .requests.create_session_qod_request_device_ports import CreateSessionQodRequestDevicePortsParams
 from .requests.create_session_qod_request_webhook import CreateSessionQodRequestWebhookParams
-from .requests.create_session_v_1_qod_request_application_server import CreateSessionV1QodRequestApplicationServerParams
-from .requests.create_session_v_1_qod_request_application_server_ports import (
+from .requests.create_session_v1qod_request_application_server import CreateSessionV1QodRequestApplicationServerParams
+from .requests.create_session_v1qod_request_application_server_ports import (
     CreateSessionV1QodRequestApplicationServerPortsParams,
 )
-from .requests.create_session_v_1_qod_request_device import CreateSessionV1QodRequestDeviceParams
-from .requests.create_session_v_1_qod_request_device_ports import CreateSessionV1QodRequestDevicePortsParams
-from .requests.create_session_v_1_qod_request_sink_credential import CreateSessionV1QodRequestSinkCredentialParams
+from .requests.create_session_v1qod_request_device import CreateSessionV1QodRequestDeviceParams
+from .requests.create_session_v1qod_request_device_ports import CreateSessionV1QodRequestDevicePortsParams
+from .requests.create_session_v1qod_request_sink_credential import CreateSessionV1QodRequestSinkCredentialParams
 from .requests.retrieve_sessions_qod_request_device import RetrieveSessionsQodRequestDeviceParams
-from .requests.retrieve_sessions_v_1_qod_request_device import RetrieveSessionsV1QodRequestDeviceParams
+from .requests.retrieve_sessions_v1qod_request_device import RetrieveSessionsV1QodRequestDeviceParams
 from .types.create_session_qod_response import CreateSessionQodResponse
-from .types.create_session_v_1_qod_response import CreateSessionV1QodResponse
+from .types.create_session_v1qod_response import CreateSessionV1QodResponse
 from .types.extend_session_qod_response import ExtendSessionQodResponse
-from .types.extend_session_v_1_qod_response import ExtendSessionV1QodResponse
+from .types.extend_session_v1qod_response import ExtendSessionV1QodResponse
 from .types.get_session_qod_response import GetSessionQodResponse
-from .types.get_session_v_1_qod_response import GetSessionV1QodResponse
+from .types.get_session_v1qod_response import GetSessionV1QodResponse
 from .types.list_sessions_qod_response_item import ListSessionsQodResponseItem
-from .types.list_sessions_v_1_qod_response_item import ListSessionsV1QodResponseItem
+from .types.list_sessions_v1qod_response_item import ListSessionsV1QodResponseItem
 from .types.retrieve_sessions_qod_response_item import RetrieveSessionsQodResponseItem
-from .types.retrieve_sessions_v_1_qod_response_item import RetrieveSessionsV1QodResponseItem
+from .types.retrieve_sessions_v1qod_response_item import RetrieveSessionsV1QodResponseItem
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class QodClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawQodClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> RawQodClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         RawQodClient
         """
         return self._raw_client
-
-    def list_sessions_v_1(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSessionsV1QodResponseItem]:
+    
+    def get_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSessionV1QodResponse:
         """
-        Return device communication Quality-on-Demand settings for your devices.
-
+        Querying for QoS session resource information details
+        
         Parameters
         ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        typing.List[ListSessionsV1QodResponseItem]
-
-
+        GetSessionV1QodResponse
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.qod.list_sessions_v_1()
+        client.qod.get_session_v1(
+            session_id="sessionId",
+        )
         """
-        _response = self._raw_client.list_sessions_v_1(request_options=request_options)
+        _response = self._raw_client.get_session_v1(session_id, request_options=request_options)
         return _response.data
-
-    def create_session_v_1(
-        self,
-        *,
-        application_server: CreateSessionV1QodRequestApplicationServerParams,
-        qos_profile: str,
-        device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT,
-        device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT,
-        application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT,
-        sink: typing.Optional[str] = OMIT,
-        sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT,
-        duration: typing.Optional[int] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSessionV1QodResponse:
+    
+    def delete_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+        """
+        Release resources related to QoS session
+        
+        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
+        - `qosStatus` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        None
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.delete_session_v1(
+            session_id="sessionId",
+        )
+        """
+        _response = self._raw_client.delete_session_v1(session_id, request_options=request_options)
+        return _response.data
+    
+    def list_sessions_v1(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSessionsV1QodResponseItem]:
+        """
+        Return device communication Quality-on-Demand settings for your devices.
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListSessionsV1QodResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.list_sessions_v1()
+        """
+        _response = self._raw_client.list_sessions_v1(request_options=request_options)
+        return _response.data
+    
+    def create_session_v1(self, *, application_server: CreateSessionV1QodRequestApplicationServerParams, qos_profile: str, device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT, device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT, sink: typing.Optional[str] = OMIT, sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSessionV1QodResponse:
         """
         Create QoS Session to manage latency/throughput priorities
-
+        
         If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
         `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-
+        
         If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
         - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
         - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-
+        
         A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-
+        
         NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
         are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
         This behavior allows clients which are not receiving notification events but are polling to get the session information with
         the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
         for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-
+        
         Parameters
         ----------
         application_server : CreateSessionV1QodRequestApplicationServerParams
             A server hosting backend applications to deliver some business logic to clients.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
-
+        
         qos_profile : str
             A unique name for identifying a specific QoS profile.
             This may follow different formats depending on the service providers implementation.
             Some options addresses:
-
-
-
-
-
+            
+            
+            
+            
+            
               - A UUID style string
               - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
               - A searchable descriptive name
-
+        
         device : typing.Optional[CreateSessionV1QodRequestDeviceParams]
             End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-
+            
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
+        
         device_ports : typing.Optional[CreateSessionV1QodRequestDevicePortsParams]
             The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-
+        
         application_server_ports : typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams]
             A list of single ports or port ranges on the application server
-
+        
         sink : typing.Optional[str]
             The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
-
+        
         sink_credential : typing.Optional[CreateSessionV1QodRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-
+        
         duration : typing.Optional[int]
             Session duration in seconds. Maximal value of 24 hours is used if not set.
             After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
             - `qosStatus` as `UNAVAILABLE`, and,
             - `statusInfo` as `DURATION_EXPIRED`.
             See notification callback.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         CreateSessionV1QodResponse
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.qod.create_session_v_1(
+        client.qod.create_session_v1(
             device={
                 "phone_number": "+99999991001",
-                "ipv_4_address": {
+                "ipv4address": {
                     "publicAddress": "233.252.0.2",
                     "privateAddress": "192.0.2.25",
                     "publicPort": 80,
                 },
             },
-            application_server={"ipv_4_address": "8.8.8.8"},
+            application_server={"ipv4address": "8.8.8.8"},
             qos_profile="DOWNLINK_M_UPLINK_L",
             duration=60,
         )
         """
-        _response = self._raw_client.create_session_v_1(
-            application_server=application_server,
-            qos_profile=qos_profile,
-            device=device,
-            device_ports=device_ports,
-            application_server_ports=application_server_ports,
-            sink=sink,
-            sink_credential=sink_credential,
-            duration=duration,
-            request_options=request_options,
-        )
+        _response = self._raw_client.create_session_v1(application_server=application_server, qos_profile=qos_profile, device=device, device_ports=device_ports, application_server_ports=application_server_ports, sink=sink, sink_credential=sink_credential, duration=duration, request_options=request_options)
         return _response.data
-
-    def extend_session_v_1(
-        self,
-        session_id: str,
-        *,
-        requested_additional_duration: int,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ExtendSessionV1QodResponse:
+    
+    def list_sessions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSessionsQodResponseItem]:
+        """
+        Return device communication Quality-on-Demand settings for your devices.
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListSessionsQodResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.list_sessions()
+        """
+        _response = self._raw_client.list_sessions(request_options=request_options)
+        return _response.data
+    
+    def create_session(self, *, device: CreateSessionQodRequestDeviceParams, application_server: CreateSessionQodRequestApplicationServerParams, qos_profile: str, device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT, webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSessionQodResponse:
+        """
+        Create QoS Session to manage latency/throughput priorities
+        
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
+        
+        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
+        
+        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
+        
+        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        
+        Parameters
+        ----------
+        device : CreateSessionQodRequestDeviceParams
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        application_server : CreateSessionQodRequestApplicationServerParams
+            A server hosting backend applications to deliver some business logic to clients.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+        
+        qos_profile : str
+            A unique name for identifying a specific QoS profile.
+            This may follow different formats depending on the service providers implementation.
+            Some options addresses:
+            
+            
+            
+            
+            
+              - A UUID style string
+              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+              - A searchable descriptive name
+        
+        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
+            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+        
+        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
+            A list of single ports or port ranges on the application server
+        
+        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
+        
+        duration : typing.Optional[int]
+            Session duration in seconds. Maximal value of 24 hours is used if not set.
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+            - `qosStatus` as `UNAVAILABLE`, and,
+            - `statusInfo` as `DURATION_EXPIRED`.
+            See notification callback.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CreateSessionQodResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.create_session(
+            device={
+                "phone_number": "+99999991001",
+                "ipv4address": {
+                    "publicAddress": "233.252.0.2",
+                    "privateAddress": "192.0.2.25",
+                    "publicPort": 80,
+                },
+            },
+            application_server={"ipv4address": "8.8.8.8"},
+            qos_profile="DOWNLINK_M_UPLINK_L",
+            duration=60,
+        )
+        """
+        _response = self._raw_client.create_session(device=device, application_server=application_server, qos_profile=qos_profile, device_ports=device_ports, application_server_ports=application_server_ports, webhook=webhook, duration=duration, request_options=request_options)
+        return _response.data
+    
+    def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RetrieveSessionsV1QodResponseItem]:
+        """
+        Return all QoD sessions related to the specified device.
+        
+        Parameters
+        ----------
+        device : RetrieveSessionsV1QodRequestDeviceParams
+            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[RetrieveSessionsV1QodResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.retrieve_sessions_v1(
+            device={"phone_number": "+99999991001"},
+        )
+        """
+        _response = self._raw_client.retrieve_sessions_v1(device=device, request_options=request_options)
+        return _response.data
+    
+    def extend_session_v1(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> ExtendSessionV1QodResponse:
         """
         Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
         The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
@@ -224,64 +430,103 @@ class QodClient:
         - Remaining duration: 70,000 seconds
         - New remaining duration: 86,400 seconds (the maximum allowed)
         - New overall session duration: 96,400 seconds
-
+        
         Parameters
         ----------
         session_id : str
             Session ID that was obtained from the createSession operation
-
+        
         requested_additional_duration : int
             Additional duration in seconds to be extended.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         ExtendSessionV1QodResponse
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.qod.extend_session_v_1(
+        client.qod.extend_session_v1(
             session_id="sessionId",
             requested_additional_duration=60,
         )
         """
-        _response = self._raw_client.extend_session_v_1(
-            session_id, requested_additional_duration=requested_additional_duration, request_options=request_options
-        )
+        _response = self._raw_client.extend_session_v1(session_id, requested_additional_duration=requested_additional_duration, request_options=request_options)
         return _response.data
-
-    def get_session(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSessionQodResponse:
+    
+    def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> ExtendSessionQodResponse:
         """
-        Querying for QoS session resource information details
-
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
+        
         Parameters
         ----------
         session_id : str
             Session ID that was obtained from the createSession operation
-
+        
+        requested_additional_duration : int
+            Additional duration in seconds to be extended.
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
+        Returns
+        -------
+        ExtendSessionQodResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.qod.extend_session(
+            session_id="sessionId",
+            requested_additional_duration=60,
+        )
+        """
+        _response = self._raw_client.extend_session(session_id, requested_additional_duration=requested_additional_duration, request_options=request_options)
+        return _response.data
+    
+    def get_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSessionQodResponse:
+        """
+        Querying for QoS session resource information details
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
         Returns
         -------
         GetSessionQodResponse
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -292,33 +537,32 @@ class QodClient:
         """
         _response = self._raw_client.get_session(session_id, request_options=request_options)
         return _response.data
-
-    def delete_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Any:
+    
+    def delete_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
         Release resources related to QoS session
-
+        
         If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
         - `qosStatus` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
-
+        
         Parameters
         ----------
         session_id : str
             Session ID that was obtained from the createSession operation
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        typing.Any
-
-
+        None
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -329,360 +573,37 @@ class QodClient:
         """
         _response = self._raw_client.delete_session(session_id, request_options=request_options)
         return _response.data
-
-    def get_session_v_1(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSessionV1QodResponse:
-        """
-        Querying for QoS session resource information details
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        GetSessionV1QodResponse
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.get_session_v_1(
-            session_id="sessionId",
-        )
-        """
-        _response = self._raw_client.get_session_v_1(session_id, request_options=request_options)
-        return _response.data
-
-    def delete_session_v_1(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
-        """
-        Release resources related to QoS session
-
-        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
-        - `qosStatus` as `UNAVAILABLE` and
-        - `statusInfo` as `DELETE_REQUESTED`
-        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.Any
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.delete_session_v_1(
-            session_id="sessionId",
-        )
-        """
-        _response = self._raw_client.delete_session_v_1(session_id, request_options=request_options)
-        return _response.data
-
-    def retrieve_sessions_v_1(
-        self,
-        *,
-        device: RetrieveSessionsV1QodRequestDeviceParams,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[RetrieveSessionsV1QodResponseItem]:
+    
+    def retrieve_sessions(self, *, device: RetrieveSessionsQodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RetrieveSessionsQodResponseItem]:
         """
         Return all QoD sessions related to the specified device.
-
-        Parameters
-        ----------
-        device : RetrieveSessionsV1QodRequestDeviceParams
-            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.List[RetrieveSessionsV1QodResponseItem]
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.retrieve_sessions_v_1(
-            device={"phone_number": "+99999991001"},
-        )
-        """
-        _response = self._raw_client.retrieve_sessions_v_1(device=device, request_options=request_options)
-        return _response.data
-
-    def extend_session(
-        self,
-        session_id: str,
-        *,
-        requested_additional_duration: int,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ExtendSessionQodResponse:
-        """
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        requested_additional_duration : int
-            Additional duration in seconds to be extended.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        ExtendSessionQodResponse
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.extend_session(
-            session_id="sessionId",
-            requested_additional_duration=60,
-        )
-        """
-        _response = self._raw_client.extend_session(
-            session_id, requested_additional_duration=requested_additional_duration, request_options=request_options
-        )
-        return _response.data
-
-    def list_sessions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSessionsQodResponseItem]:
-        """
-        Return device communication Quality-on-Demand settings for your devices.
-
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.List[ListSessionsQodResponseItem]
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.list_sessions()
-        """
-        _response = self._raw_client.list_sessions(request_options=request_options)
-        return _response.data
-
-    def create_session(
-        self,
-        *,
-        device: CreateSessionQodRequestDeviceParams,
-        application_server: CreateSessionQodRequestApplicationServerParams,
-        qos_profile: str,
-        device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT,
-        application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT,
-        webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT,
-        duration: typing.Optional[int] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSessionQodResponse:
-        """
-        Create QoS Session to manage latency/throughput priorities
-
-        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
-        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-
-        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-
-        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-
-        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
-        This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
-        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-
-        Parameters
-        ----------
-        device : CreateSessionQodRequestDeviceParams
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
-        application_server : CreateSessionQodRequestApplicationServerParams
-            A server hosting backend applications to deliver some business logic to clients.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-
-        qos_profile : str
-            A unique name for identifying a specific QoS profile.
-            This may follow different formats depending on the service providers implementation.
-            Some options addresses:
-
-
-
-
-
-              - A UUID style string
-              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
-              - A searchable descriptive name
-
-        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
-            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-
-        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
-            A list of single ports or port ranges on the application server
-
-        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
-
-        duration : typing.Optional[int]
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-            - `qosStatus` as `UNAVAILABLE`, and,
-            - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        CreateSessionQodResponse
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.qod.create_session(
-            device={
-                "phone_number": "+99999991001",
-                "ipv_4_address": {
-                    "publicAddress": "233.252.0.2",
-                    "privateAddress": "192.0.2.25",
-                    "publicPort": 80,
-                },
-            },
-            application_server={"ipv_4_address": "8.8.8.8"},
-            qos_profile="DOWNLINK_M_UPLINK_L",
-            duration=60,
-        )
-        """
-        _response = self._raw_client.create_session(
-            device=device,
-            application_server=application_server,
-            qos_profile=qos_profile,
-            device_ports=device_ports,
-            application_server_ports=application_server_ports,
-            webhook=webhook,
-            duration=duration,
-            request_options=request_options,
-        )
-        return _response.data
-
-    def retrieve_sessions(
-        self, *, device: RetrieveSessionsQodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RetrieveSessionsQodResponseItem]:
-        """
-        Return all QoD sessions related to the specified device.
-
+        
         Parameters
         ----------
         device : RetrieveSessionsQodRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-
+            
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.List[RetrieveSessionsQodResponseItem]
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -693,494 +614,449 @@ class QodClient:
         """
         _response = self._raw_client.retrieve_sessions(device=device, request_options=request_options)
         return _response.data
-
-
 class AsyncQodClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawQodClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> AsyncRawQodClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         AsyncRawQodClient
         """
         return self._raw_client
-
-    async def list_sessions_v_1(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSessionsV1QodResponseItem]:
+    
+    async def get_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSessionV1QodResponse:
         """
-        Return device communication Quality-on-Demand settings for your devices.
-
+        Querying for QoS session resource information details
+        
         Parameters
         ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        typing.List[ListSessionsV1QodResponseItem]
-
-
+        GetSessionV1QodResponse
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
-            await client.qod.list_sessions_v_1()
-
-
+            await client.qod.get_session_v1(
+                session_id="sessionId",
+            )
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.list_sessions_v_1(request_options=request_options)
+        _response = await self._raw_client.get_session_v1(session_id, request_options=request_options)
         return _response.data
-
-    async def create_session_v_1(
-        self,
-        *,
-        application_server: CreateSessionV1QodRequestApplicationServerParams,
-        qos_profile: str,
-        device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT,
-        device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT,
-        application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT,
-        sink: typing.Optional[str] = OMIT,
-        sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT,
-        duration: typing.Optional[int] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSessionV1QodResponse:
+    
+    async def delete_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+        """
+        Release resources related to QoS session
+        
+        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
+        - `qosStatus` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        None
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.qod.delete_session_v1(
+                session_id="sessionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_session_v1(session_id, request_options=request_options)
+        return _response.data
+    
+    async def list_sessions_v1(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSessionsV1QodResponseItem]:
+        """
+        Return device communication Quality-on-Demand settings for your devices.
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListSessionsV1QodResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.qod.list_sessions_v1()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_sessions_v1(request_options=request_options)
+        return _response.data
+    
+    async def create_session_v1(self, *, application_server: CreateSessionV1QodRequestApplicationServerParams, qos_profile: str, device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT, device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT, sink: typing.Optional[str] = OMIT, sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSessionV1QodResponse:
         """
         Create QoS Session to manage latency/throughput priorities
-
+        
         If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
         `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-
+        
         If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
         - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
         - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-
+        
         A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-
+        
         NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
         are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
         This behavior allows clients which are not receiving notification events but are polling to get the session information with
         the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
         for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-
+        
         Parameters
         ----------
         application_server : CreateSessionV1QodRequestApplicationServerParams
             A server hosting backend applications to deliver some business logic to clients.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
-
+        
         qos_profile : str
             A unique name for identifying a specific QoS profile.
             This may follow different formats depending on the service providers implementation.
             Some options addresses:
-
-
-
-
-
+            
+            
+            
+            
+            
               - A UUID style string
               - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
               - A searchable descriptive name
-
+        
         device : typing.Optional[CreateSessionV1QodRequestDeviceParams]
             End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-
+            
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
+        
         device_ports : typing.Optional[CreateSessionV1QodRequestDevicePortsParams]
             The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-
+        
         application_server_ports : typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams]
             A list of single ports or port ranges on the application server
-
+        
         sink : typing.Optional[str]
             The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
-
+        
         sink_credential : typing.Optional[CreateSessionV1QodRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-
+        
         duration : typing.Optional[int]
             Session duration in seconds. Maximal value of 24 hours is used if not set.
             After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
             - `qosStatus` as `UNAVAILABLE`, and,
             - `statusInfo` as `DURATION_EXPIRED`.
             See notification callback.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         CreateSessionV1QodResponse
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
-            await client.qod.create_session_v_1(
+            await client.qod.create_session_v1(
                 device={
                     "phone_number": "+99999991001",
-                    "ipv_4_address": {
+                    "ipv4address": {
                         "publicAddress": "233.252.0.2",
                         "privateAddress": "192.0.2.25",
                         "publicPort": 80,
                     },
                 },
-                application_server={"ipv_4_address": "8.8.8.8"},
+                application_server={"ipv4address": "8.8.8.8"},
                 qos_profile="DOWNLINK_M_UPLINK_L",
                 duration=60,
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.create_session_v_1(
-            application_server=application_server,
-            qos_profile=qos_profile,
-            device=device,
-            device_ports=device_ports,
-            application_server_ports=application_server_ports,
-            sink=sink,
-            sink_credential=sink_credential,
-            duration=duration,
-            request_options=request_options,
-        )
+        _response = await self._raw_client.create_session_v1(application_server=application_server, qos_profile=qos_profile, device=device, device_ports=device_ports, application_server_ports=application_server_ports, sink=sink, sink_credential=sink_credential, duration=duration, request_options=request_options)
         return _response.data
-
-    async def extend_session_v_1(
-        self,
-        session_id: str,
-        *,
-        requested_additional_duration: int,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ExtendSessionV1QodResponse:
+    
+    async def list_sessions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSessionsQodResponseItem]:
         """
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
-
+        Return device communication Quality-on-Demand settings for your devices.
+        
         Parameters
         ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        requested_additional_duration : int
-            Additional duration in seconds to be extended.
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        ExtendSessionV1QodResponse
-
-
+        typing.List[ListSessionsQodResponseItem]
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
-            await client.qod.extend_session_v_1(
-                session_id="sessionId",
-                requested_additional_duration=60,
-            )
-
-
+            await client.qod.list_sessions()
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.extend_session_v_1(
-            session_id, requested_additional_duration=requested_additional_duration, request_options=request_options
-        )
+        _response = await self._raw_client.list_sessions(request_options=request_options)
         return _response.data
-
-    async def get_session(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSessionQodResponse:
+    
+    async def create_session(self, *, device: CreateSessionQodRequestDeviceParams, application_server: CreateSessionQodRequestApplicationServerParams, qos_profile: str, device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT, webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSessionQodResponse:
         """
-        Querying for QoS session resource information details
-
+        Create QoS Session to manage latency/throughput priorities
+        
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
+        
+        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
+        
+        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
+        
+        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        
         Parameters
         ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        GetSessionQodResponse
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.qod.get_session(
-                session_id="sessionId",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_session(session_id, request_options=request_options)
-        return _response.data
-
-    async def delete_session(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
-        """
-        Release resources related to QoS session
-
-        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
-        - `qosStatus` as `UNAVAILABLE` and
-        - `statusInfo` as `DELETE_REQUESTED`
-        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.Any
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.qod.delete_session(
-                session_id="sessionId",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_session(session_id, request_options=request_options)
-        return _response.data
-
-    async def get_session_v_1(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSessionV1QodResponse:
-        """
-        Querying for QoS session resource information details
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        GetSessionV1QodResponse
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.qod.get_session_v_1(
-                session_id="sessionId",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_session_v_1(session_id, request_options=request_options)
-        return _response.data
-
-    async def delete_session_v_1(
-        self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
-        """
-        Release resources related to QoS session
-
-        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
-        - `qosStatus` as `UNAVAILABLE` and
-        - `statusInfo` as `DELETE_REQUESTED`
-        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
-
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.Any
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.qod.delete_session_v_1(
-                session_id="sessionId",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_session_v_1(session_id, request_options=request_options)
-        return _response.data
-
-    async def retrieve_sessions_v_1(
-        self,
-        *,
-        device: RetrieveSessionsV1QodRequestDeviceParams,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[RetrieveSessionsV1QodResponseItem]:
-        """
-        Return all QoD sessions related to the specified device.
-
-        Parameters
-        ----------
-        device : RetrieveSessionsV1QodRequestDeviceParams
-            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-
+        device : CreateSessionQodRequestDeviceParams
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-
+            
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
+        
+        application_server : CreateSessionQodRequestApplicationServerParams
+            A server hosting backend applications to deliver some business logic to clients.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+        
+        qos_profile : str
+            A unique name for identifying a specific QoS profile.
+            This may follow different formats depending on the service providers implementation.
+            Some options addresses:
+            
+            
+            
+            
+            
+              - A UUID style string
+              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+              - A searchable descriptive name
+        
+        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
+            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+        
+        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
+            A list of single ports or port ranges on the application server
+        
+        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
+        
+        duration : typing.Optional[int]
+            Session duration in seconds. Maximal value of 24 hours is used if not set.
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+            - `qosStatus` as `UNAVAILABLE`, and,
+            - `statusInfo` as `DURATION_EXPIRED`.
+            See notification callback.
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        typing.List[RetrieveSessionsV1QodResponseItem]
-
-
+        CreateSessionQodResponse
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
-            await client.qod.retrieve_sessions_v_1(
-                device={"phone_number": "+99999991001"},
+            await client.qod.create_session(
+                device={
+                    "phone_number": "+99999991001",
+                    "ipv4address": {
+                        "publicAddress": "233.252.0.2",
+                        "privateAddress": "192.0.2.25",
+                        "publicPort": 80,
+                    },
+                },
+                application_server={"ipv4address": "8.8.8.8"},
+                qos_profile="DOWNLINK_M_UPLINK_L",
+                duration=60,
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.retrieve_sessions_v_1(device=device, request_options=request_options)
+        _response = await self._raw_client.create_session(device=device, application_server=application_server, qos_profile=qos_profile, device_ports=device_ports, application_server_ports=application_server_ports, webhook=webhook, duration=duration, request_options=request_options)
         return _response.data
-
-    async def extend_session(
-        self,
-        session_id: str,
-        *,
-        requested_additional_duration: int,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ExtendSessionQodResponse:
+    
+    async def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RetrieveSessionsV1QodResponseItem]:
+        """
+        Return all QoD sessions related to the specified device.
+        
+        Parameters
+        ----------
+        device : RetrieveSessionsV1QodRequestDeviceParams
+            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[RetrieveSessionsV1QodResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.qod.retrieve_sessions_v1(
+                device={"phone_number": "+99999991001"},
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.retrieve_sessions_v1(device=device, request_options=request_options)
+        return _response.data
+    
+    async def extend_session_v1(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> ExtendSessionV1QodResponse:
         """
         Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
         The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
@@ -1190,262 +1066,226 @@ class AsyncQodClient:
         - Remaining duration: 70,000 seconds
         - New remaining duration: 86,400 seconds (the maximum allowed)
         - New overall session duration: 96,400 seconds
-
+        
         Parameters
         ----------
         session_id : str
             Session ID that was obtained from the createSession operation
-
+        
         requested_additional_duration : int
             Additional duration in seconds to be extended.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        ExtendSessionQodResponse
-
-
+        ExtendSessionV1QodResponse
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
+        async def main() -> None:
+            await client.qod.extend_session_v1(
+                session_id="sessionId",
+                requested_additional_duration=60,
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.extend_session_v1(session_id, requested_additional_duration=requested_additional_duration, request_options=request_options)
+        return _response.data
+    
+    async def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> ExtendSessionQodResponse:
+        """
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        requested_additional_duration : int
+            Additional duration in seconds to be extended.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        ExtendSessionQodResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
         async def main() -> None:
             await client.qod.extend_session(
                 session_id="sessionId",
                 requested_additional_duration=60,
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.extend_session(
-            session_id, requested_additional_duration=requested_additional_duration, request_options=request_options
-        )
+        _response = await self._raw_client.extend_session(session_id, requested_additional_duration=requested_additional_duration, request_options=request_options)
         return _response.data
-
-    async def list_sessions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSessionsQodResponseItem]:
+    
+    async def get_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSessionQodResponse:
         """
-        Return device communication Quality-on-Demand settings for your devices.
-
+        Querying for QoS session resource information details
+        
         Parameters
         ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        typing.List[ListSessionsQodResponseItem]
-
-
+        GetSessionQodResponse
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
-            await client.qod.list_sessions()
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.list_sessions(request_options=request_options)
-        return _response.data
-
-    async def create_session(
-        self,
-        *,
-        device: CreateSessionQodRequestDeviceParams,
-        application_server: CreateSessionQodRequestApplicationServerParams,
-        qos_profile: str,
-        device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT,
-        application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT,
-        webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT,
-        duration: typing.Optional[int] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSessionQodResponse:
-        """
-        Create QoS Session to manage latency/throughput priorities
-
-        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
-        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-
-        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-
-        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-
-        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
-        This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
-        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-
-        Parameters
-        ----------
-        device : CreateSessionQodRequestDeviceParams
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
-        application_server : CreateSessionQodRequestApplicationServerParams
-            A server hosting backend applications to deliver some business logic to clients.
-
-            The developer can choose to provide the below specified device identifiers:
-
-            * `ipv4Address`
-            * `ipv6Address`
-
-        qos_profile : str
-            A unique name for identifying a specific QoS profile.
-            This may follow different formats depending on the service providers implementation.
-            Some options addresses:
-
-
-
-
-
-              - A UUID style string
-              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
-              - A searchable descriptive name
-
-        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
-            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-
-        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
-            A list of single ports or port ranges on the application server
-
-        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
-
-        duration : typing.Optional[int]
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-            - `qosStatus` as `UNAVAILABLE`, and,
-            - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        CreateSessionQodResponse
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.qod.create_session(
-                device={
-                    "phone_number": "+99999991001",
-                    "ipv_4_address": {
-                        "publicAddress": "233.252.0.2",
-                        "privateAddress": "192.0.2.25",
-                        "publicPort": 80,
-                    },
-                },
-                application_server={"ipv_4_address": "8.8.8.8"},
-                qos_profile="DOWNLINK_M_UPLINK_L",
-                duration=60,
+            await client.qod.get_session(
+                session_id="sessionId",
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.create_session(
-            device=device,
-            application_server=application_server,
-            qos_profile=qos_profile,
-            device_ports=device_ports,
-            application_server_ports=application_server_ports,
-            webhook=webhook,
-            duration=duration,
-            request_options=request_options,
-        )
+        _response = await self._raw_client.get_session(session_id, request_options=request_options)
         return _response.data
-
-    async def retrieve_sessions(
-        self, *, device: RetrieveSessionsQodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RetrieveSessionsQodResponseItem]:
+    
+    async def delete_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+        """
+        Release resources related to QoS session
+        
+        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
+        - `qosStatus` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        None
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.qod.delete_session(
+                session_id="sessionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_session(session_id, request_options=request_options)
+        return _response.data
+    
+    async def retrieve_sessions(self, *, device: RetrieveSessionsQodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RetrieveSessionsQodResponseItem]:
         """
         Return all QoD sessions related to the specified device.
-
+        
         Parameters
         ----------
         device : RetrieveSessionsQodRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
+            
             The developer can choose to provide the below specified device identifiers:
-
+            
             * `ipv4Address`
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-
+            
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.List[RetrieveSessionsQodResponseItem]
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.qod.retrieve_sessions(
                 device={"phone_number": "+99999991001"},
             )
-
-
+        
+        
         asyncio.run(main())
         """
         _response = await self._raw_client.retrieve_sessions(device=device, request_options=request_options)

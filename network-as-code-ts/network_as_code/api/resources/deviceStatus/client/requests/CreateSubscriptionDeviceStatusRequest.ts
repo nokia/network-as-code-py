@@ -76,9 +76,9 @@ export namespace CreateSubscriptionDeviceStatusRequest {
          */
         export interface Device {
             /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, optionally prefixed with '+'. */
-            phoneNumber?: string;
+            phoneNumber?: string | undefined;
             /** A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator. */
-            networkAccessIdentifier?: string;
+            networkAccessIdentifier?: string | undefined;
             /**
              * The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
              *
@@ -88,9 +88,9 @@ export namespace CreateSubscriptionDeviceStatusRequest {
              *
              * In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
              */
-            ipv4Address?: unknown;
+            ipv4Address?: unknown | undefined;
             /** The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix). */
-            ipv6Address?: string;
+            ipv6Address?: string | undefined;
         }
 
         /**
@@ -129,6 +129,6 @@ export namespace CreateSubscriptionDeviceStatusRequest {
         /** https callback address where the event notification must be POST-ed */
         notificationUrl: string;
         /** OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken */
-        notificationAuthToken?: string;
+        notificationAuthToken?: string | undefined;
     }
 }

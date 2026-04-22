@@ -9,17 +9,11 @@ from ...core.serialization import FieldMetadata
 
 
 class CheckNumberRecyclingResponse(UniversalBaseModel):
-    phone_number_recycled: typing_extensions.Annotated[bool, FieldMetadata(alias="phoneNumberRecycled")] = (
-        pydantic.Field(alias="phoneNumberRecycled")
-    )
-    """
-    Set to true (Boolean, not string) when there has been a change in the subscriber associated with the specific phone number after “specifiedDate”.
-    """
-
+    phone_number_recycled: typing_extensions.Annotated[bool, FieldMetadata(alias="phoneNumberRecycled"), pydantic.Field(alias="phoneNumberRecycled", description="Set to true (Boolean, not string) when there has been a change in the subscriber associated with the specific phone number after “specifiedDate”.")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

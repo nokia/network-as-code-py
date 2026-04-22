@@ -12,3 +12,4 @@ class RetrieveLocationResponseAreaParams(typing_extensions.TypedDict):
     CIRCLE - The area is defined as a circle.
     POLYGON - The area is defined as a polygon.
     """
+    

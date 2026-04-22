@@ -7,21 +7,16 @@ from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class CreateSliceSliceRequestNetworkIdentifier(UniversalBaseModel):
-    """
-    PLMN ID with MCC and MNC codes.
-    """
-
     mcc: str = pydantic.Field()
     """
     Country name, short name, or MCC code. One cannot use country names if a country has several MCC codes, such as the US.
     """
-
+    
     mnc: str
-
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

@@ -10,36 +10,18 @@ from ...core.serialization import FieldMetadata
 
 
 class RetrieveRoamingStatusDeviceStatusResponse(UniversalBaseModel):
-    last_status_time: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="lastStatusTime")
-    ] = pydantic.Field(alias="lastStatusTime", default=None)
-    """
-    Last time that the associated device roaming status was updated
-    """
-
+    last_status_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="lastStatusTime"), pydantic.Field(alias="lastStatusTime", description="Last time that the associated device roaming status was updated")] = None
     roaming: bool = pydantic.Field()
     """
     Roaming status. True, if it is roaming
     """
-
-    country_code: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="countryCode")] = (
-        pydantic.Field(alias="countryCode", default=None)
-    )
-    """
-    The Mobile country code (MCC) as an geographic region identifier for the country and the dependent areas.
-    """
-
-    country_name: typing_extensions.Annotated[typing.Optional[typing.List[str]], FieldMetadata(alias="countryName")] = (
-        pydantic.Field(alias="countryName", default=None)
-    )
-    """
-    The ISO 3166 ALPHA-2 country-codes of mapped to mobile country code(MCC). If there is mapping of one MCC to multiple countries, then we have list of countries. If there is no mapping of MCC to any country, then an empty array [] shall be returned..
-    """
-
+    
+    country_code: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="countryCode"), pydantic.Field(alias="countryCode", description="The Mobile country code (MCC) as an geographic region identifier for the country and the dependent areas.")] = None
+    country_name: typing_extensions.Annotated[typing.Optional[typing.List[str]], FieldMetadata(alias="countryName"), pydantic.Field(alias="countryName", description="The ISO 3166 ALPHA-2 country-codes of mapped to mobile country code(MCC). If there is mapping of one MCC to multiple countries, then we have list of countries. If there is no mapping of MCC to any country, then an empty array [] shall be returned..")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

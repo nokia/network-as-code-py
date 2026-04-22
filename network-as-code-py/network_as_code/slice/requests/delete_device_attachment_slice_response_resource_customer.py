@@ -11,13 +11,14 @@ class DeleteDeviceAttachmentSliceResponseResourceCustomerParams(typing_extension
     """
     Description of the slice, e.g. "B2B_5G_eMBB_Slice"
     """
-
+    
     address: typing_extensions.NotRequired[typing.Optional[str]]
     """
     Address of the customer ordering slice creation.
     """
-
+    
     contact: typing_extensions.NotRequired[typing.Optional[str]]
     """
     Contact of the customer ordering slice creation.
     """
+    

@@ -19,40 +19,29 @@ from .get_device_attachments_slice_response_item_resource_webhook import (
 
 
 class GetDeviceAttachmentsSliceResponseItemResourceParams(typing_extensions.TypedDict):
-    """
-    Original device attach request resources.
-    """
-
     device: GetDeviceAttachmentsSliceResponseItemResourceDeviceParams
-    """
-    Identifiers of the device. Phone number and imsi are mandatory for device attach operations.
-    """
-
-    customer: typing_extensions.NotRequired[
-        typing.Optional[GetDeviceAttachmentsSliceResponseItemResourceCustomerParams]
-    ]
+    customer: typing_extensions.NotRequired[GetDeviceAttachmentsSliceResponseItemResourceCustomerParams]
     """
     Customer who orders the device attach operations.
     """
-
+    
     slice_id: typing_extensions.Annotated[str, FieldMetadata(alias="sliceId")]
     """
     Slice resource identifier, simple name or UUID.
     """
-
+    
     mobile_services: typing_extensions.NotRequired[typing.Sequence[str]]
     """
     List of services allowed for the device.
     """
-
-    traffic_categories: typing_extensions.NotRequired[
-        typing.Optional[GetDeviceAttachmentsSliceResponseItemResourceTrafficCategoriesParams]
-    ]
+    
+    traffic_categories: typing_extensions.NotRequired[GetDeviceAttachmentsSliceResponseItemResourceTrafficCategoriesParams]
     """
     Denotes the operating system id and the applications' identifiers
     """
-
-    webhook: typing_extensions.NotRequired[typing.Optional[GetDeviceAttachmentsSliceResponseItemResourceWebhookParams]]
+    
+    webhook: typing_extensions.NotRequired[GetDeviceAttachmentsSliceResponseItemResourceWebhookParams]
     """
     Callback settings for the requester application.
     """
+    

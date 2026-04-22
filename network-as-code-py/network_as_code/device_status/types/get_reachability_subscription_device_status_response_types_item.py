@@ -2,11 +2,4 @@
 
 import typing
 
-GetReachabilitySubscriptionDeviceStatusResponseTypesItem = typing.Union[
-    typing.Literal[
-        "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data",
-        "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms",
-        "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected",
-    ],
-    typing.Any,
-]
+GetReachabilitySubscriptionDeviceStatusResponseTypesItem = typing.Union[typing.Literal["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data", "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms", "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"], typing.Any]

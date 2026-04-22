@@ -9,8 +9,9 @@ class RetrieveSessionsQodResponseItemApplicationServerPortsRangesItemParams(typi
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

@@ -2,6 +2,4 @@
 
 import typing
 
-GetSliceSliceResponseSliceIsolationLevel = typing.Union[
-    typing.Literal["NO-ISOLATION", "PHYSICAL-ISOLATION", "LOGICAL-ISOLATION"], typing.Any
-]
+GetSliceSliceResponseSliceIsolationLevel = typing.Union[typing.Literal["NO-ISOLATION", "PHYSICAL-ISOLATION", "LOGICAL-ISOLATION"], typing.Any]

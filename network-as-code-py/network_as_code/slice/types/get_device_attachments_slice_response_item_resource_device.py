@@ -6,54 +6,25 @@ import pydantic
 import typing_extensions
 from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ...core.serialization import FieldMetadata
-from .get_device_attachments_slice_response_item_resource_device_ipv_4_address import (
+from .get_device_attachments_slice_response_item_resource_device_ipv4address import (
     GetDeviceAttachmentsSliceResponseItemResourceDeviceIpv4Address,
 )
 
 
 class GetDeviceAttachmentsSliceResponseItemResourceDevice(UniversalBaseModel):
-    """
-    Identifiers of the device. Phone number and imsi are mandatory for device attach operations.
-    """
-
-    phone_number: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="phoneNumber")] = (
-        pydantic.Field(alias="phoneNumber", default=None)
-    )
-    """
-    Phone number of the subscription, if any. Optional.
-    """
-
-    network_access_identifier: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="networkAccessIdentifier")
-    ] = pydantic.Field(alias="networkAccessIdentifier", default=None)
-    """
-    Email address-like external identifier of the subscription registered at the operator. If both networkAccessIdentifier and phoneNumber are included, phoneNumber may be dropped and networkAccessIdentifier may be retained.
-    """
-
-    ipv_4_address: typing_extensions.Annotated[
-        typing.Optional[GetDeviceAttachmentsSliceResponseItemResourceDeviceIpv4Address],
-        FieldMetadata(alias="ipv4Address"),
-    ] = pydantic.Field(alias="ipv4Address", default=None)
-    """
-    IPv4 address of the device. IP address is needed for some flow-oriented services, such as QoD.
-    """
-
-    ipv_6_address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address")] = (
-        pydantic.Field(alias="ipv6Address", default=None)
-    )
-    """
-    IPv6 address of the device. IP address is needed for some flow-oriented services, such as QoD.
-    """
-
+    phone_number: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="phoneNumber"), pydantic.Field(alias="phoneNumber", description="Phone number of the subscription, if any. Optional.")] = None
+    network_access_identifier: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="networkAccessIdentifier"), pydantic.Field(alias="networkAccessIdentifier", description="Email address-like external identifier of the subscription registered at the operator. If both networkAccessIdentifier and phoneNumber are included, phoneNumber may be dropped and networkAccessIdentifier may be retained.")] = None
+    ipv4address: typing_extensions.Annotated[typing.Optional[GetDeviceAttachmentsSliceResponseItemResourceDeviceIpv4Address], FieldMetadata(alias="ipv4Address"), pydantic.Field(alias="ipv4Address", description="IPv4 address of the device. IP address is needed for some flow-oriented services, such as QoD.")] = None
+    ipv6address: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="ipv6Address"), pydantic.Field(alias="ipv6Address", description="IPv6 address of the device. IP address is needed for some flow-oriented services, such as QoD.")] = None
     imsi: typing.Optional[int] = pydantic.Field(default=None)
     """
     International mobile subscriber identity
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

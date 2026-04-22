@@ -8,16 +8,13 @@ from ...core.serialization import FieldMetadata
 
 
 class RetrieveDateDeviceSwapResponseParams(typing_extensions.TypedDict):
-    latest_device_change: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="latestDeviceChange")
-    ]
+    latest_device_change: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="latestDeviceChange")]
     """
     Timestamp of latest device swap performed. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
     """
-
-    monitored_period: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="monitoredPeriod")]
-    ]
+    
+    monitored_period: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="monitoredPeriod")]]
     """
     Timeframe in days for device change supervision for the phone number. It could be valued in the response if the latest Device swap occurred before this monitored period.
     """
+    

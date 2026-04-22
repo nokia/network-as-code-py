@@ -10,15 +10,11 @@ from .get_device_attachment_slice_response_resource_traffic_categories_apps impo
 
 
 class GetDeviceAttachmentSliceResponseResourceTrafficCategories(UniversalBaseModel):
-    apps: GetDeviceAttachmentSliceResponseResourceTrafficCategoriesApps = pydantic.Field()
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
+    apps: GetDeviceAttachmentSliceResponseResourceTrafficCategoriesApps
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

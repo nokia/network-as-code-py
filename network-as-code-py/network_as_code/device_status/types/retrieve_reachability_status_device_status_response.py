@@ -13,24 +13,17 @@ from .retrieve_reachability_status_device_status_response_connectivity_item impo
 
 
 class RetrieveReachabilityStatusDeviceStatusResponse(UniversalBaseModel):
-    last_status_time: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="lastStatusTime")
-    ] = pydantic.Field(alias="lastStatusTime", default=None)
-    """
-    Last time that the associated device reachability status was updated
-    """
-
+    last_status_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="lastStatusTime"), pydantic.Field(alias="lastStatusTime", description="Last time that the associated device reachability status was updated")] = None
     reachable: bool = pydantic.Field()
     """
     Indicates overall device reachability
     """
-
+    
     connectivity: typing.Optional[typing.List[RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem]] = None
-
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

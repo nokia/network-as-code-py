@@ -2,10 +2,10 @@
 
 export interface RetrieveReachabilityStatusDeviceStatusResponse {
     /** Last time that the associated device reachability status was updated */
-    lastStatusTime?: string;
+    lastStatusTime?: string | undefined;
     /** Indicates overall device reachability */
     reachable: boolean;
-    connectivity?: RetrieveReachabilityStatusDeviceStatusResponse.Connectivity.Item[];
+    connectivity?: RetrieveReachabilityStatusDeviceStatusResponse.Connectivity.Item[] | undefined;
 }
 
 export namespace RetrieveReachabilityStatusDeviceStatusResponse {

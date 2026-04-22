@@ -2,6 +2,4 @@
 
 import typing
 
-ListSlicesSliceResponseItemState = typing.Union[
-    typing.Literal["PENDING", "AVAILABLE", "OPERATING", "DELETED", "FAILED"], typing.Any
-]
+ListSlicesSliceResponseItemState = typing.Union[typing.Literal["PENDING", "AVAILABLE", "OPERATING", "DELETED", "FAILED"], typing.Any]

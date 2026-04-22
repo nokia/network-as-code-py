@@ -11,21 +11,21 @@ class InternalServerErrorBody(UniversalBaseModel):
     """
     HTTP status code returned along with this error response
     """
-
+    
     code: str = pydantic.Field()
     """
     Code given to this error
     """
-
+    
     message: str = pydantic.Field()
     """
     Detailed error description
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

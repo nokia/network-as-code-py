@@ -11,23 +11,14 @@ from .query_congestion_insights_response_item_congestion_level import QueryConge
 
 
 class QueryCongestionInsightsResponseItem(UniversalBaseModel):
-    time_interval_start: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStart")] = (
-        pydantic.Field(alias="timeIntervalStart")
-    )
-    time_interval_stop: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStop")] = (
-        pydantic.Field(alias="timeIntervalStop")
-    )
-    congestion_level: typing_extensions.Annotated[
-        QueryCongestionInsightsResponseItemCongestionLevel, FieldMetadata(alias="congestionLevel")
-    ] = pydantic.Field(alias="congestionLevel")
-    confidence_level: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="confidenceLevel")] = (
-        pydantic.Field(alias="confidenceLevel", default=None)
-    )
-
+    time_interval_start: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStart"), pydantic.Field(alias="timeIntervalStart")]
+    time_interval_stop: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStop"), pydantic.Field(alias="timeIntervalStop")]
+    congestion_level: typing_extensions.Annotated[QueryCongestionInsightsResponseItemCongestionLevel, FieldMetadata(alias="congestionLevel"), pydantic.Field(alias="congestionLevel")]
+    confidence_level: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="confidenceLevel"), pydantic.Field(alias="confidenceLevel")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

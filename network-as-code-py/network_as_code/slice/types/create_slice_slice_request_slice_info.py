@@ -6,30 +6,19 @@ import pydantic
 import typing_extensions
 from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ...core.serialization import FieldMetadata
-from .create_slice_slice_request_slice_info_service_type import CreateSliceSliceRequestSliceInfoServiceType
 
 
 class CreateSliceSliceRequestSliceInfo(UniversalBaseModel):
-    """
-    Slice Service type(SST) and slice differentiator(SD).
-    """
-
-    service_type: typing_extensions.Annotated[
-        CreateSliceSliceRequestSliceInfoServiceType, FieldMetadata(alias="serviceType")
-    ] = pydantic.Field(alias="serviceType")
-    """
-    Name or ID of slice type.
-    """
-
+    service_type: typing_extensions.Annotated[int, FieldMetadata(alias="serviceType"), pydantic.Field(alias="serviceType", description="Name or ID of slice type (e.g. eMBB, URLLC, MIoT or numeric SST).")]
     differentiator: typing.Optional[str] = pydantic.Field(default=None)
     """
     Differentiator identifies the slice within the type.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

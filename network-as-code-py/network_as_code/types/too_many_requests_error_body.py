@@ -8,18 +8,17 @@ from .too_many_requests_error_body_code import TooManyRequestsErrorBodyCode
 
 
 class TooManyRequestsErrorBody(UniversalBaseModel):
-    message: str = pydantic.Field()
-    """
-    A human readable description of what the event represent
-    """
-
     status: typing.Optional[str] = None
     code: typing.Optional[TooManyRequestsErrorBodyCode] = None
-
+    message: str = pydantic.Field()
+    """
+    Detailed error description
+    """
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

@@ -13,9 +13,5 @@ from ..types.query_congestion_insights_response_item_congestion_level import (
 class QueryCongestionInsightsResponseItemParams(typing_extensions.TypedDict):
     time_interval_start: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStart")]
     time_interval_stop: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="timeIntervalStop")]
-    congestion_level: typing_extensions.Annotated[
-        QueryCongestionInsightsResponseItemCongestionLevel, FieldMetadata(alias="congestionLevel")
-    ]
-    confidence_level: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="confidenceLevel")]
-    ]
+    congestion_level: typing_extensions.Annotated[QueryCongestionInsightsResponseItemCongestionLevel, FieldMetadata(alias="congestionLevel")]
+    confidence_level: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="confidenceLevel")]]

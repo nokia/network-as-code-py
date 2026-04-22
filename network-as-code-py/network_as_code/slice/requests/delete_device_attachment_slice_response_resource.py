@@ -19,38 +19,29 @@ from .delete_device_attachment_slice_response_resource_webhook import (
 
 
 class DeleteDeviceAttachmentSliceResponseResourceParams(typing_extensions.TypedDict):
-    """
-    Original device attach request resources.
-    """
-
     device: DeleteDeviceAttachmentSliceResponseResourceDeviceParams
-    """
-    Identifiers of the device. Phone number and imsi are mandatory for device attach operations.
-    """
-
-    customer: typing_extensions.NotRequired[typing.Optional[DeleteDeviceAttachmentSliceResponseResourceCustomerParams]]
+    customer: typing_extensions.NotRequired[DeleteDeviceAttachmentSliceResponseResourceCustomerParams]
     """
     Customer who orders the device attach operations.
     """
-
+    
     slice_id: typing_extensions.Annotated[str, FieldMetadata(alias="sliceId")]
     """
     Slice resource identifier, simple name or UUID.
     """
-
+    
     mobile_services: typing_extensions.NotRequired[typing.Sequence[str]]
     """
     List of services allowed for the device.
     """
-
-    traffic_categories: typing_extensions.NotRequired[
-        typing.Optional[DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesParams]
-    ]
+    
+    traffic_categories: typing_extensions.NotRequired[DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesParams]
     """
     Denotes the operating system id and the applications' identifiers
     """
-
-    webhook: typing_extensions.NotRequired[typing.Optional[DeleteDeviceAttachmentSliceResponseResourceWebhookParams]]
+    
+    webhook: typing_extensions.NotRequired[DeleteDeviceAttachmentSliceResponseResourceWebhookParams]
     """
     Callback settings for the requester application.
     """
+    

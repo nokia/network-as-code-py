@@ -2,55 +2,55 @@
 
 export interface FillInKycResponse {
     /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'. */
-    phoneNumber?: string;
+    phoneNumber?: string | undefined;
     /** Id number associated to the id_document of the customer stored on the Operator's system. */
-    idDocument?: string;
+    idDocument?: string | undefined;
     /** Type of the official identity document provided. */
-    idDocumentType?: FillInKycResponse.IdDocumentType;
+    idDocumentType?: FillInKycResponse.IdDocumentType | undefined;
     /** Expiration date of the identity document (ISO 8601). */
-    idDocumentExpiryDate?: string;
+    idDocumentExpiryDate?: string | undefined;
     /** Complete name of the customer stored on the Operator's system.  It is usually composed of first/given name and last/family/sur- name in a country.  Depending on the country, the order of first/give name and last/family/sur- name varies, and middle name could be included.  It can use givenName, middleNames, familyName and/or familyNameAtBirth. For example, in ESP, name+familyName; in NLD, it can be name+middleNames+familyName or name+middleNames+familyNameAtBirth, etc. */
-    name?: string;
+    name?: string | undefined;
     /** First/given name or compound first/given name of the customer on the Operator's system. */
-    givenName?: string;
+    givenName?: string | undefined;
     /** Last name, family name, or surname of the customer stored on the Operator's system. */
-    familyName?: string;
+    familyName?: string | undefined;
     /** Complete name of the customer in Hankaku-Kana format (reading of name) for Japan, stored on the Operator's system. */
-    nameKanaHankaku?: string;
+    nameKanaHankaku?: string | undefined;
     /** Complete name of the customer in Zenkaku-Kana format (reading of name) for Japan, stored on the Operator's system. */
-    nameKanaZenkaku?: string;
+    nameKanaZenkaku?: string | undefined;
     /** Middle name/s of the customer stored on the Operator's system. */
-    middleNames?: string;
+    middleNames?: string | undefined;
     /** Last/family/sur- name at birth of the customer stored on the Operator's system. */
-    familyNameAtBirth?: string;
+    familyNameAtBirth?: string | undefined;
     /** Complete address of the customer stored on the Operator's system.  For some countries, it is built following the usual concatenation of parameters in a country, but for other countries, this is not the case.  For some countries, it can use streetName, streetNumber and/or houseNumberExtension. For example, in ESP, streetName+streetNumber; in NLD, it can be streetName+streetNumber or streetName+streetNumber+houseNumberExtension. */
-    address?: string;
+    address?: string | undefined;
     /** Name of the street of the customer's address on the Operator's system.  It should not include the type of the street. */
-    streetName?: string;
+    streetName?: string | undefined;
     /** The street number of the customer's address on the Operator's system.  Number identifying a specific property on the 'streetName'. */
-    streetNumber?: string;
+    streetNumber?: string | undefined;
     /** The postal code or Zip code of the customer's address, stored on the Operator's system. */
-    postalCode?: string;
+    postalCode?: string | undefined;
     /** Region/prefecture of the customer's address, stored on the Operator's system. */
-    region?: string;
+    region?: string | undefined;
     /** Locality of the customer's address, stored on the Operator's system. */
-    locality?: string;
+    locality?: string | undefined;
     /** Country of the customer's address stored on the Operator's system. Format ISO 3166-1 alpha-2. */
-    country?: string;
+    country?: string | undefined;
     /** House number extension of the customer stored on the Operator's system.  Specific identifier of the house needed depending on the property type. For example, number of apartment in an apartment building. */
-    houseNumberExtension?: string;
+    houseNumberExtension?: string | undefined;
     /** Birthdate of the customer, in ISO 8601 calendar date format (YYYY-MM-DD), stored on the Operator's system. */
-    birthdate?: string;
+    birthdate?: string | undefined;
     /** Email address of the customer in the RFC specified format (local-part@domain), stored on the Operator's system. */
-    email?: string;
+    email?: string | undefined;
     /** Gender of the customer stored on the Operator's system (Male/Female/Other). */
-    gender?: FillInKycResponse.Gender;
+    gender?: FillInKycResponse.Gender | undefined;
     /** City where the customer was born. */
-    cityOfBirth?: string;
+    cityOfBirth?: string | undefined;
     /** Country where the customer was born. Format ISO 3166-1 alpha-2. */
-    countryOfBirth?: string;
+    countryOfBirth?: string | undefined;
     /** ISO 3166-1 alpha-2 code of the customer’s nationality. In the case a customer has more than one nationality, it is supposed to be the nationality related to the ID document provided in the match request. */
-    nationality?: string;
+    nationality?: string | undefined;
 }
 
 export namespace FillInKycResponse {

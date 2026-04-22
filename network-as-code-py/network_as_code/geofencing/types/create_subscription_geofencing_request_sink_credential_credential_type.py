@@ -2,6 +2,4 @@
 
 import typing
 
-CreateSubscriptionGeofencingRequestSinkCredentialCredentialType = typing.Union[
-    typing.Literal["PLAIN", "ACCESSTOKEN", "REFRESHTOKEN"], typing.Any
-]
+CreateSubscriptionGeofencingRequestSinkCredentialCredentialType = typing.Union[typing.Literal["PLAIN", "ACCESSTOKEN", "REFRESHTOKEN"], typing.Any]

@@ -10,10 +10,7 @@ class GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailPar
     """
     The detail of the requested event subscription.
     """
-
-    device: typing_extensions.NotRequired[
-        GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDeviceParams
-    ]
+    device: typing_extensions.NotRequired[GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDeviceParams]
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
     
@@ -26,3 +23,4 @@ class GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailPar
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
     """
+    

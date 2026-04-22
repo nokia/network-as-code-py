@@ -9,20 +9,16 @@ from ...core.serialization import FieldMetadata
 
 
 class ExtendSessionQodResponseApplicationServerPortsRangesItem(UniversalBaseModel):
-    from_: typing_extensions.Annotated[int, FieldMetadata(alias="from")] = pydantic.Field(alias="from")
-    """
-    TCP or UDP port number
-    """
-
+    from_: typing_extensions.Annotated[int, FieldMetadata(alias="from"), pydantic.Field(alias="from", description="TCP or UDP port number")]
     to: int = pydantic.Field()
     """
     TCP or UDP port number
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

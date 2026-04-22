@@ -11,35 +11,13 @@ from .verify_location_response_verification_result import VerifyLocationResponse
 
 
 class VerifyLocationResponse(UniversalBaseModel):
-    last_location_time: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="lastLocationTime")
-    ] = pydantic.Field(alias="lastLocationTime", default=None)
-    """
-    Timestamp of the last location information. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
-    """
-
-    verification_result: typing_extensions.Annotated[
-        VerifyLocationResponseVerificationResult, FieldMetadata(alias="verificationResult")
-    ] = pydantic.Field(alias="verificationResult")
-    """
-    Result of a verification request:
-      - `TRUE`: when the network locates the device within the requested area, 
-      - `FALSE`: when the requested area does not match the area where the network locates the device,
-      - `UNKNOWN`: when the network cannot locate the device,
-      - `PARTIAL`: when the requested area partially match the area where the network locates the device. A `match_rate` could be included in the response.
-    """
-
-    match_rate: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="matchRate")] = pydantic.Field(
-        alias="matchRate", default=None
-    )
-    """
-    Estimation of the match rate between the area in the request (R), and area where the network locates the device (N), calculated as the percent value of the intersection of both areas divided by the network area, that is (R ∩ N) / N * 100. Included only if VerificationResult is PARTIAL.
-    """
-
+    last_location_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="lastLocationTime"), pydantic.Field(alias="lastLocationTime", description="Timestamp of the last location information. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)")] = None
+    verification_result: typing_extensions.Annotated[VerifyLocationResponseVerificationResult, FieldMetadata(alias="verificationResult"), pydantic.Field(alias="verificationResult", description="Result of a verification request:\n  - `TRUE`: when the network locates the device within the requested area, \n  - `FALSE`: when the requested area does not match the area where the network locates the device,\n  - `UNKNOWN`: when the network cannot locate the device,\n  - `PARTIAL`: when the requested area partially match the area where the network locates the device. A `match_rate` could be included in the response.")]
+    match_rate: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="matchRate"), pydantic.Field(alias="matchRate", description="Estimation of the match rate between the area in the request (R), and area where the network locates the device (N), calculated as the percent value of the intersection of both areas divided by the network area, that is (R ∩ N) / N * 100. Included only if VerificationResult is PARTIAL.")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

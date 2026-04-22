@@ -10,11 +10,10 @@ class GetOpenidConfigurationWellKnownMetadataResponse(UniversalBaseModel):
     authorization_endpoint: str
     token_endpoint: str
     fast_flow_csp_auth_endpoint: str
-
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

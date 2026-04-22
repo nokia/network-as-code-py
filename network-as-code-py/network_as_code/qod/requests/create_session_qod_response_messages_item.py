@@ -9,8 +9,9 @@ class CreateSessionQodResponseMessagesItemParams(typing_extensions.TypedDict):
     """
     Message severity
     """
-
+    
     description: str
     """
     Detailed message text
     """
+    

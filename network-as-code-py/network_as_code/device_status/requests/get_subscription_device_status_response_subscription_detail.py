@@ -13,7 +13,6 @@ class GetSubscriptionDeviceStatusResponseSubscriptionDetailParams(typing_extensi
     """
     The detail of the requested event subscription
     """
-
     device: GetSubscriptionDeviceStatusResponseSubscriptionDetailDeviceParams
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -27,7 +26,7 @@ class GetSubscriptionDeviceStatusResponseSubscriptionDetailParams(typing_extensi
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
     """
-
+    
     type: GetSubscriptionDeviceStatusResponseSubscriptionDetailType
     """
     roaming-status - Event triggered when the device switch from roaming ON to roaming OFF and conversely
@@ -44,3 +43,4 @@ class GetSubscriptionDeviceStatusResponseSubscriptionDetailParams(typing_extensi
     
     connectivity-disconnected - Event triggered when the device is not connected.
     """
+    

@@ -10,28 +10,12 @@ from .check_tenure_kyc_response_contract_type import CheckTenureKycResponseContr
 
 
 class CheckTenureKycResponse(UniversalBaseModel):
-    tenure_date_check: typing_extensions.Annotated[bool, FieldMetadata(alias="tenureDateCheck")] = pydantic.Field(
-        alias="tenureDateCheck"
-    )
-    """
-    `true` when the identified mobile subscription has had valid tenure since `tenureDate`, otherwise `false`
-    """
-
-    contract_type: typing_extensions.Annotated[
-        typing.Optional[CheckTenureKycResponseContractType], FieldMetadata(alias="contractType")
-    ] = pydantic.Field(alias="contractType", default=None)
-    """
-    If exists, populated with:
-    - `PAYG` - prepaid (pay-as-you-go) account
-    - `PAYM` - contract account
-    - `Business` - Business (enterprise) account
-    This attribute may be omitted from the response set if the information is not available
-    """
-
+    tenure_date_check: typing_extensions.Annotated[bool, FieldMetadata(alias="tenureDateCheck"), pydantic.Field(alias="tenureDateCheck", description="`true` when the identified mobile subscription has had valid tenure since `tenureDate`, otherwise `false`")]
+    contract_type: typing_extensions.Annotated[typing.Optional[CheckTenureKycResponseContractType], FieldMetadata(alias="contractType"), pydantic.Field(alias="contractType", description="If exists, populated with:\n- `PAYG` - prepaid (pay-as-you-go) account\n- `PAYM` - contract account\n- `Business` - Business (enterprise) account\nThis attribute may be omitted from the response set if the information is not available")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

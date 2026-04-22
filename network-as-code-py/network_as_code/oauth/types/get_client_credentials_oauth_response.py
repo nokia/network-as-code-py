@@ -11,16 +11,16 @@ class GetClientCredentialsOauthResponse(UniversalBaseModel):
     """
     The unique client_id string as issued by the authorization server.
     """
-
+    
     client_secret: str = pydantic.Field()
     """
     The client_secret corresponding to the client_id.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

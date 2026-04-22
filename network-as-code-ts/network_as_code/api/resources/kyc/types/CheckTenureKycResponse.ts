@@ -10,7 +10,7 @@ export interface CheckTenureKycResponse {
      * - `Business` - Business (enterprise) account
      * This attribute may be omitted from the response set if the information is not available
      */
-    contractType?: CheckTenureKycResponse.ContractType;
+    contractType?: CheckTenureKycResponse.ContractType | undefined;
 }
 
 export namespace CheckTenureKycResponse {

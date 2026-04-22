@@ -13,10 +13,7 @@ class CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail(
     """
     The detail of the requested event subscription.
     """
-
-    device: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice] = (
-        pydantic.Field(default=None)
-    )
+    device: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice] = pydantic.Field(default=None)
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
     
@@ -29,11 +26,11 @@ class CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail(
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

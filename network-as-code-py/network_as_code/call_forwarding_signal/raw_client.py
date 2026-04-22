@@ -6,6 +6,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
+from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
@@ -21,490 +22,397 @@ from .types.retrieve_call_forwarding_call_forwarding_signal_response_item import
 from .types.retrieve_unconditional_call_forwarding_call_forwarding_signal_response import (
     RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,
 )
+from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class RawCallForwardingSignalClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
-
-    def retrieve_call_forwarding(
-        self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]:
+    
+    def retrieve_call_forwarding(self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]:
         """
         This endpoint provides information about wich type of call forwarding service is active. More than one service can be active, e.g. conditional and unconditional. This endpoit exceeds the main scope of the CFS API, for this reason an error code 501 can be returned.
-
+        
         Parameters
         ----------
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         HttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]
-
+            
         """
         _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings",
-            method="POST",
+            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings",method="POST",
             json={
                 "phoneNumber": phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],
                     parse_obj_as(
-                        type_=typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 501:
-                raise NotImplementedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def retrieve_unconditional_call_forwarding(
-        self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]:
+    
+    def retrieve_unconditional_call_forwarding(self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]:
         """
         This endpoint provides information about the status of the unconditional call forwarding, beeing active or not.
-
+        
         Parameters
         ----------
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         HttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]
-
+            
         """
         _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings",
-            method="POST",
+            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings",method="POST",
             json={
                 "phoneNumber": phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,
                     parse_obj_as(
-                        type_=RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-
 class AsyncRawCallForwardingSignalClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
-
-    async def retrieve_call_forwarding(
-        self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]:
+    
+    async def retrieve_call_forwarding(self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]:
         """
         This endpoint provides information about wich type of call forwarding service is active. More than one service can be active, e.g. conditional and unconditional. This endpoit exceeds the main scope of the CFS API, for this reason an error code 501 can be returned.
-
+        
         Parameters
         ----------
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         AsyncHttpResponse[typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem]]
-
+            
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings",
-            method="POST",
+            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/call-forwardings",method="POST",
             json={
                 "phoneNumber": phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],
                     parse_obj_as(
-                        type_=typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =typing.List[RetrieveCallForwardingCallForwardingSignalResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 501:
-                raise NotImplementedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def retrieve_unconditional_call_forwarding(
-        self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]:
+    
+    async def retrieve_unconditional_call_forwarding(self, *, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]:
         """
         This endpoint provides information about the status of the unconditional call forwarding, beeing active or not.
-
+        
         Parameters
         ----------
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         AsyncHttpResponse[RetrieveUnconditionalCallForwardingCallForwardingSignalResponse]
-
+            
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings",
-            method="POST",
+            "passthrough/camara/v1/call-forwarding-signal/call-forwarding-signal/v0.3/unconditional-call-forwardings",method="POST",
             json={
                 "phoneNumber": phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,
                     parse_obj_as(
-                        type_=RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =RetrieveUnconditionalCallForwardingCallForwardingSignalResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 422:
-                raise UnprocessableEntityError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)

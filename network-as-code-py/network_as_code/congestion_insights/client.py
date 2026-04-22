@@ -20,153 +20,39 @@ from .types.query_congestion_insights_response_item import QueryCongestionInsigh
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class CongestionInsightsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawCongestionInsightsClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> RawCongestionInsightsClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         RawCongestionInsightsClient
         """
         return self._raw_client
-
-    def get_subscription(
-        self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSubscriptionCongestionInsightsResponse:
-        """
-        Get congestion subscription data of the given device.
-
-        Parameters
-        ----------
-        resource_id : str
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        GetSubscriptionCongestionInsightsResponse
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.congestion_insights.get_subscription(
-            resource_id="de87e438-58b4-42c3-9d49-0fbfbd878305",
-        )
-        """
-        _response = self._raw_client.get_subscription(resource_id, request_options=request_options)
-        return _response.data
-
-    def delete_subscription(
-        self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
-        """
-        Unsubscribe from congestion event of the given device.
-
-        Parameters
-        ----------
-        resource_id : str
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.Any
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.congestion_insights.delete_subscription(
-            resource_id="de87e438-58b4-42c3-9d49-0fbfbd878305",
-        )
-        """
-        _response = self._raw_client.delete_subscription(resource_id, request_options=request_options)
-        return _response.data
-
-    def query(
-        self,
-        *,
-        device: QueryCongestionInsightsRequestDeviceParams,
-        start: typing.Optional[dt.datetime] = OMIT,
-        end: typing.Optional[dt.datetime] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[QueryCongestionInsightsResponseItem]:
-        """
-        Fetch historical or predicted congestion level of a device for a given period.
-
-        Parameters
-        ----------
-        device : QueryCongestionInsightsRequestDeviceParams
-
-        start : typing.Optional[dt.datetime]
-            Start of the period queried. If not set, 15 minutes before end. If neither start or end is set, then the upcoming 15 minutes are predicted.
-
-        end : typing.Optional[dt.datetime]
-            End of the period queried. If not set, 15 minutes after start.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.List[QueryCongestionInsightsResponseItem]
-
-
-        Examples
-        --------
-        from network_as_code import NetworkAsCodeApi
-
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.congestion_insights.query(
-            device={"phone_number": "+99999991000"},
-        )
-        """
-        _response = self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
-        return _response.data
-
-    def list_subscriptions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
+    
+    def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
         """
         Get congestion subscriptions.
-
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.List[ListSubscriptionsCongestionInsightsResponseItem]
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -175,42 +61,34 @@ class CongestionInsightsClient:
         """
         _response = self._raw_client.list_subscriptions(request_options=request_options)
         return _response.data
-
-    def create_subscription(
-        self,
-        *,
-        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
-        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
-        subscription_expire_time: dt.datetime,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSubscriptionCongestionInsightsResponse:
+    
+    def create_subscription(self, *, device: CreateSubscriptionCongestionInsightsRequestDeviceParams, webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams, subscription_expire_time: dt.datetime, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionCongestionInsightsResponse:
         """
         Create device congestion subscription. Notifies if congestion is high, medium, low or none.
-
+        
         Parameters
         ----------
         device : CreateSubscriptionCongestionInsightsRequestDeviceParams
-            Identifiers of the device
-
+        
         webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
-
+        
         subscription_expire_time : dt.datetime
             Time when the subscription expires.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         CreateSubscriptionCongestionInsightsResponse
-
-
+            
+        
         Examples
         --------
         import datetime
-
-        from network_as_code import NetworkAsCodeApi
-
+        
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -226,243 +104,190 @@ class CongestionInsightsClient:
             ),
         )
         """
-        _response = self._raw_client.create_subscription(
-            device=device,
-            webhook=webhook,
-            subscription_expire_time=subscription_expire_time,
-            request_options=request_options,
-        )
+        _response = self._raw_client.create_subscription(device=device, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
         return _response.data
-
-
+    
+    def get_subscription(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionCongestionInsightsResponse:
+        """
+        Get congestion subscription data of the given device.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetSubscriptionCongestionInsightsResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.congestion_insights.get_subscription(
+            resource_id="resource_id",
+        )
+        """
+        _response = self._raw_client.get_subscription(resource_id, request_options=request_options)
+        return _response.data
+    
+    def delete_subscription(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+        """
+        Unsubscribe from congestion event of the given device.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        None
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.congestion_insights.delete_subscription(
+            resource_id="resource_id",
+        )
+        """
+        _response = self._raw_client.delete_subscription(resource_id, request_options=request_options)
+        return _response.data
+    
+    def query(self, *, device: QueryCongestionInsightsRequestDeviceParams, start: typing.Optional[dt.datetime] = OMIT, end: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> typing.List[QueryCongestionInsightsResponseItem]:
+        """
+        Fetch historical or predicted congestion level of a device for a given period.
+        
+        Parameters
+        ----------
+        device : QueryCongestionInsightsRequestDeviceParams
+        
+        start : typing.Optional[dt.datetime]
+            Start of the period queried. If not set, 15 minutes before end. If neither start or end is set, then the upcoming 15 minutes are predicted.
+        
+        end : typing.Optional[dt.datetime]
+            End of the period queried. If not set, 15 minutes after start.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[QueryCongestionInsightsResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.congestion_insights.query(
+            device={"phone_number": "+99999991000"},
+        )
+        """
+        _response = self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
+        return _response.data
 class AsyncCongestionInsightsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawCongestionInsightsClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> AsyncRawCongestionInsightsClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         AsyncRawCongestionInsightsClient
         """
         return self._raw_client
-
-    async def get_subscription(
-        self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetSubscriptionCongestionInsightsResponse:
-        """
-        Get congestion subscription data of the given device.
-
-        Parameters
-        ----------
-        resource_id : str
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        GetSubscriptionCongestionInsightsResponse
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.congestion_insights.get_subscription(
-                resource_id="de87e438-58b4-42c3-9d49-0fbfbd878305",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_subscription(resource_id, request_options=request_options)
-        return _response.data
-
-    async def delete_subscription(
-        self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
-        """
-        Unsubscribe from congestion event of the given device.
-
-        Parameters
-        ----------
-        resource_id : str
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.Any
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.congestion_insights.delete_subscription(
-                resource_id="de87e438-58b4-42c3-9d49-0fbfbd878305",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_subscription(resource_id, request_options=request_options)
-        return _response.data
-
-    async def query(
-        self,
-        *,
-        device: QueryCongestionInsightsRequestDeviceParams,
-        start: typing.Optional[dt.datetime] = OMIT,
-        end: typing.Optional[dt.datetime] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[QueryCongestionInsightsResponseItem]:
-        """
-        Fetch historical or predicted congestion level of a device for a given period.
-
-        Parameters
-        ----------
-        device : QueryCongestionInsightsRequestDeviceParams
-
-        start : typing.Optional[dt.datetime]
-            Start of the period queried. If not set, 15 minutes before end. If neither start or end is set, then the upcoming 15 minutes are predicted.
-
-        end : typing.Optional[dt.datetime]
-            End of the period queried. If not set, 15 minutes after start.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        typing.List[QueryCongestionInsightsResponseItem]
-
-
-        Examples
-        --------
-        import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-
-
-        async def main() -> None:
-            await client.congestion_insights.query(
-                device={"phone_number": "+99999991000"},
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
-        return _response.data
-
-    async def list_subscriptions(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
+    
+    async def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsCongestionInsightsResponseItem]:
         """
         Get congestion subscriptions.
-
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.List[ListSubscriptionsCongestionInsightsResponseItem]
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.congestion_insights.list_subscriptions()
-
-
+        
+        
         asyncio.run(main())
         """
         _response = await self._raw_client.list_subscriptions(request_options=request_options)
         return _response.data
-
-    async def create_subscription(
-        self,
-        *,
-        device: CreateSubscriptionCongestionInsightsRequestDeviceParams,
-        webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams,
-        subscription_expire_time: dt.datetime,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> CreateSubscriptionCongestionInsightsResponse:
+    
+    async def create_subscription(self, *, device: CreateSubscriptionCongestionInsightsRequestDeviceParams, webhook: CreateSubscriptionCongestionInsightsRequestWebhookParams, subscription_expire_time: dt.datetime, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionCongestionInsightsResponse:
         """
         Create device congestion subscription. Notifies if congestion is high, medium, low or none.
-
+        
         Parameters
         ----------
         device : CreateSubscriptionCongestionInsightsRequestDeviceParams
-            Identifiers of the device
-
+        
         webhook : CreateSubscriptionCongestionInsightsRequestWebhookParams
-
+        
         subscription_expire_time : dt.datetime
             Time when the subscription expires.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         CreateSubscriptionCongestionInsightsResponse
-
-
+            
+        
         Examples
         --------
         import asyncio
         import datetime
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.congestion_insights.create_subscription(
                 device={"phone_number": "+36719991000"},
@@ -474,14 +299,131 @@ class AsyncCongestionInsightsClient:
                     "2045-04-12 09:09:33+00:00",
                 ),
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.create_subscription(
-            device=device,
-            webhook=webhook,
-            subscription_expire_time=subscription_expire_time,
-            request_options=request_options,
+        _response = await self._raw_client.create_subscription(device=device, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
+        return _response.data
+    
+    async def get_subscription(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionCongestionInsightsResponse:
+        """
+        Get congestion subscription data of the given device.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetSubscriptionCongestionInsightsResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
         )
+        
+        
+        async def main() -> None:
+            await client.congestion_insights.get_subscription(
+                resource_id="resource_id",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_subscription(resource_id, request_options=request_options)
+        return _response.data
+    
+    async def delete_subscription(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+        """
+        Unsubscribe from congestion event of the given device.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        None
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.congestion_insights.delete_subscription(
+                resource_id="resource_id",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_subscription(resource_id, request_options=request_options)
+        return _response.data
+    
+    async def query(self, *, device: QueryCongestionInsightsRequestDeviceParams, start: typing.Optional[dt.datetime] = OMIT, end: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> typing.List[QueryCongestionInsightsResponseItem]:
+        """
+        Fetch historical or predicted congestion level of a device for a given period.
+        
+        Parameters
+        ----------
+        device : QueryCongestionInsightsRequestDeviceParams
+        
+        start : typing.Optional[dt.datetime]
+            Start of the period queried. If not set, 15 minutes before end. If neither start or end is set, then the upcoming 15 minutes are predicted.
+        
+        end : typing.Optional[dt.datetime]
+            End of the period queried. If not set, 15 minutes after start.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[QueryCongestionInsightsResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.congestion_insights.query(
+                device={"phone_number": "+99999991000"},
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.query(device=device, start=start, end=end, request_options=request_options)
         return _response.data

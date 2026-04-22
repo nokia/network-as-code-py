@@ -5,16 +5,6 @@
  *     {
  *         subscriptionId: "subscriptionId"
  *     }
- *
- * @example
- *     {
- *         subscriptionId: "subscriptionId"
- *     }
- *
- * @example
- *     {
- *         subscriptionId: "subscriptionId"
- *     }
  */
 export interface GetReachabilitySubscriptionDeviceStatusRequest {
     /** Subscription identifier that was obtained from the create event subscription operation */

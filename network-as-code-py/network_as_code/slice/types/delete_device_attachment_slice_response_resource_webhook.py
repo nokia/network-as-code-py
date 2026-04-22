@@ -9,24 +9,12 @@ from ...core.serialization import FieldMetadata
 
 
 class DeleteDeviceAttachmentSliceResponseResourceWebhook(UniversalBaseModel):
-    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl")] = pydantic.Field(
-        alias="notificationUrl"
-    )
-    """
-    Notification URL for session-related events.
-    """
-
-    notification_auth_token: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="notificationAuthToken")
-    ] = pydantic.Field(alias="notificationAuthToken", default=None)
-    """
-    Authorization token for notification sending.
-    """
-
+    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl"), pydantic.Field(alias="notificationUrl", description="Notification URL for session-related events.")]
+    notification_auth_token: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken"), pydantic.Field(alias="notificationAuthToken", description="Authorization token for notification sending.")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

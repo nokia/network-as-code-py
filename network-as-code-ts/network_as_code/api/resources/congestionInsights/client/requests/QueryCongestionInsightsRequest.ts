@@ -19,23 +19,23 @@ export interface QueryCongestionInsightsRequest {
 export namespace QueryCongestionInsightsRequest {
     export interface Device {
         /** Phone number of the subscription, if any. Optional. */
-        phoneNumber?: string | null;
+        phoneNumber?: (string | null) | undefined;
         /** Email address-like external identifier of the subscription registered at the operator. If both networkAccessIdentifier and phoneNumber are included, phoneNumber may be dropped and networkAccessIdentifier may be retained. */
-        networkAccessIdentifier?: string | null;
+        networkAccessIdentifier?: (string | null) | undefined;
         /** IPv4 address of the device. IP address is needed for some flow-oriented services, such as QoD. */
-        ipv4Address?: Device.Ipv4Address | null;
+        ipv4Address?: Device.Ipv4Address | undefined;
         /** IPv6 address of the device. IP address is needed for some flow-oriented services, such as QoD. */
-        ipv6Address?: string | null;
+        ipv6Address?: (string | null) | undefined;
     }
 
     export namespace Device {
         export interface Ipv4Address {
             /** Public IPv4 address of the device. Either of the device or the NAT the device is behind. */
-            publicAddress?: string | null;
+            publicAddress?: (string | null) | undefined;
             /** Private IPv4 address of the device, if it is behind a NAT. */
-            privateAddress?: string | null;
+            privateAddress?: (string | null) | undefined;
             /** Public port used by the device. Port is necessary, as private address ranges overlap, and public port is used to extend the range for CGNAT. */
-            publicPort?: number | null;
+            publicPort?: (number | null) | undefined;
         }
     }
 }

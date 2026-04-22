@@ -2,6 +2,4 @@
 
 import typing
 
-DeleteDeviceAttachmentSliceResponseDeviceAttachState = typing.Union[
-    typing.Literal["Completed", "Accepted", "Rejected", "Acknowledged"], typing.Any
-]
+DeleteDeviceAttachmentSliceResponseDeviceAttachState = typing.Union[typing.Literal["Completed", "Accepted", "Rejected", "Acknowledged"], typing.Any]

@@ -2,6 +2,4 @@
 
 import typing
 
-GetRoamingSubscriptionDeviceStatusResponseStatus = typing.Union[
-    typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any
-]
+GetRoamingSubscriptionDeviceStatusResponseStatus = typing.Union[typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any]

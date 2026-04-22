@@ -11,10 +11,9 @@ class CreateSubscriptionCongestionInsightsRequestWebhookParams(typing_extensions
     """
     Notification URL for session-related events.
     """
-
-    notification_auth_token: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken")]
-    ]
+    
+    notification_auth_token: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken")]]
     """
     Authorization token for notification sending.
     """
+    

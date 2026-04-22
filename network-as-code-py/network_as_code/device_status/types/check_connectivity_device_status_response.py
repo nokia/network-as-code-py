@@ -12,21 +12,11 @@ from .check_connectivity_device_status_response_connectivity_status import (
 
 
 class CheckConnectivityDeviceStatusResponse(UniversalBaseModel):
-    connectivity_status: typing_extensions.Annotated[
-        CheckConnectivityDeviceStatusResponseConnectivityStatus, FieldMetadata(alias="connectivityStatus")
-    ] = pydantic.Field(alias="connectivityStatus")
-    """
-    CONNECTED_DATA: The device is connected to the network for Data usage
+    connectivity_status: typing_extensions.Annotated[CheckConnectivityDeviceStatusResponseConnectivityStatus, FieldMetadata(alias="connectivityStatus"), pydantic.Field(alias="connectivityStatus", description="CONNECTED_DATA: The device is connected to the network for Data usage\n\nCONNECTED_SMS: The device is connected to the network for SMS usage\n\nNOT_CONNECTED: The device is not connected")]
     
-    CONNECTED_SMS: The device is connected to the network for SMS usage
-    
-    NOT_CONNECTED: The device is not connected
-    """
-
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

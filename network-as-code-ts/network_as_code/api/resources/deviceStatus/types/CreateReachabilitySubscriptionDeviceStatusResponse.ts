@@ -27,13 +27,13 @@ export interface CreateReachabilitySubscriptionDeviceStatusResponse {
      * It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
      * Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
      */
-    startsAt?: string;
+    startsAt?: string | undefined;
     /**
      * Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
      * It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
      * Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
      */
-    expiresAt?: string;
+    expiresAt?: string | undefined;
     /**
      * Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
      *
@@ -47,7 +47,7 @@ export interface CreateReachabilitySubscriptionDeviceStatusResponse {
      *   - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
      *   - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).
      */
-    status?: CreateReachabilitySubscriptionDeviceStatusResponse.Status;
+    status?: CreateReachabilitySubscriptionDeviceStatusResponse.Status | undefined;
 }
 
 export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
@@ -92,14 +92,14 @@ export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
         /** The detail of the requested event subscription. */
         subscriptionDetail: Config.SubscriptionDetail;
         /** The subscription expiration time (in date-time format) requested by the API consumer. Up to API project decision to keep it. */
-        subscriptionExpireTime?: string;
+        subscriptionExpireTime?: string | undefined;
         /** Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends. Up to API project decision to keep it. */
-        subscriptionMaxEvents?: number;
+        subscriptionMaxEvents?: number | undefined;
         /**
          * Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.Up to API project decision to keep it.
          * Example: Consumer subscribes to reachability SMS. If consumer sets initialEvent to true and device is already reachable by SMS, an event is triggered.
          */
-        initialEvent?: boolean;
+        initialEvent?: boolean | undefined;
     }
 
     export namespace Config {
@@ -119,7 +119,7 @@ export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
              *
              * NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
              */
-            device?: SubscriptionDetail.Device;
+            device?: SubscriptionDetail.Device | undefined;
         }
 
         export namespace SubscriptionDetail {
@@ -137,9 +137,9 @@ export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
              */
             export interface Device {
                 /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'. */
-                phoneNumber?: string;
+                phoneNumber?: string | undefined;
                 /** A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator. */
-                networkAccessIdentifier?: string;
+                networkAccessIdentifier?: string | undefined;
                 /**
                  * The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
                  *
@@ -149,9 +149,9 @@ export namespace CreateReachabilitySubscriptionDeviceStatusResponse {
                  *
                  * In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
                  */
-                ipv4Address?: unknown;
+                ipv4Address?: unknown | undefined;
                 /** The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix). */
-                ipv6Address?: string;
+                ipv6Address?: string | undefined;
             }
         }
     }

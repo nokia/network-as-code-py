@@ -11,16 +11,16 @@ class GetSliceSliceResponseSliceDeviceUplinkThroughput(UniversalBaseModel):
     """
     Guaranteed throughput in kbps.
     """
-
+    
     maximum: typing.Optional[float] = pydantic.Field(default=None)
     """
     Maximum throughput in kbps.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

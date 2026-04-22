@@ -10,16 +10,15 @@ class RetrieveUnconditionalCallForwardingCallForwardingSignalResponse(UniversalB
     """
     resource containing the information about the Unconditional Call Forwarding Service for the given phone number (PhoneNumber)
     """
-
     active: typing.Optional[bool] = pydantic.Field(default=None)
     """
     Indicates if the unconditional call forwarding service is active.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

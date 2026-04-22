@@ -3,7 +3,7 @@
 /**
  * @example
  *     {
- *         resource_id: "de87e438-58b4-42c3-9d49-0fbfbd878305"
+ *         resource_id: "resource_id"
  *     }
  */
 export interface GetSubscriptionCongestionInsightsRequest {

@@ -11,38 +11,36 @@ from .types.get_client_credentials_oauth_response import GetClientCredentialsOau
 class OauthClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawOauthClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> RawOauthClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         RawOauthClient
         """
         return self._raw_client
-
-    def get_client_credentials(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetClientCredentialsOauthResponse:
+    
+    def get_client_credentials(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetClientCredentialsOauthResponse:
         """
         Getting client credentials for user. If it exists that is returned, otherwise new created.
-
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         GetClientCredentialsOauthResponse
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -51,55 +49,51 @@ class OauthClient:
         """
         _response = self._raw_client.get_client_credentials(request_options=request_options)
         return _response.data
-
-
 class AsyncOauthClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawOauthClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> AsyncRawOauthClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         AsyncRawOauthClient
         """
         return self._raw_client
-
-    async def get_client_credentials(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> GetClientCredentialsOauthResponse:
+    
+    async def get_client_credentials(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetClientCredentialsOauthResponse:
         """
         Getting client credentials for user. If it exists that is returned, otherwise new created.
-
+        
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         GetClientCredentialsOauthResponse
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.oauth.get_client_credentials()
-
-
+        
+        
         asyncio.run(main())
         """
         _response = await self._raw_client.get_client_credentials(request_options=request_options)

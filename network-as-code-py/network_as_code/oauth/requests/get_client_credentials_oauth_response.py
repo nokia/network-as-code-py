@@ -8,8 +8,9 @@ class GetClientCredentialsOauthResponseParams(typing_extensions.TypedDict):
     """
     The unique client_id string as issued by the authorization server.
     """
-
+    
     client_secret: str
     """
     The client_secret corresponding to the client_id.
     """
+    

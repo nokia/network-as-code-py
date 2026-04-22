@@ -11,3 +11,4 @@ class VerifyLocationRequestAreaParams(typing_extensions.TypedDict):
     Type of this area.
     CIRCLE - The area is defined as a circle.
     """
+    

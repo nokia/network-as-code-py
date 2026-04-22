@@ -10,31 +10,12 @@ from .retrieve_consent_info_response_status_info_item import RetrieveConsentInfo
 
 
 class RetrieveConsentInfoResponse(UniversalBaseModel):
-    status_info: typing_extensions.Annotated[
-        typing.List[RetrieveConsentInfoResponseStatusInfoItem], FieldMetadata(alias="statusInfo")
-    ] = pydantic.Field(alias="statusInfo")
-    """
-    Provides information about the validity status of the requested data processing for the specified scope(s) and Purpose. It contains details of whether the processing of the data is currently valid and, if not, the reason why. The expiration date of the validity may be also provided if applicable.
+    status_info: typing_extensions.Annotated[typing.List[RetrieveConsentInfoResponseStatusInfoItem], FieldMetadata(alias="statusInfo"), pydantic.Field(alias="statusInfo", description="Provides information about the validity status of the requested data processing for the specified scope(s) and Purpose. It contains details of whether the processing of the data is currently valid and, if not, the reason why. The expiration date of the validity may be also provided if applicable.\n\nMore than one array item may be required for the requested scope(s) and Purpose, e.g. when the requested scopes relate to multiple APIs.")]
+    capture_url: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="captureUrl"), pydantic.Field(alias="captureUrl", description="URL where the User can provide the necessary Consent. This field is only present in the API response if the API Consumer requests it and if the following conditions are met:\n\n- `statusInfo[*].statusValidForProcessing` is `false`, and\n- `statusInfo[*].statusReason` is `PENDING`, `REQUESTED` or `EXPIRED`.\n\nPlease note that this field is only applicable when the User Consent is required to enable valid data processing. A unique URL is provided to authorise all items in the statusInfo list that require user action.")] = None
     
-    More than one array item may be required for the requested scope(s) and Purpose, e.g. when the requested scopes relate to multiple APIs.
-    """
-
-    capture_url: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="captureUrl")] = pydantic.Field(
-        alias="captureUrl", default=None
-    )
-    """
-    URL where the User can provide the necessary Consent. This field is only present in the API response if the API Consumer requests it and if the following conditions are met:
-    
-    - `statusInfo[*].statusValidForProcessing` is `false`, and
-    - `statusInfo[*].statusReason` is `PENDING`, `REQUESTED` or `EXPIRED`.
-    
-    Please note that this field is only applicable when the User Consent is required to enable valid data processing. A unique URL is provided to authorise all items in the statusInfo list that require user action.
-    """
-
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

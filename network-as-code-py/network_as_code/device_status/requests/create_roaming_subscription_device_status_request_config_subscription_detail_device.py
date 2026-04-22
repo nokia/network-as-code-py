@@ -9,32 +9,27 @@ from ...core.serialization import FieldMetadata
 class CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDeviceParams(typing_extensions.TypedDict):
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-
+    
     The developer can choose to provide the below specified device identifiers:
-
+    
     * `ipv4Address`
     * `ipv6Address`
     * `phoneNumber`
     * `networkAccessIdentifier`
-
+    
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
     """
-
     phone_number: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="phoneNumber")]]
     """
     A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
     """
-
-    network_access_identifier: typing_extensions.NotRequired[
-        typing_extensions.Annotated[str, FieldMetadata(alias="networkAccessIdentifier")]
-    ]
+    
+    network_access_identifier: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="networkAccessIdentifier")]]
     """
     A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
     """
-
-    ipv_4_address: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Any, FieldMetadata(alias="ipv4Address")]
-    ]
+    
+    ipv4address: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Any, FieldMetadata(alias="ipv4Address")]]
     """
     The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
     
@@ -44,8 +39,9 @@ class CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice
     
     In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
     """
-
-    ipv_6_address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv6Address")]]
+    
+    ipv6address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv6Address")]]
     """
     The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
     """
+    

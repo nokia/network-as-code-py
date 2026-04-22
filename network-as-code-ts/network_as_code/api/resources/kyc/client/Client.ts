@@ -24,9 +24,13 @@ export class KycClient {
     }
 
     /**
+     * Verify that the age of the subscriber associated with a phone number is equal to or greater than the specified age threshold value.
      *
+     * As it is possible that the person holding the contract and the end-user of the subscription may not be the same, the endpoint also admits a list of optional properties to be included in the request to improve the identification. The response may optionally include the `identityMatchScore` property with a value that indicates how certain it is that the information returned relates to the person that the API Client is requesting. To increase the reliability of the information returned, the API Provider may include in the response the `verifiedStatus` property, indicating whether the identity information in its possession has been verified against an identification document legally accepted as an age verification document.
      *
-     * @param {NetworkAsCodeApi.FillInKycRequest} request
+     * If the API Client indicates request properties `includeContentLock` or `includeParentalControl` with value `true` and the API Provider implements this functionality, then the response will also include `contentLock` and `parentalControl` properties to indicate if the subscription has any kind of content filtering enabled. On the other hand, if the request properties are not included or the API Client specifies value `false`, then the response properties will not be returned. If the API Provider doesn't implement this functionality, request properties will be ignored and response properties won't be returned in any case.
+     *
+     * @param {NetworkAsCodeApi.VerifyAgeKycRequest} request
      * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -36,33 +40,55 @@ export class KycClient {
      * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
      *
      * @example
-     *     await client.kyc.fillIn({
-     *         phoneNumber: "+99999991000"
+     *     await client.kyc.verifyAge({
+     *         ageThreshold: 18,
+     *         phoneNumber: "+99999991000",
+     *         idDocument: "66666666q",
+     *         name: "Federica Sanchez Arjona",
+     *         givenName: "Federica",
+     *         familyName: "Sanchez Arjona",
+     *         middleNames: "Sanchez",
+     *         familyNameAtBirth: "YYYY",
+     *         birthdate: "1978-08-22",
+     *         email: "federicaSanchez.Arjona@example.com",
+     *         includeContentLock: true,
+     *         includeParentalControl: true
      *     })
      *
      * @example
-     *     await client.kyc.fillIn()
+     *     await client.kyc.verifyAge({
+     *         ageThreshold: 18,
+     *         idDocument: "66666666q",
+     *         name: "Federica Sanchez Arjona",
+     *         givenName: "Federica",
+     *         familyName: "Sanchez Arjona",
+     *         middleNames: "Sanchez",
+     *         familyNameAtBirth: "YYYY",
+     *         birthdate: "1978-08-22",
+     *         email: "federicaSanchez.Arjona@gmail.com",
+     *         includeContentLock: true,
+     *         includeParentalControl: true
+     *     })
      */
-    public fillIn(
-        request: NetworkAsCodeApi.FillInKycRequest = {},
+    public verifyAge(
+        request: NetworkAsCodeApi.VerifyAgeKycRequest,
         requestOptions?: KycClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.FillInKycResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__fillIn(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.VerifyAgeKycResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__verifyAge(request, requestOptions));
     }
 
-    private async __fillIn(
-        request: NetworkAsCodeApi.FillInKycRequest = {},
+    private async __verifyAge(
+        request: NetworkAsCodeApi.VerifyAgeKycRequest,
         requestOptions?: KycClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.FillInKycResponse>> {
-        const { "x-correlator": correlator, authorization, ..._body } = request;
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyAgeKycResponse>> {
+        const { authorization, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "x-correlator":
-                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
                 authorization: authorization,
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -72,7 +98,7 @@ export class KycClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",
+                "passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify",
             ),
             method: "POST",
             headers: _headers,
@@ -87,7 +113,10 @@ export class KycClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as NetworkAsCodeApi.FillInKycResponse, rawResponse: _response.rawResponse };
+            return {
+                data: _response.body as NetworkAsCodeApi.VerifyAgeKycResponse,
+                rawResponse: _response.rawResponse,
+            };
         }
 
         if (_response.error.reason === "status-code") {
@@ -121,7 +150,7 @@ export class KycClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",
+            "/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify",
         );
     }
 
@@ -165,8 +194,8 @@ export class KycClient {
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
                 authorization: authorization,
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -387,13 +416,9 @@ export class KycClient {
     }
 
     /**
-     * Verify that the age of the subscriber associated with a phone number is equal to or greater than the specified age threshold value.
      *
-     * As it is possible that the person holding the contract and the end-user of the subscription may not be the same, the endpoint also admits a list of optional properties to be included in the request to improve the identification. The response may optionally include the `identityMatchScore` property with a value that indicates how certain it is that the information returned relates to the person that the API Client is requesting. To increase the reliability of the information returned, the API Provider may include in the response the `verifiedStatus` property, indicating whether the identity information in its possession has been verified against an identification document legally accepted as an age verification document.
      *
-     * If the API Client indicates request properties `includeContentLock` or `includeParentalControl` with value `true` and the API Provider implements this functionality, then the response will also include `contentLock` and `parentalControl` properties to indicate if the subscription has any kind of content filtering enabled. On the other hand, if the request properties are not included or the API Client specifies value `false`, then the response properties will not be returned. If the API Provider doesn't implement this functionality, request properties will be ignored and response properties won't be returned in any case.
-     *
-     * @param {NetworkAsCodeApi.VerifyAgeKycRequest} request
+     * @param {NetworkAsCodeApi.FillInKycRequest} request
      * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -403,55 +428,33 @@ export class KycClient {
      * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
      *
      * @example
-     *     await client.kyc.verifyAge({
-     *         ageThreshold: 18,
-     *         phoneNumber: "+99999991000",
-     *         idDocument: "66666666q",
-     *         name: "Federica Sanchez Arjona",
-     *         givenName: "Federica",
-     *         familyName: "Sanchez Arjona",
-     *         middleNames: "Sanchez",
-     *         familyNameAtBirth: "YYYY",
-     *         birthdate: "1978-08-22",
-     *         email: "federicaSanchez.Arjona@example.com",
-     *         includeContentLock: true,
-     *         includeParentalControl: true
+     *     await client.kyc.fillIn({
+     *         phoneNumber: "+99999991000"
      *     })
      *
      * @example
-     *     await client.kyc.verifyAge({
-     *         ageThreshold: 18,
-     *         idDocument: "66666666q",
-     *         name: "Federica Sanchez Arjona",
-     *         givenName: "Federica",
-     *         familyName: "Sanchez Arjona",
-     *         middleNames: "Sanchez",
-     *         familyNameAtBirth: "YYYY",
-     *         birthdate: "1978-08-22",
-     *         email: "federicaSanchez.Arjona@gmail.com",
-     *         includeContentLock: true,
-     *         includeParentalControl: true
-     *     })
+     *     await client.kyc.fillIn()
      */
-    public verifyAge(
-        request: NetworkAsCodeApi.VerifyAgeKycRequest,
+    public fillIn(
+        request: NetworkAsCodeApi.FillInKycRequest = {},
         requestOptions?: KycClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.VerifyAgeKycResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__verifyAge(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.FillInKycResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__fillIn(request, requestOptions));
     }
 
-    private async __verifyAge(
-        request: NetworkAsCodeApi.VerifyAgeKycRequest,
+    private async __fillIn(
+        request: NetworkAsCodeApi.FillInKycRequest = {},
         requestOptions?: KycClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyAgeKycResponse>> {
-        const { authorization, ..._body } = request;
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.FillInKycResponse>> {
+        const { "x-correlator": correlator, authorization, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
                 authorization: authorization,
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -461,7 +464,7 @@ export class KycClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify",
+                "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",
             ),
             method: "POST",
             headers: _headers,
@@ -476,10 +479,7 @@ export class KycClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.VerifyAgeKycResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as NetworkAsCodeApi.FillInKycResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -513,7 +513,7 @@ export class KycClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify",
+            "/passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",
         );
     }
 }

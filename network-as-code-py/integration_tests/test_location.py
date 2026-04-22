@@ -13,15 +13,23 @@ class TestLocation:
     def test_verify_location_v0(self, client: NetworkAsCodeApi):
         result = client.location.verify(
             device={"phone_number": "+99999991000"},
-            area={"area_type": "CIRCLE"},
+            area={
+                "area_type": "CIRCLE",
+                "center": {"latitude": 47.48627616952785, "longitude": 19.07915612501993},
+                "radius": 10000,
+            },
         )
         assert result is not None
         assert result.verification_result is not None
 
     def test_verify_location_v1(self, client: NetworkAsCodeApi):
-        result = client.location.verify_v_1(
+        result = client.location.verify_v1(
             device={"phone_number": "+99999991000"},
-            area={"area_type": "CIRCLE"},
+            area={
+                "area_type": "CIRCLE",
+                "center": {"latitude": 47.48627616952785, "longitude": 19.07915612501993},
+                "radius": 10000,
+            },
         )
         assert result is not None
         assert result.verification_result is not None

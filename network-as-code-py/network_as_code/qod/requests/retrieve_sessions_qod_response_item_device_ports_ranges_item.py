@@ -9,8 +9,9 @@ class RetrieveSessionsQodResponseItemDevicePortsRangesItemParams(typing_extensio
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

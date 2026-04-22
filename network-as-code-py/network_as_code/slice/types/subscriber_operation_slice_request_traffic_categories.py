@@ -10,15 +10,11 @@ from .subscriber_operation_slice_request_traffic_categories_apps import (
 
 
 class SubscriberOperationSliceRequestTrafficCategories(UniversalBaseModel):
-    apps: SubscriberOperationSliceRequestTrafficCategoriesApps = pydantic.Field()
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
+    apps: SubscriberOperationSliceRequestTrafficCategoriesApps
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

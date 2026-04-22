@@ -6,6 +6,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
+from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.bad_request_error import BadRequestError
@@ -15,354 +16,285 @@ from ..errors.internal_server_error import InternalServerError
 from ..errors.service_unavailable_error import ServiceUnavailableError
 from ..errors.unauthorized_error import UnauthorizedError
 from .types.verify_number_verification_response import VerifyNumberVerificationResponse
+from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class RawNumberVerificationClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
-
+    
+    def verify(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, authorization: typing.Optional[str] = None, correlator: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[VerifyNumberVerificationResponse]:
+        """
+        Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
+        - The number verification will be done for the user that has authenticated via mobile network
+        - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
+        
+        Parameters
+        ----------
+        state : typing.Optional[str]
+            Application state
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
+        
+        authorization : typing.Optional[str]
+            authorization header for token
+        
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        hashed_phone_number : typing.Optional[str]
+            Hashed phone number. SHA-256 (in hexadecimal representation) of the mobile phone number in **E.164 format (starting with country code)**. Prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[VerifyNumberVerificationResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "passthrough/camara/v1/number-verification/number-verification/v0/verify",method="POST",
+            params={"state": state, "code": code, }
+            ,
+            json={
+                "phoneNumber": phone_number,
+                "hashedPhoneNumber": hashed_phone_number,
+            }
+            ,
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    VerifyNumberVerificationResponse,
+                    parse_obj_as(
+                        type_ =VerifyNumberVerificationResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 504:
+                raise GatewayTimeoutError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def get_device_phone_number(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[None]:
         """
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         HttpResponse[None]
         """
         _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
-            method="POST",
-            request_options=request_options,
-        )
+            "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",method="POST",
+            request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 return HttpResponse(response=_response, data=None)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def verify(
-        self,
-        *,
-        code: typing.Optional[str] = None,
-        state: typing.Optional[str] = None,
-        authorization: typing.Optional[str] = None,
-        correlator: typing.Optional[str] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        hashed_phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[VerifyNumberVerificationResponse]:
+class AsyncRawNumberVerificationClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
+    
+    async def verify(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, authorization: typing.Optional[str] = None, correlator: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[VerifyNumberVerificationResponse]:
         """
         Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
         - The number verification will be done for the user that has authenticated via mobile network
         - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
-
+        
         Parameters
         ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-
         state : typing.Optional[str]
             Application state
-
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
+        
         authorization : typing.Optional[str]
             authorization header for token
-
+        
         correlator : typing.Optional[str]
             Correlation id for the different services
-
+        
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         hashed_phone_number : typing.Optional[str]
             Hashed phone number. SHA-256 (in hexadecimal representation) of the mobile phone number in **E.164 format (starting with country code)**. Prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
-        HttpResponse[VerifyNumberVerificationResponse]
-
+        AsyncHttpResponse[VerifyNumberVerificationResponse]
+            
         """
-        _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-verification/number-verification/v0/verify",
-            method="POST",
-            params={
-                "code": code,
-                "state": state,
-            },
+        _response = await self._client_wrapper.httpx_client.request(
+            "passthrough/camara/v1/number-verification/number-verification/v0/verify",method="POST",
+            params={"state": state, "code": code, }
+            ,
             json={
                 "phoneNumber": phone_number,
                 "hashedPhoneNumber": hashed_phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "authorization": str(authorization) if authorization is not None else None,
-                "x-correlator": str(correlator) if correlator is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
+            }
+            ,
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     VerifyNumberVerificationResponse,
                     parse_obj_as(
-                        type_=VerifyNumberVerificationResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
+                        type_ =VerifyNumberVerificationResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
                 )
-                return HttpResponse(response=_response, data=_data)
+                return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             if _response.status_code == 504:
-                raise GatewayTimeoutError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
+                raise GatewayTimeoutError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-
-class AsyncRawNumberVerificationClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def get_device_phone_number(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[None]:
+    
+    async def get_device_phone_number(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[None]:
         """
         Parameters
         ----------
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         AsyncHttpResponse[None]
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",
-            method="POST",
-            request_options=request_options,
-        )
+            "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",method="POST",
+            request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 return AsyncHttpResponse(response=_response, data=None)
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def verify(
-        self,
-        *,
-        code: typing.Optional[str] = None,
-        state: typing.Optional[str] = None,
-        authorization: typing.Optional[str] = None,
-        correlator: typing.Optional[str] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        hashed_phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[VerifyNumberVerificationResponse]:
-        """
-        Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
-        - The number verification will be done for the user that has authenticated via mobile network
-        - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
-
-        Parameters
-        ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-
-        state : typing.Optional[str]
-            Application state
-
-        authorization : typing.Optional[str]
-            authorization header for token
-
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
-        hashed_phone_number : typing.Optional[str]
-            Hashed phone number. SHA-256 (in hexadecimal representation) of the mobile phone number in **E.164 format (starting with country code)**. Prefixed with '+'.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[VerifyNumberVerificationResponse]
-
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/number-verification/number-verification/v0/verify",
-            method="POST",
-            params={
-                "code": code,
-                "state": state,
-            },
-            json={
-                "phoneNumber": phone_number,
-                "hashedPhoneNumber": hashed_phone_number,
-            },
-            headers={
-                "content-type": "application/json",
-                "authorization": str(authorization) if authorization is not None else None,
-                "x-correlator": str(correlator) if correlator is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    VerifyNumberVerificationResponse,
-                    parse_obj_as(
-                        type_=VerifyNumberVerificationResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 504:
-                raise GatewayTimeoutError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)

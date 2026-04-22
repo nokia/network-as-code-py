@@ -10,10 +10,8 @@ class CheckTenureKycResponseParams(typing_extensions.TypedDict):
     """
     `true` when the identified mobile subscription has had valid tenure since `tenureDate`, otherwise `false`
     """
-
-    contract_type: typing_extensions.NotRequired[
-        typing_extensions.Annotated[CheckTenureKycResponseContractType, FieldMetadata(alias="contractType")]
-    ]
+    
+    contract_type: typing_extensions.NotRequired[typing_extensions.Annotated[CheckTenureKycResponseContractType, FieldMetadata(alias="contractType")]]
     """
     If exists, populated with:
     - `PAYG` - prepaid (pay-as-you-go) account
@@ -21,3 +19,4 @@ class CheckTenureKycResponseParams(typing_extensions.TypedDict):
     - `Business` - Business (enterprise) account
     This attribute may be omitted from the response set if the information is not available
     """
+    

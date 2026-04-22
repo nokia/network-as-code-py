@@ -4,18 +4,10 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
-    from .get_oauth_authorization_server_well_known_metadata_response import (
-        GetOauthAuthorizationServerWellKnownMetadataResponse,
-    )
+    from .get_oauth_authorization_server_well_known_metadata_response import GetOauthAuthorizationServerWellKnownMetadataResponse
     from .get_openid_configuration_well_known_metadata_response import GetOpenidConfigurationWellKnownMetadataResponse
-_dynamic_imports: typing.Dict[str, str] = {
-    "GetOauthAuthorizationServerWellKnownMetadataResponse": ".get_oauth_authorization_server_well_known_metadata_response",
-    "GetOpenidConfigurationWellKnownMetadataResponse": ".get_openid_configuration_well_known_metadata_response",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"GetOauthAuthorizationServerWellKnownMetadataResponse": ".get_oauth_authorization_server_well_known_metadata_response", "GetOpenidConfigurationWellKnownMetadataResponse": ".get_openid_configuration_well_known_metadata_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -30,11 +22,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
 __all__ = ["GetOauthAuthorizationServerWellKnownMetadataResponse", "GetOpenidConfigurationWellKnownMetadataResponse"]

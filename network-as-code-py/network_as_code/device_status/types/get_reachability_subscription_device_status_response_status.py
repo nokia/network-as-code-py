@@ -2,6 +2,4 @@
 
 import typing
 
-GetReachabilitySubscriptionDeviceStatusResponseStatus = typing.Union[
-    typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any
-]
+GetReachabilitySubscriptionDeviceStatusResponseStatus = typing.Union[typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any]

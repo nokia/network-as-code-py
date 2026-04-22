@@ -15,7 +15,7 @@ describe("Slicing", () => {
 
         const result = await client.slice.createSlice({
             networkIdentifier: { mcc: "236", mnc: "30" },
-            sliceInfo: { serviceType: "eMBB", differentiator: "444444" },
+            sliceInfo: { serviceType: 1, differentiator: "444444" },
             notificationUrl: "https://notify.me/here",
             name: `slice${random}`,
             notificationAuthToken: "my-token",
@@ -34,7 +34,7 @@ describe("Slicing", () => {
 
         const result = await client.slice.createSlice({
             networkIdentifier: { mcc: "236", mnc: "30" },
-            sliceInfo: { serviceType: "eMBB", differentiator: "444444" },
+            sliceInfo: { serviceType: 1, differentiator: "444444" },
             notificationUrl: "https://notify.me/here",
             name: `slice${random}`,
             notificationAuthToken: "my-token",
@@ -67,7 +67,7 @@ describe("Slicing", () => {
 
         const created = await client.slice.createSlice({
             networkIdentifier: { mcc: "236", mnc: "30" },
-            sliceInfo: { serviceType: "eMBB", differentiator: "444444" },
+            sliceInfo: { serviceType: 1, differentiator: "444444" },
             notificationUrl: "https://notify.me/here",
             name,
             notificationAuthToken: "my-token",

@@ -8,11 +8,10 @@ from ..types.create_subscription_geofencing_request_config_subscription_detail_a
 
 
 class CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaParams(typing_extensions.TypedDict):
-    area_type: typing_extensions.Annotated[
-        CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType, FieldMetadata(alias="areaType")
-    ]
+    area_type: typing_extensions.Annotated[CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType, FieldMetadata(alias="areaType")]
     """
     Type of this area.
     CIRCLE - The area is defined as a circle.
     POI - The area is defined by a named point of interest.
     """
+    

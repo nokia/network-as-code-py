@@ -8,26 +8,23 @@ from ...core.serialization import FieldMetadata
 
 
 class RetrieveRoamingStatusDeviceStatusResponseParams(typing_extensions.TypedDict):
-    last_status_time: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastStatusTime")]
-    ]
+    last_status_time: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastStatusTime")]]
     """
     Last time that the associated device roaming status was updated
     """
-
+    
     roaming: bool
     """
     Roaming status. True, if it is roaming
     """
-
+    
     country_code: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="countryCode")]]
     """
     The Mobile country code (MCC) as an geographic region identifier for the country and the dependent areas.
     """
-
-    country_name: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Sequence[str], FieldMetadata(alias="countryName")]
-    ]
+    
+    country_name: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Sequence[str], FieldMetadata(alias="countryName")]]
     """
     The ISO 3166 ALPHA-2 country-codes of mapped to mobile country code(MCC). If there is mapping of one MCC to multiple countries, then we have list of countries. If there is no mapping of MCC to any country, then an empty array [] shall be returned..
     """
+    

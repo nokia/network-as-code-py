@@ -5,5 +5,5 @@
  */
 export interface RetrieveUnconditionalCallForwardingCallForwardingSignalResponse {
     /** Indicates if the unconditional call forwarding service is active. */
-    active?: boolean;
+    active?: boolean | undefined;
 }

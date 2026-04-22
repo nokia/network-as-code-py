@@ -17,7 +17,6 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
     """
     Session related information.
     """
-
     device: CreateSessionQodResponseDeviceParams
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -31,10 +30,8 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
     """
-
-    application_server: typing_extensions.Annotated[
-        CreateSessionQodResponseApplicationServerParams, FieldMetadata(alias="applicationServer")
-    ]
+    
+    application_server: typing_extensions.Annotated[CreateSessionQodResponseApplicationServerParams, FieldMetadata(alias="applicationServer")]
     """
     A server hosting backend applications to deliver some business logic to clients.
     
@@ -43,23 +40,17 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
     * `ipv4Address`
     * `ipv6Address`
     """
-
-    device_ports: typing_extensions.NotRequired[
-        typing_extensions.Annotated[CreateSessionQodResponseDevicePortsParams, FieldMetadata(alias="devicePorts")]
-    ]
+    
+    device_ports: typing_extensions.NotRequired[typing_extensions.Annotated[CreateSessionQodResponseDevicePortsParams, FieldMetadata(alias="devicePorts")]]
     """
     The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
     """
-
-    application_server_ports: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            CreateSessionQodResponseApplicationServerPortsParams, FieldMetadata(alias="applicationServerPorts")
-        ]
-    ]
+    
+    application_server_ports: typing_extensions.NotRequired[typing_extensions.Annotated[CreateSessionQodResponseApplicationServerPortsParams, FieldMetadata(alias="applicationServerPorts")]]
     """
     A list of single ports or port ranges on the application server
     """
-
+    
     qos_profile: typing_extensions.Annotated[str, FieldMetadata(alias="qosProfile")]
     """
     A unique name for identifying a specific QoS profile.
@@ -74,24 +65,24 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
       - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
       - A searchable descriptive name
     """
-
+    
     webhook: typing_extensions.NotRequired[CreateSessionQodResponseWebhookParams]
     session_id: typing_extensions.Annotated[str, FieldMetadata(alias="sessionId")]
     """
     Session ID in UUID format
     """
-
+    
     duration: int
-    started_at: typing_extensions.Annotated[int, FieldMetadata(alias="startedAt")]
+    started_at: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="startedAt")]]
     """
     Timestamp of session start in seconds since Unix epoch
     """
-
-    expires_at: typing_extensions.Annotated[int, FieldMetadata(alias="expiresAt")]
+    
+    expires_at: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="expiresAt")]]
     """
     Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
     """
-
+    
     qos_status: typing_extensions.Annotated[CreateSessionQodResponseQosStatus, FieldMetadata(alias="qosStatus")]
     """
     The current status of the requested QoS session. The status can be one of the following:
@@ -99,5 +90,5 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
     * `AVAILABLE` - The requested QoS has been provided by the network
     * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
     """
-
+    
     messages: typing_extensions.NotRequired[typing.Sequence[CreateSessionQodResponseMessagesItemParams]]

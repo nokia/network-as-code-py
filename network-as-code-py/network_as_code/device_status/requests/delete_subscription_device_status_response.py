@@ -8,10 +8,8 @@ class DeleteSubscriptionDeviceStatusResponseParams(typing_extensions.TypedDict):
     """
     Response for a device status operation managed asynchronously (Creation or Deletion)
     """
-
-    subscription_id: typing_extensions.NotRequired[
-        typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")]
-    ]
+    subscription_id: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")]]
     """
     The event subscription identifier.
     """
+    

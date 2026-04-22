@@ -7,22 +7,21 @@ from ...core.serialization import FieldMetadata
 class GetSessionQodResponseApplicationServerParams(typing_extensions.TypedDict):
     """
     A server hosting backend applications to deliver some business logic to clients.
-
+    
     The developer can choose to provide the below specified device identifiers:
-
+    
     * `ipv4Address`
     * `ipv6Address`
     """
-
-    ipv_4_address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv4Address")]]
+    ipv4address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv4Address")]]
     """
     IPv4 address may be specified in form <address/mask> as:
       - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
       - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
         In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
     """
-
-    ipv_6_address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv6Address")]]
+    
+    ipv6address: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="ipv6Address")]]
     """
     IPv6 address may be specified in form <address/mask> as:
       - address - The /128 subnet is optional for single addresses:
@@ -32,3 +31,4 @@ class GetSessionQodResponseApplicationServerParams(typing_extensions.TypedDict):
         - 2001:db8:85a3:8d3::0/64
         - 2001:db8:85a3:8d3::/64
     """
+    
