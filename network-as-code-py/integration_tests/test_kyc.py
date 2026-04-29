@@ -1,6 +1,56 @@
+import datetime
 import pytest
 
 from network_as_code.client import NetworkAsCodeApi
+
+
+class TestKycFillIn:
+    def test_fill_in_with_phone_number(self, client: NetworkAsCodeApi):
+        result = client.kyc.fill_in(
+            phone_number="+99999991000",
+        )
+        assert result is not None
+
+    def test_fill_in_returns_identity_fields(self, client: NetworkAsCodeApi):
+        result = client.kyc.fill_in(
+            phone_number="+99999991000",
+        )
+        assert result is not None
+        # All fields are optional — the operator populates what it has.
+        # Verify that any returned fields have the expected types.
+        if result.phone_number is not None:
+            assert isinstance(result.phone_number, str)
+        if result.name is not None:
+            assert isinstance(result.name, str)
+        if result.given_name is not None:
+            assert isinstance(result.given_name, str)
+        if result.family_name is not None:
+            assert isinstance(result.family_name, str)
+        if result.birthdate is not None:
+            assert isinstance(result.birthdate, datetime.date)
+        if result.email is not None:
+            assert isinstance(result.email, str)
+        if result.gender is not None:
+            assert result.gender in ("MALE", "FEMALE", "OTHER")
+
+
+class TestKycCheckTenure:
+    def test_check_tenure_returns_boolean_result(self, client: NetworkAsCodeApi):
+        result = client.kyc.check_tenure(
+            phone_number="+99999991000",
+            tenure_date=datetime.date(2023, 7, 3),
+        )
+        assert result is not None
+        assert isinstance(result.tenure_date_check, bool)
+
+    def test_check_tenure_contract_type_when_present(self, client: NetworkAsCodeApi):
+        result = client.kyc.check_tenure(
+            phone_number="+99999991000",
+            tenure_date=datetime.date(2023, 7, 3),
+        )
+        assert result is not None
+        if result.contract_type is not None:
+            assert result.contract_type in ("PAYG", "PAYM", "Business")
 
 
 class TestKycAgeVerification:

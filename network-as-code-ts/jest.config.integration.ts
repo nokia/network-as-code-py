@@ -16,6 +16,8 @@ const config: Config.InitialOptions = {
     moduleNameMapper: {
         "^(\\.\\.?\\/.*)\\.js$": "$1",
     },
+    coverageProvider: "v8",
+    collectCoverage: true
 };
 
 export default config;

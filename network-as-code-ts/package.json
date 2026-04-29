@@ -11,7 +11,7 @@
     "build:types": "node config/cleanup @types && ./node_modules/typescript/bin/tsc -p config/tsconfig.types.json",
     "lint": "eslint network_as_code/**/*",
     "test": "jest",
-    "test:integration": "jest --config jest.config.integration.ts"
+    "test:integration": "jest --coverage --config jest.config.integration.ts"
   },
   "files": [
     "dist"
