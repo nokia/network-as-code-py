@@ -16,7 +16,6 @@ class CreateSubscriptionDeviceStatusResponseSubscriptionDetail(UniversalBaseMode
     """
     The detail of the requested event subscription
     """
-
     device: CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice = pydantic.Field()
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -30,7 +29,7 @@ class CreateSubscriptionDeviceStatusResponseSubscriptionDetail(UniversalBaseMode
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
     """
-
+    
     type: CreateSubscriptionDeviceStatusResponseSubscriptionDetailType = pydantic.Field()
     """
     roaming-status - Event triggered when the device switch from roaming ON to roaming OFF and conversely
@@ -47,11 +46,11 @@ class CreateSubscriptionDeviceStatusResponseSubscriptionDetail(UniversalBaseMode
     
     connectivity-disconnected - Event triggered when the device is not connected.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

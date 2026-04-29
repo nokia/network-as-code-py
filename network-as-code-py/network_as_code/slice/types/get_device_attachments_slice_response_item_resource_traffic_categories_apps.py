@@ -7,24 +7,20 @@ from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class GetDeviceAttachmentsSliceResponseItemResourceTrafficCategoriesApps(UniversalBaseModel):
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
     os: str = pydantic.Field()
     """
     Operating system identifier, UUID
     """
-
+    
     apps: typing.List[str] = pydantic.Field()
     """
     List of application identifiers
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

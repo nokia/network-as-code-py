@@ -3,7 +3,7 @@
 /**
  * @example
  *     {
- *         id: "Concert-2029-Big-Arena"
+ *         id: "id"
  *     }
  */
 export interface DeleteSliceSliceRequest {

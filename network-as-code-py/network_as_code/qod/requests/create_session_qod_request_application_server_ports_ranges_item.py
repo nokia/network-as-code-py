@@ -9,8 +9,9 @@ class CreateSessionQodRequestApplicationServerPortsRangesItemParams(typing_exten
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

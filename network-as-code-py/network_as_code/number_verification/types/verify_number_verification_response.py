@@ -12,18 +12,11 @@ class VerifyNumberVerificationResponse(UniversalBaseModel):
     """
     Number verification result
     """
-
-    device_phone_number_verified: typing_extensions.Annotated[
-        bool, FieldMetadata(alias="devicePhoneNumberVerified")
-    ] = pydantic.Field(alias="devicePhoneNumberVerified")
-    """
-    Number verification. True, if it matches
-    """
-
+    device_phone_number_verified: typing_extensions.Annotated[bool, FieldMetadata(alias="devicePhoneNumberVerified"), pydantic.Field(alias="devicePhoneNumberVerified", description="Number verification. True, if it matches")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

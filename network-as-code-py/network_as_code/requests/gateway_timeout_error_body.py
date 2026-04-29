@@ -8,13 +8,14 @@ class GatewayTimeoutErrorBodyParams(typing_extensions.TypedDict):
     """
     HTTP response status code
     """
-
+    
     code: str
     """
     Code given to this error
     """
-
+    
     message: str
     """
     Detailed error description
     """
+    

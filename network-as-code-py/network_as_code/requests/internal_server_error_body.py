@@ -8,13 +8,14 @@ class InternalServerErrorBodyParams(typing_extensions.TypedDict):
     """
     HTTP status code returned along with this error response
     """
-
+    
     code: str
     """
     Code given to this error
     """
-
+    
     message: str
     """
     Detailed error description
     """
+    

@@ -2,6 +2,4 @@
 
 import typing
 
-RetrieveSessionsQodResponseItemQosStatus = typing.Union[
-    typing.Literal["REQUESTED", "AVAILABLE", "UNAVAILABLE"], typing.Any
-]
+RetrieveSessionsQodResponseItemQosStatus = typing.Union[typing.Literal["REQUESTED", "AVAILABLE", "UNAVAILABLE"], typing.Any]

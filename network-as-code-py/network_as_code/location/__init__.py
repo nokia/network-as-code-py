@@ -4,62 +4,10 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
-    from .types import (
-        RetrieveLocationRequestDevice,
-        RetrieveLocationResponse,
-        RetrieveLocationResponseArea,
-        RetrieveLocationResponseAreaAreaType,
-        VerifyLocationRequestArea,
-        VerifyLocationRequestAreaAreaType,
-        VerifyLocationRequestDevice,
-        VerifyLocationResponse,
-        VerifyLocationResponseVerificationResult,
-        VerifyV1LocationRequestArea,
-        VerifyV1LocationRequestAreaAreaType,
-        VerifyV1LocationRequestDevice,
-        VerifyV1LocationResponse,
-        VerifyV1LocationResponseVerificationResult,
-    )
-    from .requests import (
-        RetrieveLocationRequestDeviceParams,
-        RetrieveLocationResponseAreaParams,
-        RetrieveLocationResponseParams,
-        VerifyLocationRequestAreaParams,
-        VerifyLocationRequestDeviceParams,
-        VerifyLocationResponseParams,
-        VerifyV1LocationRequestAreaParams,
-        VerifyV1LocationRequestDeviceParams,
-        VerifyV1LocationResponseParams,
-    )
-_dynamic_imports: typing.Dict[str, str] = {
-    "RetrieveLocationRequestDevice": ".types",
-    "RetrieveLocationRequestDeviceParams": ".requests",
-    "RetrieveLocationResponse": ".types",
-    "RetrieveLocationResponseArea": ".types",
-    "RetrieveLocationResponseAreaAreaType": ".types",
-    "RetrieveLocationResponseAreaParams": ".requests",
-    "RetrieveLocationResponseParams": ".requests",
-    "VerifyLocationRequestArea": ".types",
-    "VerifyLocationRequestAreaAreaType": ".types",
-    "VerifyLocationRequestAreaParams": ".requests",
-    "VerifyLocationRequestDevice": ".types",
-    "VerifyLocationRequestDeviceParams": ".requests",
-    "VerifyLocationResponse": ".types",
-    "VerifyLocationResponseParams": ".requests",
-    "VerifyLocationResponseVerificationResult": ".types",
-    "VerifyV1LocationRequestArea": ".types",
-    "VerifyV1LocationRequestAreaAreaType": ".types",
-    "VerifyV1LocationRequestAreaParams": ".requests",
-    "VerifyV1LocationRequestDevice": ".types",
-    "VerifyV1LocationRequestDeviceParams": ".requests",
-    "VerifyV1LocationResponse": ".types",
-    "VerifyV1LocationResponseParams": ".requests",
-    "VerifyV1LocationResponseVerificationResult": ".types",
-}
-
-
+    from .types import RetrieveLocationRequestDevice, RetrieveLocationResponse, RetrieveLocationResponseArea, RetrieveLocationResponseAreaAreaType, VerifyLocationRequestArea, VerifyLocationRequestAreaAreaType, VerifyLocationRequestDevice, VerifyLocationResponse, VerifyLocationResponseVerificationResult, VerifyV1LocationRequestArea, VerifyV1LocationRequestAreaAreaType, VerifyV1LocationRequestDevice, VerifyV1LocationResponse, VerifyV1LocationResponseVerificationResult
+    from .requests import RetrieveLocationRequestDeviceParams, RetrieveLocationResponseAreaParams, RetrieveLocationResponseParams, VerifyLocationRequestAreaParams, VerifyLocationRequestDeviceParams, VerifyLocationResponseParams, VerifyV1LocationRequestAreaParams, VerifyV1LocationRequestDeviceParams, VerifyV1LocationResponseParams
+_dynamic_imports: typing.Dict[str, str] = {"RetrieveLocationRequestDevice": ".types", "RetrieveLocationRequestDeviceParams": ".requests", "RetrieveLocationResponse": ".types", "RetrieveLocationResponseArea": ".types", "RetrieveLocationResponseAreaAreaType": ".types", "RetrieveLocationResponseAreaParams": ".requests", "RetrieveLocationResponseParams": ".requests", "VerifyLocationRequestArea": ".types", "VerifyLocationRequestAreaAreaType": ".types", "VerifyLocationRequestAreaParams": ".requests", "VerifyLocationRequestDevice": ".types", "VerifyLocationRequestDeviceParams": ".requests", "VerifyLocationResponse": ".types", "VerifyLocationResponseParams": ".requests", "VerifyLocationResponseVerificationResult": ".types", "VerifyV1LocationRequestArea": ".types", "VerifyV1LocationRequestAreaAreaType": ".types", "VerifyV1LocationRequestAreaParams": ".requests", "VerifyV1LocationRequestDevice": ".types", "VerifyV1LocationRequestDeviceParams": ".requests", "VerifyV1LocationResponse": ".types", "VerifyV1LocationResponseParams": ".requests", "VerifyV1LocationResponseVerificationResult": ".types"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -74,35 +22,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "RetrieveLocationRequestDevice",
-    "RetrieveLocationRequestDeviceParams",
-    "RetrieveLocationResponse",
-    "RetrieveLocationResponseArea",
-    "RetrieveLocationResponseAreaAreaType",
-    "RetrieveLocationResponseAreaParams",
-    "RetrieveLocationResponseParams",
-    "VerifyLocationRequestArea",
-    "VerifyLocationRequestAreaAreaType",
-    "VerifyLocationRequestAreaParams",
-    "VerifyLocationRequestDevice",
-    "VerifyLocationRequestDeviceParams",
-    "VerifyLocationResponse",
-    "VerifyLocationResponseParams",
-    "VerifyLocationResponseVerificationResult",
-    "VerifyV1LocationRequestArea",
-    "VerifyV1LocationRequestAreaAreaType",
-    "VerifyV1LocationRequestAreaParams",
-    "VerifyV1LocationRequestDevice",
-    "VerifyV1LocationRequestDeviceParams",
-    "VerifyV1LocationResponse",
-    "VerifyV1LocationResponseParams",
-    "VerifyV1LocationResponseVerificationResult",
-]
+__all__ = ["RetrieveLocationRequestDevice", "RetrieveLocationRequestDeviceParams", "RetrieveLocationResponse", "RetrieveLocationResponseArea", "RetrieveLocationResponseAreaAreaType", "RetrieveLocationResponseAreaParams", "RetrieveLocationResponseParams", "VerifyLocationRequestArea", "VerifyLocationRequestAreaAreaType", "VerifyLocationRequestAreaParams", "VerifyLocationRequestDevice", "VerifyLocationRequestDeviceParams", "VerifyLocationResponse", "VerifyLocationResponseParams", "VerifyLocationResponseVerificationResult", "VerifyV1LocationRequestArea", "VerifyV1LocationRequestAreaAreaType", "VerifyV1LocationRequestAreaParams", "VerifyV1LocationRequestDevice", "VerifyV1LocationRequestDeviceParams", "VerifyV1LocationResponse", "VerifyV1LocationResponseParams", "VerifyV1LocationResponseVerificationResult"]

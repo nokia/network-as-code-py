@@ -11,11 +11,9 @@ class CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams(typing_ex
     """
     A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
     """
-
-    credential_type: typing_extensions.Annotated[
-        CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType, FieldMetadata(alias="credentialType")
-    ]
+    credential_type: typing_extensions.Annotated[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType, FieldMetadata(alias="credentialType")]
     """
     The type of the credential.
     Note: Type of the credential - MUST be set to ACCESSTOKEN for now
     """
+    

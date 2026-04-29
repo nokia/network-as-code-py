@@ -2,6 +2,4 @@
 
 import typing
 
-CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType = typing.Union[
-    typing.Literal["CIRCLE", "POI"], typing.Any
-]
+CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType = typing.Union[typing.Literal["CIRCLE", "POI"], typing.Any]

@@ -4,14 +4,9 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .get_client_credentials_oauth_response import GetClientCredentialsOauthResponseParams
-_dynamic_imports: typing.Dict[str, str] = {
-    "GetClientCredentialsOauthResponseParams": ".get_client_credentials_oauth_response"
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"GetClientCredentialsOauthResponseParams": ".get_client_credentials_oauth_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -26,11 +21,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
 __all__ = ["GetClientCredentialsOauthResponseParams"]

@@ -5,10 +5,10 @@ from ..types.too_many_requests_error_body_code import TooManyRequestsErrorBodyCo
 
 
 class TooManyRequestsErrorBodyParams(typing_extensions.TypedDict):
-    message: str
-    """
-    A human readable description of what the event represent
-    """
-
     status: typing_extensions.NotRequired[str]
     code: typing_extensions.NotRequired[TooManyRequestsErrorBodyCode]
+    message: str
+    """
+    Detailed error description
+    """
+    

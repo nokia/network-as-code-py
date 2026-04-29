@@ -9,26 +9,19 @@ from .get_slice_slice_response_slice import GetSliceSliceResponseSliceParams
 
 class GetSliceSliceResponseParams(typing_extensions.TypedDict):
     slice: GetSliceSliceResponseSliceParams
-    """
-    Contains the network slice's details.
-    """
-
     csi_id: typing_extensions.NotRequired[typing.Optional[str]]
     """
     Communications Service Instance identifier.
     """
-
+    
     name: str
     """
     Name/resource identifier of the network slice.
     """
-
+    
     state: GetSliceSliceResponseState
-    """
-    Network slice's current state.
-    """
-
     provisioner: str
     """
     The organization provisioning the slice
     """
+    

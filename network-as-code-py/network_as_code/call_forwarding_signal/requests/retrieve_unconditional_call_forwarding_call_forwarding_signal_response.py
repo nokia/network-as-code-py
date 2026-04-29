@@ -7,8 +7,8 @@ class RetrieveUnconditionalCallForwardingCallForwardingSignalResponseParams(typi
     """
     resource containing the information about the Unconditional Call Forwarding Service for the given phone number (PhoneNumber)
     """
-
     active: typing_extensions.NotRequired[bool]
     """
     Indicates if the unconditional call forwarding service is active.
     """
+    

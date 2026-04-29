@@ -407,14 +407,14 @@ export class GeofencingClient {
     public deleteSubscription(
         request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
         requestOptions?: GeofencingClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse> {
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined> {
         return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
     }
 
     private async __deleteSubscription(
         request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
         requestOptions?: GeofencingClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined>> {
         const { subscriptionId, "x-correlator": correlator } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -444,7 +444,7 @@ export class GeofencingClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse,
+                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined,
                 rawResponse: _response.rawResponse,
             };
         }

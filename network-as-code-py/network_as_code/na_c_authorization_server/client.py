@@ -10,38 +10,38 @@ from .raw_client import AsyncRawNaCAuthorizationServerClient, RawNaCAuthorizatio
 class NaCAuthorizationServerClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawNaCAuthorizationServerClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> RawNaCAuthorizationServerClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         RawNaCAuthorizationServerClient
         """
         return self._raw_client
-
+    
     def get_jwks(self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Any:
         """
-
-
+         
+        
         Parameters
         ----------
         nac_app_ref : str
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.Any
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -52,59 +52,55 @@ class NaCAuthorizationServerClient:
         """
         _response = self._raw_client.get_jwks(nac_app_ref, request_options=request_options)
         return _response.data
-
-
 class AsyncNaCAuthorizationServerClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawNaCAuthorizationServerClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> AsyncRawNaCAuthorizationServerClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         AsyncRawNaCAuthorizationServerClient
         """
         return self._raw_client
-
-    async def get_jwks(
-        self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.Any:
+    
+    async def get_jwks(self, nac_app_ref: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Any:
         """
-
-
+         
+        
         Parameters
         ----------
         nac_app_ref : str
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         typing.Any
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.na_c_authorization_server.get_jwks(
                 nac_app_ref="nac_app_ref",
             )
-
-
+        
+        
         asyncio.run(main())
         """
         _response = await self._raw_client.get_jwks(nac_app_ref, request_options=request_options)

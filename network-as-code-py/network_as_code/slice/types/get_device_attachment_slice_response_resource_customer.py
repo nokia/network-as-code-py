@@ -12,21 +12,21 @@ class GetDeviceAttachmentSliceResponseResourceCustomer(UniversalBaseModel):
     """
     Description of the slice, e.g. "B2B_5G_eMBB_Slice"
     """
-
+    
     address: typing.Optional[str] = pydantic.Field(default=None)
     """
     Address of the customer ordering slice creation.
     """
-
+    
     contact: typing.Optional[str] = pydantic.Field(default=None)
     """
     Contact of the customer ordering slice creation.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

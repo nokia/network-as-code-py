@@ -9,8 +9,9 @@ class ListSessionsQodResponseItemApplicationServerPortsRangesItemParams(typing_e
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

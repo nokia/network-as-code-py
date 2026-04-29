@@ -24,159 +24,87 @@ from .match_kyc_response_street_number_match import MatchKycResponseStreetNumber
 
 
 class MatchKycResponseParams(typing_extensions.TypedDict):
-    id_document_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseIdDocumentMatchParams, FieldMetadata(alias="idDocumentMatch")]
-    ]
-    name_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseNameMatchParams, FieldMetadata(alias="nameMatch")]
-    ]
-    name_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="nameMatchScore")]
-    ]
+    id_document_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseIdDocumentMatchParams, FieldMetadata(alias="idDocumentMatch")]]
+    name_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseNameMatchParams, FieldMetadata(alias="nameMatch")]]
+    name_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="nameMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    given_name_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseGivenNameMatchParams, FieldMetadata(alias="givenNameMatch")]
-    ]
-    given_name_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="givenNameMatchScore")]
-    ]
+    
+    given_name_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseGivenNameMatchParams, FieldMetadata(alias="givenNameMatch")]]
+    given_name_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="givenNameMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    family_name_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseFamilyNameMatchParams, FieldMetadata(alias="familyNameMatch")]
-    ]
-    family_name_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="familyNameMatchScore")]
-    ]
+    
+    family_name_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseFamilyNameMatchParams, FieldMetadata(alias="familyNameMatch")]]
+    family_name_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="familyNameMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    name_kana_hankaku_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            MatchKycResponseNameKanaHankakuMatchParams, FieldMetadata(alias="nameKanaHankakuMatch")
-        ]
-    ]
-    name_kana_hankaku_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="nameKanaHankakuMatchScore")]
-    ]
+    
+    name_kana_hankaku_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseNameKanaHankakuMatchParams, FieldMetadata(alias="nameKanaHankakuMatch")]]
+    name_kana_hankaku_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="nameKanaHankakuMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    name_kana_zenkaku_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            MatchKycResponseNameKanaZenkakuMatchParams, FieldMetadata(alias="nameKanaZenkakuMatch")
-        ]
-    ]
-    name_kana_zenkaku_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="nameKanaZenkakuMatchScore")]
-    ]
+    
+    name_kana_zenkaku_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseNameKanaZenkakuMatchParams, FieldMetadata(alias="nameKanaZenkakuMatch")]]
+    name_kana_zenkaku_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="nameKanaZenkakuMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    middle_names_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseMiddleNamesMatchParams, FieldMetadata(alias="middleNamesMatch")]
-    ]
-    middle_names_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="middleNamesMatchScore")]
-    ]
+    
+    middle_names_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseMiddleNamesMatchParams, FieldMetadata(alias="middleNamesMatch")]]
+    middle_names_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="middleNamesMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    family_name_at_birth_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            MatchKycResponseFamilyNameAtBirthMatchParams, FieldMetadata(alias="familyNameAtBirthMatch")
-        ]
-    ]
-    family_name_at_birth_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="familyNameAtBirthMatchScore")]
-    ]
+    
+    family_name_at_birth_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseFamilyNameAtBirthMatchParams, FieldMetadata(alias="familyNameAtBirthMatch")]]
+    family_name_at_birth_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="familyNameAtBirthMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    address_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseAddressMatchParams, FieldMetadata(alias="addressMatch")]
-    ]
-    address_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="addressMatchScore")]
-    ]
+    
+    address_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseAddressMatchParams, FieldMetadata(alias="addressMatch")]]
+    address_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="addressMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    street_name_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseStreetNameMatchParams, FieldMetadata(alias="streetNameMatch")]
-    ]
-    street_name_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="streetNameMatchScore")]
-    ]
+    
+    street_name_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseStreetNameMatchParams, FieldMetadata(alias="streetNameMatch")]]
+    street_name_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="streetNameMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    street_number_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseStreetNumberMatchParams, FieldMetadata(alias="streetNumberMatch")]
-    ]
-    street_number_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="streetNumberMatchScore")]
-    ]
+    
+    street_number_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseStreetNumberMatchParams, FieldMetadata(alias="streetNumberMatch")]]
+    street_number_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="streetNumberMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    postal_code_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponsePostalCodeMatchParams, FieldMetadata(alias="postalCodeMatch")]
-    ]
-    region_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseRegionMatchParams, FieldMetadata(alias="regionMatch")]
-    ]
-    region_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="regionMatchScore")]
-    ]
+    
+    postal_code_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponsePostalCodeMatchParams, FieldMetadata(alias="postalCodeMatch")]]
+    region_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseRegionMatchParams, FieldMetadata(alias="regionMatch")]]
+    region_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="regionMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    locality_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseLocalityMatchParams, FieldMetadata(alias="localityMatch")]
-    ]
-    locality_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="localityMatchScore")]
-    ]
+    
+    locality_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseLocalityMatchParams, FieldMetadata(alias="localityMatch")]]
+    locality_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="localityMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    country_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseCountryMatchParams, FieldMetadata(alias="countryMatch")]
-    ]
-    house_number_extension_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            MatchKycResponseHouseNumberExtensionMatchParams, FieldMetadata(alias="houseNumberExtensionMatch")
-        ]
-    ]
-    birthdate_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseBirthdateMatchParams, FieldMetadata(alias="birthdateMatch")]
-    ]
-    email_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseEmailMatchParams, FieldMetadata(alias="emailMatch")]
-    ]
-    email_match_score: typing_extensions.NotRequired[
-        typing_extensions.Annotated[int, FieldMetadata(alias="emailMatchScore")]
-    ]
+    
+    country_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseCountryMatchParams, FieldMetadata(alias="countryMatch")]]
+    house_number_extension_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseHouseNumberExtensionMatchParams, FieldMetadata(alias="houseNumberExtensionMatch")]]
+    birthdate_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseBirthdateMatchParams, FieldMetadata(alias="birthdateMatch")]]
+    email_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseEmailMatchParams, FieldMetadata(alias="emailMatch")]]
+    email_match_score: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="emailMatchScore")]]
     """
     Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
     """
-
-    gender_match: typing_extensions.NotRequired[
-        typing_extensions.Annotated[MatchKycResponseGenderMatchParams, FieldMetadata(alias="genderMatch")]
-    ]
+    
+    gender_match: typing_extensions.NotRequired[typing_extensions.Annotated[MatchKycResponseGenderMatchParams, FieldMetadata(alias="genderMatch")]]

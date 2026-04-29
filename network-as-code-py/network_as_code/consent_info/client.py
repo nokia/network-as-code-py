@@ -9,67 +9,56 @@ from .types.retrieve_consent_info_response import RetrieveConsentInfoResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
-
-
 class ConsentInfoClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawConsentInfoClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> RawConsentInfoClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         RawConsentInfoClient
         """
         return self._raw_client
-
-    def retrieve(
-        self,
-        *,
-        scopes: typing.Sequence[str],
-        purpose: str,
-        request_capture_url: bool,
-        correlator: typing.Optional[typing.Any] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> RetrieveConsentInfoResponse:
+    
+    def retrieve(self, *, scopes: typing.Sequence[str], purpose: str, request_capture_url: bool, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveConsentInfoResponse:
         """
         Create a request to retrieve the validity status of the API Consumer data processing for a given User, scope(s) and Purpose.
-
+        
         Parameters
         ----------
         scopes : typing.Sequence[str]
             List of requested scopes. The scope is a string that represents the access rights that the API Consumer is requesting from the User.
-
+        
         purpose : str
             The reason for which personal data will be processed by the API Consumer. CAMARA defines a standard set of Purposes which can be used by API Consumers to specify the reason for their intended personal data processing. CAMARA uses the [W3C Data Privacy Vocabulary](https://w3c.github.io/dpv/2.0/dpv/) (DPV) to represent these purposes e.g. `dpv:FraudPreventionAndDetection` or `dpv:RequestedServiceProvision`.
-
+        
         request_capture_url : bool
             A boolean flag indicating whether the API Consumer requests API Provider to return a Consent capture URL.
             * `true` - If set to `true` the API will include a `captureUrl` in the response body if applicable.
             * `false` - The API will omit the Consent capture URL from the response.
-
+        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
-
+        
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         RetrieveConsentInfoResponse
-
-
+            
+        
         Examples
         --------
-        from network_as_code import NetworkAsCodeApi
-
+        from networkAsCode import NetworkAsCodeApi
+        
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
@@ -81,84 +70,66 @@ class ConsentInfoClient:
             request_capture_url=False,
         )
         """
-        _response = self._raw_client.retrieve(
-            scopes=scopes,
-            purpose=purpose,
-            request_capture_url=request_capture_url,
-            correlator=correlator,
-            phone_number=phone_number,
-            request_options=request_options,
-        )
+        _response = self._raw_client.retrieve(scopes=scopes, purpose=purpose, request_capture_url=request_capture_url, correlator=correlator, phone_number=phone_number, request_options=request_options)
         return _response.data
-
-
 class AsyncConsentInfoClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawConsentInfoClient(client_wrapper=client_wrapper)
-
+    
     @property
     def with_raw_response(self) -> AsyncRawConsentInfoClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
-
+        
         Returns
         -------
         AsyncRawConsentInfoClient
         """
         return self._raw_client
-
-    async def retrieve(
-        self,
-        *,
-        scopes: typing.Sequence[str],
-        purpose: str,
-        request_capture_url: bool,
-        correlator: typing.Optional[typing.Any] = None,
-        phone_number: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> RetrieveConsentInfoResponse:
+    
+    async def retrieve(self, *, scopes: typing.Sequence[str], purpose: str, request_capture_url: bool, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveConsentInfoResponse:
         """
         Create a request to retrieve the validity status of the API Consumer data processing for a given User, scope(s) and Purpose.
-
+        
         Parameters
         ----------
         scopes : typing.Sequence[str]
             List of requested scopes. The scope is a string that represents the access rights that the API Consumer is requesting from the User.
-
+        
         purpose : str
             The reason for which personal data will be processed by the API Consumer. CAMARA defines a standard set of Purposes which can be used by API Consumers to specify the reason for their intended personal data processing. CAMARA uses the [W3C Data Privacy Vocabulary](https://w3c.github.io/dpv/2.0/dpv/) (DPV) to represent these purposes e.g. `dpv:FraudPreventionAndDetection` or `dpv:RequestedServiceProvision`.
-
+        
         request_capture_url : bool
             A boolean flag indicating whether the API Consumer requests API Provider to return a Consent capture URL.
             * `true` - If set to `true` the API will include a `captureUrl` in the response body if applicable.
             * `false` - The API will omit the Consent capture URL from the response.
-
+        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
-
+        
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
-
+        
         Returns
         -------
         RetrieveConsentInfoResponse
-
-
+            
+        
         Examples
         --------
         import asyncio
-
-        from network_as_code import AsyncNetworkAsCodeApi
-
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
         client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-
-
+        
+        
         async def main() -> None:
             await client.consent_info.retrieve(
                 phone_number="+99999991000",
@@ -166,16 +137,9 @@ class AsyncConsentInfoClient:
                 purpose="dpv:FraudPreventionAndDetection",
                 request_capture_url=False,
             )
-
-
+        
+        
         asyncio.run(main())
         """
-        _response = await self._raw_client.retrieve(
-            scopes=scopes,
-            purpose=purpose,
-            request_capture_url=request_capture_url,
-            correlator=correlator,
-            phone_number=phone_number,
-            request_options=request_options,
-        )
+        _response = await self._raw_client.retrieve(scopes=scopes, purpose=purpose, request_capture_url=request_capture_url, correlator=correlator, phone_number=phone_number, request_options=request_options)
         return _response.data

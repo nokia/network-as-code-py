@@ -19,7 +19,6 @@ class ListSessionsQodResponseItem(UniversalBaseModel):
     """
     Session related information.
     """
-
     device: ListSessionsQodResponseItemDevice = pydantic.Field()
     """
     End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -33,84 +32,22 @@ class ListSessionsQodResponseItem(UniversalBaseModel):
     
     NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
     """
-
-    application_server: typing_extensions.Annotated[
-        ListSessionsQodResponseItemApplicationServer, FieldMetadata(alias="applicationServer")
-    ] = pydantic.Field(alias="applicationServer")
-    """
-    A server hosting backend applications to deliver some business logic to clients.
     
-    The developer can choose to provide the below specified device identifiers:
-    
-    * `ipv4Address`
-    * `ipv6Address`
-    """
-
-    device_ports: typing_extensions.Annotated[
-        typing.Optional[ListSessionsQodResponseItemDevicePorts], FieldMetadata(alias="devicePorts")
-    ] = pydantic.Field(alias="devicePorts", default=None)
-    """
-    The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-    """
-
-    application_server_ports: typing_extensions.Annotated[
-        typing.Optional[ListSessionsQodResponseItemApplicationServerPorts],
-        FieldMetadata(alias="applicationServerPorts"),
-    ] = pydantic.Field(alias="applicationServerPorts", default=None)
-    """
-    A list of single ports or port ranges on the application server
-    """
-
-    qos_profile: typing_extensions.Annotated[str, FieldMetadata(alias="qosProfile")] = pydantic.Field(
-        alias="qosProfile"
-    )
-    """
-    A unique name for identifying a specific QoS profile.
-    This may follow different formats depending on the service providers implementation.
-    Some options addresses:
-    
-    
-    
-    
-    
-      - A UUID style string
-      - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
-      - A searchable descriptive name
-    """
-
+    application_server: typing_extensions.Annotated[ListSessionsQodResponseItemApplicationServer, FieldMetadata(alias="applicationServer"), pydantic.Field(alias="applicationServer", description="A server hosting backend applications to deliver some business logic to clients.\n\nThe developer can choose to provide the below specified device identifiers:\n\n* `ipv4Address`\n* `ipv6Address`")]
+    device_ports: typing_extensions.Annotated[typing.Optional[ListSessionsQodResponseItemDevicePorts], FieldMetadata(alias="devicePorts"), pydantic.Field(alias="devicePorts", description="The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports")] = None
+    application_server_ports: typing_extensions.Annotated[typing.Optional[ListSessionsQodResponseItemApplicationServerPorts], FieldMetadata(alias="applicationServerPorts"), pydantic.Field(alias="applicationServerPorts", description="A list of single ports or port ranges on the application server")] = None
+    qos_profile: typing_extensions.Annotated[str, FieldMetadata(alias="qosProfile"), pydantic.Field(alias="qosProfile", description="A unique name for identifying a specific QoS profile.\nThis may follow different formats depending on the service providers implementation.\nSome options addresses:\n\n\n\n\n\n  - A UUID style string\n  - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E\n  - A searchable descriptive name")]
     webhook: typing.Optional[ListSessionsQodResponseItemWebhook] = None
-    session_id: typing_extensions.Annotated[str, FieldMetadata(alias="sessionId")] = pydantic.Field(alias="sessionId")
-    """
-    Session ID in UUID format
-    """
-
+    session_id: typing_extensions.Annotated[str, FieldMetadata(alias="sessionId"), pydantic.Field(alias="sessionId", description="Session ID in UUID format")]
     duration: int
-    started_at: typing_extensions.Annotated[int, FieldMetadata(alias="startedAt")] = pydantic.Field(alias="startedAt")
-    """
-    Timestamp of session start in seconds since Unix epoch
-    """
-
-    expires_at: typing_extensions.Annotated[int, FieldMetadata(alias="expiresAt")] = pydantic.Field(alias="expiresAt")
-    """
-    Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
-    """
-
-    qos_status: typing_extensions.Annotated[ListSessionsQodResponseItemQosStatus, FieldMetadata(alias="qosStatus")] = (
-        pydantic.Field(alias="qosStatus")
-    )
-    """
-    The current status of the requested QoS session. The status can be one of the following:
-    * `REQUESTED` - QoS has been requested by creating a session
-    * `AVAILABLE` - The requested QoS has been provided by the network
-    * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
-    """
-
+    started_at: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt", description="Timestamp of session start in seconds since Unix epoch")] = None
+    expires_at: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch")] = None
+    qos_status: typing_extensions.Annotated[ListSessionsQodResponseItemQosStatus, FieldMetadata(alias="qosStatus"), pydantic.Field(alias="qosStatus", description="The current status of the requested QoS session. The status can be one of the following:\n* `REQUESTED` - QoS has been requested by creating a session\n* `AVAILABLE` - The requested QoS has been provided by the network\n* `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason")]
     messages: typing.Optional[typing.List[ListSessionsQodResponseItemMessagesItem]] = None
-
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

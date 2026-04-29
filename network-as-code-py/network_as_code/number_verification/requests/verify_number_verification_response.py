@@ -8,8 +8,8 @@ class VerifyNumberVerificationResponseParams(typing_extensions.TypedDict):
     """
     Number verification result
     """
-
     device_phone_number_verified: typing_extensions.Annotated[bool, FieldMetadata(alias="devicePhoneNumberVerified")]
     """
     Number verification. True, if it matches
     """
+    

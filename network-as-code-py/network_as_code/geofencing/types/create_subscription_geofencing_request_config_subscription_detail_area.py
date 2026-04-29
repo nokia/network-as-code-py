@@ -12,19 +12,11 @@ from .create_subscription_geofencing_request_config_subscription_detail_area_are
 
 
 class CreateSubscriptionGeofencingRequestConfigSubscriptionDetailArea(UniversalBaseModel):
-    area_type: typing_extensions.Annotated[
-        CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType, FieldMetadata(alias="areaType")
-    ] = pydantic.Field(alias="areaType")
-    """
-    Type of this area.
-    CIRCLE - The area is defined as a circle.
-    POI - The area is defined by a named point of interest.
-    """
-
+    area_type: typing_extensions.Annotated[CreateSubscriptionGeofencingRequestConfigSubscriptionDetailAreaAreaType, FieldMetadata(alias="areaType"), pydantic.Field(alias="areaType", description="Type of this area.\nCIRCLE - The area is defined as a circle.\nPOI - The area is defined by a named point of interest.")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

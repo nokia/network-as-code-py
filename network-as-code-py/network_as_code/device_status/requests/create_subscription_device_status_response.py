@@ -14,39 +14,33 @@ class CreateSubscriptionDeviceStatusResponseParams(typing_extensions.TypedDict):
     """
     Represents a device status subscription.
     """
-
-    subscription_detail: typing_extensions.Annotated[
-        CreateSubscriptionDeviceStatusResponseSubscriptionDetailParams, FieldMetadata(alias="subscriptionDetail")
-    ]
+    subscription_detail: typing_extensions.Annotated[CreateSubscriptionDeviceStatusResponseSubscriptionDetailParams, FieldMetadata(alias="subscriptionDetail")]
     """
     The detail of the requested event subscription
     """
-
-    subscription_expire_time: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime")]
-    ]
+    
+    subscription_expire_time: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime")]]
     """
     The subscription expiration time in date-time format.
     """
-
+    
     webhook: CreateSubscriptionDeviceStatusResponseWebhookParams
     """
     Webhook information for event channel
     """
-
+    
     subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")]
     """
     The event subscription identifier.
     """
-
+    
     starts_at: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="startsAt")]]
     """
     date time when subscription started
     """
-
-    expires_at: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expiresAt")]
-    ]
+    
+    expires_at: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expiresAt")]]
     """
     date time when subscription will expire or expired
     """
+    

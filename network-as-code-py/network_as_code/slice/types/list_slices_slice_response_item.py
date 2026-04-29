@@ -9,35 +9,27 @@ from .list_slices_slice_response_item_state import ListSlicesSliceResponseItemSt
 
 
 class ListSlicesSliceResponseItem(UniversalBaseModel):
-    slice: ListSlicesSliceResponseItemSlice = pydantic.Field()
-    """
-    Contains the network slice's details.
-    """
-
+    slice: ListSlicesSliceResponseItemSlice
     csi_id: typing.Optional[str] = pydantic.Field(default=None)
     """
     Communications Service Instance identifier.
     """
-
+    
     name: str = pydantic.Field()
     """
     Name/resource identifier of the network slice.
     """
-
-    state: ListSlicesSliceResponseItemState = pydantic.Field()
-    """
-    Network slice's current state.
-    """
-
+    
+    state: ListSlicesSliceResponseItemState
     provisioner: str = pydantic.Field()
     """
     The organization provisioning the slice
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

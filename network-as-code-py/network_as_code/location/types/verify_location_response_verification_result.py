@@ -2,6 +2,4 @@
 
 import typing
 
-VerifyLocationResponseVerificationResult = typing.Union[
-    typing.Literal["TRUE", "FALSE", "UNKNOWN", "PARTIAL"], typing.Any
-]
+VerifyLocationResponseVerificationResult = typing.Union[typing.Literal["TRUE", "FALSE", "UNKNOWN", "PARTIAL"], typing.Any]

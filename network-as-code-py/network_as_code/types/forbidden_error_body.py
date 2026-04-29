@@ -4,28 +4,21 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .forbidden_error_body_code import ForbiddenErrorBodyCode
 
 
 class ForbiddenErrorBody(UniversalBaseModel):
-    status: int = pydantic.Field()
-    """
-    HTTP status code returned along with this error response
-    """
-
-    code: str = pydantic.Field()
-    """
-    Code given to this error
-    """
-
+    status: typing.Optional[str] = None
+    code: typing.Optional[ForbiddenErrorBodyCode] = None
     message: str = pydantic.Field()
     """
     Detailed error description
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

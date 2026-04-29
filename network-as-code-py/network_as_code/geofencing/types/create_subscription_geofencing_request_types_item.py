@@ -2,10 +2,4 @@
 
 import typing
 
-CreateSubscriptionGeofencingRequestTypesItem = typing.Union[
-    typing.Literal[
-        "org.camaraproject.geofencing-subscriptions.v0.area-entered",
-        "org.camaraproject.geofencing-subscriptions.v0.area-left",
-    ],
-    typing.Any,
-]
+CreateSubscriptionGeofencingRequestTypesItem = typing.Union[typing.Literal["org.camaraproject.geofencing-subscriptions.v0.area-entered", "org.camaraproject.geofencing-subscriptions.v0.area-left"], typing.Any]

@@ -12,18 +12,11 @@ class DeleteSubscriptionDeviceStatusResponse(UniversalBaseModel):
     """
     Response for a device status operation managed asynchronously (Creation or Deletion)
     """
-
-    subscription_id: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="subscriptionId")] = (
-        pydantic.Field(alias="subscriptionId", default=None)
-    )
-    """
-    The event subscription identifier.
-    """
-
+    subscription_id: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="subscriptionId"), pydantic.Field(alias="subscriptionId", description="The event subscription identifier.")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

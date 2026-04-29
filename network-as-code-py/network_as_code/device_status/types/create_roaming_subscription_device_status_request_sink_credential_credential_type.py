@@ -2,6 +2,4 @@
 
 import typing
 
-CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType = typing.Union[
-    typing.Literal["PLAIN", "ACCESSTOKEN", "REFRESHTOKEN"], typing.Any
-]
+CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType = typing.Union[typing.Literal["PLAIN", "ACCESSTOKEN", "REFRESHTOKEN"], typing.Any]

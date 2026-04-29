@@ -4,76 +4,26 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
-    from .create_subscription_congestion_insights_request_device import (
-        CreateSubscriptionCongestionInsightsRequestDeviceParams,
-    )
-    from .create_subscription_congestion_insights_request_device_ipv_4_address import (
-        CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams,
-    )
-    from .create_subscription_congestion_insights_request_webhook import (
-        CreateSubscriptionCongestionInsightsRequestWebhookParams,
-    )
+    from .create_subscription_congestion_insights_request_device import CreateSubscriptionCongestionInsightsRequestDeviceParams
+    from .create_subscription_congestion_insights_request_device_ipv4address import CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams
+    from .create_subscription_congestion_insights_request_webhook import CreateSubscriptionCongestionInsightsRequestWebhookParams
     from .create_subscription_congestion_insights_response import CreateSubscriptionCongestionInsightsResponseParams
-    from .create_subscription_congestion_insights_response_device import (
-        CreateSubscriptionCongestionInsightsResponseDeviceParams,
-    )
-    from .create_subscription_congestion_insights_response_device_ipv_4_address import (
-        CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams,
-    )
-    from .create_subscription_congestion_insights_response_webhook import (
-        CreateSubscriptionCongestionInsightsResponseWebhookParams,
-    )
+    from .create_subscription_congestion_insights_response_device import CreateSubscriptionCongestionInsightsResponseDeviceParams
+    from .create_subscription_congestion_insights_response_device_ipv4address import CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams
+    from .create_subscription_congestion_insights_response_webhook import CreateSubscriptionCongestionInsightsResponseWebhookParams
     from .get_subscription_congestion_insights_response import GetSubscriptionCongestionInsightsResponseParams
-    from .get_subscription_congestion_insights_response_device import (
-        GetSubscriptionCongestionInsightsResponseDeviceParams,
-    )
-    from .get_subscription_congestion_insights_response_device_ipv_4_address import (
-        GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams,
-    )
-    from .get_subscription_congestion_insights_response_webhook import (
-        GetSubscriptionCongestionInsightsResponseWebhookParams,
-    )
-    from .list_subscriptions_congestion_insights_response_item import (
-        ListSubscriptionsCongestionInsightsResponseItemParams,
-    )
-    from .list_subscriptions_congestion_insights_response_item_device import (
-        ListSubscriptionsCongestionInsightsResponseItemDeviceParams,
-    )
-    from .list_subscriptions_congestion_insights_response_item_device_ipv_4_address import (
-        ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams,
-    )
-    from .list_subscriptions_congestion_insights_response_item_webhook import (
-        ListSubscriptionsCongestionInsightsResponseItemWebhookParams,
-    )
+    from .get_subscription_congestion_insights_response_device import GetSubscriptionCongestionInsightsResponseDeviceParams
+    from .get_subscription_congestion_insights_response_device_ipv4address import GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams
+    from .get_subscription_congestion_insights_response_webhook import GetSubscriptionCongestionInsightsResponseWebhookParams
+    from .list_subscriptions_congestion_insights_response_item import ListSubscriptionsCongestionInsightsResponseItemParams
+    from .list_subscriptions_congestion_insights_response_item_device import ListSubscriptionsCongestionInsightsResponseItemDeviceParams
+    from .list_subscriptions_congestion_insights_response_item_device_ipv4address import ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams
+    from .list_subscriptions_congestion_insights_response_item_webhook import ListSubscriptionsCongestionInsightsResponseItemWebhookParams
     from .query_congestion_insights_request_device import QueryCongestionInsightsRequestDeviceParams
-    from .query_congestion_insights_request_device_ipv_4_address import (
-        QueryCongestionInsightsRequestDeviceIpv4AddressParams,
-    )
+    from .query_congestion_insights_request_device_ipv4address import QueryCongestionInsightsRequestDeviceIpv4AddressParams
     from .query_congestion_insights_response_item import QueryCongestionInsightsResponseItemParams
-_dynamic_imports: typing.Dict[str, str] = {
-    "CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams": ".create_subscription_congestion_insights_request_device_ipv_4_address",
-    "CreateSubscriptionCongestionInsightsRequestDeviceParams": ".create_subscription_congestion_insights_request_device",
-    "CreateSubscriptionCongestionInsightsRequestWebhookParams": ".create_subscription_congestion_insights_request_webhook",
-    "CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams": ".create_subscription_congestion_insights_response_device_ipv_4_address",
-    "CreateSubscriptionCongestionInsightsResponseDeviceParams": ".create_subscription_congestion_insights_response_device",
-    "CreateSubscriptionCongestionInsightsResponseParams": ".create_subscription_congestion_insights_response",
-    "CreateSubscriptionCongestionInsightsResponseWebhookParams": ".create_subscription_congestion_insights_response_webhook",
-    "GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams": ".get_subscription_congestion_insights_response_device_ipv_4_address",
-    "GetSubscriptionCongestionInsightsResponseDeviceParams": ".get_subscription_congestion_insights_response_device",
-    "GetSubscriptionCongestionInsightsResponseParams": ".get_subscription_congestion_insights_response",
-    "GetSubscriptionCongestionInsightsResponseWebhookParams": ".get_subscription_congestion_insights_response_webhook",
-    "ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams": ".list_subscriptions_congestion_insights_response_item_device_ipv_4_address",
-    "ListSubscriptionsCongestionInsightsResponseItemDeviceParams": ".list_subscriptions_congestion_insights_response_item_device",
-    "ListSubscriptionsCongestionInsightsResponseItemParams": ".list_subscriptions_congestion_insights_response_item",
-    "ListSubscriptionsCongestionInsightsResponseItemWebhookParams": ".list_subscriptions_congestion_insights_response_item_webhook",
-    "QueryCongestionInsightsRequestDeviceIpv4AddressParams": ".query_congestion_insights_request_device_ipv_4_address",
-    "QueryCongestionInsightsRequestDeviceParams": ".query_congestion_insights_request_device",
-    "QueryCongestionInsightsResponseItemParams": ".query_congestion_insights_response_item",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams": ".create_subscription_congestion_insights_request_device_ipv4address", "CreateSubscriptionCongestionInsightsRequestDeviceParams": ".create_subscription_congestion_insights_request_device", "CreateSubscriptionCongestionInsightsRequestWebhookParams": ".create_subscription_congestion_insights_request_webhook", "CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams": ".create_subscription_congestion_insights_response_device_ipv4address", "CreateSubscriptionCongestionInsightsResponseDeviceParams": ".create_subscription_congestion_insights_response_device", "CreateSubscriptionCongestionInsightsResponseParams": ".create_subscription_congestion_insights_response", "CreateSubscriptionCongestionInsightsResponseWebhookParams": ".create_subscription_congestion_insights_response_webhook", "GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams": ".get_subscription_congestion_insights_response_device_ipv4address", "GetSubscriptionCongestionInsightsResponseDeviceParams": ".get_subscription_congestion_insights_response_device", "GetSubscriptionCongestionInsightsResponseParams": ".get_subscription_congestion_insights_response", "GetSubscriptionCongestionInsightsResponseWebhookParams": ".get_subscription_congestion_insights_response_webhook", "ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams": ".list_subscriptions_congestion_insights_response_item_device_ipv4address", "ListSubscriptionsCongestionInsightsResponseItemDeviceParams": ".list_subscriptions_congestion_insights_response_item_device", "ListSubscriptionsCongestionInsightsResponseItemParams": ".list_subscriptions_congestion_insights_response_item", "ListSubscriptionsCongestionInsightsResponseItemWebhookParams": ".list_subscriptions_congestion_insights_response_item_webhook", "QueryCongestionInsightsRequestDeviceIpv4AddressParams": ".query_congestion_insights_request_device_ipv4address", "QueryCongestionInsightsRequestDeviceParams": ".query_congestion_insights_request_device", "QueryCongestionInsightsResponseItemParams": ".query_congestion_insights_response_item"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -88,30 +38,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams",
-    "CreateSubscriptionCongestionInsightsRequestDeviceParams",
-    "CreateSubscriptionCongestionInsightsRequestWebhookParams",
-    "CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams",
-    "CreateSubscriptionCongestionInsightsResponseDeviceParams",
-    "CreateSubscriptionCongestionInsightsResponseParams",
-    "CreateSubscriptionCongestionInsightsResponseWebhookParams",
-    "GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams",
-    "GetSubscriptionCongestionInsightsResponseDeviceParams",
-    "GetSubscriptionCongestionInsightsResponseParams",
-    "GetSubscriptionCongestionInsightsResponseWebhookParams",
-    "ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams",
-    "ListSubscriptionsCongestionInsightsResponseItemDeviceParams",
-    "ListSubscriptionsCongestionInsightsResponseItemParams",
-    "ListSubscriptionsCongestionInsightsResponseItemWebhookParams",
-    "QueryCongestionInsightsRequestDeviceIpv4AddressParams",
-    "QueryCongestionInsightsRequestDeviceParams",
-    "QueryCongestionInsightsResponseItemParams",
-]
+__all__ = ["CreateSubscriptionCongestionInsightsRequestDeviceIpv4AddressParams", "CreateSubscriptionCongestionInsightsRequestDeviceParams", "CreateSubscriptionCongestionInsightsRequestWebhookParams", "CreateSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams", "CreateSubscriptionCongestionInsightsResponseDeviceParams", "CreateSubscriptionCongestionInsightsResponseParams", "CreateSubscriptionCongestionInsightsResponseWebhookParams", "GetSubscriptionCongestionInsightsResponseDeviceIpv4AddressParams", "GetSubscriptionCongestionInsightsResponseDeviceParams", "GetSubscriptionCongestionInsightsResponseParams", "GetSubscriptionCongestionInsightsResponseWebhookParams", "ListSubscriptionsCongestionInsightsResponseItemDeviceIpv4AddressParams", "ListSubscriptionsCongestionInsightsResponseItemDeviceParams", "ListSubscriptionsCongestionInsightsResponseItemParams", "ListSubscriptionsCongestionInsightsResponseItemWebhookParams", "QueryCongestionInsightsRequestDeviceIpv4AddressParams", "QueryCongestionInsightsRequestDeviceParams", "QueryCongestionInsightsResponseItemParams"]

@@ -8,3 +8,4 @@ class CheckSimSwapResponseParams(typing_extensions.TypedDict):
     """
     Indicates whether the SIM card has been swapped during the period within the provided age.
     """
+    

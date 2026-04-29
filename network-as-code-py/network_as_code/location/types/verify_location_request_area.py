@@ -10,18 +10,11 @@ from .verify_location_request_area_area_type import VerifyLocationRequestAreaAre
 
 
 class VerifyLocationRequestArea(UniversalBaseModel):
-    area_type: typing_extensions.Annotated[VerifyLocationRequestAreaAreaType, FieldMetadata(alias="areaType")] = (
-        pydantic.Field(alias="areaType")
-    )
-    """
-    Type of this area.
-    CIRCLE - The area is defined as a circle.
-    """
-
+    area_type: typing_extensions.Annotated[VerifyLocationRequestAreaAreaType, FieldMetadata(alias="areaType"), pydantic.Field(alias="areaType", description="Type of this area.\nCIRCLE - The area is defined as a circle.")]
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

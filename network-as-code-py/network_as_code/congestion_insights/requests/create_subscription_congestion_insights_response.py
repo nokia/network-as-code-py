@@ -15,27 +15,20 @@ from .create_subscription_congestion_insights_response_webhook import (
 
 class CreateSubscriptionCongestionInsightsResponseParams(typing_extensions.TypedDict):
     device: CreateSubscriptionCongestionInsightsResponseDeviceParams
-    """
-    Identifiers of the device
-    """
-
     webhook: CreateSubscriptionCongestionInsightsResponseWebhookParams
     subscription_expire_time: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="subscriptionExpireTime")]
     """
     Time when the subscription expires.
     """
-
+    
     subscription_id: typing_extensions.Annotated[str, FieldMetadata(alias="subscriptionId")]
-    started_at: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startedAt")]
-    ]
+    started_at: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="startedAt")]]
     """
     Time when subscription started
     """
-
-    expires_at: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt")]
-    ]
+    
+    expires_at: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt")]]
     """
     Time when subscription will expire or expired
     """
+    

@@ -11,10 +11,9 @@ class RetrieveLocationResponseParams(typing_extensions.TypedDict):
     """
     Device location
     """
-
     last_location_time: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastLocationTime")]
     """
     Last date and time when the device was localized. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
     """
-
+    
     area: RetrieveLocationResponseAreaParams

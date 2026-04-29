@@ -10,8 +10,9 @@ class ListSlicesSliceResponseItemSliceSliceDownlinkThroughputParams(typing_exten
     """
     Guaranteed throughput in kbps.
     """
-
+    
     maximum: typing_extensions.NotRequired[typing.Optional[float]]
     """
     Maximum throughput in kbps.
     """
+    

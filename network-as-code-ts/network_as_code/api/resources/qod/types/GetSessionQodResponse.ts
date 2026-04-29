@@ -27,9 +27,9 @@ export interface GetSessionQodResponse {
      */
     applicationServer: GetSessionQodResponse.ApplicationServer;
     /** The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports */
-    devicePorts?: GetSessionQodResponse.DevicePorts;
+    devicePorts?: GetSessionQodResponse.DevicePorts | undefined;
     /** A list of single ports or port ranges on the application server */
-    applicationServerPorts?: GetSessionQodResponse.ApplicationServerPorts;
+    applicationServerPorts?: GetSessionQodResponse.ApplicationServerPorts | undefined;
     /**
      * A unique name for identifying a specific QoS profile.
      * This may follow different formats depending on the service providers implementation.
@@ -44,14 +44,14 @@ export interface GetSessionQodResponse {
      *   - A searchable descriptive name
      */
     qosProfile: string;
-    webhook?: GetSessionQodResponse.Webhook;
+    webhook?: GetSessionQodResponse.Webhook | undefined;
     /** Session ID in UUID format */
     sessionId: string;
     duration: number;
     /** Timestamp of session start in seconds since Unix epoch */
-    startedAt: number;
+    startedAt?: string | undefined;
     /** Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch */
-    expiresAt: number;
+    expiresAt?: string | undefined;
     /**
      * The current status of the requested QoS session. The status can be one of the following:
      * * `REQUESTED` - QoS has been requested by creating a session
@@ -59,7 +59,7 @@ export interface GetSessionQodResponse {
      * * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
      */
     qosStatus: GetSessionQodResponse.QosStatus;
-    messages?: GetSessionQodResponse.Messages.Item[];
+    messages?: GetSessionQodResponse.Messages.Item[] | undefined;
 }
 
 export namespace GetSessionQodResponse {
@@ -77,9 +77,9 @@ export namespace GetSessionQodResponse {
      */
     export interface Device {
         /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, optionally prefixed with '+'. */
-        phoneNumber?: string;
+        phoneNumber?: string | undefined;
         /** A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator. */
-        networkAccessIdentifier?: string;
+        networkAccessIdentifier?: string | undefined;
         /**
          * The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
          *
@@ -89,13 +89,13 @@ export namespace GetSessionQodResponse {
          *
          * In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
          */
-        ipv4Address?: unknown;
+        ipv4Address?: unknown | undefined;
         /**
          * The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
          *
          * The session shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
          */
-        ipv6Address?: string;
+        ipv6Address?: string | undefined;
     }
 
     /**
@@ -113,7 +113,7 @@ export namespace GetSessionQodResponse {
          *   - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
          *     In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
          */
-        ipv4Address?: string;
+        ipv4Address?: string | undefined;
         /**
          * IPv6 address may be specified in form <address/mask> as:
          *   - address - The /128 subnet is optional for single addresses:
@@ -123,12 +123,12 @@ export namespace GetSessionQodResponse {
          *     - 2001:db8:85a3:8d3::0/64
          *     - 2001:db8:85a3:8d3::/64
          */
-        ipv6Address?: string;
+        ipv6Address?: string | undefined;
     }
 
     export interface DevicePorts {
-        ranges?: DevicePorts.Ranges.Item[];
-        ports?: number[];
+        ranges?: DevicePorts.Ranges.Item[] | undefined;
+        ports?: number[] | undefined;
     }
 
     export namespace DevicePorts {
@@ -145,8 +145,8 @@ export namespace GetSessionQodResponse {
     }
 
     export interface ApplicationServerPorts {
-        ranges?: ApplicationServerPorts.Ranges.Item[];
-        ports?: number[];
+        ranges?: ApplicationServerPorts.Ranges.Item[] | undefined;
+        ports?: number[] | undefined;
     }
 
     export namespace ApplicationServerPorts {
@@ -166,7 +166,7 @@ export namespace GetSessionQodResponse {
         /** Allows asynchronous delivery of session related events */
         notificationUrl: string;
         /** Authentication token for callback API */
-        notificationAuthToken?: string;
+        notificationAuthToken?: string | undefined;
     }
 
     /**

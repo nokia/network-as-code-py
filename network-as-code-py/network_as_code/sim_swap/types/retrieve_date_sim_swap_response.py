@@ -10,17 +10,11 @@ from ...core.serialization import FieldMetadata
 
 
 class RetrieveDateSimSwapResponse(UniversalBaseModel):
-    latest_sim_change: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="latestSimChange")
-    ] = pydantic.Field(alias="latestSimChange", default=None)
-    """
-    Timestamp of latest SIM swap performed. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
-    """
-
+    latest_sim_change: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="latestSimChange"), pydantic.Field(alias="latestSimChange", description="Timestamp of latest SIM swap performed. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

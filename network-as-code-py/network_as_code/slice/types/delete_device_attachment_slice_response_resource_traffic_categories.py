@@ -10,15 +10,11 @@ from .delete_device_attachment_slice_response_resource_traffic_categories_apps i
 
 
 class DeleteDeviceAttachmentSliceResponseResourceTrafficCategories(UniversalBaseModel):
-    apps: DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesApps = pydantic.Field()
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
+    apps: DeleteDeviceAttachmentSliceResponseResourceTrafficCategoriesApps
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

@@ -4,7 +4,7 @@ export interface QueryCongestionInsightsResponseItem {
     timeIntervalStart: string;
     timeIntervalStop: string;
     congestionLevel: QueryCongestionInsightsResponseItem.CongestionLevel;
-    confidenceLevel?: number | null;
+    confidenceLevel?: (number | null) | undefined;
 }
 
 export namespace QueryCongestionInsightsResponseItem {

@@ -7,8 +7,8 @@ class DeleteReachabilitySubscriptionDeviceStatusResponseParams(typing_extensions
     """
     Response for a device reachability status operation managed asynchronously (Creation or Deletion)
     """
-
     id: typing_extensions.NotRequired[str]
     """
     The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#122-event-notification).
     """
+    

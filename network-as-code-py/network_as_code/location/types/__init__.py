@@ -4,7 +4,6 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .retrieve_location_request_device import RetrieveLocationRequestDevice
     from .retrieve_location_response import RetrieveLocationResponse
@@ -15,29 +14,12 @@ if typing.TYPE_CHECKING:
     from .verify_location_request_device import VerifyLocationRequestDevice
     from .verify_location_response import VerifyLocationResponse
     from .verify_location_response_verification_result import VerifyLocationResponseVerificationResult
-    from .verify_v_1_location_request_area import VerifyV1LocationRequestArea
-    from .verify_v_1_location_request_area_area_type import VerifyV1LocationRequestAreaAreaType
-    from .verify_v_1_location_request_device import VerifyV1LocationRequestDevice
-    from .verify_v_1_location_response import VerifyV1LocationResponse
-    from .verify_v_1_location_response_verification_result import VerifyV1LocationResponseVerificationResult
-_dynamic_imports: typing.Dict[str, str] = {
-    "RetrieveLocationRequestDevice": ".retrieve_location_request_device",
-    "RetrieveLocationResponse": ".retrieve_location_response",
-    "RetrieveLocationResponseArea": ".retrieve_location_response_area",
-    "RetrieveLocationResponseAreaAreaType": ".retrieve_location_response_area_area_type",
-    "VerifyLocationRequestArea": ".verify_location_request_area",
-    "VerifyLocationRequestAreaAreaType": ".verify_location_request_area_area_type",
-    "VerifyLocationRequestDevice": ".verify_location_request_device",
-    "VerifyLocationResponse": ".verify_location_response",
-    "VerifyLocationResponseVerificationResult": ".verify_location_response_verification_result",
-    "VerifyV1LocationRequestArea": ".verify_v_1_location_request_area",
-    "VerifyV1LocationRequestAreaAreaType": ".verify_v_1_location_request_area_area_type",
-    "VerifyV1LocationRequestDevice": ".verify_v_1_location_request_device",
-    "VerifyV1LocationResponse": ".verify_v_1_location_response",
-    "VerifyV1LocationResponseVerificationResult": ".verify_v_1_location_response_verification_result",
-}
-
-
+    from .verify_v1location_request_area import VerifyV1LocationRequestArea
+    from .verify_v1location_request_area_area_type import VerifyV1LocationRequestAreaAreaType
+    from .verify_v1location_request_device import VerifyV1LocationRequestDevice
+    from .verify_v1location_response import VerifyV1LocationResponse
+    from .verify_v1location_response_verification_result import VerifyV1LocationResponseVerificationResult
+_dynamic_imports: typing.Dict[str, str] = {"RetrieveLocationRequestDevice": ".retrieve_location_request_device", "RetrieveLocationResponse": ".retrieve_location_response", "RetrieveLocationResponseArea": ".retrieve_location_response_area", "RetrieveLocationResponseAreaAreaType": ".retrieve_location_response_area_area_type", "VerifyLocationRequestArea": ".verify_location_request_area", "VerifyLocationRequestAreaAreaType": ".verify_location_request_area_area_type", "VerifyLocationRequestDevice": ".verify_location_request_device", "VerifyLocationResponse": ".verify_location_response", "VerifyLocationResponseVerificationResult": ".verify_location_response_verification_result", "VerifyV1LocationRequestArea": ".verify_v1location_request_area", "VerifyV1LocationRequestAreaAreaType": ".verify_v1location_request_area_area_type", "VerifyV1LocationRequestDevice": ".verify_v1location_request_device", "VerifyV1LocationResponse": ".verify_v1location_response", "VerifyV1LocationResponseVerificationResult": ".verify_v1location_response_verification_result"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -52,26 +34,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "RetrieveLocationRequestDevice",
-    "RetrieveLocationResponse",
-    "RetrieveLocationResponseArea",
-    "RetrieveLocationResponseAreaAreaType",
-    "VerifyLocationRequestArea",
-    "VerifyLocationRequestAreaAreaType",
-    "VerifyLocationRequestDevice",
-    "VerifyLocationResponse",
-    "VerifyLocationResponseVerificationResult",
-    "VerifyV1LocationRequestArea",
-    "VerifyV1LocationRequestAreaAreaType",
-    "VerifyV1LocationRequestDevice",
-    "VerifyV1LocationResponse",
-    "VerifyV1LocationResponseVerificationResult",
-]
+__all__ = ["RetrieveLocationRequestDevice", "RetrieveLocationResponse", "RetrieveLocationResponseArea", "RetrieveLocationResponseAreaAreaType", "VerifyLocationRequestArea", "VerifyLocationRequestAreaAreaType", "VerifyLocationRequestDevice", "VerifyLocationResponse", "VerifyLocationResponseVerificationResult", "VerifyV1LocationRequestArea", "VerifyV1LocationRequestAreaAreaType", "VerifyV1LocationRequestDevice", "VerifyV1LocationResponse", "VerifyV1LocationResponseVerificationResult"]

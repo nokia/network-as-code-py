@@ -15,7 +15,7 @@ export interface RetrieveConsentInfoResponse {
      *
      * Please note that this field is only applicable when the User Consent is required to enable valid data processing. A unique URL is provided to authorise all items in the statusInfo list that require user action.
      */
-    captureUrl?: string;
+    captureUrl?: string | undefined;
 }
 
 export namespace RetrieveConsentInfoResponse {
@@ -76,7 +76,7 @@ export namespace RetrieveConsentInfoResponse {
              *
              *             This is common for time-limited Consents.
              */
-            statusReason?: Item.StatusReason;
+            statusReason?: Item.StatusReason | undefined;
             /**
              * The date and time at which the validity of the data processing is set to expire or has expired.
              * It applies mainly to time-limited Consents, or other cases where a specific duration of validity is defined for the data processing. This field is only applicable:
@@ -86,7 +86,7 @@ export namespace RetrieveConsentInfoResponse {
              *
              * It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z).
              */
-            expirationDate?: string;
+            expirationDate?: string | undefined;
         }
 
         export namespace Item {

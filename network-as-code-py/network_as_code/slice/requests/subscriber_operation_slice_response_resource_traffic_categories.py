@@ -8,6 +8,3 @@ from .subscriber_operation_slice_response_resource_traffic_categories_apps impor
 
 class SubscriberOperationSliceResponseResourceTrafficCategoriesParams(typing_extensions.TypedDict):
     apps: SubscriberOperationSliceResponseResourceTrafficCategoriesAppsParams
-    """
-    Contains the operating system ID and the applications identifiers.
-    """

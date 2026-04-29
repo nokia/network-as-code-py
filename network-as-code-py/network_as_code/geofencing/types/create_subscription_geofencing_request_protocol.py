@@ -2,6 +2,4 @@
 
 import typing
 
-CreateSubscriptionGeofencingRequestProtocol = typing.Union[
-    typing.Literal["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"], typing.Any
-]
+CreateSubscriptionGeofencingRequestProtocol = typing.Union[typing.Literal["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"], typing.Any]

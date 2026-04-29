@@ -2,9 +2,4 @@
 
 import typing
 
-RetrieveCallForwardingCallForwardingSignalResponseItem = typing.Union[
-    typing.Literal[
-        "inactive", "unconditional", "conditional_busy", "conditional_not_reachable", "conditional_no_answer"
-    ],
-    typing.Any,
-]
+RetrieveCallForwardingCallForwardingSignalResponseItem = typing.Union[typing.Literal["inactive", "unconditional", "conditional_busy", "conditional_not_reachable", "conditional_no_answer"], typing.Any]

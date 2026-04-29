@@ -23,244 +23,6 @@ export class CongestionInsightsClient {
     }
 
     /**
-     * Get congestion subscription data of the given device.
-     *
-     * @param {NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest} request
-     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.congestionInsights.getSubscription({
-     *         resource_id: "de87e438-58b4-42c3-9d49-0fbfbd878305"
-     *     })
-     */
-    public getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
-    }
-
-    private async __getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse>> {
-        const { resource_id: resourceId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `congestion-insights/v0/subscriptions/${core.url.encodePathParam(resourceId)}`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/congestion-insights/v0/subscriptions/{resource_id}",
-        );
-    }
-
-    /**
-     * Unsubscribe from congestion event of the given device.
-     *
-     * @param {NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest} request
-     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.congestionInsights.deleteSubscription({
-     *         resource_id: "de87e438-58b4-42c3-9d49-0fbfbd878305"
-     *     })
-     */
-    public deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): core.HttpResponsePromise<unknown> {
-        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
-    }
-
-    private async __deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<unknown>> {
-        const { resource_id: resourceId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `congestion-insights/v0/subscriptions/${core.url.encodePathParam(resourceId)}`,
-            ),
-            method: "DELETE",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "DELETE",
-            "/congestion-insights/v0/subscriptions/{resource_id}",
-        );
-    }
-
-    /**
-     * Fetch historical or predicted congestion level of a device for a given period.
-     *
-     * @param {NetworkAsCodeApi.QueryCongestionInsightsRequest} request
-     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.congestionInsights.query({
-     *         device: {
-     *             phoneNumber: "+99999991000"
-     *         }
-     *     })
-     */
-    public query(
-        request: NetworkAsCodeApi.QueryCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.QueryCongestionInsightsResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__query(request, requestOptions));
-    }
-
-    private async __query(
-        request: NetworkAsCodeApi.QueryCongestionInsightsRequest,
-        requestOptions?: CongestionInsightsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.QueryCongestionInsightsResponseItem[]>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "congestion-insights/v0/query",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.QueryCongestionInsightsResponseItem[],
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/congestion-insights/v0/query",
-        );
-    }
-
-    /**
      * Get congestion subscriptions.
      *
      * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -408,6 +170,244 @@ export class CongestionInsightsClient {
             _response.rawResponse,
             "POST",
             "/congestion-insights/v0/subscriptions",
+        );
+    }
+
+    /**
+     * Get congestion subscription data of the given device.
+     *
+     * @param {NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest} request
+     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.congestionInsights.getSubscription({
+     *         resource_id: "resource_id"
+     *     })
+     */
+    public getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
+    }
+
+    private async __getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse>> {
+        const { resource_id: resourceId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `congestion-insights/v0/subscriptions/${core.url.encodePathParam(resourceId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetSubscriptionCongestionInsightsResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/congestion-insights/v0/subscriptions/{resource_id}",
+        );
+    }
+
+    /**
+     * Unsubscribe from congestion event of the given device.
+     *
+     * @param {NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest} request
+     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.congestionInsights.deleteSubscription({
+     *         resource_id: "resource_id"
+     *     })
+     */
+    public deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): core.HttpResponsePromise<void> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
+    }
+
+    private async __deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<void>> {
+        const { resource_id: resourceId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `congestion-insights/v0/subscriptions/${core.url.encodePathParam(resourceId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: undefined, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/congestion-insights/v0/subscriptions/{resource_id}",
+        );
+    }
+
+    /**
+     * Fetch historical or predicted congestion level of a device for a given period.
+     *
+     * @param {NetworkAsCodeApi.QueryCongestionInsightsRequest} request
+     * @param {CongestionInsightsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.congestionInsights.query({
+     *         device: {
+     *             phoneNumber: "+99999991000"
+     *         }
+     *     })
+     */
+    public query(
+        request: NetworkAsCodeApi.QueryCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.QueryCongestionInsightsResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__query(request, requestOptions));
+    }
+
+    private async __query(
+        request: NetworkAsCodeApi.QueryCongestionInsightsRequest,
+        requestOptions?: CongestionInsightsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.QueryCongestionInsightsResponseItem[]>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "congestion-insights/v0/query",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.QueryCongestionInsightsResponseItem[],
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/congestion-insights/v0/query",
         );
     }
 }

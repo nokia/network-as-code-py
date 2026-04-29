@@ -9,8 +9,9 @@ class GetSessionQodResponseApplicationServerPortsRangesItemParams(typing_extensi
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

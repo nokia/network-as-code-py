@@ -10,8 +10,9 @@ class GetSliceSliceResponseSliceDeviceUplinkThroughputParams(typing_extensions.T
     """
     Guaranteed throughput in kbps.
     """
-
+    
     maximum: typing_extensions.NotRequired[typing.Optional[float]]
     """
     Maximum throughput in kbps.
     """
+    

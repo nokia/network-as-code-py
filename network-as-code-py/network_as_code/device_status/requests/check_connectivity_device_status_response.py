@@ -8,9 +8,7 @@ from ..types.check_connectivity_device_status_response_connectivity_status impor
 
 
 class CheckConnectivityDeviceStatusResponseParams(typing_extensions.TypedDict):
-    connectivity_status: typing_extensions.Annotated[
-        CheckConnectivityDeviceStatusResponseConnectivityStatus, FieldMetadata(alias="connectivityStatus")
-    ]
+    connectivity_status: typing_extensions.Annotated[CheckConnectivityDeviceStatusResponseConnectivityStatus, FieldMetadata(alias="connectivityStatus")]
     """
     CONNECTED_DATA: The device is connected to the network for Data usage
     
@@ -18,3 +16,4 @@ class CheckConnectivityDeviceStatusResponseParams(typing_extensions.TypedDict):
     
     NOT_CONNECTED: The device is not connected
     """
+    

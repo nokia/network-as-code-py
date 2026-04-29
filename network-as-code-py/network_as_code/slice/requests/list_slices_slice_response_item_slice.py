@@ -26,140 +26,85 @@ from .list_slices_slice_response_item_slice_slice_uplink_throughput import (
 
 
 class ListSlicesSliceResponseItemSliceParams(typing_extensions.TypedDict):
-    """
-    Contains the network slice's details.
-    """
-
     name: typing_extensions.NotRequired[typing.Optional[str]]
     """
     Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event.
     """
-
+    
     notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl")]
     """
     Contact attached to the order to send back information regarding this order.
     """
-
-    notification_auth_token: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken")]
-    ]
+    
+    notification_auth_token: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken")]]
     """
     Authorization token for notification sending.
     """
-
-    network_identifier: typing_extensions.Annotated[
-        ListSlicesSliceResponseItemSliceNetworkIdentifierParams, FieldMetadata(alias="networkIdentifier")
-    ]
-    """
-    PLMN ID with MCC and MNC codes.
-    """
-
-    slice_info: typing_extensions.Annotated[
-        ListSlicesSliceResponseItemSliceSliceInfoParams, FieldMetadata(alias="sliceInfo")
-    ]
-    """
-    Slice Service type(SST) and slice differentiator(SD).
-    """
-
-    area_of_service: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceAreaOfServiceParams], FieldMetadata(alias="areaOfService")
-        ]
-    ]
+    
+    network_identifier: typing_extensions.Annotated[ListSlicesSliceResponseItemSliceNetworkIdentifierParams, FieldMetadata(alias="networkIdentifier")]
+    slice_info: typing_extensions.Annotated[ListSlicesSliceResponseItemSliceSliceInfoParams, FieldMetadata(alias="sliceInfo")]
+    area_of_service: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceAreaOfServiceParams, FieldMetadata(alias="areaOfService")]]
     """
     Specifies the area where the slice can be used
     """
-
-    max_data_connections: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDataConnections")]
-    ]
+    
+    max_data_connections: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDataConnections")]]
     """
     Maximum number of data connection sessions in the slice.
     """
-
-    max_devices: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDevices")]
-    ]
+    
+    max_devices: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDevices")]]
     """
     Maximum number of devices using the slice.
     """
-
-    delay_tolerance: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="delayTolerance")]
-    ]
+    
+    delay_tolerance: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="delayTolerance")]]
     """
     Delaytolerance attribute, True/False or SUPPORTED/NOT SUPPORTED
     """
-
-    service_priority: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="servicePriority")]
-    ]
+    
+    service_priority: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="servicePriority")]]
     """
     ServicePriority attribute
     """
-
-    slice_downlink_throughput: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceSliceDownlinkThroughputParams],
-            FieldMetadata(alias="sliceDownlinkThroughput"),
-        ]
-    ]
+    
+    slice_downlink_throughput: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceSliceDownlinkThroughputParams, FieldMetadata(alias="sliceDownlinkThroughput")]]
     """
     Data rate parameters (max/guaranteed) supported by the network slice for all devices together in downlink
     """
-
-    slice_uplink_throughput: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceSliceUplinkThroughputParams],
-            FieldMetadata(alias="sliceUplinkThroughput"),
-        ]
-    ]
+    
+    slice_uplink_throughput: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceSliceUplinkThroughputParams, FieldMetadata(alias="sliceUplinkThroughput")]]
     """
     Data rate parameters (max/guaranteed) supported by the network slice for all devices together in uplink
     """
-
-    device_downlink_throughput: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceDeviceDownlinkThroughputParams],
-            FieldMetadata(alias="deviceDownlinkThroughput"),
-        ]
-    ]
+    
+    device_downlink_throughput: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceDeviceDownlinkThroughputParams, FieldMetadata(alias="deviceDownlinkThroughput")]]
     """
     Data rate parameters (max/guaranteed) supported by the network slice per device in downlink
     """
-
-    device_uplink_throughput: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceDeviceUplinkThroughputParams],
-            FieldMetadata(alias="deviceUplinkThroughput"),
-        ]
-    ]
+    
+    device_uplink_throughput: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceDeviceUplinkThroughputParams, FieldMetadata(alias="deviceUplinkThroughput")]]
     """
     Data rate parameters (max/guaranteed) supported by the network slice per device in uplink
     """
-
-    isolation_level: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[ListSlicesSliceResponseItemSliceIsolationLevel], FieldMetadata(alias="isolationLevel")
-        ]
-    ]
+    
+    isolation_level: typing_extensions.NotRequired[typing_extensions.Annotated[ListSlicesSliceResponseItemSliceIsolationLevel, FieldMetadata(alias="isolationLevel")]]
     """
     Parameter describing the isolation type
     """
-
+    
     qos: typing_extensions.NotRequired[typing.Optional[str]]
     """
     QoS Identifier
     """
-
-    udm_5_qi: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="udm5Qi")]
-    ]
+    
+    udm5qi: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="udm5Qi")]]
     """
     5G QoS Identifier
     """
-
-    customer: typing_extensions.NotRequired[typing.Optional[ListSlicesSliceResponseItemSliceCustomerParams]]
+    
+    customer: typing_extensions.NotRequired[ListSlicesSliceResponseItemSliceCustomerParams]
     """
     Customer created the slice
     """
+    

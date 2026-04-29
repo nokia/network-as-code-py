@@ -4,7 +4,6 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .check_tenure_kyc_response import CheckTenureKycResponseParams
     from .fill_in_kyc_response import FillInKycResponseParams
@@ -29,33 +28,7 @@ if typing.TYPE_CHECKING:
     from .match_kyc_response_street_name_match import MatchKycResponseStreetNameMatchParams
     from .match_kyc_response_street_number_match import MatchKycResponseStreetNumberMatchParams
     from .verify_age_kyc_response import VerifyAgeKycResponseParams
-_dynamic_imports: typing.Dict[str, str] = {
-    "CheckTenureKycResponseParams": ".check_tenure_kyc_response",
-    "FillInKycResponseParams": ".fill_in_kyc_response",
-    "MatchKycResponseAddressMatchParams": ".match_kyc_response_address_match",
-    "MatchKycResponseBirthdateMatchParams": ".match_kyc_response_birthdate_match",
-    "MatchKycResponseCountryMatchParams": ".match_kyc_response_country_match",
-    "MatchKycResponseEmailMatchParams": ".match_kyc_response_email_match",
-    "MatchKycResponseFamilyNameAtBirthMatchParams": ".match_kyc_response_family_name_at_birth_match",
-    "MatchKycResponseFamilyNameMatchParams": ".match_kyc_response_family_name_match",
-    "MatchKycResponseGenderMatchParams": ".match_kyc_response_gender_match",
-    "MatchKycResponseGivenNameMatchParams": ".match_kyc_response_given_name_match",
-    "MatchKycResponseHouseNumberExtensionMatchParams": ".match_kyc_response_house_number_extension_match",
-    "MatchKycResponseIdDocumentMatchParams": ".match_kyc_response_id_document_match",
-    "MatchKycResponseLocalityMatchParams": ".match_kyc_response_locality_match",
-    "MatchKycResponseMiddleNamesMatchParams": ".match_kyc_response_middle_names_match",
-    "MatchKycResponseNameKanaHankakuMatchParams": ".match_kyc_response_name_kana_hankaku_match",
-    "MatchKycResponseNameKanaZenkakuMatchParams": ".match_kyc_response_name_kana_zenkaku_match",
-    "MatchKycResponseNameMatchParams": ".match_kyc_response_name_match",
-    "MatchKycResponseParams": ".match_kyc_response",
-    "MatchKycResponsePostalCodeMatchParams": ".match_kyc_response_postal_code_match",
-    "MatchKycResponseRegionMatchParams": ".match_kyc_response_region_match",
-    "MatchKycResponseStreetNameMatchParams": ".match_kyc_response_street_name_match",
-    "MatchKycResponseStreetNumberMatchParams": ".match_kyc_response_street_number_match",
-    "VerifyAgeKycResponseParams": ".verify_age_kyc_response",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"CheckTenureKycResponseParams": ".check_tenure_kyc_response", "FillInKycResponseParams": ".fill_in_kyc_response", "MatchKycResponseAddressMatchParams": ".match_kyc_response_address_match", "MatchKycResponseBirthdateMatchParams": ".match_kyc_response_birthdate_match", "MatchKycResponseCountryMatchParams": ".match_kyc_response_country_match", "MatchKycResponseEmailMatchParams": ".match_kyc_response_email_match", "MatchKycResponseFamilyNameAtBirthMatchParams": ".match_kyc_response_family_name_at_birth_match", "MatchKycResponseFamilyNameMatchParams": ".match_kyc_response_family_name_match", "MatchKycResponseGenderMatchParams": ".match_kyc_response_gender_match", "MatchKycResponseGivenNameMatchParams": ".match_kyc_response_given_name_match", "MatchKycResponseHouseNumberExtensionMatchParams": ".match_kyc_response_house_number_extension_match", "MatchKycResponseIdDocumentMatchParams": ".match_kyc_response_id_document_match", "MatchKycResponseLocalityMatchParams": ".match_kyc_response_locality_match", "MatchKycResponseMiddleNamesMatchParams": ".match_kyc_response_middle_names_match", "MatchKycResponseNameKanaHankakuMatchParams": ".match_kyc_response_name_kana_hankaku_match", "MatchKycResponseNameKanaZenkakuMatchParams": ".match_kyc_response_name_kana_zenkaku_match", "MatchKycResponseNameMatchParams": ".match_kyc_response_name_match", "MatchKycResponseParams": ".match_kyc_response", "MatchKycResponsePostalCodeMatchParams": ".match_kyc_response_postal_code_match", "MatchKycResponseRegionMatchParams": ".match_kyc_response_region_match", "MatchKycResponseStreetNameMatchParams": ".match_kyc_response_street_name_match", "MatchKycResponseStreetNumberMatchParams": ".match_kyc_response_street_number_match", "VerifyAgeKycResponseParams": ".verify_age_kyc_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -70,35 +43,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "CheckTenureKycResponseParams",
-    "FillInKycResponseParams",
-    "MatchKycResponseAddressMatchParams",
-    "MatchKycResponseBirthdateMatchParams",
-    "MatchKycResponseCountryMatchParams",
-    "MatchKycResponseEmailMatchParams",
-    "MatchKycResponseFamilyNameAtBirthMatchParams",
-    "MatchKycResponseFamilyNameMatchParams",
-    "MatchKycResponseGenderMatchParams",
-    "MatchKycResponseGivenNameMatchParams",
-    "MatchKycResponseHouseNumberExtensionMatchParams",
-    "MatchKycResponseIdDocumentMatchParams",
-    "MatchKycResponseLocalityMatchParams",
-    "MatchKycResponseMiddleNamesMatchParams",
-    "MatchKycResponseNameKanaHankakuMatchParams",
-    "MatchKycResponseNameKanaZenkakuMatchParams",
-    "MatchKycResponseNameMatchParams",
-    "MatchKycResponseParams",
-    "MatchKycResponsePostalCodeMatchParams",
-    "MatchKycResponseRegionMatchParams",
-    "MatchKycResponseStreetNameMatchParams",
-    "MatchKycResponseStreetNumberMatchParams",
-    "VerifyAgeKycResponseParams",
-]
+__all__ = ["CheckTenureKycResponseParams", "FillInKycResponseParams", "MatchKycResponseAddressMatchParams", "MatchKycResponseBirthdateMatchParams", "MatchKycResponseCountryMatchParams", "MatchKycResponseEmailMatchParams", "MatchKycResponseFamilyNameAtBirthMatchParams", "MatchKycResponseFamilyNameMatchParams", "MatchKycResponseGenderMatchParams", "MatchKycResponseGivenNameMatchParams", "MatchKycResponseHouseNumberExtensionMatchParams", "MatchKycResponseIdDocumentMatchParams", "MatchKycResponseLocalityMatchParams", "MatchKycResponseMiddleNamesMatchParams", "MatchKycResponseNameKanaHankakuMatchParams", "MatchKycResponseNameKanaZenkakuMatchParams", "MatchKycResponseNameMatchParams", "MatchKycResponseParams", "MatchKycResponsePostalCodeMatchParams", "MatchKycResponseRegionMatchParams", "MatchKycResponseStreetNameMatchParams", "MatchKycResponseStreetNumberMatchParams", "VerifyAgeKycResponseParams"]

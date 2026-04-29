@@ -2,6 +2,4 @@
 
 import typing
 
-RetrieveConsentInfoResponseStatusInfoItemStatusReason = typing.Union[
-    typing.Literal["PENDING", "REQUESTED", "REVOKED", "EXPIRED", "OBJECTED"], typing.Any
-]
+RetrieveConsentInfoResponseStatusInfoItemStatusReason = typing.Union[typing.Literal["PENDING", "REQUESTED", "REVOKED", "EXPIRED", "OBJECTED"], typing.Any]

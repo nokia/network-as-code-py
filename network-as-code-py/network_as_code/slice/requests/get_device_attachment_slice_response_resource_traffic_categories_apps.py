@@ -6,16 +6,13 @@ import typing_extensions
 
 
 class GetDeviceAttachmentSliceResponseResourceTrafficCategoriesAppsParams(typing_extensions.TypedDict):
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
     os: str
     """
     Operating system identifier, UUID
     """
-
+    
     apps: typing.Sequence[str]
     """
     List of application identifiers
     """
+    

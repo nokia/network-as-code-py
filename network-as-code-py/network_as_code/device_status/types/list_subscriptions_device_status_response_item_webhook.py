@@ -12,25 +12,12 @@ class ListSubscriptionsDeviceStatusResponseItemWebhook(UniversalBaseModel):
     """
     Webhook information for event channel
     """
-
-    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl")] = pydantic.Field(
-        alias="notificationUrl"
-    )
-    """
-    https callback address where the event notification must be POST-ed
-    """
-
-    notification_auth_token: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="notificationAuthToken")
-    ] = pydantic.Field(alias="notificationAuthToken", default=None)
-    """
-    OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken
-    """
-
+    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl"), pydantic.Field(alias="notificationUrl", description="https callback address where the event notification must be POST-ed")]
+    notification_auth_token: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken"), pydantic.Field(alias="notificationAuthToken", description="OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

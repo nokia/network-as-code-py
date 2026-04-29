@@ -18,34 +18,20 @@ class DeleteDeviceAttachmentSliceResponseParams(typing_extensions.TypedDict):
     """
     Resource identifier of the attachment data.
     """
-
+    
     resource: DeleteDeviceAttachmentSliceResponseResourceParams
-    """
-    Original device attach request resources.
-    """
-
-    device_status: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[DeleteDeviceAttachmentSliceResponseDeviceStatus], FieldMetadata(alias="deviceStatus")
-        ]
-    ]
+    device_status: typing_extensions.NotRequired[typing_extensions.Annotated[DeleteDeviceAttachmentSliceResponseDeviceStatus, FieldMetadata(alias="deviceStatus")]]
     """
     Status of the device in relation to the given slice e.g. ATTACHED or DETACHED.
     """
-
-    device_attach_state: typing_extensions.NotRequired[
-        typing_extensions.Annotated[
-            typing.Optional[DeleteDeviceAttachmentSliceResponseDeviceAttachState],
-            FieldMetadata(alias="deviceAttachState"),
-        ]
-    ]
+    
+    device_attach_state: typing_extensions.NotRequired[typing_extensions.Annotated[DeleteDeviceAttachmentSliceResponseDeviceAttachState, FieldMetadata(alias="deviceAttachState")]]
     """
     Progress/state of the device attach order, e.g. Completed, Accepted, Rejected.
     """
-
-    application_attach_successful: typing_extensions.NotRequired[
-        typing_extensions.Annotated[typing.Optional[bool], FieldMetadata(alias="applicationAttachSuccessful")]
-    ]
+    
+    application_attach_successful: typing_extensions.NotRequired[typing_extensions.Annotated[typing.Optional[bool], FieldMetadata(alias="applicationAttachSuccessful")]]
     """
     Denotes whether successful application attach subscription was subsequently sent.
     """
+    

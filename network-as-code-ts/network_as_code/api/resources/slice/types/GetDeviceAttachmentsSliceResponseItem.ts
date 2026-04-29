@@ -3,82 +3,70 @@
 export interface GetDeviceAttachmentsSliceResponseItem {
     /** Resource identifier of the attachment data. */
     nac_resource_id: string;
-    /** Original device attach request resources. */
     resource: GetDeviceAttachmentsSliceResponseItem.Resource;
     /** Status of the device in relation to the given slice e.g. ATTACHED or DETACHED. */
-    deviceStatus?: GetDeviceAttachmentsSliceResponseItem.DeviceStatus | null;
+    deviceStatus?: GetDeviceAttachmentsSliceResponseItem.DeviceStatus | undefined;
     /** Progress/state of the device attach order, e.g. Completed, Accepted, Rejected. */
-    deviceAttachState?: GetDeviceAttachmentsSliceResponseItem.DeviceAttachState | null;
+    deviceAttachState?: GetDeviceAttachmentsSliceResponseItem.DeviceAttachState | undefined;
     /** Denotes whether successful application attach subscription was subsequently sent. */
-    applicationAttachSuccessful?: boolean | null;
+    applicationAttachSuccessful?: (boolean | null) | undefined;
 }
 
 export namespace GetDeviceAttachmentsSliceResponseItem {
-    /**
-     * Original device attach request resources.
-     */
     export interface Resource {
-        /** Identifiers of the device. Phone number and imsi are mandatory for device attach operations. */
         device: Resource.Device;
         /** Customer who orders the device attach operations. */
-        customer?: Resource.Customer | null;
+        customer?: Resource.Customer | undefined;
         /** Slice resource identifier, simple name or UUID. */
         sliceId: string;
         /** List of services allowed for the device. */
-        mobile_services?: string[];
+        mobile_services?: string[] | undefined;
         /** Denotes the operating system id and the applications' identifiers */
-        traffic_categories?: Resource.TrafficCategories | null;
+        traffic_categories?: Resource.TrafficCategories | undefined;
         /** Callback settings for the requester application. */
-        webhook?: Resource.Webhook | null;
+        webhook?: Resource.Webhook | undefined;
     }
 
     export namespace Resource {
-        /**
-         * Identifiers of the device. Phone number and imsi are mandatory for device attach operations.
-         */
         export interface Device {
             /** Phone number of the subscription, if any. Optional. */
-            phoneNumber?: string | null;
+            phoneNumber?: (string | null) | undefined;
             /** Email address-like external identifier of the subscription registered at the operator. If both networkAccessIdentifier and phoneNumber are included, phoneNumber may be dropped and networkAccessIdentifier may be retained. */
-            networkAccessIdentifier?: string | null;
+            networkAccessIdentifier?: (string | null) | undefined;
             /** IPv4 address of the device. IP address is needed for some flow-oriented services, such as QoD. */
-            ipv4Address?: Device.Ipv4Address | null;
+            ipv4Address?: Device.Ipv4Address | undefined;
             /** IPv6 address of the device. IP address is needed for some flow-oriented services, such as QoD. */
-            ipv6Address?: string | null;
+            ipv6Address?: (string | null) | undefined;
             /** International mobile subscriber identity */
-            imsi?: number | null;
+            imsi?: (number | null) | undefined;
         }
 
         export namespace Device {
             export interface Ipv4Address {
                 /** Public IPv4 address of the device. Either of the device or the NAT the device is behind. */
-                publicAddress?: string | null;
+                publicAddress?: (string | null) | undefined;
                 /** Private IPv4 address of the device, if it is behind a NAT. */
-                privateAddress?: string | null;
+                privateAddress?: (string | null) | undefined;
                 /** Public port used by the device. Port is necessary, as private address ranges overlap, and public port is used to extend the range for CGNAT. */
-                publicPort?: number | null;
+                publicPort?: (number | null) | undefined;
             }
         }
 
         export interface Customer {
             name: string;
             /** Description of the slice, e.g. "B2B_5G_eMBB_Slice" */
-            description?: string | null;
+            description?: (string | null) | undefined;
             /** Address of the customer ordering slice creation. */
-            address?: string | null;
+            address?: (string | null) | undefined;
             /** Contact of the customer ordering slice creation. */
-            contact?: string | null;
+            contact?: (string | null) | undefined;
         }
 
         export interface TrafficCategories {
-            /** Contains the operating system ID and the applications identifiers. */
             apps: TrafficCategories.Apps;
         }
 
         export namespace TrafficCategories {
-            /**
-             * Contains the operating system ID and the applications identifiers.
-             */
             export interface Apps {
                 /** Operating system identifier, UUID */
                 os: string;
@@ -91,7 +79,7 @@ export namespace GetDeviceAttachmentsSliceResponseItem {
             /** Notification URL for session-related events. */
             notificationUrl: string;
             /** Authorization token for notification sending. */
-            notificationAuthToken?: string | null;
+            notificationAuthToken?: (string | null) | undefined;
         }
     }
 

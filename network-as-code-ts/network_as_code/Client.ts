@@ -19,6 +19,7 @@ import { SliceClient } from "./api/resources/slice/client/Client.js";
 import { WellKnownMetadataClient } from "./api/resources/wellKnownMetadata/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "./BaseClient.js";
+import * as core from "./core/index.js";
 
 export declare namespace NetworkAsCodeApiClient {
     export type Options = BaseClientOptions;
@@ -28,58 +29,66 @@ export declare namespace NetworkAsCodeApiClient {
 
 export class NetworkAsCodeApiClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<NetworkAsCodeApiClient.Options>;
-    protected _wellKnownMetadata: WellKnownMetadataClient | undefined;
-    protected _congestionInsights: CongestionInsightsClient | undefined;
-    protected _numberRecycling: NumberRecyclingClient | undefined;
-    protected _qod: QodClient | undefined;
     protected _slice: SliceClient | undefined;
+    protected _wellKnownMetadata: WellKnownMetadataClient | undefined;
     protected _deviceStatus: DeviceStatusClient | undefined;
+    protected _consentInfo: ConsentInfoClient | undefined;
+    protected _numberRecycling: NumberRecyclingClient | undefined;
+    protected _numberVerification: NumberVerificationClient | undefined;
+    protected _congestionInsights: CongestionInsightsClient | undefined;
+    protected _simSwap: SimSwapClient | undefined;
     protected _kyc: KycClient | undefined;
-    protected _naCAuthorizationServer: NaCAuthorizationServerClient | undefined;
+    protected _qod: QodClient | undefined;
     protected _deviceSwap: DeviceSwapClient | undefined;
     protected _geofencing: GeofencingClient | undefined;
     protected _oauth: OauthClient | undefined;
     protected _callForwardingSignal: CallForwardingSignalClient | undefined;
-    protected _numberVerificationV100: NumberVerificationV100Client | undefined;
-    protected _numberVerification: NumberVerificationClient | undefined;
-    protected _simSwap: SimSwapClient | undefined;
     protected _location: LocationClient | undefined;
-    protected _consentInfo: ConsentInfoClient | undefined;
+    protected _numberVerificationV100: NumberVerificationV100Client | undefined;
+    protected _naCAuthorizationServer: NaCAuthorizationServerClient | undefined;
 
     constructor(options: NetworkAsCodeApiClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
-    }
-
-    public get wellKnownMetadata(): WellKnownMetadataClient {
-        return (this._wellKnownMetadata ??= new WellKnownMetadataClient(this._options));
-    }
-
-    public get congestionInsights(): CongestionInsightsClient {
-        return (this._congestionInsights ??= new CongestionInsightsClient(this._options));
-    }
-
-    public get numberRecycling(): NumberRecyclingClient {
-        return (this._numberRecycling ??= new NumberRecyclingClient(this._options));
-    }
-
-    public get qod(): QodClient {
-        return (this._qod ??= new QodClient(this._options));
     }
 
     public get slice(): SliceClient {
         return (this._slice ??= new SliceClient(this._options));
     }
 
+    public get wellKnownMetadata(): WellKnownMetadataClient {
+        return (this._wellKnownMetadata ??= new WellKnownMetadataClient(this._options));
+    }
+
     public get deviceStatus(): DeviceStatusClient {
         return (this._deviceStatus ??= new DeviceStatusClient(this._options));
+    }
+
+    public get consentInfo(): ConsentInfoClient {
+        return (this._consentInfo ??= new ConsentInfoClient(this._options));
+    }
+
+    public get numberRecycling(): NumberRecyclingClient {
+        return (this._numberRecycling ??= new NumberRecyclingClient(this._options));
+    }
+
+    public get numberVerification(): NumberVerificationClient {
+        return (this._numberVerification ??= new NumberVerificationClient(this._options));
+    }
+
+    public get congestionInsights(): CongestionInsightsClient {
+        return (this._congestionInsights ??= new CongestionInsightsClient(this._options));
+    }
+
+    public get simSwap(): SimSwapClient {
+        return (this._simSwap ??= new SimSwapClient(this._options));
     }
 
     public get kyc(): KycClient {
         return (this._kyc ??= new KycClient(this._options));
     }
 
-    public get naCAuthorizationServer(): NaCAuthorizationServerClient {
-        return (this._naCAuthorizationServer ??= new NaCAuthorizationServerClient(this._options));
+    public get qod(): QodClient {
+        return (this._qod ??= new QodClient(this._options));
     }
 
     public get deviceSwap(): DeviceSwapClient {
@@ -98,23 +107,46 @@ export class NetworkAsCodeApiClient {
         return (this._callForwardingSignal ??= new CallForwardingSignalClient(this._options));
     }
 
-    public get numberVerificationV100(): NumberVerificationV100Client {
-        return (this._numberVerificationV100 ??= new NumberVerificationV100Client(this._options));
-    }
-
-    public get numberVerification(): NumberVerificationClient {
-        return (this._numberVerification ??= new NumberVerificationClient(this._options));
-    }
-
-    public get simSwap(): SimSwapClient {
-        return (this._simSwap ??= new SimSwapClient(this._options));
-    }
-
     public get location(): LocationClient {
         return (this._location ??= new LocationClient(this._options));
     }
 
-    public get consentInfo(): ConsentInfoClient {
-        return (this._consentInfo ??= new ConsentInfoClient(this._options));
+    public get numberVerificationV100(): NumberVerificationV100Client {
+        return (this._numberVerificationV100 ??= new NumberVerificationV100Client(this._options));
+    }
+
+    public get naCAuthorizationServer(): NaCAuthorizationServerClient {
+        return (this._naCAuthorizationServer ??= new NaCAuthorizationServerClient(this._options));
+    }
+
+    /**
+     * Make a passthrough request using the SDK's configured auth, retry, logging, etc.
+     * This is useful for making requests to endpoints not yet supported in the SDK.
+     * The input can be a URL string, URL object, or Request object. Relative paths are resolved against the configured base URL.
+     *
+     * @param {Request | string | URL} input - The URL, path, or Request object.
+     * @param {RequestInit} init - Standard fetch RequestInit options.
+     * @param {core.PassthroughRequest.RequestOptions} requestOptions - Per-request overrides (timeout, retries, headers, abort signal).
+     * @returns {Promise<Response>} A standard Response object.
+     */
+    public async fetch(
+        input: Request | string | URL,
+        init?: RequestInit,
+        requestOptions?: core.PassthroughRequest.RequestOptions,
+    ): Promise<Response> {
+        return core.makePassthroughRequest(
+            input,
+            init,
+            {
+                baseUrl: this._options.baseUrl ?? this._options.environment,
+                headers: this._options.headers,
+                timeoutInSeconds: this._options.timeoutInSeconds,
+                maxRetries: this._options.maxRetries,
+                fetch: this._options.fetch,
+                logging: this._options.logging,
+                getAuthHeaders: async () => (await this._options.authProvider.getAuthRequest()).headers,
+            },
+            requestOptions,
+        );
     }
 }

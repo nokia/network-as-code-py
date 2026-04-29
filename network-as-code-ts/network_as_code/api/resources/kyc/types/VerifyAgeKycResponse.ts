@@ -7,13 +7,13 @@ export interface VerifyAgeKycResponse {
     /** Indicate `"true"` when the age of the user is the same age or older than the age threshold (age >= age threshold), and `"false"` if not (age < age threshold). If the API Provider doesn't have enough information to perform the validation, a `not_available` can be returned. */
     ageCheck: VerifyAgeKycResponse.AgeCheck;
     /** Indicate `true` if the information provided has been compared against information based on an identification document legally accepted as an age verification document, otherwise indicate `false`. */
-    verifiedStatus?: boolean;
+    verifiedStatus?: boolean | undefined;
     /** The overall score of identity information available in the API Provider, information either provided in the request body comparing it to the one that the API Provider holds or directly using internal API Provider's information. It is optional for the API Provider to return the Identity match score. */
-    identityMatchScore?: number;
+    identityMatchScore?: number | undefined;
     /** Indicate `"true"` if the subscription associated with the phone number has any kind of content lock (i.e certain web content blocked) and `"false"` if not. If the information is not available the value `not_available` can be returned. */
-    contentLock?: VerifyAgeKycResponse.ContentLock;
+    contentLock?: VerifyAgeKycResponse.ContentLock | undefined;
     /** Indicate `"true"` if the subscription associated with the phone number has any kind of parental control activated and `"false"` if not. If the information is not available the value `not_available` can be returned. */
-    parentalControl?: VerifyAgeKycResponse.ParentalControl;
+    parentalControl?: VerifyAgeKycResponse.ParentalControl | undefined;
 }
 
 export namespace VerifyAgeKycResponse {

@@ -4,320 +4,96 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .check_connectivity_device_status_request_device import CheckConnectivityDeviceStatusRequestDevice
     from .check_connectivity_device_status_response import CheckConnectivityDeviceStatusResponse
-    from .check_connectivity_device_status_response_connectivity_status import (
-        CheckConnectivityDeviceStatusResponseConnectivityStatus,
-    )
+    from .check_connectivity_device_status_response_connectivity_status import CheckConnectivityDeviceStatusResponseConnectivityStatus
     from .check_roaming_device_status_request_device import CheckRoamingDeviceStatusRequestDevice
     from .check_roaming_device_status_response import CheckRoamingDeviceStatusResponse
-    from .create_reachability_subscription_device_status_request_config import (
-        CreateReachabilitySubscriptionDeviceStatusRequestConfig,
-    )
-    from .create_reachability_subscription_device_status_request_config_subscription_detail import (
-        CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail,
-    )
-    from .create_reachability_subscription_device_status_request_config_subscription_detail_device import (
-        CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice,
-    )
-    from .create_reachability_subscription_device_status_request_protocol import (
-        CreateReachabilitySubscriptionDeviceStatusRequestProtocol,
-    )
-    from .create_reachability_subscription_device_status_request_sink_credential import (
-        CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential,
-    )
-    from .create_reachability_subscription_device_status_request_sink_credential_credential_type import (
-        CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType,
-    )
-    from .create_reachability_subscription_device_status_request_types_item import (
-        CreateReachabilitySubscriptionDeviceStatusRequestTypesItem,
-    )
-    from .create_reachability_subscription_device_status_response import (
-        CreateReachabilitySubscriptionDeviceStatusResponse,
-    )
-    from .create_reachability_subscription_device_status_response_config import (
-        CreateReachabilitySubscriptionDeviceStatusResponseConfig,
-    )
-    from .create_reachability_subscription_device_status_response_config_subscription_detail import (
-        CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail,
-    )
-    from .create_reachability_subscription_device_status_response_config_subscription_detail_device import (
-        CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice,
-    )
-    from .create_reachability_subscription_device_status_response_protocol import (
-        CreateReachabilitySubscriptionDeviceStatusResponseProtocol,
-    )
-    from .create_reachability_subscription_device_status_response_status import (
-        CreateReachabilitySubscriptionDeviceStatusResponseStatus,
-    )
-    from .create_reachability_subscription_device_status_response_types_item import (
-        CreateReachabilitySubscriptionDeviceStatusResponseTypesItem,
-    )
-    from .create_roaming_subscription_device_status_request_config import (
-        CreateRoamingSubscriptionDeviceStatusRequestConfig,
-    )
-    from .create_roaming_subscription_device_status_request_config_subscription_detail import (
-        CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail,
-    )
-    from .create_roaming_subscription_device_status_request_config_subscription_detail_device import (
-        CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice,
-    )
-    from .create_roaming_subscription_device_status_request_protocol import (
-        CreateRoamingSubscriptionDeviceStatusRequestProtocol,
-    )
-    from .create_roaming_subscription_device_status_request_sink_credential import (
-        CreateRoamingSubscriptionDeviceStatusRequestSinkCredential,
-    )
-    from .create_roaming_subscription_device_status_request_sink_credential_credential_type import (
-        CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType,
-    )
-    from .create_roaming_subscription_device_status_request_types_item import (
-        CreateRoamingSubscriptionDeviceStatusRequestTypesItem,
-    )
+    from .create_reachability_subscription_device_status_request_config import CreateReachabilitySubscriptionDeviceStatusRequestConfig
+    from .create_reachability_subscription_device_status_request_config_subscription_detail import CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail
+    from .create_reachability_subscription_device_status_request_config_subscription_detail_device import CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice
+    from .create_reachability_subscription_device_status_request_protocol import CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+    from .create_reachability_subscription_device_status_request_sink_credential import CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential
+    from .create_reachability_subscription_device_status_request_sink_credential_credential_type import CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType
+    from .create_reachability_subscription_device_status_request_types_item import CreateReachabilitySubscriptionDeviceStatusRequestTypesItem
+    from .create_reachability_subscription_device_status_response import CreateReachabilitySubscriptionDeviceStatusResponse
+    from .create_reachability_subscription_device_status_response_config import CreateReachabilitySubscriptionDeviceStatusResponseConfig
+    from .create_reachability_subscription_device_status_response_config_subscription_detail import CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail
+    from .create_reachability_subscription_device_status_response_config_subscription_detail_device import CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice
+    from .create_reachability_subscription_device_status_response_protocol import CreateReachabilitySubscriptionDeviceStatusResponseProtocol
+    from .create_reachability_subscription_device_status_response_status import CreateReachabilitySubscriptionDeviceStatusResponseStatus
+    from .create_reachability_subscription_device_status_response_types_item import CreateReachabilitySubscriptionDeviceStatusResponseTypesItem
+    from .create_roaming_subscription_device_status_request_config import CreateRoamingSubscriptionDeviceStatusRequestConfig
+    from .create_roaming_subscription_device_status_request_config_subscription_detail import CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail
+    from .create_roaming_subscription_device_status_request_config_subscription_detail_device import CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice
+    from .create_roaming_subscription_device_status_request_protocol import CreateRoamingSubscriptionDeviceStatusRequestProtocol
+    from .create_roaming_subscription_device_status_request_sink_credential import CreateRoamingSubscriptionDeviceStatusRequestSinkCredential
+    from .create_roaming_subscription_device_status_request_sink_credential_credential_type import CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType
+    from .create_roaming_subscription_device_status_request_types_item import CreateRoamingSubscriptionDeviceStatusRequestTypesItem
     from .create_roaming_subscription_device_status_response import CreateRoamingSubscriptionDeviceStatusResponse
-    from .create_roaming_subscription_device_status_response_config import (
-        CreateRoamingSubscriptionDeviceStatusResponseConfig,
-    )
-    from .create_roaming_subscription_device_status_response_config_subscription_detail import (
-        CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail,
-    )
-    from .create_roaming_subscription_device_status_response_config_subscription_detail_device import (
-        CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice,
-    )
-    from .create_roaming_subscription_device_status_response_protocol import (
-        CreateRoamingSubscriptionDeviceStatusResponseProtocol,
-    )
-    from .create_roaming_subscription_device_status_response_status import (
-        CreateRoamingSubscriptionDeviceStatusResponseStatus,
-    )
-    from .create_roaming_subscription_device_status_response_types_item import (
-        CreateRoamingSubscriptionDeviceStatusResponseTypesItem,
-    )
-    from .create_subscription_device_status_request_subscription_detail import (
-        CreateSubscriptionDeviceStatusRequestSubscriptionDetail,
-    )
-    from .create_subscription_device_status_request_subscription_detail_device import (
-        CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice,
-    )
-    from .create_subscription_device_status_request_subscription_detail_type import (
-        CreateSubscriptionDeviceStatusRequestSubscriptionDetailType,
-    )
+    from .create_roaming_subscription_device_status_response_config import CreateRoamingSubscriptionDeviceStatusResponseConfig
+    from .create_roaming_subscription_device_status_response_config_subscription_detail import CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail
+    from .create_roaming_subscription_device_status_response_config_subscription_detail_device import CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice
+    from .create_roaming_subscription_device_status_response_protocol import CreateRoamingSubscriptionDeviceStatusResponseProtocol
+    from .create_roaming_subscription_device_status_response_status import CreateRoamingSubscriptionDeviceStatusResponseStatus
+    from .create_roaming_subscription_device_status_response_types_item import CreateRoamingSubscriptionDeviceStatusResponseTypesItem
+    from .create_subscription_device_status_request_subscription_detail import CreateSubscriptionDeviceStatusRequestSubscriptionDetail
+    from .create_subscription_device_status_request_subscription_detail_device import CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice
+    from .create_subscription_device_status_request_subscription_detail_type import CreateSubscriptionDeviceStatusRequestSubscriptionDetailType
     from .create_subscription_device_status_request_webhook import CreateSubscriptionDeviceStatusRequestWebhook
     from .create_subscription_device_status_response import CreateSubscriptionDeviceStatusResponse
-    from .create_subscription_device_status_response_subscription_detail import (
-        CreateSubscriptionDeviceStatusResponseSubscriptionDetail,
-    )
-    from .create_subscription_device_status_response_subscription_detail_device import (
-        CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice,
-    )
-    from .create_subscription_device_status_response_subscription_detail_type import (
-        CreateSubscriptionDeviceStatusResponseSubscriptionDetailType,
-    )
+    from .create_subscription_device_status_response_subscription_detail import CreateSubscriptionDeviceStatusResponseSubscriptionDetail
+    from .create_subscription_device_status_response_subscription_detail_device import CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice
+    from .create_subscription_device_status_response_subscription_detail_type import CreateSubscriptionDeviceStatusResponseSubscriptionDetailType
     from .create_subscription_device_status_response_webhook import CreateSubscriptionDeviceStatusResponseWebhook
-    from .delete_reachability_subscription_device_status_response import (
-        DeleteReachabilitySubscriptionDeviceStatusResponse,
-    )
+    from .delete_reachability_subscription_device_status_response import DeleteReachabilitySubscriptionDeviceStatusResponse
     from .delete_roaming_subscription_device_status_response import DeleteRoamingSubscriptionDeviceStatusResponse
     from .delete_subscription_device_status_response import DeleteSubscriptionDeviceStatusResponse
     from .get_reachability_subscription_device_status_response import GetReachabilitySubscriptionDeviceStatusResponse
-    from .get_reachability_subscription_device_status_response_config import (
-        GetReachabilitySubscriptionDeviceStatusResponseConfig,
-    )
-    from .get_reachability_subscription_device_status_response_config_subscription_detail import (
-        GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail,
-    )
-    from .get_reachability_subscription_device_status_response_config_subscription_detail_device import (
-        GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice,
-    )
-    from .get_reachability_subscription_device_status_response_protocol import (
-        GetReachabilitySubscriptionDeviceStatusResponseProtocol,
-    )
-    from .get_reachability_subscription_device_status_response_status import (
-        GetReachabilitySubscriptionDeviceStatusResponseStatus,
-    )
-    from .get_reachability_subscription_device_status_response_types_item import (
-        GetReachabilitySubscriptionDeviceStatusResponseTypesItem,
-    )
+    from .get_reachability_subscription_device_status_response_config import GetReachabilitySubscriptionDeviceStatusResponseConfig
+    from .get_reachability_subscription_device_status_response_config_subscription_detail import GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail
+    from .get_reachability_subscription_device_status_response_config_subscription_detail_device import GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice
+    from .get_reachability_subscription_device_status_response_protocol import GetReachabilitySubscriptionDeviceStatusResponseProtocol
+    from .get_reachability_subscription_device_status_response_status import GetReachabilitySubscriptionDeviceStatusResponseStatus
+    from .get_reachability_subscription_device_status_response_types_item import GetReachabilitySubscriptionDeviceStatusResponseTypesItem
     from .get_roaming_subscription_device_status_response import GetRoamingSubscriptionDeviceStatusResponse
     from .get_roaming_subscription_device_status_response_config import GetRoamingSubscriptionDeviceStatusResponseConfig
-    from .get_roaming_subscription_device_status_response_config_subscription_detail import (
-        GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail,
-    )
-    from .get_roaming_subscription_device_status_response_config_subscription_detail_device import (
-        GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice,
-    )
-    from .get_roaming_subscription_device_status_response_protocol import (
-        GetRoamingSubscriptionDeviceStatusResponseProtocol,
-    )
+    from .get_roaming_subscription_device_status_response_config_subscription_detail import GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail
+    from .get_roaming_subscription_device_status_response_config_subscription_detail_device import GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice
+    from .get_roaming_subscription_device_status_response_protocol import GetRoamingSubscriptionDeviceStatusResponseProtocol
     from .get_roaming_subscription_device_status_response_status import GetRoamingSubscriptionDeviceStatusResponseStatus
-    from .get_roaming_subscription_device_status_response_types_item import (
-        GetRoamingSubscriptionDeviceStatusResponseTypesItem,
-    )
+    from .get_roaming_subscription_device_status_response_types_item import GetRoamingSubscriptionDeviceStatusResponseTypesItem
     from .get_subscription_device_status_response import GetSubscriptionDeviceStatusResponse
-    from .get_subscription_device_status_response_subscription_detail import (
-        GetSubscriptionDeviceStatusResponseSubscriptionDetail,
-    )
-    from .get_subscription_device_status_response_subscription_detail_device import (
-        GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice,
-    )
-    from .get_subscription_device_status_response_subscription_detail_type import (
-        GetSubscriptionDeviceStatusResponseSubscriptionDetailType,
-    )
+    from .get_subscription_device_status_response_subscription_detail import GetSubscriptionDeviceStatusResponseSubscriptionDetail
+    from .get_subscription_device_status_response_subscription_detail_device import GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice
+    from .get_subscription_device_status_response_subscription_detail_type import GetSubscriptionDeviceStatusResponseSubscriptionDetailType
     from .get_subscription_device_status_response_webhook import GetSubscriptionDeviceStatusResponseWebhook
-    from .list_reachability_subscriptions_device_status_response_item import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItem,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_config import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemConfig,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_config_subscription_detail import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_config_subscription_detail_device import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_protocol import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_status import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemStatus,
-    )
-    from .list_reachability_subscriptions_device_status_response_item_types_item import (
-        ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem,
-    )
+    from .list_reachability_subscriptions_device_status_response_item import ListReachabilitySubscriptionsDeviceStatusResponseItem
+    from .list_reachability_subscriptions_device_status_response_item_config import ListReachabilitySubscriptionsDeviceStatusResponseItemConfig
+    from .list_reachability_subscriptions_device_status_response_item_config_subscription_detail import ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail
+    from .list_reachability_subscriptions_device_status_response_item_config_subscription_detail_device import ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice
+    from .list_reachability_subscriptions_device_status_response_item_protocol import ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol
+    from .list_reachability_subscriptions_device_status_response_item_status import ListReachabilitySubscriptionsDeviceStatusResponseItemStatus
+    from .list_reachability_subscriptions_device_status_response_item_types_item import ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem
     from .list_roaming_subscriptions_device_status_response_item import ListRoamingSubscriptionsDeviceStatusResponseItem
-    from .list_roaming_subscriptions_device_status_response_item_config import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemConfig,
-    )
-    from .list_roaming_subscriptions_device_status_response_item_config_subscription_detail import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail,
-    )
-    from .list_roaming_subscriptions_device_status_response_item_config_subscription_detail_device import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice,
-    )
-    from .list_roaming_subscriptions_device_status_response_item_protocol import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemProtocol,
-    )
-    from .list_roaming_subscriptions_device_status_response_item_status import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemStatus,
-    )
-    from .list_roaming_subscriptions_device_status_response_item_types_item import (
-        ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem,
-    )
+    from .list_roaming_subscriptions_device_status_response_item_config import ListRoamingSubscriptionsDeviceStatusResponseItemConfig
+    from .list_roaming_subscriptions_device_status_response_item_config_subscription_detail import ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail
+    from .list_roaming_subscriptions_device_status_response_item_config_subscription_detail_device import ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice
+    from .list_roaming_subscriptions_device_status_response_item_protocol import ListRoamingSubscriptionsDeviceStatusResponseItemProtocol
+    from .list_roaming_subscriptions_device_status_response_item_status import ListRoamingSubscriptionsDeviceStatusResponseItemStatus
+    from .list_roaming_subscriptions_device_status_response_item_types_item import ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem
     from .list_subscriptions_device_status_response_item import ListSubscriptionsDeviceStatusResponseItem
-    from .list_subscriptions_device_status_response_item_subscription_detail import (
-        ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail,
-    )
-    from .list_subscriptions_device_status_response_item_subscription_detail_device import (
-        ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice,
-    )
-    from .list_subscriptions_device_status_response_item_subscription_detail_type import (
-        ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType,
-    )
+    from .list_subscriptions_device_status_response_item_subscription_detail import ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail
+    from .list_subscriptions_device_status_response_item_subscription_detail_device import ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice
+    from .list_subscriptions_device_status_response_item_subscription_detail_type import ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType
     from .list_subscriptions_device_status_response_item_webhook import ListSubscriptionsDeviceStatusResponseItemWebhook
-    from .retrieve_reachability_status_device_status_request_device import (
-        RetrieveReachabilityStatusDeviceStatusRequestDevice,
-    )
+    from .retrieve_reachability_status_device_status_request_device import RetrieveReachabilityStatusDeviceStatusRequestDevice
     from .retrieve_reachability_status_device_status_response import RetrieveReachabilityStatusDeviceStatusResponse
-    from .retrieve_reachability_status_device_status_response_connectivity_item import (
-        RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem,
-    )
+    from .retrieve_reachability_status_device_status_response_connectivity_item import RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem
     from .retrieve_roaming_status_device_status_request_device import RetrieveRoamingStatusDeviceStatusRequestDevice
     from .retrieve_roaming_status_device_status_response import RetrieveRoamingStatusDeviceStatusResponse
-_dynamic_imports: typing.Dict[str, str] = {
-    "CheckConnectivityDeviceStatusRequestDevice": ".check_connectivity_device_status_request_device",
-    "CheckConnectivityDeviceStatusResponse": ".check_connectivity_device_status_response",
-    "CheckConnectivityDeviceStatusResponseConnectivityStatus": ".check_connectivity_device_status_response_connectivity_status",
-    "CheckRoamingDeviceStatusRequestDevice": ".check_roaming_device_status_request_device",
-    "CheckRoamingDeviceStatusResponse": ".check_roaming_device_status_response",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfig": ".create_reachability_subscription_device_status_request_config",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail": ".create_reachability_subscription_device_status_request_config_subscription_detail",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice": ".create_reachability_subscription_device_status_request_config_subscription_detail_device",
-    "CreateReachabilitySubscriptionDeviceStatusRequestProtocol": ".create_reachability_subscription_device_status_request_protocol",
-    "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential": ".create_reachability_subscription_device_status_request_sink_credential",
-    "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType": ".create_reachability_subscription_device_status_request_sink_credential_credential_type",
-    "CreateReachabilitySubscriptionDeviceStatusRequestTypesItem": ".create_reachability_subscription_device_status_request_types_item",
-    "CreateReachabilitySubscriptionDeviceStatusResponse": ".create_reachability_subscription_device_status_response",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfig": ".create_reachability_subscription_device_status_response_config",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".create_reachability_subscription_device_status_response_config_subscription_detail",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".create_reachability_subscription_device_status_response_config_subscription_detail_device",
-    "CreateReachabilitySubscriptionDeviceStatusResponseProtocol": ".create_reachability_subscription_device_status_response_protocol",
-    "CreateReachabilitySubscriptionDeviceStatusResponseStatus": ".create_reachability_subscription_device_status_response_status",
-    "CreateReachabilitySubscriptionDeviceStatusResponseTypesItem": ".create_reachability_subscription_device_status_response_types_item",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfig": ".create_roaming_subscription_device_status_request_config",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail": ".create_roaming_subscription_device_status_request_config_subscription_detail",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice": ".create_roaming_subscription_device_status_request_config_subscription_detail_device",
-    "CreateRoamingSubscriptionDeviceStatusRequestProtocol": ".create_roaming_subscription_device_status_request_protocol",
-    "CreateRoamingSubscriptionDeviceStatusRequestSinkCredential": ".create_roaming_subscription_device_status_request_sink_credential",
-    "CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType": ".create_roaming_subscription_device_status_request_sink_credential_credential_type",
-    "CreateRoamingSubscriptionDeviceStatusRequestTypesItem": ".create_roaming_subscription_device_status_request_types_item",
-    "CreateRoamingSubscriptionDeviceStatusResponse": ".create_roaming_subscription_device_status_response",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfig": ".create_roaming_subscription_device_status_response_config",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".create_roaming_subscription_device_status_response_config_subscription_detail",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".create_roaming_subscription_device_status_response_config_subscription_detail_device",
-    "CreateRoamingSubscriptionDeviceStatusResponseProtocol": ".create_roaming_subscription_device_status_response_protocol",
-    "CreateRoamingSubscriptionDeviceStatusResponseStatus": ".create_roaming_subscription_device_status_response_status",
-    "CreateRoamingSubscriptionDeviceStatusResponseTypesItem": ".create_roaming_subscription_device_status_response_types_item",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetail": ".create_subscription_device_status_request_subscription_detail",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice": ".create_subscription_device_status_request_subscription_detail_device",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetailType": ".create_subscription_device_status_request_subscription_detail_type",
-    "CreateSubscriptionDeviceStatusRequestWebhook": ".create_subscription_device_status_request_webhook",
-    "CreateSubscriptionDeviceStatusResponse": ".create_subscription_device_status_response",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetail": ".create_subscription_device_status_response_subscription_detail",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice": ".create_subscription_device_status_response_subscription_detail_device",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetailType": ".create_subscription_device_status_response_subscription_detail_type",
-    "CreateSubscriptionDeviceStatusResponseWebhook": ".create_subscription_device_status_response_webhook",
-    "DeleteReachabilitySubscriptionDeviceStatusResponse": ".delete_reachability_subscription_device_status_response",
-    "DeleteRoamingSubscriptionDeviceStatusResponse": ".delete_roaming_subscription_device_status_response",
-    "DeleteSubscriptionDeviceStatusResponse": ".delete_subscription_device_status_response",
-    "GetReachabilitySubscriptionDeviceStatusResponse": ".get_reachability_subscription_device_status_response",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfig": ".get_reachability_subscription_device_status_response_config",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".get_reachability_subscription_device_status_response_config_subscription_detail",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".get_reachability_subscription_device_status_response_config_subscription_detail_device",
-    "GetReachabilitySubscriptionDeviceStatusResponseProtocol": ".get_reachability_subscription_device_status_response_protocol",
-    "GetReachabilitySubscriptionDeviceStatusResponseStatus": ".get_reachability_subscription_device_status_response_status",
-    "GetReachabilitySubscriptionDeviceStatusResponseTypesItem": ".get_reachability_subscription_device_status_response_types_item",
-    "GetRoamingSubscriptionDeviceStatusResponse": ".get_roaming_subscription_device_status_response",
-    "GetRoamingSubscriptionDeviceStatusResponseConfig": ".get_roaming_subscription_device_status_response_config",
-    "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".get_roaming_subscription_device_status_response_config_subscription_detail",
-    "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".get_roaming_subscription_device_status_response_config_subscription_detail_device",
-    "GetRoamingSubscriptionDeviceStatusResponseProtocol": ".get_roaming_subscription_device_status_response_protocol",
-    "GetRoamingSubscriptionDeviceStatusResponseStatus": ".get_roaming_subscription_device_status_response_status",
-    "GetRoamingSubscriptionDeviceStatusResponseTypesItem": ".get_roaming_subscription_device_status_response_types_item",
-    "GetSubscriptionDeviceStatusResponse": ".get_subscription_device_status_response",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetail": ".get_subscription_device_status_response_subscription_detail",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice": ".get_subscription_device_status_response_subscription_detail_device",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetailType": ".get_subscription_device_status_response_subscription_detail_type",
-    "GetSubscriptionDeviceStatusResponseWebhook": ".get_subscription_device_status_response_webhook",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItem": ".list_reachability_subscriptions_device_status_response_item",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfig": ".list_reachability_subscriptions_device_status_response_item_config",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail": ".list_reachability_subscriptions_device_status_response_item_config_subscription_detail",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice": ".list_reachability_subscriptions_device_status_response_item_config_subscription_detail_device",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol": ".list_reachability_subscriptions_device_status_response_item_protocol",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemStatus": ".list_reachability_subscriptions_device_status_response_item_status",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem": ".list_reachability_subscriptions_device_status_response_item_types_item",
-    "ListRoamingSubscriptionsDeviceStatusResponseItem": ".list_roaming_subscriptions_device_status_response_item",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfig": ".list_roaming_subscriptions_device_status_response_item_config",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail": ".list_roaming_subscriptions_device_status_response_item_config_subscription_detail",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice": ".list_roaming_subscriptions_device_status_response_item_config_subscription_detail_device",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemProtocol": ".list_roaming_subscriptions_device_status_response_item_protocol",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemStatus": ".list_roaming_subscriptions_device_status_response_item_status",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem": ".list_roaming_subscriptions_device_status_response_item_types_item",
-    "ListSubscriptionsDeviceStatusResponseItem": ".list_subscriptions_device_status_response_item",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail": ".list_subscriptions_device_status_response_item_subscription_detail",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice": ".list_subscriptions_device_status_response_item_subscription_detail_device",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType": ".list_subscriptions_device_status_response_item_subscription_detail_type",
-    "ListSubscriptionsDeviceStatusResponseItemWebhook": ".list_subscriptions_device_status_response_item_webhook",
-    "RetrieveReachabilityStatusDeviceStatusRequestDevice": ".retrieve_reachability_status_device_status_request_device",
-    "RetrieveReachabilityStatusDeviceStatusResponse": ".retrieve_reachability_status_device_status_response",
-    "RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem": ".retrieve_reachability_status_device_status_response_connectivity_item",
-    "RetrieveRoamingStatusDeviceStatusRequestDevice": ".retrieve_roaming_status_device_status_request_device",
-    "RetrieveRoamingStatusDeviceStatusResponse": ".retrieve_roaming_status_device_status_response",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"CheckConnectivityDeviceStatusRequestDevice": ".check_connectivity_device_status_request_device", "CheckConnectivityDeviceStatusResponse": ".check_connectivity_device_status_response", "CheckConnectivityDeviceStatusResponseConnectivityStatus": ".check_connectivity_device_status_response_connectivity_status", "CheckRoamingDeviceStatusRequestDevice": ".check_roaming_device_status_request_device", "CheckRoamingDeviceStatusResponse": ".check_roaming_device_status_response", "CreateReachabilitySubscriptionDeviceStatusRequestConfig": ".create_reachability_subscription_device_status_request_config", "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail": ".create_reachability_subscription_device_status_request_config_subscription_detail", "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice": ".create_reachability_subscription_device_status_request_config_subscription_detail_device", "CreateReachabilitySubscriptionDeviceStatusRequestProtocol": ".create_reachability_subscription_device_status_request_protocol", "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential": ".create_reachability_subscription_device_status_request_sink_credential", "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType": ".create_reachability_subscription_device_status_request_sink_credential_credential_type", "CreateReachabilitySubscriptionDeviceStatusRequestTypesItem": ".create_reachability_subscription_device_status_request_types_item", "CreateReachabilitySubscriptionDeviceStatusResponse": ".create_reachability_subscription_device_status_response", "CreateReachabilitySubscriptionDeviceStatusResponseConfig": ".create_reachability_subscription_device_status_response_config", "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".create_reachability_subscription_device_status_response_config_subscription_detail", "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".create_reachability_subscription_device_status_response_config_subscription_detail_device", "CreateReachabilitySubscriptionDeviceStatusResponseProtocol": ".create_reachability_subscription_device_status_response_protocol", "CreateReachabilitySubscriptionDeviceStatusResponseStatus": ".create_reachability_subscription_device_status_response_status", "CreateReachabilitySubscriptionDeviceStatusResponseTypesItem": ".create_reachability_subscription_device_status_response_types_item", "CreateRoamingSubscriptionDeviceStatusRequestConfig": ".create_roaming_subscription_device_status_request_config", "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail": ".create_roaming_subscription_device_status_request_config_subscription_detail", "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice": ".create_roaming_subscription_device_status_request_config_subscription_detail_device", "CreateRoamingSubscriptionDeviceStatusRequestProtocol": ".create_roaming_subscription_device_status_request_protocol", "CreateRoamingSubscriptionDeviceStatusRequestSinkCredential": ".create_roaming_subscription_device_status_request_sink_credential", "CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType": ".create_roaming_subscription_device_status_request_sink_credential_credential_type", "CreateRoamingSubscriptionDeviceStatusRequestTypesItem": ".create_roaming_subscription_device_status_request_types_item", "CreateRoamingSubscriptionDeviceStatusResponse": ".create_roaming_subscription_device_status_response", "CreateRoamingSubscriptionDeviceStatusResponseConfig": ".create_roaming_subscription_device_status_response_config", "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".create_roaming_subscription_device_status_response_config_subscription_detail", "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".create_roaming_subscription_device_status_response_config_subscription_detail_device", "CreateRoamingSubscriptionDeviceStatusResponseProtocol": ".create_roaming_subscription_device_status_response_protocol", "CreateRoamingSubscriptionDeviceStatusResponseStatus": ".create_roaming_subscription_device_status_response_status", "CreateRoamingSubscriptionDeviceStatusResponseTypesItem": ".create_roaming_subscription_device_status_response_types_item", "CreateSubscriptionDeviceStatusRequestSubscriptionDetail": ".create_subscription_device_status_request_subscription_detail", "CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice": ".create_subscription_device_status_request_subscription_detail_device", "CreateSubscriptionDeviceStatusRequestSubscriptionDetailType": ".create_subscription_device_status_request_subscription_detail_type", "CreateSubscriptionDeviceStatusRequestWebhook": ".create_subscription_device_status_request_webhook", "CreateSubscriptionDeviceStatusResponse": ".create_subscription_device_status_response", "CreateSubscriptionDeviceStatusResponseSubscriptionDetail": ".create_subscription_device_status_response_subscription_detail", "CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice": ".create_subscription_device_status_response_subscription_detail_device", "CreateSubscriptionDeviceStatusResponseSubscriptionDetailType": ".create_subscription_device_status_response_subscription_detail_type", "CreateSubscriptionDeviceStatusResponseWebhook": ".create_subscription_device_status_response_webhook", "DeleteReachabilitySubscriptionDeviceStatusResponse": ".delete_reachability_subscription_device_status_response", "DeleteRoamingSubscriptionDeviceStatusResponse": ".delete_roaming_subscription_device_status_response", "DeleteSubscriptionDeviceStatusResponse": ".delete_subscription_device_status_response", "GetReachabilitySubscriptionDeviceStatusResponse": ".get_reachability_subscription_device_status_response", "GetReachabilitySubscriptionDeviceStatusResponseConfig": ".get_reachability_subscription_device_status_response_config", "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".get_reachability_subscription_device_status_response_config_subscription_detail", "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".get_reachability_subscription_device_status_response_config_subscription_detail_device", "GetReachabilitySubscriptionDeviceStatusResponseProtocol": ".get_reachability_subscription_device_status_response_protocol", "GetReachabilitySubscriptionDeviceStatusResponseStatus": ".get_reachability_subscription_device_status_response_status", "GetReachabilitySubscriptionDeviceStatusResponseTypesItem": ".get_reachability_subscription_device_status_response_types_item", "GetRoamingSubscriptionDeviceStatusResponse": ".get_roaming_subscription_device_status_response", "GetRoamingSubscriptionDeviceStatusResponseConfig": ".get_roaming_subscription_device_status_response_config", "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail": ".get_roaming_subscription_device_status_response_config_subscription_detail", "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice": ".get_roaming_subscription_device_status_response_config_subscription_detail_device", "GetRoamingSubscriptionDeviceStatusResponseProtocol": ".get_roaming_subscription_device_status_response_protocol", "GetRoamingSubscriptionDeviceStatusResponseStatus": ".get_roaming_subscription_device_status_response_status", "GetRoamingSubscriptionDeviceStatusResponseTypesItem": ".get_roaming_subscription_device_status_response_types_item", "GetSubscriptionDeviceStatusResponse": ".get_subscription_device_status_response", "GetSubscriptionDeviceStatusResponseSubscriptionDetail": ".get_subscription_device_status_response_subscription_detail", "GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice": ".get_subscription_device_status_response_subscription_detail_device", "GetSubscriptionDeviceStatusResponseSubscriptionDetailType": ".get_subscription_device_status_response_subscription_detail_type", "GetSubscriptionDeviceStatusResponseWebhook": ".get_subscription_device_status_response_webhook", "ListReachabilitySubscriptionsDeviceStatusResponseItem": ".list_reachability_subscriptions_device_status_response_item", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfig": ".list_reachability_subscriptions_device_status_response_item_config", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail": ".list_reachability_subscriptions_device_status_response_item_config_subscription_detail", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice": ".list_reachability_subscriptions_device_status_response_item_config_subscription_detail_device", "ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol": ".list_reachability_subscriptions_device_status_response_item_protocol", "ListReachabilitySubscriptionsDeviceStatusResponseItemStatus": ".list_reachability_subscriptions_device_status_response_item_status", "ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem": ".list_reachability_subscriptions_device_status_response_item_types_item", "ListRoamingSubscriptionsDeviceStatusResponseItem": ".list_roaming_subscriptions_device_status_response_item", "ListRoamingSubscriptionsDeviceStatusResponseItemConfig": ".list_roaming_subscriptions_device_status_response_item_config", "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail": ".list_roaming_subscriptions_device_status_response_item_config_subscription_detail", "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice": ".list_roaming_subscriptions_device_status_response_item_config_subscription_detail_device", "ListRoamingSubscriptionsDeviceStatusResponseItemProtocol": ".list_roaming_subscriptions_device_status_response_item_protocol", "ListRoamingSubscriptionsDeviceStatusResponseItemStatus": ".list_roaming_subscriptions_device_status_response_item_status", "ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem": ".list_roaming_subscriptions_device_status_response_item_types_item", "ListSubscriptionsDeviceStatusResponseItem": ".list_subscriptions_device_status_response_item", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail": ".list_subscriptions_device_status_response_item_subscription_detail", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice": ".list_subscriptions_device_status_response_item_subscription_detail_device", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType": ".list_subscriptions_device_status_response_item_subscription_detail_type", "ListSubscriptionsDeviceStatusResponseItemWebhook": ".list_subscriptions_device_status_response_item_webhook", "RetrieveReachabilityStatusDeviceStatusRequestDevice": ".retrieve_reachability_status_device_status_request_device", "RetrieveReachabilityStatusDeviceStatusResponse": ".retrieve_reachability_status_device_status_response", "RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem": ".retrieve_reachability_status_device_status_response_connectivity_item", "RetrieveRoamingStatusDeviceStatusRequestDevice": ".retrieve_roaming_status_device_status_request_device", "RetrieveRoamingStatusDeviceStatusResponse": ".retrieve_roaming_status_device_status_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -332,100 +108,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "CheckConnectivityDeviceStatusRequestDevice",
-    "CheckConnectivityDeviceStatusResponse",
-    "CheckConnectivityDeviceStatusResponseConnectivityStatus",
-    "CheckRoamingDeviceStatusRequestDevice",
-    "CheckRoamingDeviceStatusResponse",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfig",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail",
-    "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice",
-    "CreateReachabilitySubscriptionDeviceStatusRequestProtocol",
-    "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential",
-    "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType",
-    "CreateReachabilitySubscriptionDeviceStatusRequestTypesItem",
-    "CreateReachabilitySubscriptionDeviceStatusResponse",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfig",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail",
-    "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice",
-    "CreateReachabilitySubscriptionDeviceStatusResponseProtocol",
-    "CreateReachabilitySubscriptionDeviceStatusResponseStatus",
-    "CreateReachabilitySubscriptionDeviceStatusResponseTypesItem",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfig",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail",
-    "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice",
-    "CreateRoamingSubscriptionDeviceStatusRequestProtocol",
-    "CreateRoamingSubscriptionDeviceStatusRequestSinkCredential",
-    "CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType",
-    "CreateRoamingSubscriptionDeviceStatusRequestTypesItem",
-    "CreateRoamingSubscriptionDeviceStatusResponse",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfig",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail",
-    "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice",
-    "CreateRoamingSubscriptionDeviceStatusResponseProtocol",
-    "CreateRoamingSubscriptionDeviceStatusResponseStatus",
-    "CreateRoamingSubscriptionDeviceStatusResponseTypesItem",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetail",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice",
-    "CreateSubscriptionDeviceStatusRequestSubscriptionDetailType",
-    "CreateSubscriptionDeviceStatusRequestWebhook",
-    "CreateSubscriptionDeviceStatusResponse",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetail",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice",
-    "CreateSubscriptionDeviceStatusResponseSubscriptionDetailType",
-    "CreateSubscriptionDeviceStatusResponseWebhook",
-    "DeleteReachabilitySubscriptionDeviceStatusResponse",
-    "DeleteRoamingSubscriptionDeviceStatusResponse",
-    "DeleteSubscriptionDeviceStatusResponse",
-    "GetReachabilitySubscriptionDeviceStatusResponse",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfig",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail",
-    "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice",
-    "GetReachabilitySubscriptionDeviceStatusResponseProtocol",
-    "GetReachabilitySubscriptionDeviceStatusResponseStatus",
-    "GetReachabilitySubscriptionDeviceStatusResponseTypesItem",
-    "GetRoamingSubscriptionDeviceStatusResponse",
-    "GetRoamingSubscriptionDeviceStatusResponseConfig",
-    "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail",
-    "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice",
-    "GetRoamingSubscriptionDeviceStatusResponseProtocol",
-    "GetRoamingSubscriptionDeviceStatusResponseStatus",
-    "GetRoamingSubscriptionDeviceStatusResponseTypesItem",
-    "GetSubscriptionDeviceStatusResponse",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetail",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice",
-    "GetSubscriptionDeviceStatusResponseSubscriptionDetailType",
-    "GetSubscriptionDeviceStatusResponseWebhook",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItem",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfig",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemStatus",
-    "ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem",
-    "ListRoamingSubscriptionsDeviceStatusResponseItem",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfig",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemProtocol",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemStatus",
-    "ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem",
-    "ListSubscriptionsDeviceStatusResponseItem",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice",
-    "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType",
-    "ListSubscriptionsDeviceStatusResponseItemWebhook",
-    "RetrieveReachabilityStatusDeviceStatusRequestDevice",
-    "RetrieveReachabilityStatusDeviceStatusResponse",
-    "RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem",
-    "RetrieveRoamingStatusDeviceStatusRequestDevice",
-    "RetrieveRoamingStatusDeviceStatusResponse",
-]
+__all__ = ["CheckConnectivityDeviceStatusRequestDevice", "CheckConnectivityDeviceStatusResponse", "CheckConnectivityDeviceStatusResponseConnectivityStatus", "CheckRoamingDeviceStatusRequestDevice", "CheckRoamingDeviceStatusResponse", "CreateReachabilitySubscriptionDeviceStatusRequestConfig", "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetail", "CreateReachabilitySubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice", "CreateReachabilitySubscriptionDeviceStatusRequestProtocol", "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredential", "CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialCredentialType", "CreateReachabilitySubscriptionDeviceStatusRequestTypesItem", "CreateReachabilitySubscriptionDeviceStatusResponse", "CreateReachabilitySubscriptionDeviceStatusResponseConfig", "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail", "CreateReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice", "CreateReachabilitySubscriptionDeviceStatusResponseProtocol", "CreateReachabilitySubscriptionDeviceStatusResponseStatus", "CreateReachabilitySubscriptionDeviceStatusResponseTypesItem", "CreateRoamingSubscriptionDeviceStatusRequestConfig", "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetail", "CreateRoamingSubscriptionDeviceStatusRequestConfigSubscriptionDetailDevice", "CreateRoamingSubscriptionDeviceStatusRequestProtocol", "CreateRoamingSubscriptionDeviceStatusRequestSinkCredential", "CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialCredentialType", "CreateRoamingSubscriptionDeviceStatusRequestTypesItem", "CreateRoamingSubscriptionDeviceStatusResponse", "CreateRoamingSubscriptionDeviceStatusResponseConfig", "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail", "CreateRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice", "CreateRoamingSubscriptionDeviceStatusResponseProtocol", "CreateRoamingSubscriptionDeviceStatusResponseStatus", "CreateRoamingSubscriptionDeviceStatusResponseTypesItem", "CreateSubscriptionDeviceStatusRequestSubscriptionDetail", "CreateSubscriptionDeviceStatusRequestSubscriptionDetailDevice", "CreateSubscriptionDeviceStatusRequestSubscriptionDetailType", "CreateSubscriptionDeviceStatusRequestWebhook", "CreateSubscriptionDeviceStatusResponse", "CreateSubscriptionDeviceStatusResponseSubscriptionDetail", "CreateSubscriptionDeviceStatusResponseSubscriptionDetailDevice", "CreateSubscriptionDeviceStatusResponseSubscriptionDetailType", "CreateSubscriptionDeviceStatusResponseWebhook", "DeleteReachabilitySubscriptionDeviceStatusResponse", "DeleteRoamingSubscriptionDeviceStatusResponse", "DeleteSubscriptionDeviceStatusResponse", "GetReachabilitySubscriptionDeviceStatusResponse", "GetReachabilitySubscriptionDeviceStatusResponseConfig", "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetail", "GetReachabilitySubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice", "GetReachabilitySubscriptionDeviceStatusResponseProtocol", "GetReachabilitySubscriptionDeviceStatusResponseStatus", "GetReachabilitySubscriptionDeviceStatusResponseTypesItem", "GetRoamingSubscriptionDeviceStatusResponse", "GetRoamingSubscriptionDeviceStatusResponseConfig", "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetail", "GetRoamingSubscriptionDeviceStatusResponseConfigSubscriptionDetailDevice", "GetRoamingSubscriptionDeviceStatusResponseProtocol", "GetRoamingSubscriptionDeviceStatusResponseStatus", "GetRoamingSubscriptionDeviceStatusResponseTypesItem", "GetSubscriptionDeviceStatusResponse", "GetSubscriptionDeviceStatusResponseSubscriptionDetail", "GetSubscriptionDeviceStatusResponseSubscriptionDetailDevice", "GetSubscriptionDeviceStatusResponseSubscriptionDetailType", "GetSubscriptionDeviceStatusResponseWebhook", "ListReachabilitySubscriptionsDeviceStatusResponseItem", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfig", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail", "ListReachabilitySubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice", "ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol", "ListReachabilitySubscriptionsDeviceStatusResponseItemStatus", "ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem", "ListRoamingSubscriptionsDeviceStatusResponseItem", "ListRoamingSubscriptionsDeviceStatusResponseItemConfig", "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetail", "ListRoamingSubscriptionsDeviceStatusResponseItemConfigSubscriptionDetailDevice", "ListRoamingSubscriptionsDeviceStatusResponseItemProtocol", "ListRoamingSubscriptionsDeviceStatusResponseItemStatus", "ListRoamingSubscriptionsDeviceStatusResponseItemTypesItem", "ListSubscriptionsDeviceStatusResponseItem", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetail", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailDevice", "ListSubscriptionsDeviceStatusResponseItemSubscriptionDetailType", "ListSubscriptionsDeviceStatusResponseItemWebhook", "RetrieveReachabilityStatusDeviceStatusRequestDevice", "RetrieveReachabilityStatusDeviceStatusResponse", "RetrieveReachabilityStatusDeviceStatusResponseConnectivityItem", "RetrieveRoamingStatusDeviceStatusRequestDevice", "RetrieveRoamingStatusDeviceStatusResponse"]

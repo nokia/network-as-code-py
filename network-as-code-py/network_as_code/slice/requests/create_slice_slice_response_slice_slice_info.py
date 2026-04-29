@@ -4,24 +4,16 @@ import typing
 
 import typing_extensions
 from ...core.serialization import FieldMetadata
-from .create_slice_slice_response_slice_slice_info_service_type import (
-    CreateSliceSliceResponseSliceSliceInfoServiceTypeParams,
-)
 
 
 class CreateSliceSliceResponseSliceSliceInfoParams(typing_extensions.TypedDict):
+    service_type: typing_extensions.Annotated[int, FieldMetadata(alias="serviceType")]
     """
-    Slice Service type(SST) and slice differentiator(SD).
+    Name or ID of slice type (e.g. eMBB, URLLC, MIoT or numeric SST).
     """
-
-    service_type: typing_extensions.Annotated[
-        CreateSliceSliceResponseSliceSliceInfoServiceTypeParams, FieldMetadata(alias="serviceType")
-    ]
-    """
-    Name or ID of slice type.
-    """
-
+    
     differentiator: typing_extensions.NotRequired[typing.Optional[str]]
     """
     Differentiator identifies the slice within the type.
     """
+    

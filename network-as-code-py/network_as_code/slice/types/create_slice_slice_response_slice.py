@@ -26,138 +26,40 @@ from .create_slice_slice_response_slice_slice_uplink_throughput import (
 
 
 class CreateSliceSliceResponseSlice(UniversalBaseModel):
-    """
-    Contains the network slice's details.
-    """
-
     name: typing.Optional[str] = pydantic.Field(default=None)
     """
     Optional short name for the slice. Must be ASCII characters, digits and dash. Like name of an event.
     """
-
-    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl")] = pydantic.Field(
-        alias="notificationUrl"
-    )
-    """
-    Contact attached to the order to send back information regarding this order.
-    """
-
-    notification_auth_token: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="notificationAuthToken")
-    ] = pydantic.Field(alias="notificationAuthToken", default=None)
-    """
-    Authorization token for notification sending.
-    """
-
-    network_identifier: typing_extensions.Annotated[
-        CreateSliceSliceResponseSliceNetworkIdentifier, FieldMetadata(alias="networkIdentifier")
-    ] = pydantic.Field(alias="networkIdentifier")
-    """
-    PLMN ID with MCC and MNC codes.
-    """
-
-    slice_info: typing_extensions.Annotated[
-        CreateSliceSliceResponseSliceSliceInfo, FieldMetadata(alias="sliceInfo")
-    ] = pydantic.Field(alias="sliceInfo")
-    """
-    Slice Service type(SST) and slice differentiator(SD).
-    """
-
-    area_of_service: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceAreaOfService], FieldMetadata(alias="areaOfService")
-    ] = pydantic.Field(alias="areaOfService", default=None)
-    """
-    Specifies the area where the slice can be used
-    """
-
-    max_data_connections: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="maxDataConnections")
-    ] = pydantic.Field(alias="maxDataConnections", default=None)
-    """
-    Maximum number of data connection sessions in the slice.
-    """
-
-    max_devices: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDevices")] = pydantic.Field(
-        alias="maxDevices", default=None
-    )
-    """
-    Maximum number of devices using the slice.
-    """
-
-    delay_tolerance: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="delayTolerance")] = (
-        pydantic.Field(alias="delayTolerance", default=None)
-    )
-    """
-    Delaytolerance attribute, True/False or SUPPORTED/NOT SUPPORTED
-    """
-
-    service_priority: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="servicePriority")] = (
-        pydantic.Field(alias="servicePriority", default=None)
-    )
-    """
-    ServicePriority attribute
-    """
-
-    slice_downlink_throughput: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceSliceDownlinkThroughput],
-        FieldMetadata(alias="sliceDownlinkThroughput"),
-    ] = pydantic.Field(alias="sliceDownlinkThroughput", default=None)
-    """
-    Data rate parameters (max/guaranteed) supported by the network slice for all devices together in downlink
-    """
-
-    slice_uplink_throughput: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceSliceUplinkThroughput],
-        FieldMetadata(alias="sliceUplinkThroughput"),
-    ] = pydantic.Field(alias="sliceUplinkThroughput", default=None)
-    """
-    Data rate parameters (max/guaranteed) supported by the network slice for all devices together in uplink
-    """
-
-    device_downlink_throughput: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceDeviceDownlinkThroughput],
-        FieldMetadata(alias="deviceDownlinkThroughput"),
-    ] = pydantic.Field(alias="deviceDownlinkThroughput", default=None)
-    """
-    Data rate parameters (max/guaranteed) supported by the network slice per device in downlink
-    """
-
-    device_uplink_throughput: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceDeviceUplinkThroughput],
-        FieldMetadata(alias="deviceUplinkThroughput"),
-    ] = pydantic.Field(alias="deviceUplinkThroughput", default=None)
-    """
-    Data rate parameters (max/guaranteed) supported by the network slice per device in uplink
-    """
-
-    isolation_level: typing_extensions.Annotated[
-        typing.Optional[CreateSliceSliceResponseSliceIsolationLevel], FieldMetadata(alias="isolationLevel")
-    ] = pydantic.Field(alias="isolationLevel", default=None)
-    """
-    Parameter describing the isolation type
-    """
-
+    
+    notification_url: typing_extensions.Annotated[str, FieldMetadata(alias="notificationUrl"), pydantic.Field(alias="notificationUrl", description="Contact attached to the order to send back information regarding this order.")]
+    notification_auth_token: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="notificationAuthToken"), pydantic.Field(alias="notificationAuthToken", description="Authorization token for notification sending.")] = None
+    network_identifier: typing_extensions.Annotated[CreateSliceSliceResponseSliceNetworkIdentifier, FieldMetadata(alias="networkIdentifier"), pydantic.Field(alias="networkIdentifier")]
+    slice_info: typing_extensions.Annotated[CreateSliceSliceResponseSliceSliceInfo, FieldMetadata(alias="sliceInfo"), pydantic.Field(alias="sliceInfo")]
+    area_of_service: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceAreaOfService], FieldMetadata(alias="areaOfService"), pydantic.Field(alias="areaOfService", description="Specifies the area where the slice can be used")] = None
+    max_data_connections: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDataConnections"), pydantic.Field(alias="maxDataConnections", description="Maximum number of data connection sessions in the slice.")] = None
+    max_devices: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="maxDevices"), pydantic.Field(alias="maxDevices", description="Maximum number of devices using the slice.")] = None
+    delay_tolerance: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="delayTolerance"), pydantic.Field(alias="delayTolerance", description="Delaytolerance attribute, True/False or SUPPORTED/NOT SUPPORTED")] = None
+    service_priority: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="servicePriority"), pydantic.Field(alias="servicePriority", description="ServicePriority attribute")] = None
+    slice_downlink_throughput: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceSliceDownlinkThroughput], FieldMetadata(alias="sliceDownlinkThroughput"), pydantic.Field(alias="sliceDownlinkThroughput", description="Data rate parameters (max/guaranteed) supported by the network slice for all devices together in downlink")] = None
+    slice_uplink_throughput: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceSliceUplinkThroughput], FieldMetadata(alias="sliceUplinkThroughput"), pydantic.Field(alias="sliceUplinkThroughput", description="Data rate parameters (max/guaranteed) supported by the network slice for all devices together in uplink")] = None
+    device_downlink_throughput: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceDeviceDownlinkThroughput], FieldMetadata(alias="deviceDownlinkThroughput"), pydantic.Field(alias="deviceDownlinkThroughput", description="Data rate parameters (max/guaranteed) supported by the network slice per device in downlink")] = None
+    device_uplink_throughput: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceDeviceUplinkThroughput], FieldMetadata(alias="deviceUplinkThroughput"), pydantic.Field(alias="deviceUplinkThroughput", description="Data rate parameters (max/guaranteed) supported by the network slice per device in uplink")] = None
+    isolation_level: typing_extensions.Annotated[typing.Optional[CreateSliceSliceResponseSliceIsolationLevel], FieldMetadata(alias="isolationLevel"), pydantic.Field(alias="isolationLevel", description="Parameter describing the isolation type")] = None
     qos: typing.Optional[str] = pydantic.Field(default=None)
     """
     QoS Identifier
     """
-
-    udm_5_qi: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="udm5Qi")] = pydantic.Field(
-        alias="udm5Qi", default=None
-    )
-    """
-    5G QoS Identifier
-    """
-
+    
+    udm5qi: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="udm5Qi"), pydantic.Field(alias="udm5Qi", description="5G QoS Identifier")] = None
     customer: typing.Optional[CreateSliceSliceResponseSliceCustomer] = pydantic.Field(default=None)
     """
     Customer created the slice
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

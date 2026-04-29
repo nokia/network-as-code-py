@@ -2,7 +2,7 @@
 
 export interface VerifyLocationResponse {
     /** Timestamp of the last location information. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z) */
-    lastLocationTime?: string;
+    lastLocationTime?: string | undefined;
     /**
      * Result of a verification request:
      *   - `TRUE`: when the network locates the device within the requested area,
@@ -12,7 +12,7 @@ export interface VerifyLocationResponse {
      */
     verificationResult: VerifyLocationResponse.VerificationResult;
     /** Estimation of the match rate between the area in the request (R), and area where the network locates the device (N), calculated as the percent value of the intersection of both areas divided by the network area, that is (R ∩ N) / N * 100. Included only if VerificationResult is PARTIAL. */
-    matchRate?: number;
+    matchRate?: number | undefined;
 }
 
 export namespace VerifyLocationResponse {

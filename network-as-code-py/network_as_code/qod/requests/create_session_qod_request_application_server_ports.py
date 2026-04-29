@@ -9,7 +9,5 @@ from .create_session_qod_request_application_server_ports_ranges_item import (
 
 
 class CreateSessionQodRequestApplicationServerPortsParams(typing_extensions.TypedDict):
-    ranges: typing_extensions.NotRequired[
-        typing.Sequence[CreateSessionQodRequestApplicationServerPortsRangesItemParams]
-    ]
+    ranges: typing_extensions.NotRequired[typing.Sequence[CreateSessionQodRequestApplicationServerPortsRangesItemParams]]
     ports: typing_extensions.NotRequired[typing.Sequence[int]]

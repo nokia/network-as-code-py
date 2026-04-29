@@ -6,6 +6,3 @@ from .attach_device_slice_request_traffic_categories_apps import AttachDeviceSli
 
 class AttachDeviceSliceRequestTrafficCategoriesParams(typing_extensions.TypedDict):
     apps: AttachDeviceSliceRequestTrafficCategoriesAppsParams
-    """
-    Contains the operating system ID and the applications identifiers.
-    """

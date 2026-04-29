@@ -2,6 +2,4 @@
 
 import typing
 
-CreateReachabilitySubscriptionDeviceStatusResponseProtocol = typing.Union[
-    typing.Literal["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"], typing.Any
-]
+CreateReachabilitySubscriptionDeviceStatusResponseProtocol = typing.Union[typing.Literal["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"], typing.Any]

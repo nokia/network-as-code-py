@@ -9,8 +9,9 @@ class GetSessionQodResponseDevicePortsRangesItemParams(typing_extensions.TypedDi
     """
     TCP or UDP port number
     """
-
+    
     to: int
     """
     TCP or UDP port number
     """
+    

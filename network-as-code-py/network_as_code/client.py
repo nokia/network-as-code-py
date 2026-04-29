@@ -6,6 +6,7 @@ import typing
 
 import httpx
 from .core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
+from .core.logging import LogConfig, Logger
 from .environment import NetworkAsCodeApiEnvironment
 
 if typing.TYPE_CHECKING:
@@ -20,462 +21,398 @@ if typing.TYPE_CHECKING:
     from .na_c_authorization_server.client import AsyncNaCAuthorizationServerClient, NaCAuthorizationServerClient
     from .number_recycling.client import AsyncNumberRecyclingClient, NumberRecyclingClient
     from .number_verification.client import AsyncNumberVerificationClient, NumberVerificationClient
-    from .number_verification_v_100.client import AsyncNumberVerificationV100Client, NumberVerificationV100Client
+    from .number_verification_v100.client import AsyncNumberVerificationV100Client, NumberVerificationV100Client
     from .oauth.client import AsyncOauthClient, OauthClient
     from .qod.client import AsyncQodClient, QodClient
     from .sim_swap.client import AsyncSimSwapClient, SimSwapClient
     from .slice.client import AsyncSliceClient, SliceClient
     from .well_known_metadata.client import AsyncWellKnownMetadataClient, WellKnownMetadataClient
-
-
 class NetworkAsCodeApi:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
-
+    
     Parameters
     ----------
     base_url : typing.Optional[str]
         The base url to use for requests from the client.
-
+    
     environment : NetworkAsCodeApiEnvironment
         The environment to use for requests from the client. from .environment import NetworkAsCodeApiEnvironment
-
-
-
+        
+        
+        
         Defaults to NetworkAsCodeApiEnvironment.DEFAULT
-
-
-
+        
+        
+    
     rapidapi_host : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
-
+    
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
-
+    
     follow_redirects : typing.Optional[bool]
         Whether the default httpx client follows redirects or not, this is irrelevant if a custom httpx client is passed in.
-
+    
     httpx_client : typing.Optional[httpx.Client]
         The httpx client to use for making requests, a preconfigured client is used by default, however this is useful should you want to pass in any custom httpx configuration.
-
+    
+    logging : typing.Optional[typing.Union[LogConfig, Logger]]
+        Configure logging for the SDK. Accepts a LogConfig dict with 'level' (debug/info/warn/error), 'logger' (custom logger implementation), and 'silent' (boolean, defaults to True) fields. You can also pass a pre-configured Logger instance.
+    
     Examples
     --------
-    from network_as_code import NetworkAsCodeApi
-
+    from networkAsCode import NetworkAsCodeApi
+    
     client = NetworkAsCodeApi(
         rapidapi_host="YOUR_RAPIDAPI_HOST",
         api_key="YOUR_API_KEY",
     )
     """
-
-    def __init__(
-        self,
-        *,
-        base_url: typing.Optional[str] = None,
-        environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT,
-        rapidapi_host: typing.Optional[str] = None,
-        api_key: str,
-        headers: typing.Optional[typing.Dict[str, str]] = None,
-        timeout: typing.Optional[float] = None,
-        follow_redirects: typing.Optional[bool] = True,
-        httpx_client: typing.Optional[httpx.Client] = None,
-    ):
-        _defaulted_timeout = (
-            timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
-        )
-        self._client_wrapper = SyncClientWrapper(
-            base_url=_get_base_url(base_url=base_url, environment=environment),
-            rapidapi_host=rapidapi_host,
-            api_key=api_key,
-            headers=headers,
-            httpx_client=httpx_client
-            if httpx_client is not None
-            else httpx.Client(timeout=_defaulted_timeout, follow_redirects=follow_redirects)
-            if follow_redirects is not None
-            else httpx.Client(timeout=_defaulted_timeout),
-            timeout=_defaulted_timeout,
-        )
-        self._well_known_metadata: typing.Optional[WellKnownMetadataClient] = None
-        self._congestion_insights: typing.Optional[CongestionInsightsClient] = None
-        self._number_recycling: typing.Optional[NumberRecyclingClient] = None
-        self._qod: typing.Optional[QodClient] = None
+    def __init__(self, *, base_url: typing.Optional[str] = None, environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT
+    , rapidapi_host: typing.Optional[str] = None, api_key: str, headers: typing.Optional[typing.Dict[str, str]] = None, timeout: typing.Optional[float] = None, follow_redirects: typing.Optional[bool] = True, httpx_client: typing.Optional[httpx.Client] = None, logging: typing.Optional[typing.Union[LogConfig, Logger]] = None):
+        _defaulted_timeout = timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
+        self._client_wrapper = SyncClientWrapper(base_url=_get_base_url(base_url=base_url, environment=environment), rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, httpx_client=httpx_client if httpx_client is not None else httpx.Client(timeout=_defaulted_timeout, follow_redirects=follow_redirects) if follow_redirects is not None else httpx.Client(timeout=_defaulted_timeout)
+        , timeout=_defaulted_timeout, logging=logging)
         self._slice: typing.Optional[SliceClient] = None
+        self._well_known_metadata: typing.Optional[WellKnownMetadataClient] = None
         self._device_status: typing.Optional[DeviceStatusClient] = None
+        self._consent_info: typing.Optional[ConsentInfoClient] = None
+        self._number_recycling: typing.Optional[NumberRecyclingClient] = None
+        self._number_verification: typing.Optional[NumberVerificationClient] = None
+        self._congestion_insights: typing.Optional[CongestionInsightsClient] = None
+        self._sim_swap: typing.Optional[SimSwapClient] = None
         self._kyc: typing.Optional[KycClient] = None
-        self._na_c_authorization_server: typing.Optional[NaCAuthorizationServerClient] = None
+        self._qod: typing.Optional[QodClient] = None
         self._device_swap: typing.Optional[DeviceSwapClient] = None
         self._geofencing: typing.Optional[GeofencingClient] = None
         self._oauth: typing.Optional[OauthClient] = None
         self._call_forwarding_signal: typing.Optional[CallForwardingSignalClient] = None
-        self._number_verification_v_100: typing.Optional[NumberVerificationV100Client] = None
-        self._number_verification: typing.Optional[NumberVerificationClient] = None
-        self._sim_swap: typing.Optional[SimSwapClient] = None
         self._location: typing.Optional[LocationClient] = None
-        self._consent_info: typing.Optional[ConsentInfoClient] = None
-
-    @property
-    def well_known_metadata(self):
-        if self._well_known_metadata is None:
-            from .well_known_metadata.client import WellKnownMetadataClient  # noqa: E402
-
-            self._well_known_metadata = WellKnownMetadataClient(client_wrapper=self._client_wrapper)
-        return self._well_known_metadata
-
-    @property
-    def congestion_insights(self):
-        if self._congestion_insights is None:
-            from .congestion_insights.client import CongestionInsightsClient  # noqa: E402
-
-            self._congestion_insights = CongestionInsightsClient(client_wrapper=self._client_wrapper)
-        return self._congestion_insights
-
-    @property
-    def number_recycling(self):
-        if self._number_recycling is None:
-            from .number_recycling.client import NumberRecyclingClient  # noqa: E402
-
-            self._number_recycling = NumberRecyclingClient(client_wrapper=self._client_wrapper)
-        return self._number_recycling
-
-    @property
-    def qod(self):
-        if self._qod is None:
-            from .qod.client import QodClient  # noqa: E402
-
-            self._qod = QodClient(client_wrapper=self._client_wrapper)
-        return self._qod
-
+        self._number_verification_v100: typing.Optional[NumberVerificationV100Client] = None
+        self._na_c_authorization_server: typing.Optional[NaCAuthorizationServerClient] = None
+    
     @property
     def slice(self):
         if self._slice is None:
             from .slice.client import SliceClient  # noqa: E402
-
             self._slice = SliceClient(client_wrapper=self._client_wrapper)
         return self._slice
-
+    
+    @property
+    def well_known_metadata(self):
+        if self._well_known_metadata is None:
+            from .well_known_metadata.client import WellKnownMetadataClient  # noqa: E402
+            self._well_known_metadata = WellKnownMetadataClient(client_wrapper=self._client_wrapper)
+        return self._well_known_metadata
+    
     @property
     def device_status(self):
         if self._device_status is None:
             from .device_status.client import DeviceStatusClient  # noqa: E402
-
             self._device_status = DeviceStatusClient(client_wrapper=self._client_wrapper)
         return self._device_status
-
-    @property
-    def kyc(self):
-        if self._kyc is None:
-            from .kyc.client import KycClient  # noqa: E402
-
-            self._kyc = KycClient(client_wrapper=self._client_wrapper)
-        return self._kyc
-
-    @property
-    def na_c_authorization_server(self):
-        if self._na_c_authorization_server is None:
-            from .na_c_authorization_server.client import NaCAuthorizationServerClient  # noqa: E402
-
-            self._na_c_authorization_server = NaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
-        return self._na_c_authorization_server
-
-    @property
-    def device_swap(self):
-        if self._device_swap is None:
-            from .device_swap.client import DeviceSwapClient  # noqa: E402
-
-            self._device_swap = DeviceSwapClient(client_wrapper=self._client_wrapper)
-        return self._device_swap
-
-    @property
-    def geofencing(self):
-        if self._geofencing is None:
-            from .geofencing.client import GeofencingClient  # noqa: E402
-
-            self._geofencing = GeofencingClient(client_wrapper=self._client_wrapper)
-        return self._geofencing
-
-    @property
-    def oauth(self):
-        if self._oauth is None:
-            from .oauth.client import OauthClient  # noqa: E402
-
-            self._oauth = OauthClient(client_wrapper=self._client_wrapper)
-        return self._oauth
-
-    @property
-    def call_forwarding_signal(self):
-        if self._call_forwarding_signal is None:
-            from .call_forwarding_signal.client import CallForwardingSignalClient  # noqa: E402
-
-            self._call_forwarding_signal = CallForwardingSignalClient(client_wrapper=self._client_wrapper)
-        return self._call_forwarding_signal
-
-    @property
-    def number_verification_v_100(self):
-        if self._number_verification_v_100 is None:
-            from .number_verification_v_100.client import NumberVerificationV100Client  # noqa: E402
-
-            self._number_verification_v_100 = NumberVerificationV100Client(client_wrapper=self._client_wrapper)
-        return self._number_verification_v_100
-
-    @property
-    def number_verification(self):
-        if self._number_verification is None:
-            from .number_verification.client import NumberVerificationClient  # noqa: E402
-
-            self._number_verification = NumberVerificationClient(client_wrapper=self._client_wrapper)
-        return self._number_verification
-
-    @property
-    def sim_swap(self):
-        if self._sim_swap is None:
-            from .sim_swap.client import SimSwapClient  # noqa: E402
-
-            self._sim_swap = SimSwapClient(client_wrapper=self._client_wrapper)
-        return self._sim_swap
-
-    @property
-    def location(self):
-        if self._location is None:
-            from .location.client import LocationClient  # noqa: E402
-
-            self._location = LocationClient(client_wrapper=self._client_wrapper)
-        return self._location
-
+    
     @property
     def consent_info(self):
         if self._consent_info is None:
             from .consent_info.client import ConsentInfoClient  # noqa: E402
-
             self._consent_info = ConsentInfoClient(client_wrapper=self._client_wrapper)
         return self._consent_info
-
-
+    
+    @property
+    def number_recycling(self):
+        if self._number_recycling is None:
+            from .number_recycling.client import NumberRecyclingClient  # noqa: E402
+            self._number_recycling = NumberRecyclingClient(client_wrapper=self._client_wrapper)
+        return self._number_recycling
+    
+    @property
+    def number_verification(self):
+        if self._number_verification is None:
+            from .number_verification.client import NumberVerificationClient  # noqa: E402
+            self._number_verification = NumberVerificationClient(client_wrapper=self._client_wrapper)
+        return self._number_verification
+    
+    @property
+    def congestion_insights(self):
+        if self._congestion_insights is None:
+            from .congestion_insights.client import CongestionInsightsClient  # noqa: E402
+            self._congestion_insights = CongestionInsightsClient(client_wrapper=self._client_wrapper)
+        return self._congestion_insights
+    
+    @property
+    def sim_swap(self):
+        if self._sim_swap is None:
+            from .sim_swap.client import SimSwapClient  # noqa: E402
+            self._sim_swap = SimSwapClient(client_wrapper=self._client_wrapper)
+        return self._sim_swap
+    
+    @property
+    def kyc(self):
+        if self._kyc is None:
+            from .kyc.client import KycClient  # noqa: E402
+            self._kyc = KycClient(client_wrapper=self._client_wrapper)
+        return self._kyc
+    
+    @property
+    def qod(self):
+        if self._qod is None:
+            from .qod.client import QodClient  # noqa: E402
+            self._qod = QodClient(client_wrapper=self._client_wrapper)
+        return self._qod
+    
+    @property
+    def device_swap(self):
+        if self._device_swap is None:
+            from .device_swap.client import DeviceSwapClient  # noqa: E402
+            self._device_swap = DeviceSwapClient(client_wrapper=self._client_wrapper)
+        return self._device_swap
+    
+    @property
+    def geofencing(self):
+        if self._geofencing is None:
+            from .geofencing.client import GeofencingClient  # noqa: E402
+            self._geofencing = GeofencingClient(client_wrapper=self._client_wrapper)
+        return self._geofencing
+    
+    @property
+    def oauth(self):
+        if self._oauth is None:
+            from .oauth.client import OauthClient  # noqa: E402
+            self._oauth = OauthClient(client_wrapper=self._client_wrapper)
+        return self._oauth
+    
+    @property
+    def call_forwarding_signal(self):
+        if self._call_forwarding_signal is None:
+            from .call_forwarding_signal.client import CallForwardingSignalClient  # noqa: E402
+            self._call_forwarding_signal = CallForwardingSignalClient(client_wrapper=self._client_wrapper)
+        return self._call_forwarding_signal
+    
+    @property
+    def location(self):
+        if self._location is None:
+            from .location.client import LocationClient  # noqa: E402
+            self._location = LocationClient(client_wrapper=self._client_wrapper)
+        return self._location
+    
+    @property
+    def number_verification_v100(self):
+        if self._number_verification_v100 is None:
+            from .number_verification_v100.client import NumberVerificationV100Client  # noqa: E402
+            self._number_verification_v100 = NumberVerificationV100Client(client_wrapper=self._client_wrapper)
+        return self._number_verification_v100
+    
+    @property
+    def na_c_authorization_server(self):
+        if self._na_c_authorization_server is None:
+            from .na_c_authorization_server.client import NaCAuthorizationServerClient  # noqa: E402
+            self._na_c_authorization_server = NaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
+        return self._na_c_authorization_server
+def _make_default_async_client(
+    timeout: typing.Optional[float],
+    follow_redirects: typing.Optional[bool],
+) -> httpx.AsyncClient:
+    try:
+        import httpx_aiohttp  # type: ignore[import-not-found]
+    except ImportError:
+        pass
+    else:
+        if follow_redirects is not None:
+            return httpx_aiohttp.HttpxAiohttpClient(timeout=timeout, follow_redirects=follow_redirects)
+        return httpx_aiohttp.HttpxAiohttpClient(timeout=timeout)
+    
+    if follow_redirects is not None:
+        return httpx.AsyncClient(timeout=timeout, follow_redirects=follow_redirects)
+    return httpx.AsyncClient(timeout=timeout)
 class AsyncNetworkAsCodeApi:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
-
+    
     Parameters
     ----------
     base_url : typing.Optional[str]
         The base url to use for requests from the client.
-
+    
     environment : NetworkAsCodeApiEnvironment
         The environment to use for requests from the client. from .environment import NetworkAsCodeApiEnvironment
-
-
-
+        
+        
+        
         Defaults to NetworkAsCodeApiEnvironment.DEFAULT
-
-
-
+        
+        
+    
     rapidapi_host : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
-
+    
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
-
+    
     follow_redirects : typing.Optional[bool]
         Whether the default httpx client follows redirects or not, this is irrelevant if a custom httpx client is passed in.
-
+    
     httpx_client : typing.Optional[httpx.AsyncClient]
         The httpx client to use for making requests, a preconfigured client is used by default, however this is useful should you want to pass in any custom httpx configuration.
-
+    
+    logging : typing.Optional[typing.Union[LogConfig, Logger]]
+        Configure logging for the SDK. Accepts a LogConfig dict with 'level' (debug/info/warn/error), 'logger' (custom logger implementation), and 'silent' (boolean, defaults to True) fields. You can also pass a pre-configured Logger instance.
+    
     Examples
     --------
-    from network_as_code import AsyncNetworkAsCodeApi
-
+    from networkAsCode import AsyncNetworkAsCodeApi
+    
     client = AsyncNetworkAsCodeApi(
         rapidapi_host="YOUR_RAPIDAPI_HOST",
         api_key="YOUR_API_KEY",
     )
     """
-
-    def __init__(
-        self,
-        *,
-        base_url: typing.Optional[str] = None,
-        environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT,
-        rapidapi_host: typing.Optional[str] = None,
-        api_key: str,
-        headers: typing.Optional[typing.Dict[str, str]] = None,
-        timeout: typing.Optional[float] = None,
-        follow_redirects: typing.Optional[bool] = True,
-        httpx_client: typing.Optional[httpx.AsyncClient] = None,
-    ):
-        _defaulted_timeout = (
-            timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
-        )
-        self._client_wrapper = AsyncClientWrapper(
-            base_url=_get_base_url(base_url=base_url, environment=environment),
-            rapidapi_host=rapidapi_host,
-            api_key=api_key,
-            headers=headers,
-            httpx_client=httpx_client
-            if httpx_client is not None
-            else httpx.AsyncClient(timeout=_defaulted_timeout, follow_redirects=follow_redirects)
-            if follow_redirects is not None
-            else httpx.AsyncClient(timeout=_defaulted_timeout),
-            timeout=_defaulted_timeout,
-        )
-        self._well_known_metadata: typing.Optional[AsyncWellKnownMetadataClient] = None
-        self._congestion_insights: typing.Optional[AsyncCongestionInsightsClient] = None
-        self._number_recycling: typing.Optional[AsyncNumberRecyclingClient] = None
-        self._qod: typing.Optional[AsyncQodClient] = None
+    def __init__(self, *, base_url: typing.Optional[str] = None, environment: NetworkAsCodeApiEnvironment = NetworkAsCodeApiEnvironment.DEFAULT
+    , rapidapi_host: typing.Optional[str] = None, api_key: str, headers: typing.Optional[typing.Dict[str, str]] = None, timeout: typing.Optional[float] = None, follow_redirects: typing.Optional[bool] = True, httpx_client: typing.Optional[httpx.AsyncClient] = None, logging: typing.Optional[typing.Union[LogConfig, Logger]] = None):
+        _defaulted_timeout = timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
+        self._client_wrapper = AsyncClientWrapper(base_url=_get_base_url(base_url=base_url, environment=environment), rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, httpx_client=httpx_client if httpx_client is not None else _make_default_async_client(timeout=_defaulted_timeout, follow_redirects=follow_redirects)
+        , timeout=_defaulted_timeout, logging=logging)
         self._slice: typing.Optional[AsyncSliceClient] = None
+        self._well_known_metadata: typing.Optional[AsyncWellKnownMetadataClient] = None
         self._device_status: typing.Optional[AsyncDeviceStatusClient] = None
+        self._consent_info: typing.Optional[AsyncConsentInfoClient] = None
+        self._number_recycling: typing.Optional[AsyncNumberRecyclingClient] = None
+        self._number_verification: typing.Optional[AsyncNumberVerificationClient] = None
+        self._congestion_insights: typing.Optional[AsyncCongestionInsightsClient] = None
+        self._sim_swap: typing.Optional[AsyncSimSwapClient] = None
         self._kyc: typing.Optional[AsyncKycClient] = None
-        self._na_c_authorization_server: typing.Optional[AsyncNaCAuthorizationServerClient] = None
+        self._qod: typing.Optional[AsyncQodClient] = None
         self._device_swap: typing.Optional[AsyncDeviceSwapClient] = None
         self._geofencing: typing.Optional[AsyncGeofencingClient] = None
         self._oauth: typing.Optional[AsyncOauthClient] = None
         self._call_forwarding_signal: typing.Optional[AsyncCallForwardingSignalClient] = None
-        self._number_verification_v_100: typing.Optional[AsyncNumberVerificationV100Client] = None
-        self._number_verification: typing.Optional[AsyncNumberVerificationClient] = None
-        self._sim_swap: typing.Optional[AsyncSimSwapClient] = None
         self._location: typing.Optional[AsyncLocationClient] = None
-        self._consent_info: typing.Optional[AsyncConsentInfoClient] = None
-
-    @property
-    def well_known_metadata(self):
-        if self._well_known_metadata is None:
-            from .well_known_metadata.client import AsyncWellKnownMetadataClient  # noqa: E402
-
-            self._well_known_metadata = AsyncWellKnownMetadataClient(client_wrapper=self._client_wrapper)
-        return self._well_known_metadata
-
-    @property
-    def congestion_insights(self):
-        if self._congestion_insights is None:
-            from .congestion_insights.client import AsyncCongestionInsightsClient  # noqa: E402
-
-            self._congestion_insights = AsyncCongestionInsightsClient(client_wrapper=self._client_wrapper)
-        return self._congestion_insights
-
-    @property
-    def number_recycling(self):
-        if self._number_recycling is None:
-            from .number_recycling.client import AsyncNumberRecyclingClient  # noqa: E402
-
-            self._number_recycling = AsyncNumberRecyclingClient(client_wrapper=self._client_wrapper)
-        return self._number_recycling
-
-    @property
-    def qod(self):
-        if self._qod is None:
-            from .qod.client import AsyncQodClient  # noqa: E402
-
-            self._qod = AsyncQodClient(client_wrapper=self._client_wrapper)
-        return self._qod
-
+        self._number_verification_v100: typing.Optional[AsyncNumberVerificationV100Client] = None
+        self._na_c_authorization_server: typing.Optional[AsyncNaCAuthorizationServerClient] = None
+    
     @property
     def slice(self):
         if self._slice is None:
             from .slice.client import AsyncSliceClient  # noqa: E402
-
             self._slice = AsyncSliceClient(client_wrapper=self._client_wrapper)
         return self._slice
-
+    
+    @property
+    def well_known_metadata(self):
+        if self._well_known_metadata is None:
+            from .well_known_metadata.client import AsyncWellKnownMetadataClient  # noqa: E402
+            self._well_known_metadata = AsyncWellKnownMetadataClient(client_wrapper=self._client_wrapper)
+        return self._well_known_metadata
+    
     @property
     def device_status(self):
         if self._device_status is None:
             from .device_status.client import AsyncDeviceStatusClient  # noqa: E402
-
             self._device_status = AsyncDeviceStatusClient(client_wrapper=self._client_wrapper)
         return self._device_status
-
-    @property
-    def kyc(self):
-        if self._kyc is None:
-            from .kyc.client import AsyncKycClient  # noqa: E402
-
-            self._kyc = AsyncKycClient(client_wrapper=self._client_wrapper)
-        return self._kyc
-
-    @property
-    def na_c_authorization_server(self):
-        if self._na_c_authorization_server is None:
-            from .na_c_authorization_server.client import AsyncNaCAuthorizationServerClient  # noqa: E402
-
-            self._na_c_authorization_server = AsyncNaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
-        return self._na_c_authorization_server
-
-    @property
-    def device_swap(self):
-        if self._device_swap is None:
-            from .device_swap.client import AsyncDeviceSwapClient  # noqa: E402
-
-            self._device_swap = AsyncDeviceSwapClient(client_wrapper=self._client_wrapper)
-        return self._device_swap
-
-    @property
-    def geofencing(self):
-        if self._geofencing is None:
-            from .geofencing.client import AsyncGeofencingClient  # noqa: E402
-
-            self._geofencing = AsyncGeofencingClient(client_wrapper=self._client_wrapper)
-        return self._geofencing
-
-    @property
-    def oauth(self):
-        if self._oauth is None:
-            from .oauth.client import AsyncOauthClient  # noqa: E402
-
-            self._oauth = AsyncOauthClient(client_wrapper=self._client_wrapper)
-        return self._oauth
-
-    @property
-    def call_forwarding_signal(self):
-        if self._call_forwarding_signal is None:
-            from .call_forwarding_signal.client import AsyncCallForwardingSignalClient  # noqa: E402
-
-            self._call_forwarding_signal = AsyncCallForwardingSignalClient(client_wrapper=self._client_wrapper)
-        return self._call_forwarding_signal
-
-    @property
-    def number_verification_v_100(self):
-        if self._number_verification_v_100 is None:
-            from .number_verification_v_100.client import AsyncNumberVerificationV100Client  # noqa: E402
-
-            self._number_verification_v_100 = AsyncNumberVerificationV100Client(client_wrapper=self._client_wrapper)
-        return self._number_verification_v_100
-
-    @property
-    def number_verification(self):
-        if self._number_verification is None:
-            from .number_verification.client import AsyncNumberVerificationClient  # noqa: E402
-
-            self._number_verification = AsyncNumberVerificationClient(client_wrapper=self._client_wrapper)
-        return self._number_verification
-
-    @property
-    def sim_swap(self):
-        if self._sim_swap is None:
-            from .sim_swap.client import AsyncSimSwapClient  # noqa: E402
-
-            self._sim_swap = AsyncSimSwapClient(client_wrapper=self._client_wrapper)
-        return self._sim_swap
-
-    @property
-    def location(self):
-        if self._location is None:
-            from .location.client import AsyncLocationClient  # noqa: E402
-
-            self._location = AsyncLocationClient(client_wrapper=self._client_wrapper)
-        return self._location
-
+    
     @property
     def consent_info(self):
         if self._consent_info is None:
             from .consent_info.client import AsyncConsentInfoClient  # noqa: E402
-
             self._consent_info = AsyncConsentInfoClient(client_wrapper=self._client_wrapper)
         return self._consent_info
-
-
+    
+    @property
+    def number_recycling(self):
+        if self._number_recycling is None:
+            from .number_recycling.client import AsyncNumberRecyclingClient  # noqa: E402
+            self._number_recycling = AsyncNumberRecyclingClient(client_wrapper=self._client_wrapper)
+        return self._number_recycling
+    
+    @property
+    def number_verification(self):
+        if self._number_verification is None:
+            from .number_verification.client import AsyncNumberVerificationClient  # noqa: E402
+            self._number_verification = AsyncNumberVerificationClient(client_wrapper=self._client_wrapper)
+        return self._number_verification
+    
+    @property
+    def congestion_insights(self):
+        if self._congestion_insights is None:
+            from .congestion_insights.client import AsyncCongestionInsightsClient  # noqa: E402
+            self._congestion_insights = AsyncCongestionInsightsClient(client_wrapper=self._client_wrapper)
+        return self._congestion_insights
+    
+    @property
+    def sim_swap(self):
+        if self._sim_swap is None:
+            from .sim_swap.client import AsyncSimSwapClient  # noqa: E402
+            self._sim_swap = AsyncSimSwapClient(client_wrapper=self._client_wrapper)
+        return self._sim_swap
+    
+    @property
+    def kyc(self):
+        if self._kyc is None:
+            from .kyc.client import AsyncKycClient  # noqa: E402
+            self._kyc = AsyncKycClient(client_wrapper=self._client_wrapper)
+        return self._kyc
+    
+    @property
+    def qod(self):
+        if self._qod is None:
+            from .qod.client import AsyncQodClient  # noqa: E402
+            self._qod = AsyncQodClient(client_wrapper=self._client_wrapper)
+        return self._qod
+    
+    @property
+    def device_swap(self):
+        if self._device_swap is None:
+            from .device_swap.client import AsyncDeviceSwapClient  # noqa: E402
+            self._device_swap = AsyncDeviceSwapClient(client_wrapper=self._client_wrapper)
+        return self._device_swap
+    
+    @property
+    def geofencing(self):
+        if self._geofencing is None:
+            from .geofencing.client import AsyncGeofencingClient  # noqa: E402
+            self._geofencing = AsyncGeofencingClient(client_wrapper=self._client_wrapper)
+        return self._geofencing
+    
+    @property
+    def oauth(self):
+        if self._oauth is None:
+            from .oauth.client import AsyncOauthClient  # noqa: E402
+            self._oauth = AsyncOauthClient(client_wrapper=self._client_wrapper)
+        return self._oauth
+    
+    @property
+    def call_forwarding_signal(self):
+        if self._call_forwarding_signal is None:
+            from .call_forwarding_signal.client import AsyncCallForwardingSignalClient  # noqa: E402
+            self._call_forwarding_signal = AsyncCallForwardingSignalClient(client_wrapper=self._client_wrapper)
+        return self._call_forwarding_signal
+    
+    @property
+    def location(self):
+        if self._location is None:
+            from .location.client import AsyncLocationClient  # noqa: E402
+            self._location = AsyncLocationClient(client_wrapper=self._client_wrapper)
+        return self._location
+    
+    @property
+    def number_verification_v100(self):
+        if self._number_verification_v100 is None:
+            from .number_verification_v100.client import AsyncNumberVerificationV100Client  # noqa: E402
+            self._number_verification_v100 = AsyncNumberVerificationV100Client(client_wrapper=self._client_wrapper)
+        return self._number_verification_v100
+    
+    @property
+    def na_c_authorization_server(self):
+        if self._na_c_authorization_server is None:
+            from .na_c_authorization_server.client import AsyncNaCAuthorizationServerClient  # noqa: E402
+            self._na_c_authorization_server = AsyncNaCAuthorizationServerClient(client_wrapper=self._client_wrapper)
+        return self._na_c_authorization_server
 def _get_base_url(*, base_url: typing.Optional[str] = None, environment: NetworkAsCodeApiEnvironment) -> str:
     if base_url is not None:
         return base_url

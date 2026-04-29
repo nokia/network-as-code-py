@@ -4,18 +4,10 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .types import CheckSimSwapResponse, RetrieveDateSimSwapResponse
     from .requests import CheckSimSwapResponseParams, RetrieveDateSimSwapResponseParams
-_dynamic_imports: typing.Dict[str, str] = {
-    "CheckSimSwapResponse": ".types",
-    "CheckSimSwapResponseParams": ".requests",
-    "RetrieveDateSimSwapResponse": ".types",
-    "RetrieveDateSimSwapResponseParams": ".requests",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"CheckSimSwapResponse": ".types", "CheckSimSwapResponseParams": ".requests", "RetrieveDateSimSwapResponse": ".types", "RetrieveDateSimSwapResponseParams": ".requests"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -30,16 +22,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "CheckSimSwapResponse",
-    "CheckSimSwapResponseParams",
-    "RetrieveDateSimSwapResponse",
-    "RetrieveDateSimSwapResponseParams",
-]
+__all__ = ["CheckSimSwapResponse", "CheckSimSwapResponseParams", "RetrieveDateSimSwapResponse", "RetrieveDateSimSwapResponseParams"]

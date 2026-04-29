@@ -10,24 +10,12 @@ from ...core.serialization import FieldMetadata
 
 
 class RetrieveDateDeviceSwapResponse(UniversalBaseModel):
-    latest_device_change: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="latestDeviceChange")
-    ] = pydantic.Field(alias="latestDeviceChange", default=None)
-    """
-    Timestamp of latest device swap performed. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
-    """
-
-    monitored_period: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="monitoredPeriod")] = (
-        pydantic.Field(alias="monitoredPeriod", default=None)
-    )
-    """
-    Timeframe in days for device change supervision for the phone number. It could be valued in the response if the latest Device swap occurred before this monitored period.
-    """
-
+    latest_device_change: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="latestDeviceChange"), pydantic.Field(alias="latestDeviceChange", description="Timestamp of latest device swap performed. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)")] = None
+    monitored_period: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="monitoredPeriod"), pydantic.Field(alias="monitoredPeriod", description="Timeframe in days for device change supervision for the phone number. It could be valued in the response if the latest Device swap occurred before this monitored period.")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

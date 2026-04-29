@@ -2,15 +2,4 @@
 
 import typing
 
-FillInKycResponseIdDocumentType = typing.Union[
-    typing.Literal[
-        "passport",
-        "national_id_card",
-        "residence_permit",
-        "diplomatic_id",
-        "driver_licence",
-        "social_security_id",
-        "other",
-    ],
-    typing.Any,
-]
+FillInKycResponseIdDocumentType = typing.Union[typing.Literal["passport", "national_id_card", "residence_permit", "diplomatic_id", "driver_licence", "social_security_id", "other"], typing.Any]

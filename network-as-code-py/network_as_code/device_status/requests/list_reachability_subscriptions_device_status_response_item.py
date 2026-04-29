@@ -23,23 +23,22 @@ class ListReachabilitySubscriptionsDeviceStatusResponseItemParams(typing_extensi
     """
     Represents a event-type subscription.
     """
-
     protocol: ListReachabilitySubscriptionsDeviceStatusResponseItemProtocol
     """
     Identifier of a delivery protocol. Only HTTP is allowed for now
     """
-
+    
     sink: str
     """
     The address to which events shall be delivered using the selected protocol.
     """
-
+    
     types: typing.Sequence[ListReachabilitySubscriptionsDeviceStatusResponseItemTypesItem]
     """
     Camara Event types eligible to be delivered by this subscription.
     Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed
     """
-
+    
     config: ListReachabilitySubscriptionsDeviceStatusResponseItemConfigParams
     """
     Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
@@ -47,28 +46,26 @@ class ListReachabilitySubscriptionsDeviceStatusResponseItemParams(typing_extensi
     Specific event type attributes must be defined in `subscriptionDetail`
     Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
     """
-
+    
     id: str
     """
     The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#122-event-notification).
     """
-
+    
     starts_at: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="startsAt")]]
     """
     Date when the event subscription will begin/began
     It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
     Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
     """
-
-    expires_at: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expiresAt")]
-    ]
+    
+    expires_at: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="expiresAt")]]
     """
     Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
     It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
     Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
     """
-
+    
     status: typing_extensions.NotRequired[ListReachabilitySubscriptionsDeviceStatusResponseItemStatus]
     """
     Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
@@ -83,3 +80,4 @@ class ListReachabilitySubscriptionsDeviceStatusResponseItemParams(typing_extensi
       - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
       - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).
     """
+    

@@ -4,7 +4,6 @@
 
 import typing
 from importlib import import_module
-
 if typing.TYPE_CHECKING:
     from .check_tenure_kyc_response import CheckTenureKycResponse
     from .check_tenure_kyc_response_contract_type import CheckTenureKycResponseContractType
@@ -14,62 +13,48 @@ if typing.TYPE_CHECKING:
     from .match_kyc_request_gender import MatchKycRequestGender
     from .match_kyc_response import MatchKycResponse
     from .match_kyc_response_address_match import MatchKycResponseAddressMatch
+    from .match_kyc_response_address_match_zero import MatchKycResponseAddressMatchZero
     from .match_kyc_response_birthdate_match import MatchKycResponseBirthdateMatch
+    from .match_kyc_response_birthdate_match_zero import MatchKycResponseBirthdateMatchZero
     from .match_kyc_response_country_match import MatchKycResponseCountryMatch
+    from .match_kyc_response_country_match_zero import MatchKycResponseCountryMatchZero
     from .match_kyc_response_email_match import MatchKycResponseEmailMatch
+    from .match_kyc_response_email_match_zero import MatchKycResponseEmailMatchZero
     from .match_kyc_response_family_name_at_birth_match import MatchKycResponseFamilyNameAtBirthMatch
+    from .match_kyc_response_family_name_at_birth_match_zero import MatchKycResponseFamilyNameAtBirthMatchZero
     from .match_kyc_response_family_name_match import MatchKycResponseFamilyNameMatch
+    from .match_kyc_response_family_name_match_zero import MatchKycResponseFamilyNameMatchZero
     from .match_kyc_response_gender_match import MatchKycResponseGenderMatch
+    from .match_kyc_response_gender_match_zero import MatchKycResponseGenderMatchZero
     from .match_kyc_response_given_name_match import MatchKycResponseGivenNameMatch
+    from .match_kyc_response_given_name_match_zero import MatchKycResponseGivenNameMatchZero
     from .match_kyc_response_house_number_extension_match import MatchKycResponseHouseNumberExtensionMatch
+    from .match_kyc_response_house_number_extension_match_zero import MatchKycResponseHouseNumberExtensionMatchZero
     from .match_kyc_response_id_document_match import MatchKycResponseIdDocumentMatch
+    from .match_kyc_response_id_document_match_zero import MatchKycResponseIdDocumentMatchZero
     from .match_kyc_response_locality_match import MatchKycResponseLocalityMatch
+    from .match_kyc_response_locality_match_zero import MatchKycResponseLocalityMatchZero
     from .match_kyc_response_middle_names_match import MatchKycResponseMiddleNamesMatch
+    from .match_kyc_response_middle_names_match_zero import MatchKycResponseMiddleNamesMatchZero
     from .match_kyc_response_name_kana_hankaku_match import MatchKycResponseNameKanaHankakuMatch
+    from .match_kyc_response_name_kana_hankaku_match_zero import MatchKycResponseNameKanaHankakuMatchZero
     from .match_kyc_response_name_kana_zenkaku_match import MatchKycResponseNameKanaZenkakuMatch
+    from .match_kyc_response_name_kana_zenkaku_match_zero import MatchKycResponseNameKanaZenkakuMatchZero
     from .match_kyc_response_name_match import MatchKycResponseNameMatch
+    from .match_kyc_response_name_match_zero import MatchKycResponseNameMatchZero
     from .match_kyc_response_postal_code_match import MatchKycResponsePostalCodeMatch
+    from .match_kyc_response_postal_code_match_zero import MatchKycResponsePostalCodeMatchZero
     from .match_kyc_response_region_match import MatchKycResponseRegionMatch
+    from .match_kyc_response_region_match_zero import MatchKycResponseRegionMatchZero
     from .match_kyc_response_street_name_match import MatchKycResponseStreetNameMatch
+    from .match_kyc_response_street_name_match_zero import MatchKycResponseStreetNameMatchZero
     from .match_kyc_response_street_number_match import MatchKycResponseStreetNumberMatch
+    from .match_kyc_response_street_number_match_zero import MatchKycResponseStreetNumberMatchZero
     from .verify_age_kyc_response import VerifyAgeKycResponse
     from .verify_age_kyc_response_age_check import VerifyAgeKycResponseAgeCheck
     from .verify_age_kyc_response_content_lock import VerifyAgeKycResponseContentLock
     from .verify_age_kyc_response_parental_control import VerifyAgeKycResponseParentalControl
-_dynamic_imports: typing.Dict[str, str] = {
-    "CheckTenureKycResponse": ".check_tenure_kyc_response",
-    "CheckTenureKycResponseContractType": ".check_tenure_kyc_response_contract_type",
-    "FillInKycResponse": ".fill_in_kyc_response",
-    "FillInKycResponseGender": ".fill_in_kyc_response_gender",
-    "FillInKycResponseIdDocumentType": ".fill_in_kyc_response_id_document_type",
-    "MatchKycRequestGender": ".match_kyc_request_gender",
-    "MatchKycResponse": ".match_kyc_response",
-    "MatchKycResponseAddressMatch": ".match_kyc_response_address_match",
-    "MatchKycResponseBirthdateMatch": ".match_kyc_response_birthdate_match",
-    "MatchKycResponseCountryMatch": ".match_kyc_response_country_match",
-    "MatchKycResponseEmailMatch": ".match_kyc_response_email_match",
-    "MatchKycResponseFamilyNameAtBirthMatch": ".match_kyc_response_family_name_at_birth_match",
-    "MatchKycResponseFamilyNameMatch": ".match_kyc_response_family_name_match",
-    "MatchKycResponseGenderMatch": ".match_kyc_response_gender_match",
-    "MatchKycResponseGivenNameMatch": ".match_kyc_response_given_name_match",
-    "MatchKycResponseHouseNumberExtensionMatch": ".match_kyc_response_house_number_extension_match",
-    "MatchKycResponseIdDocumentMatch": ".match_kyc_response_id_document_match",
-    "MatchKycResponseLocalityMatch": ".match_kyc_response_locality_match",
-    "MatchKycResponseMiddleNamesMatch": ".match_kyc_response_middle_names_match",
-    "MatchKycResponseNameKanaHankakuMatch": ".match_kyc_response_name_kana_hankaku_match",
-    "MatchKycResponseNameKanaZenkakuMatch": ".match_kyc_response_name_kana_zenkaku_match",
-    "MatchKycResponseNameMatch": ".match_kyc_response_name_match",
-    "MatchKycResponsePostalCodeMatch": ".match_kyc_response_postal_code_match",
-    "MatchKycResponseRegionMatch": ".match_kyc_response_region_match",
-    "MatchKycResponseStreetNameMatch": ".match_kyc_response_street_name_match",
-    "MatchKycResponseStreetNumberMatch": ".match_kyc_response_street_number_match",
-    "VerifyAgeKycResponse": ".verify_age_kyc_response",
-    "VerifyAgeKycResponseAgeCheck": ".verify_age_kyc_response_age_check",
-    "VerifyAgeKycResponseContentLock": ".verify_age_kyc_response_content_lock",
-    "VerifyAgeKycResponseParentalControl": ".verify_age_kyc_response_parental_control",
-}
-
-
+_dynamic_imports: typing.Dict[str, str] = {"CheckTenureKycResponse": ".check_tenure_kyc_response", "CheckTenureKycResponseContractType": ".check_tenure_kyc_response_contract_type", "FillInKycResponse": ".fill_in_kyc_response", "FillInKycResponseGender": ".fill_in_kyc_response_gender", "FillInKycResponseIdDocumentType": ".fill_in_kyc_response_id_document_type", "MatchKycRequestGender": ".match_kyc_request_gender", "MatchKycResponse": ".match_kyc_response", "MatchKycResponseAddressMatch": ".match_kyc_response_address_match", "MatchKycResponseAddressMatchZero": ".match_kyc_response_address_match_zero", "MatchKycResponseBirthdateMatch": ".match_kyc_response_birthdate_match", "MatchKycResponseBirthdateMatchZero": ".match_kyc_response_birthdate_match_zero", "MatchKycResponseCountryMatch": ".match_kyc_response_country_match", "MatchKycResponseCountryMatchZero": ".match_kyc_response_country_match_zero", "MatchKycResponseEmailMatch": ".match_kyc_response_email_match", "MatchKycResponseEmailMatchZero": ".match_kyc_response_email_match_zero", "MatchKycResponseFamilyNameAtBirthMatch": ".match_kyc_response_family_name_at_birth_match", "MatchKycResponseFamilyNameAtBirthMatchZero": ".match_kyc_response_family_name_at_birth_match_zero", "MatchKycResponseFamilyNameMatch": ".match_kyc_response_family_name_match", "MatchKycResponseFamilyNameMatchZero": ".match_kyc_response_family_name_match_zero", "MatchKycResponseGenderMatch": ".match_kyc_response_gender_match", "MatchKycResponseGenderMatchZero": ".match_kyc_response_gender_match_zero", "MatchKycResponseGivenNameMatch": ".match_kyc_response_given_name_match", "MatchKycResponseGivenNameMatchZero": ".match_kyc_response_given_name_match_zero", "MatchKycResponseHouseNumberExtensionMatch": ".match_kyc_response_house_number_extension_match", "MatchKycResponseHouseNumberExtensionMatchZero": ".match_kyc_response_house_number_extension_match_zero", "MatchKycResponseIdDocumentMatch": ".match_kyc_response_id_document_match", "MatchKycResponseIdDocumentMatchZero": ".match_kyc_response_id_document_match_zero", "MatchKycResponseLocalityMatch": ".match_kyc_response_locality_match", "MatchKycResponseLocalityMatchZero": ".match_kyc_response_locality_match_zero", "MatchKycResponseMiddleNamesMatch": ".match_kyc_response_middle_names_match", "MatchKycResponseMiddleNamesMatchZero": ".match_kyc_response_middle_names_match_zero", "MatchKycResponseNameKanaHankakuMatch": ".match_kyc_response_name_kana_hankaku_match", "MatchKycResponseNameKanaHankakuMatchZero": ".match_kyc_response_name_kana_hankaku_match_zero", "MatchKycResponseNameKanaZenkakuMatch": ".match_kyc_response_name_kana_zenkaku_match", "MatchKycResponseNameKanaZenkakuMatchZero": ".match_kyc_response_name_kana_zenkaku_match_zero", "MatchKycResponseNameMatch": ".match_kyc_response_name_match", "MatchKycResponseNameMatchZero": ".match_kyc_response_name_match_zero", "MatchKycResponsePostalCodeMatch": ".match_kyc_response_postal_code_match", "MatchKycResponsePostalCodeMatchZero": ".match_kyc_response_postal_code_match_zero", "MatchKycResponseRegionMatch": ".match_kyc_response_region_match", "MatchKycResponseRegionMatchZero": ".match_kyc_response_region_match_zero", "MatchKycResponseStreetNameMatch": ".match_kyc_response_street_name_match", "MatchKycResponseStreetNameMatchZero": ".match_kyc_response_street_name_match_zero", "MatchKycResponseStreetNumberMatch": ".match_kyc_response_street_number_match", "MatchKycResponseStreetNumberMatchZero": ".match_kyc_response_street_number_match_zero", "VerifyAgeKycResponse": ".verify_age_kyc_response", "VerifyAgeKycResponseAgeCheck": ".verify_age_kyc_response_age_check", "VerifyAgeKycResponseContentLock": ".verify_age_kyc_response_content_lock", "VerifyAgeKycResponseParentalControl": ".verify_age_kyc_response_parental_control"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -84,42 +69,7 @@ def __getattr__(attr_name: str) -> typing.Any:
         raise ImportError(f"Failed to import {attr_name} from {module_name}: {e}") from e
     except AttributeError as e:
         raise AttributeError(f"Failed to get {attr_name} from {module_name}: {e}") from e
-
-
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-
-
-__all__ = [
-    "CheckTenureKycResponse",
-    "CheckTenureKycResponseContractType",
-    "FillInKycResponse",
-    "FillInKycResponseGender",
-    "FillInKycResponseIdDocumentType",
-    "MatchKycRequestGender",
-    "MatchKycResponse",
-    "MatchKycResponseAddressMatch",
-    "MatchKycResponseBirthdateMatch",
-    "MatchKycResponseCountryMatch",
-    "MatchKycResponseEmailMatch",
-    "MatchKycResponseFamilyNameAtBirthMatch",
-    "MatchKycResponseFamilyNameMatch",
-    "MatchKycResponseGenderMatch",
-    "MatchKycResponseGivenNameMatch",
-    "MatchKycResponseHouseNumberExtensionMatch",
-    "MatchKycResponseIdDocumentMatch",
-    "MatchKycResponseLocalityMatch",
-    "MatchKycResponseMiddleNamesMatch",
-    "MatchKycResponseNameKanaHankakuMatch",
-    "MatchKycResponseNameKanaZenkakuMatch",
-    "MatchKycResponseNameMatch",
-    "MatchKycResponsePostalCodeMatch",
-    "MatchKycResponseRegionMatch",
-    "MatchKycResponseStreetNameMatch",
-    "MatchKycResponseStreetNumberMatch",
-    "VerifyAgeKycResponse",
-    "VerifyAgeKycResponseAgeCheck",
-    "VerifyAgeKycResponseContentLock",
-    "VerifyAgeKycResponseParentalControl",
-]
+__all__ = ["CheckTenureKycResponse", "CheckTenureKycResponseContractType", "FillInKycResponse", "FillInKycResponseGender", "FillInKycResponseIdDocumentType", "MatchKycRequestGender", "MatchKycResponse", "MatchKycResponseAddressMatch", "MatchKycResponseAddressMatchZero", "MatchKycResponseBirthdateMatch", "MatchKycResponseBirthdateMatchZero", "MatchKycResponseCountryMatch", "MatchKycResponseCountryMatchZero", "MatchKycResponseEmailMatch", "MatchKycResponseEmailMatchZero", "MatchKycResponseFamilyNameAtBirthMatch", "MatchKycResponseFamilyNameAtBirthMatchZero", "MatchKycResponseFamilyNameMatch", "MatchKycResponseFamilyNameMatchZero", "MatchKycResponseGenderMatch", "MatchKycResponseGenderMatchZero", "MatchKycResponseGivenNameMatch", "MatchKycResponseGivenNameMatchZero", "MatchKycResponseHouseNumberExtensionMatch", "MatchKycResponseHouseNumberExtensionMatchZero", "MatchKycResponseIdDocumentMatch", "MatchKycResponseIdDocumentMatchZero", "MatchKycResponseLocalityMatch", "MatchKycResponseLocalityMatchZero", "MatchKycResponseMiddleNamesMatch", "MatchKycResponseMiddleNamesMatchZero", "MatchKycResponseNameKanaHankakuMatch", "MatchKycResponseNameKanaHankakuMatchZero", "MatchKycResponseNameKanaZenkakuMatch", "MatchKycResponseNameKanaZenkakuMatchZero", "MatchKycResponseNameMatch", "MatchKycResponseNameMatchZero", "MatchKycResponsePostalCodeMatch", "MatchKycResponsePostalCodeMatchZero", "MatchKycResponseRegionMatch", "MatchKycResponseRegionMatchZero", "MatchKycResponseStreetNameMatch", "MatchKycResponseStreetNameMatchZero", "MatchKycResponseStreetNumberMatch", "MatchKycResponseStreetNumberMatchZero", "VerifyAgeKycResponse", "VerifyAgeKycResponseAgeCheck", "VerifyAgeKycResponseContentLock", "VerifyAgeKycResponseParentalControl"]

@@ -4,7 +4,7 @@ export interface CheckRoamingDeviceStatusResponse {
     /** Roaming status. True, if it is roaming */
     roaming: boolean;
     /** The Mobile country code (MCC) as an geographic region identifier for the country and the dependent areas. */
-    countryCode?: number;
+    countryCode?: number | undefined;
     /** The ISO 3166 ALPHA-2 country-codes of mapped to mobile country code(MCC). If there is mapping of one MCC to multiple countries, then we have list of countries. If there is no mapping of MCC to any country, then an empty array [] shall be returned.. */
-    countryName?: string[];
+    countryName?: string[] | undefined;
 }

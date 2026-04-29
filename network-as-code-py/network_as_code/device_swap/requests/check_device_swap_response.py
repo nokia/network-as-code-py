@@ -8,3 +8,4 @@ class CheckDeviceSwapResponseParams(typing_extensions.TypedDict):
     """
     Indicates whether the device has been swapped during the period within the provided age.
     """
+    

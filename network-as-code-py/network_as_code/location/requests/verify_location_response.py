@@ -8,16 +8,12 @@ from ..types.verify_location_response_verification_result import VerifyLocationR
 
 
 class VerifyLocationResponseParams(typing_extensions.TypedDict):
-    last_location_time: typing_extensions.NotRequired[
-        typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastLocationTime")]
-    ]
+    last_location_time: typing_extensions.NotRequired[typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastLocationTime")]]
     """
     Timestamp of the last location information. It must follow RFC 3339 and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
     """
-
-    verification_result: typing_extensions.Annotated[
-        VerifyLocationResponseVerificationResult, FieldMetadata(alias="verificationResult")
-    ]
+    
+    verification_result: typing_extensions.Annotated[VerifyLocationResponseVerificationResult, FieldMetadata(alias="verificationResult")]
     """
     Result of a verification request:
       - `TRUE`: when the network locates the device within the requested area, 
@@ -25,8 +21,9 @@ class VerifyLocationResponseParams(typing_extensions.TypedDict):
       - `UNKNOWN`: when the network cannot locate the device,
       - `PARTIAL`: when the requested area partially match the area where the network locates the device. A `match_rate` could be included in the response.
     """
-
+    
     match_rate: typing_extensions.NotRequired[typing_extensions.Annotated[int, FieldMetadata(alias="matchRate")]]
     """
     Estimation of the match rate between the area in the request (R), and area where the network locates the device (N), calculated as the percent value of the intersection of both areas divided by the network area, that is (R ∩ N) / N * 100. Included only if VerificationResult is PARTIAL.
     """
+    

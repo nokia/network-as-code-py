@@ -8,6 +8,3 @@ from .get_device_attachment_slice_response_resource_traffic_categories_apps impo
 
 class GetDeviceAttachmentSliceResponseResourceTrafficCategoriesParams(typing_extensions.TypedDict):
     apps: GetDeviceAttachmentSliceResponseResourceTrafficCategoriesAppsParams
-    """
-    Contains the operating system ID and the applications identifiers.
-    """

@@ -28,159 +28,42 @@ from .match_kyc_response_street_number_match import MatchKycResponseStreetNumber
 
 
 class MatchKycResponse(UniversalBaseModel):
-    id_document_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseIdDocumentMatch], FieldMetadata(alias="idDocumentMatch")
-    ] = pydantic.Field(alias="idDocumentMatch", default=None)
-    name_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseNameMatch], FieldMetadata(alias="nameMatch")
-    ] = pydantic.Field(alias="nameMatch", default=None)
-    name_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="nameMatchScore")] = (
-        pydantic.Field(alias="nameMatchScore", default=None)
-    )
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    given_name_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseGivenNameMatch], FieldMetadata(alias="givenNameMatch")
-    ] = pydantic.Field(alias="givenNameMatch", default=None)
-    given_name_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="givenNameMatchScore")
-    ] = pydantic.Field(alias="givenNameMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    family_name_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseFamilyNameMatch], FieldMetadata(alias="familyNameMatch")
-    ] = pydantic.Field(alias="familyNameMatch", default=None)
-    family_name_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="familyNameMatchScore")
-    ] = pydantic.Field(alias="familyNameMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    name_kana_hankaku_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseNameKanaHankakuMatch], FieldMetadata(alias="nameKanaHankakuMatch")
-    ] = pydantic.Field(alias="nameKanaHankakuMatch", default=None)
-    name_kana_hankaku_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="nameKanaHankakuMatchScore")
-    ] = pydantic.Field(alias="nameKanaHankakuMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    name_kana_zenkaku_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseNameKanaZenkakuMatch], FieldMetadata(alias="nameKanaZenkakuMatch")
-    ] = pydantic.Field(alias="nameKanaZenkakuMatch", default=None)
-    name_kana_zenkaku_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="nameKanaZenkakuMatchScore")
-    ] = pydantic.Field(alias="nameKanaZenkakuMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    middle_names_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseMiddleNamesMatch], FieldMetadata(alias="middleNamesMatch")
-    ] = pydantic.Field(alias="middleNamesMatch", default=None)
-    middle_names_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="middleNamesMatchScore")
-    ] = pydantic.Field(alias="middleNamesMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    family_name_at_birth_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseFamilyNameAtBirthMatch], FieldMetadata(alias="familyNameAtBirthMatch")
-    ] = pydantic.Field(alias="familyNameAtBirthMatch", default=None)
-    family_name_at_birth_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="familyNameAtBirthMatchScore")
-    ] = pydantic.Field(alias="familyNameAtBirthMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    address_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseAddressMatch], FieldMetadata(alias="addressMatch")
-    ] = pydantic.Field(alias="addressMatch", default=None)
-    address_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="addressMatchScore")] = (
-        pydantic.Field(alias="addressMatchScore", default=None)
-    )
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    street_name_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseStreetNameMatch], FieldMetadata(alias="streetNameMatch")
-    ] = pydantic.Field(alias="streetNameMatch", default=None)
-    street_name_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="streetNameMatchScore")
-    ] = pydantic.Field(alias="streetNameMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    street_number_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseStreetNumberMatch], FieldMetadata(alias="streetNumberMatch")
-    ] = pydantic.Field(alias="streetNumberMatch", default=None)
-    street_number_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="streetNumberMatchScore")
-    ] = pydantic.Field(alias="streetNumberMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    postal_code_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponsePostalCodeMatch], FieldMetadata(alias="postalCodeMatch")
-    ] = pydantic.Field(alias="postalCodeMatch", default=None)
-    region_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseRegionMatch], FieldMetadata(alias="regionMatch")
-    ] = pydantic.Field(alias="regionMatch", default=None)
-    region_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="regionMatchScore")] = (
-        pydantic.Field(alias="regionMatchScore", default=None)
-    )
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    locality_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseLocalityMatch], FieldMetadata(alias="localityMatch")
-    ] = pydantic.Field(alias="localityMatch", default=None)
-    locality_match_score: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="localityMatchScore")
-    ] = pydantic.Field(alias="localityMatchScore", default=None)
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    country_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseCountryMatch], FieldMetadata(alias="countryMatch")
-    ] = pydantic.Field(alias="countryMatch", default=None)
-    house_number_extension_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseHouseNumberExtensionMatch], FieldMetadata(alias="houseNumberExtensionMatch")
-    ] = pydantic.Field(alias="houseNumberExtensionMatch", default=None)
-    birthdate_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseBirthdateMatch], FieldMetadata(alias="birthdateMatch")
-    ] = pydantic.Field(alias="birthdateMatch", default=None)
-    email_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseEmailMatch], FieldMetadata(alias="emailMatch")
-    ] = pydantic.Field(alias="emailMatch", default=None)
-    email_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="emailMatchScore")] = (
-        pydantic.Field(alias="emailMatchScore", default=None)
-    )
-    """
-    Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.
-    """
-
-    gender_match: typing_extensions.Annotated[
-        typing.Optional[MatchKycResponseGenderMatch], FieldMetadata(alias="genderMatch")
-    ] = pydantic.Field(alias="genderMatch", default=None)
-
+    id_document_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseIdDocumentMatch], FieldMetadata(alias="idDocumentMatch"), pydantic.Field(alias="idDocumentMatch")] = None
+    name_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseNameMatch], FieldMetadata(alias="nameMatch"), pydantic.Field(alias="nameMatch")] = None
+    name_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="nameMatchScore"), pydantic.Field(alias="nameMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    given_name_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseGivenNameMatch], FieldMetadata(alias="givenNameMatch"), pydantic.Field(alias="givenNameMatch")] = None
+    given_name_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="givenNameMatchScore"), pydantic.Field(alias="givenNameMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    family_name_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseFamilyNameMatch], FieldMetadata(alias="familyNameMatch"), pydantic.Field(alias="familyNameMatch")] = None
+    family_name_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="familyNameMatchScore"), pydantic.Field(alias="familyNameMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    name_kana_hankaku_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseNameKanaHankakuMatch], FieldMetadata(alias="nameKanaHankakuMatch"), pydantic.Field(alias="nameKanaHankakuMatch")] = None
+    name_kana_hankaku_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="nameKanaHankakuMatchScore"), pydantic.Field(alias="nameKanaHankakuMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    name_kana_zenkaku_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseNameKanaZenkakuMatch], FieldMetadata(alias="nameKanaZenkakuMatch"), pydantic.Field(alias="nameKanaZenkakuMatch")] = None
+    name_kana_zenkaku_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="nameKanaZenkakuMatchScore"), pydantic.Field(alias="nameKanaZenkakuMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    middle_names_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseMiddleNamesMatch], FieldMetadata(alias="middleNamesMatch"), pydantic.Field(alias="middleNamesMatch")] = None
+    middle_names_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="middleNamesMatchScore"), pydantic.Field(alias="middleNamesMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    family_name_at_birth_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseFamilyNameAtBirthMatch], FieldMetadata(alias="familyNameAtBirthMatch"), pydantic.Field(alias="familyNameAtBirthMatch")] = None
+    family_name_at_birth_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="familyNameAtBirthMatchScore"), pydantic.Field(alias="familyNameAtBirthMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    address_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseAddressMatch], FieldMetadata(alias="addressMatch"), pydantic.Field(alias="addressMatch")] = None
+    address_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="addressMatchScore"), pydantic.Field(alias="addressMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    street_name_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseStreetNameMatch], FieldMetadata(alias="streetNameMatch"), pydantic.Field(alias="streetNameMatch")] = None
+    street_name_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="streetNameMatchScore"), pydantic.Field(alias="streetNameMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    street_number_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseStreetNumberMatch], FieldMetadata(alias="streetNumberMatch"), pydantic.Field(alias="streetNumberMatch")] = None
+    street_number_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="streetNumberMatchScore"), pydantic.Field(alias="streetNumberMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    postal_code_match: typing_extensions.Annotated[typing.Optional[MatchKycResponsePostalCodeMatch], FieldMetadata(alias="postalCodeMatch"), pydantic.Field(alias="postalCodeMatch")] = None
+    region_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseRegionMatch], FieldMetadata(alias="regionMatch"), pydantic.Field(alias="regionMatch")] = None
+    region_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="regionMatchScore"), pydantic.Field(alias="regionMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    locality_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseLocalityMatch], FieldMetadata(alias="localityMatch"), pydantic.Field(alias="localityMatch")] = None
+    locality_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="localityMatchScore"), pydantic.Field(alias="localityMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    country_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseCountryMatch], FieldMetadata(alias="countryMatch"), pydantic.Field(alias="countryMatch")] = None
+    house_number_extension_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseHouseNumberExtensionMatch], FieldMetadata(alias="houseNumberExtensionMatch"), pydantic.Field(alias="houseNumberExtensionMatch")] = None
+    birthdate_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseBirthdateMatch], FieldMetadata(alias="birthdateMatch"), pydantic.Field(alias="birthdateMatch")] = None
+    email_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseEmailMatch], FieldMetadata(alias="emailMatch"), pydantic.Field(alias="emailMatch")] = None
+    email_match_score: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="emailMatchScore"), pydantic.Field(alias="emailMatchScore", description="Indicates the similarity score assigned to the input value when it does not exactly match the value stored in the operator's system. This property shall only be returned when the value of the corresponding match field is `false`.")] = None
+    gender_match: typing_extensions.Annotated[typing.Optional[MatchKycResponseGenderMatch], FieldMetadata(alias="genderMatch"), pydantic.Field(alias="genderMatch")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

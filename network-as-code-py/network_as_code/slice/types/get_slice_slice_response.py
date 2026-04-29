@@ -9,35 +9,27 @@ from .get_slice_slice_response_state import GetSliceSliceResponseState
 
 
 class GetSliceSliceResponse(UniversalBaseModel):
-    slice: GetSliceSliceResponseSlice = pydantic.Field()
-    """
-    Contains the network slice's details.
-    """
-
+    slice: GetSliceSliceResponseSlice
     csi_id: typing.Optional[str] = pydantic.Field(default=None)
     """
     Communications Service Instance identifier.
     """
-
+    
     name: str = pydantic.Field()
     """
     Name/resource identifier of the network slice.
     """
-
-    state: GetSliceSliceResponseState = pydantic.Field()
-    """
-    Network slice's current state.
-    """
-
+    
+    state: GetSliceSliceResponseState
     provisioner: str = pydantic.Field()
     """
     The organization provisioning the slice
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

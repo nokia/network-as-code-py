@@ -17,85 +17,19 @@ class RetrieveConsentInfoResponseStatusInfoItem(UniversalBaseModel):
     """
     List of requested scopes. The scope is a string that represents the access rights that the API Consumer is requesting from the User.
     """
-
+    
     purpose: str = pydantic.Field()
     """
     The reason for which personal data will be processed by the API Consumer. CAMARA defines a standard set of Purposes which can be used by API Consumers to specify the reason for their intended personal data processing. CAMARA uses the [W3C Data Privacy Vocabulary](https://w3c.github.io/dpv/2.0/dpv/) (DPV) to represent these purposes e.g. `dpv:FraudPreventionAndDetection` or `dpv:RequestedServiceProvision`.
     """
-
-    status_valid_for_processing: typing_extensions.Annotated[bool, FieldMetadata(alias="statusValidForProcessing")] = (
-        pydantic.Field(alias="statusValidForProcessing")
-    )
-    """
-    Boolean flag that shows the validity status of the requested data processing for the specified scope(s) and Purpose.
-    * `true` - indicates that the current status is valid and permits the requested data processing.
-    * `false` - indicates that the requested data processing is not permitted. The reason for this is provided in the `statusReason` field.
-    """
-
-    status_reason: typing_extensions.Annotated[
-        typing.Optional[RetrieveConsentInfoResponseStatusInfoItemStatusReason], FieldMetadata(alias="statusReason")
-    ] = pydantic.Field(alias="statusReason", default=None)
-    """
-    This field must be present if `statusValidForProcessing` is `false`. It indicates the reason why the requested data processing is not permitted for the specified scope(s) and Purpose. It provides API Consumers with additional context on the current validity status, helping them to understand its applicability and the next steps they may need to take.
     
-    It is particularly useful for determining whether the API Consumer should prompt the User to take action, such as providing Consent or renewing an existing Consent.
+    status_valid_for_processing: typing_extensions.Annotated[bool, FieldMetadata(alias="statusValidForProcessing"), pydantic.Field(alias="statusValidForProcessing", description="Boolean flag that shows the validity status of the requested data processing for the specified scope(s) and Purpose.\n* `true` - indicates that the current status is valid and permits the requested data processing.\n* `false` - indicates that the requested data processing is not permitted. The reason for this is provided in the `statusReason` field.")]
+    status_reason: typing_extensions.Annotated[typing.Optional[RetrieveConsentInfoResponseStatusInfoItemStatusReason], FieldMetadata(alias="statusReason"), pydantic.Field(alias="statusReason", description="This field must be present if `statusValidForProcessing` is `false`. It indicates the reason why the requested data processing is not permitted for the specified scope(s) and Purpose. It provides API Consumers with additional context on the current validity status, helping them to understand its applicability and the next steps they may need to take.\n\nIt is particularly useful for determining whether the API Consumer should prompt the User to take action, such as providing Consent or renewing an existing Consent.\n\nPossible values are:\n\n- `PENDING`: The requested data processing has not yet been established or fully validated under the applicable privacy regulations.\n\n\n\n\n\n            For example, the User has not yet provided Consent when it is required.\n- `REQUESTED`: The permission for the requested data processing has been submitted but has not yet been granted or confirmed.\n\n\n\n\n\n            This is common when the API Consumer has initiated a request for Consent capture, but the User has not yet completed the process. For example, this occurs when a notice prompting the User to provide Consent has been displayed, but they have not yet made a decision.\n- `REVOKED`: The User has actively withdrawn their permission for the requested data processing after previously opting in.\n\n\n\n\n\n            For example, the User revokes their Consent for the data processing.\n- `OBJECTED`: The user has opted out of the requested data processing, despite a previous explicit opt-in not being required.\n\n\n\n\n\n            This is common when the User has exercised their right to object to data processing under the applicable privacy regulations.\n- `EXPIRED`: When applicable, the validity of the data processing has ceased due to the passage of time or a pre-defined condition.\n\n\n\n\n\n            This is common for time-limited Consents.")] = None
+    expiration_date: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="expirationDate"), pydantic.Field(alias="expirationDate", description="The date and time at which the validity of the data processing is set to expire or has expired.\nIt applies mainly to time-limited Consents, or other cases where a specific duration of validity is defined for the data processing. This field is only applicable:\n\n- if `statusValidForProcessing` is `true` (indicating a future expiration), or\n- if `statusValidForProcessing` is `false` and `statusReason` is `EXPIRED` (indicating the past expiration date).\n\nIt must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z).")] = None
     
-    Possible values are:
-    
-    - `PENDING`: The requested data processing has not yet been established or fully validated under the applicable privacy regulations.
-    
-    
-    
-    
-    
-                For example, the User has not yet provided Consent when it is required.
-    - `REQUESTED`: The permission for the requested data processing has been submitted but has not yet been granted or confirmed.
-    
-    
-    
-    
-    
-                This is common when the API Consumer has initiated a request for Consent capture, but the User has not yet completed the process. For example, this occurs when a notice prompting the User to provide Consent has been displayed, but they have not yet made a decision.
-    - `REVOKED`: The User has actively withdrawn their permission for the requested data processing after previously opting in.
-    
-    
-    
-    
-    
-                For example, the User revokes their Consent for the data processing.
-    - `OBJECTED`: The user has opted out of the requested data processing, despite a previous explicit opt-in not being required.
-    
-    
-    
-    
-    
-                This is common when the User has exercised their right to object to data processing under the applicable privacy regulations.
-    - `EXPIRED`: When applicable, the validity of the data processing has ceased due to the passage of time or a pre-defined condition.
-    
-    
-    
-    
-    
-                This is common for time-limited Consents.
-    """
-
-    expiration_date: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="expirationDate")
-    ] = pydantic.Field(alias="expirationDate", default=None)
-    """
-    The date and time at which the validity of the data processing is set to expire or has expired.
-    It applies mainly to time-limited Consents, or other cases where a specific duration of validity is defined for the data processing. This field is only applicable:
-    
-    - if `statusValidForProcessing` is `true` (indicating a future expiration), or
-    - if `statusValidForProcessing` is `false` and `statusReason` is `EXPIRED` (indicating the past expiration date).
-    
-    It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z).
-    """
-
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

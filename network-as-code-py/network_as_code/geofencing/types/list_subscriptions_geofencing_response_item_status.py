@@ -2,6 +2,4 @@
 
 import typing
 
-ListSubscriptionsGeofencingResponseItemStatus = typing.Union[
-    typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any
-]
+ListSubscriptionsGeofencingResponseItemStatus = typing.Union[typing.Literal["ACTIVATION_REQUESTED", "ACTIVE", "EXPIRED", "INACTIVE", "DELETED"], typing.Any]

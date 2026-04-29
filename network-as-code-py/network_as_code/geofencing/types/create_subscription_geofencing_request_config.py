@@ -19,40 +19,14 @@ class CreateSubscriptionGeofencingRequestConfig(UniversalBaseModel):
     Specific event type attributes must be defined in `subscriptionDetail`
     Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
     """
-
-    subscription_detail: typing_extensions.Annotated[
-        CreateSubscriptionGeofencingRequestConfigSubscriptionDetail, FieldMetadata(alias="subscriptionDetail")
-    ] = pydantic.Field(alias="subscriptionDetail")
-    """
-    The detail of the requested event subscription
-    """
-
-    subscription_expire_time: typing_extensions.Annotated[
-        typing.Optional[dt.datetime], FieldMetadata(alias="subscriptionExpireTime")
-    ] = pydantic.Field(alias="subscriptionExpireTime", default=None)
-    """
-    The subscription expiration time (in date-time format) requested by the API consumer.
-    """
-
-    subscription_max_events: typing_extensions.Annotated[
-        typing.Optional[int], FieldMetadata(alias="subscriptionMaxEvents")
-    ] = pydantic.Field(alias="subscriptionMaxEvents", default=None)
-    """
-    Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.
-    """
-
-    initial_event: typing_extensions.Annotated[typing.Optional[bool], FieldMetadata(alias="initialEvent")] = (
-        pydantic.Field(alias="initialEvent", default=None)
-    )
-    """
-    Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
-    Example: Consumer request area entered event. If consumer sets initialEvent to true and device is already in the geofence, an event is triggered
-    """
-
+    subscription_detail: typing_extensions.Annotated[CreateSubscriptionGeofencingRequestConfigSubscriptionDetail, FieldMetadata(alias="subscriptionDetail"), pydantic.Field(alias="subscriptionDetail", description="The detail of the requested event subscription")]
+    subscription_expire_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="subscriptionExpireTime"), pydantic.Field(alias="subscriptionExpireTime", description="The subscription expiration time (in date-time format) requested by the API consumer.")] = None
+    subscription_max_events: typing_extensions.Annotated[typing.Optional[int], FieldMetadata(alias="subscriptionMaxEvents"), pydantic.Field(alias="subscriptionMaxEvents", description="Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.")] = None
+    initial_event: typing_extensions.Annotated[typing.Optional[bool], FieldMetadata(alias="initialEvent"), pydantic.Field(alias="initialEvent", description="Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.\nExample: Consumer request area entered event. If consumer sets initialEvent to true and device is already in the geofence, an event is triggered")] = None
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

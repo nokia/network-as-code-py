@@ -13,3 +13,4 @@ class CreateSliceSliceRequestAreaOfServiceParams(typing_extensions.TypedDict):
     """
     Corners of the polygon defining the area that must be covered. The actual area may be larger, depending on cell areas.
     """
+    

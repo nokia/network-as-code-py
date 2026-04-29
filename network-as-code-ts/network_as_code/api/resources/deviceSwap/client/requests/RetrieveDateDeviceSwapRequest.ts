@@ -5,16 +5,6 @@
  *     {
  *         phoneNumber: "+99999991001"
  *     }
- *
- * @example
- *     {
- *         phoneNumber: "+99999991001"
- *     }
- *
- * @example
- *     {
- *         phoneNumber: "+99999991001"
- *     }
  */
 export interface RetrieveDateDeviceSwapRequest {
     /** Correlation id for the different services */

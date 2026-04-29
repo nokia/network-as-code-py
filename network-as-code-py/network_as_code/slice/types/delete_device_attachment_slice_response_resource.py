@@ -17,46 +17,32 @@ from .delete_device_attachment_slice_response_resource_webhook import DeleteDevi
 
 
 class DeleteDeviceAttachmentSliceResponseResource(UniversalBaseModel):
-    """
-    Original device attach request resources.
-    """
-
-    device: DeleteDeviceAttachmentSliceResponseResourceDevice = pydantic.Field()
-    """
-    Identifiers of the device. Phone number and imsi are mandatory for device attach operations.
-    """
-
+    device: DeleteDeviceAttachmentSliceResponseResourceDevice
     customer: typing.Optional[DeleteDeviceAttachmentSliceResponseResourceCustomer] = pydantic.Field(default=None)
     """
     Customer who orders the device attach operations.
     """
-
-    slice_id: typing_extensions.Annotated[str, FieldMetadata(alias="sliceId")] = pydantic.Field(alias="sliceId")
-    """
-    Slice resource identifier, simple name or UUID.
-    """
-
+    
+    slice_id: typing_extensions.Annotated[str, FieldMetadata(alias="sliceId"), pydantic.Field(alias="sliceId", description="Slice resource identifier, simple name or UUID.")]
     mobile_services: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
     """
     List of services allowed for the device.
     """
-
-    traffic_categories: typing.Optional[DeleteDeviceAttachmentSliceResponseResourceTrafficCategories] = pydantic.Field(
-        default=None
-    )
+    
+    traffic_categories: typing.Optional[DeleteDeviceAttachmentSliceResponseResourceTrafficCategories] = pydantic.Field(default=None)
     """
     Denotes the operating system id and the applications' identifiers
     """
-
+    
     webhook: typing.Optional[DeleteDeviceAttachmentSliceResponseResourceWebhook] = pydantic.Field(default=None)
     """
     Callback settings for the requester application.
     """
-
+    
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True

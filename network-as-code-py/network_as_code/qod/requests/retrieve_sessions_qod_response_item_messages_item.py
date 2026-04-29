@@ -11,8 +11,9 @@ class RetrieveSessionsQodResponseItemMessagesItemParams(typing_extensions.TypedD
     """
     Message severity
     """
-
+    
     description: str
     """
     Detailed message text
     """
+    

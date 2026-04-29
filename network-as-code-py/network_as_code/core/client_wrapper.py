@@ -4,94 +4,50 @@ import typing
 
 import httpx
 from .http_client import AsyncHttpClient, HttpClient
+from .logging import LogConfig, Logger
 
 
 class BaseClientWrapper:
-    def __init__(
-        self,
-        *,
-        rapidapi_host: typing.Optional[str] = None,
-        api_key: str,
-        headers: typing.Optional[typing.Dict[str, str]] = None,
-        base_url: str,
-        timeout: typing.Optional[float] = None,
-    ):
+    def __init__(self, *, rapidapi_host: typing.Optional[str] = None, api_key: str, headers: typing.Optional[typing.Dict[str, str]] = None, base_url: str, timeout: typing.Optional[float] = None, logging: typing.Optional[typing.Union[LogConfig, Logger]] = None):
         self._rapidapi_host = rapidapi_host
         self.api_key = api_key
         self._headers = headers
         self._base_url = base_url
         self._timeout = timeout
-
+        self._logging = logging
+    
     def get_headers(self) -> typing.Dict[str, str]:
         import platform
-
-        headers: typing.Dict[str, str] = {
-            "X-Fern-Language": "Python",
-            "X-Fern-Runtime": f"python/{platform.python_version()}",
-            "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
-            **(self.get_custom_headers() or {}),
+        
+        headers: typing.Dict[str, str]= {
+        "X-Fern-Language": "Python",
+        'X-Fern-Runtime': f"python/{platform.python_version()}",
+        'X-Fern-Platform': f"{platform.system().lower()}/{platform.release()}",
+        **(self.get_custom_headers() or {}),
         }
         if self._rapidapi_host is not None:
             headers["x-rapidapi-host"] = self._rapidapi_host
         headers["x-rapidapi-key"] = self.api_key
         return headers
-
+    
     def get_custom_headers(self) -> typing.Optional[typing.Dict[str, str]]:
         return self._headers
-
+    
     def get_base_url(self) -> str:
         return self._base_url
-
+    
     def get_timeout(self) -> typing.Optional[float]:
         return self._timeout
-
-
 class SyncClientWrapper(BaseClientWrapper):
-    def __init__(
-        self,
-        *,
-        rapidapi_host: typing.Optional[str] = None,
-        api_key: str,
-        headers: typing.Optional[typing.Dict[str, str]] = None,
-        base_url: str,
-        timeout: typing.Optional[float] = None,
-        httpx_client: httpx.Client,
-    ):
-        super().__init__(
-            rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, base_url=base_url, timeout=timeout
-        )
-        self.httpx_client = HttpClient(
-            httpx_client=httpx_client,
-            base_headers=self.get_headers,
-            base_timeout=self.get_timeout,
-            base_url=self.get_base_url,
-        )
-
-
+    def __init__(self, *, rapidapi_host: typing.Optional[str] = None, api_key: str, headers: typing.Optional[typing.Dict[str, str]] = None, base_url: str, timeout: typing.Optional[float] = None, logging: typing.Optional[typing.Union[LogConfig, Logger]] = None, httpx_client: httpx.Client):
+        super().__init__(rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, base_url=base_url, timeout=timeout, logging=logging)
+        self.httpx_client = HttpClient(httpx_client=httpx_client, base_headers=self.get_headers, base_timeout=self.get_timeout, base_url=self.get_base_url, logging_config=self._logging)
 class AsyncClientWrapper(BaseClientWrapper):
-    def __init__(
-        self,
-        *,
-        rapidapi_host: typing.Optional[str] = None,
-        api_key: str,
-        headers: typing.Optional[typing.Dict[str, str]] = None,
-        base_url: str,
-        timeout: typing.Optional[float] = None,
-        async_token: typing.Optional[typing.Callable[[], typing.Awaitable[str]]] = None,
-        httpx_client: httpx.AsyncClient,
-    ):
-        super().__init__(
-            rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, base_url=base_url, timeout=timeout
-        )
+    def __init__(self, *, rapidapi_host: typing.Optional[str] = None, api_key: str, headers: typing.Optional[typing.Dict[str, str]] = None, base_url: str, timeout: typing.Optional[float] = None, logging: typing.Optional[typing.Union[LogConfig, Logger]] = None, async_token: typing.Optional[typing.Callable[[], typing.Awaitable[str]]] = None, httpx_client: httpx.AsyncClient):
+        super().__init__(rapidapi_host=rapidapi_host, api_key=api_key, headers=headers, base_url=base_url, timeout=timeout, logging=logging)
         self._async_token = async_token
-        self.httpx_client = AsyncHttpClient(
-            httpx_client=httpx_client,
-            base_headers=self.get_headers,
-            base_timeout=self.get_timeout,
-            base_url=self.get_base_url,
-            async_base_headers=self.async_get_headers,
-        )
-
+        self.httpx_client = AsyncHttpClient(httpx_client=httpx_client, base_headers=self.get_headers, base_timeout=self.get_timeout, base_url=self.get_base_url, async_base_headers=self.async_get_headers, logging_config=self._logging)
+    
     async def async_get_headers(self) -> typing.Dict[str, str]:
         headers = self.get_headers()
         if self._async_token is not None:

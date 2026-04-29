@@ -2,4 +2,4 @@
 
 import typing
 
-UnauthorizedErrorBodyCode = typing.Union[typing.Literal["UNAUTHENTICATED"], typing.Any]
+UnauthorizedErrorBodyCode = typing.Union[typing.Literal["UNAUTHENTICATED", "AUTHENTICATION_REQUIRED"], typing.Any]

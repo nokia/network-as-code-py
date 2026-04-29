@@ -28,15 +28,17 @@ export class WellKnownMetadataClient {
      * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.wellKnownMetadata.getSecurityTxt()
+     *     await client.wellKnownMetadata.getOpenidConfiguration()
      */
-    public getSecurityTxt(requestOptions?: WellKnownMetadataClient.RequestOptions): core.HttpResponsePromise<string> {
-        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxt(requestOptions));
+    public getOpenidConfiguration(
+        requestOptions?: WellKnownMetadataClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getOpenidConfiguration(requestOptions));
     }
 
-    private async __getSecurityTxt(
+    private async __getOpenidConfiguration(
         requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): Promise<core.WithRawResponse<string>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -49,12 +51,11 @@ export class WellKnownMetadataClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                ".well-known/security.txt",
+                ".well-known/openid-configuration",
             ),
             method: "GET",
             headers: _headers,
             queryParameters: requestOptions?.queryParams,
-            responseType: "text",
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -62,7 +63,10 @@ export class WellKnownMetadataClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as string, rawResponse: _response.rawResponse };
+            return {
+                data: _response.body as NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse,
+                rawResponse: _response.rawResponse,
+            };
         }
 
         if (_response.error.reason === "status-code") {
@@ -73,7 +77,12 @@ export class WellKnownMetadataClient {
             });
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/.well-known/security.txt");
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/.well-known/openid-configuration",
+        );
     }
 
     /**
@@ -145,17 +154,15 @@ export class WellKnownMetadataClient {
      * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
-     *     await client.wellKnownMetadata.getOpenidConfiguration()
+     *     await client.wellKnownMetadata.getSecurityTxt()
      */
-    public getOpenidConfiguration(
-        requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getOpenidConfiguration(requestOptions));
+    public getSecurityTxt(requestOptions?: WellKnownMetadataClient.RequestOptions): core.HttpResponsePromise<string> {
+        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxt(requestOptions));
     }
 
-    private async __getOpenidConfiguration(
+    private async __getSecurityTxt(
         requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse>> {
+    ): Promise<core.WithRawResponse<string>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -168,11 +175,12 @@ export class WellKnownMetadataClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                ".well-known/openid-configuration",
+                ".well-known/security.txt",
             ),
             method: "GET",
             headers: _headers,
             queryParameters: requestOptions?.queryParams,
+            responseType: "text",
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -180,10 +188,7 @@ export class WellKnownMetadataClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetOpenidConfigurationWellKnownMetadataResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as string, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -194,11 +199,6 @@ export class WellKnownMetadataClient {
             });
         }
 
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/.well-known/openid-configuration",
-        );
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/.well-known/security.txt");
     }
 }

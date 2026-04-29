@@ -10,15 +10,11 @@ from .subscriber_operation_slice_response_resource_traffic_categories_apps impor
 
 
 class SubscriberOperationSliceResponseResourceTrafficCategories(UniversalBaseModel):
-    apps: SubscriberOperationSliceResponseResourceTrafficCategoriesApps = pydantic.Field()
-    """
-    Contains the operating system ID and the applications identifiers.
-    """
-
+    apps: SubscriberOperationSliceResponseResourceTrafficCategoriesApps
+    
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
-
         class Config:
             frozen = True
             smart_union = True
