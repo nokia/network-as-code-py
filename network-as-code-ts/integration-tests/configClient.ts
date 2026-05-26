@@ -4,9 +4,11 @@ import { NetworkAsCodeApiClient } from "../network_as_code/Client.js";
 export const configureClient = (): NetworkAsCodeApiClient => {
     const apiKey = process.env["NAC_TOKEN"] as string;
 
+    const rapidapiHost = process.env["RAPIDAPI_HOST"] ?? "network-as-code.nokia.rapidapi.com";
+
     const client = new NetworkAsCodeApiClient({
         apiKey,
-        rapidapiHost: "network-as-code.nokia.rapidapi.com",
+        rapidapiHost,
     });
 
     return client;
