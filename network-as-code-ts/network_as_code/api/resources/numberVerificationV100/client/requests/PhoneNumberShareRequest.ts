@@ -5,10 +5,10 @@
  *     {}
  */
 export interface PhoneNumberShareRequest {
-    /** Authorization code received from the CSP */
-    code?: string;
     /** Application state */
     state?: string;
+    /** Authorization code received from the CSP */
+    code?: string;
     /** Correlation id for the different services */
     "x-correlator"?: string;
     /** authorization header for token */

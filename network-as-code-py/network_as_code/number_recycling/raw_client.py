@@ -24,7 +24,7 @@ class RawNumberRecyclingClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    def check(self, *, specified_date: dt.date, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckNumberRecyclingResponse]:
+    def check(self, *, specified_date: dt.date, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckNumberRecyclingResponse]:
         """
         Check whether the subscriber of the phone number has changed.
         
@@ -33,11 +33,11 @@ class RawNumberRecyclingClient:
         specified_date : dt.date
             Specified date to check whether there has been a change in the subscriber associated with the specific phone number, in RFC 3339 calendar date format (YYYY-MM-DD).
         
-        authorization : typing.Optional[str]
-            authorization header for token
-        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
+        
+        authorization : typing.Optional[str]
+            authorization header for token
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -57,7 +57,7 @@ class RawNumberRecyclingClient:
                 "specifiedDate": specified_date,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
@@ -121,7 +121,7 @@ class AsyncRawNumberRecyclingClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    async def check(self, *, specified_date: dt.date, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckNumberRecyclingResponse]:
+    async def check(self, *, specified_date: dt.date, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckNumberRecyclingResponse]:
         """
         Check whether the subscriber of the phone number has changed.
         
@@ -130,11 +130,11 @@ class AsyncRawNumberRecyclingClient:
         specified_date : dt.date
             Specified date to check whether there has been a change in the subscriber associated with the specific phone number, in RFC 3339 calendar date format (YYYY-MM-DD).
         
-        authorization : typing.Optional[str]
-            authorization header for token
-        
         correlator : typing.Optional[typing.Any]
             Correlation id for the different services
+        
+        authorization : typing.Optional[str]
+            authorization header for token
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -154,7 +154,7 @@ class AsyncRawNumberRecyclingClient:
                 "specifiedDate": specified_date,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )

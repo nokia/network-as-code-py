@@ -4,12 +4,22 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .too_many_requests_error_body_code import TooManyRequestsErrorBodyCode
 
 
 class TooManyRequestsErrorBody(UniversalBaseModel):
-    status: typing.Optional[str] = None
-    code: typing.Optional[TooManyRequestsErrorBodyCode] = None
+    """
+    The error info object for possible error cases
+    """
+    status: int = pydantic.Field()
+    """
+    HTTP response status code
+    """
+    
+    code: str = pydantic.Field()
+    """
+    Code given to this error
+    """
+    
     message: str = pydantic.Field()
     """
     Detailed error description

@@ -37,6 +37,204 @@ class RawGeofencingClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
+    def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSubscriptionGeofencingResponse]:
+        """
+        retrieve Geofencing subscription information for a given subscription ID.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[GetSubscriptionGeofencingResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetSubscriptionGeofencingResponse,
+                    parse_obj_as(
+                        type_ =GetSubscriptionGeofencingResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]:
+        """
+        delete a given Geofencing subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return HttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteSubscriptionGeofencingResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteSubscriptionGeofencingResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def list_subscriptions(self, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListSubscriptionsGeofencingResponseItem]]:
         """
         Retrieve a list of geofencing event subscription(s)
@@ -245,8 +443,11 @@ class RawGeofencingClient:
         except ValidationError as e:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+class AsyncRawGeofencingClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
     
-    def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSubscriptionGeofencingResponse]:
+    async def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSubscriptionGeofencingResponse]:
         """
         retrieve Geofencing subscription information for a given subscription ID.
         
@@ -263,10 +464,10 @@ class RawGeofencingClient:
         
         Returns
         -------
-        HttpResponse[GetSubscriptionGeofencingResponse]
+        AsyncHttpResponse[GetSubscriptionGeofencingResponse]
             
         """
-        _response = self._client_wrapper.httpx_client.request(
+        _response = await self._client_wrapper.httpx_client.request(
             f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="GET",
             headers={"x-correlator": str(correlator) if correlator is not None else None, }
             ,
@@ -280,7 +481,7 @@ class RawGeofencingClient:
                         object_ =_response.json()
                     )
                 )
-                return HttpResponse(response=_response, data=_data)
+                return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
@@ -344,7 +545,7 @@ class RawGeofencingClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]:
+    async def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]:
         """
         delete a given Geofencing subscription.
         
@@ -361,17 +562,17 @@ class RawGeofencingClient:
         
         Returns
         -------
-        HttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]
+        AsyncHttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]
             
         """
-        _response = self._client_wrapper.httpx_client.request(
+        _response = await self._client_wrapper.httpx_client.request(
             f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
             headers={"x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,)
         try:
             if _response is None or not _response.text.strip():
-                return HttpResponse(response=_response, data=None)
+                return AsyncHttpResponse(response=_response, data=None)
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
                     typing.Optional[DeleteSubscriptionGeofencingResponse],
@@ -380,7 +581,7 @@ class RawGeofencingClient:
                         object_ =_response.json()
                     )
                 )
-                return HttpResponse(response=_response, data=_data)
+                return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
@@ -443,9 +644,6 @@ class RawGeofencingClient:
         except ValidationError as e:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-class AsyncRawGeofencingClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
     
     async def list_subscriptions(self, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListSubscriptionsGeofencingResponseItem]]:
         """
@@ -619,204 +817,6 @@ class AsyncRawGeofencingClient:
                 ))
             if _response.status_code == 422:
                 raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSubscriptionGeofencingResponse]:
-        """
-        retrieve Geofencing subscription information for a given subscription ID.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[GetSubscriptionGeofencingResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="GET",
-            headers={"x-correlator": str(correlator) if correlator is not None else None, }
-            ,
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetSubscriptionGeofencingResponse,
-                    parse_obj_as(
-                        type_ =GetSubscriptionGeofencingResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]:
-        """
-        delete a given Geofencing subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[typing.Optional[DeleteSubscriptionGeofencingResponse]]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"geofencing-subscriptions/v0.3/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
-            headers={"x-correlator": str(correlator) if correlator is not None else None, }
-            ,
-            request_options=request_options,)
-        try:
-            if _response is None or not _response.text.strip():
-                return AsyncHttpResponse(response=_response, data=None)
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.Optional[DeleteSubscriptionGeofencingResponse],
-                    parse_obj_as(
-                        type_ =typing.Optional[DeleteSubscriptionGeofencingResponse],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore

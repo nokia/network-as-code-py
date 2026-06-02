@@ -9,6 +9,12 @@
  *
  * @example
  *     {
+ *         phoneNumber: "+99999991001",
+ *         tenureDate: "2023-07-03"
+ *     }
+ *
+ * @example
+ *     {
  *         tenureDate: "2023-07-03"
  *     }
  */

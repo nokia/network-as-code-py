@@ -24,6 +24,107 @@ export class DeviceSwapClient {
     }
 
     /**
+     * Get timestamp of last device swap for a mobile user account provided with phone number.
+     *
+     * @param {NetworkAsCodeApi.RetrieveDateDeviceSwapRequest} request
+     * @param {DeviceSwapClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.deviceSwap.retrieveDate({
+     *         phoneNumber: "+99999991001"
+     *     })
+     */
+    public retrieveDate(
+        request: NetworkAsCodeApi.RetrieveDateDeviceSwapRequest = {},
+        requestOptions?: DeviceSwapClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveDateDeviceSwapResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieveDate(request, requestOptions));
+    }
+
+    private async __retrieveDate(
+        request: NetworkAsCodeApi.RetrieveDateDeviceSwapRequest = {},
+        requestOptions?: DeviceSwapClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveDateDeviceSwapResponse>> {
+        const { "x-correlator": correlator, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.RetrieveDateDeviceSwapResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",
+        );
+    }
+
+    /**
      * Check if device swap has been performed during a past period
      *
      * @param {NetworkAsCodeApi.CheckDeviceSwapRequest} request
@@ -128,107 +229,6 @@ export class DeviceSwapClient {
             _response.rawResponse,
             "POST",
             "/passthrough/camara/v1/device-swap/device-swap/v1/check",
-        );
-    }
-
-    /**
-     * Get timestamp of last device swap for a mobile user account provided with phone number.
-     *
-     * @param {NetworkAsCodeApi.RetrieveDateDeviceSwapRequest} request
-     * @param {DeviceSwapClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.deviceSwap.retrieveDate({
-     *         phoneNumber: "+99999991001"
-     *     })
-     */
-    public retrieveDate(
-        request: NetworkAsCodeApi.RetrieveDateDeviceSwapRequest = {},
-        requestOptions?: DeviceSwapClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveDateDeviceSwapResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieveDate(request, requestOptions));
-    }
-
-    private async __retrieveDate(
-        request: NetworkAsCodeApi.RetrieveDateDeviceSwapRequest = {},
-        requestOptions?: DeviceSwapClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveDateDeviceSwapResponse>> {
-        const { "x-correlator": correlator, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator":
-                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: _body,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.RetrieveDateDeviceSwapResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",
         );
     }
 }

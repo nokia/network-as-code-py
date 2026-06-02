@@ -24,6 +24,93 @@ class RawDeviceSwapClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
+    def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveDateDeviceSwapResponse]:
+        """
+        Get timestamp of last device swap for a mobile user account provided with phone number.
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[RetrieveDateDeviceSwapResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",method="POST",
+            json={
+                "phoneNumber": phone_number,
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RetrieveDateDeviceSwapResponse,
+                    parse_obj_as(
+                        type_ =RetrieveDateDeviceSwapResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def check(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckDeviceSwapResponse]:
         """
         Check if device swap has been performed during a past period
@@ -114,8 +201,11 @@ class RawDeviceSwapClient:
         except ValidationError as e:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+class AsyncRawDeviceSwapClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
     
-    def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveDateDeviceSwapResponse]:
+    async def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveDateDeviceSwapResponse]:
         """
         Get timestamp of last device swap for a mobile user account provided with phone number.
         
@@ -132,10 +222,10 @@ class RawDeviceSwapClient:
         
         Returns
         -------
-        HttpResponse[RetrieveDateDeviceSwapResponse]
+        AsyncHttpResponse[RetrieveDateDeviceSwapResponse]
             
         """
-        _response = self._client_wrapper.httpx_client.request(
+        _response = await self._client_wrapper.httpx_client.request(
             "passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",method="POST",
             json={
                 "phoneNumber": phone_number,
@@ -151,100 +241,6 @@ class RawDeviceSwapClient:
                     RetrieveDateDeviceSwapResponse,
                     parse_obj_as(
                         type_ =RetrieveDateDeviceSwapResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-class AsyncRawDeviceSwapClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-    
-    async def check(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckDeviceSwapResponse]:
-        """
-        Check if device swap has been performed during a past period
-        
-        Parameters
-        ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
-        
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-        
-        max_age : typing.Optional[int]
-            Period in hours to be checked for device swap.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[CheckDeviceSwapResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/device-swap/device-swap/v1/check",method="POST",
-            json={
-                "phoneNumber": phone_number,
-                "maxAge": max_age,
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CheckDeviceSwapResponse,
-                    parse_obj_as(
-                        type_ =CheckDeviceSwapResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -296,9 +292,9 @@ class AsyncRawDeviceSwapClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveDateDeviceSwapResponse]:
+    async def check(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckDeviceSwapResponse]:
         """
-        Get timestamp of last device swap for a mobile user account provided with phone number.
+        Check if device swap has been performed during a past period
         
         Parameters
         ----------
@@ -308,18 +304,22 @@ class AsyncRawDeviceSwapClient:
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
         
+        max_age : typing.Optional[int]
+            Period in hours to be checked for device swap.
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[RetrieveDateDeviceSwapResponse]
+        AsyncHttpResponse[CheckDeviceSwapResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/device-swap/device-swap/v1/retrieve-date",method="POST",
+            "passthrough/camara/v1/device-swap/device-swap/v1/check",method="POST",
             json={
                 "phoneNumber": phone_number,
+                "maxAge": max_age,
             }
             ,
             headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
@@ -329,9 +329,9 @@ class AsyncRawDeviceSwapClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RetrieveDateDeviceSwapResponse,
+                    CheckDeviceSwapResponse,
                     parse_obj_as(
-                        type_ =RetrieveDateDeviceSwapResponse,  # type: ignore
+                        type_ =CheckDeviceSwapResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )

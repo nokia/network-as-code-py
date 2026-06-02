@@ -23,7 +23,7 @@ class NumberVerificationV100Client:
         """
         return self._raw_client
     
-    def phone_number_share(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> PhoneNumberShareResponse:
+    def phone_number_share(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> PhoneNumberShareResponse:
         """
         Returns the phone number so the API clients can verify the number themselves:
         - It will be done for the user that has authenticated via mobile network
@@ -31,11 +31,11 @@ class NumberVerificationV100Client:
         
         Parameters
         ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-        
         state : typing.Optional[str]
             Application state
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
         
         correlator : typing.Optional[str]
             Correlation id for the different services
@@ -61,7 +61,7 @@ class NumberVerificationV100Client:
         )
         client.number_verification_v100.phone_number_share()
         """
-        _response = self._raw_client.phone_number_share(code=code, state=state, correlator=correlator, authorization=authorization, request_options=request_options)
+        _response = self._raw_client.phone_number_share(state=state, code=code, correlator=correlator, authorization=authorization, request_options=request_options)
         return _response.data
 class AsyncNumberVerificationV100Client:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -78,7 +78,7 @@ class AsyncNumberVerificationV100Client:
         """
         return self._raw_client
     
-    async def phone_number_share(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> PhoneNumberShareResponse:
+    async def phone_number_share(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> PhoneNumberShareResponse:
         """
         Returns the phone number so the API clients can verify the number themselves:
         - It will be done for the user that has authenticated via mobile network
@@ -86,11 +86,11 @@ class AsyncNumberVerificationV100Client:
         
         Parameters
         ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-        
         state : typing.Optional[str]
             Application state
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
         
         correlator : typing.Optional[str]
             Correlation id for the different services
@@ -124,5 +124,5 @@ class AsyncNumberVerificationV100Client:
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.phone_number_share(code=code, state=state, correlator=correlator, authorization=authorization, request_options=request_options)
+        _response = await self._raw_client.phone_number_share(state=state, code=code, correlator=correlator, authorization=authorization, request_options=request_options)
         return _response.data

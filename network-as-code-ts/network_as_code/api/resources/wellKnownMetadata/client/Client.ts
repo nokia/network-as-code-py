@@ -91,6 +91,60 @@ export class WellKnownMetadataClient {
      * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
+     *     await client.wellKnownMetadata.getSecurityTxt()
+     */
+    public getSecurityTxt(requestOptions?: WellKnownMetadataClient.RequestOptions): core.HttpResponsePromise<string> {
+        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxt(requestOptions));
+    }
+
+    private async __getSecurityTxt(
+        requestOptions?: WellKnownMetadataClient.RequestOptions,
+    ): Promise<core.WithRawResponse<string>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                ".well-known/security.txt",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            responseType: "text",
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as string, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.NetworkAsCodeApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/.well-known/security.txt");
+    }
+
+    /**
+     *
+     *
+     * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @example
      *     await client.wellKnownMetadata.getOauthAuthorizationServer()
      */
     public getOauthAuthorizationServer(
@@ -146,59 +200,5 @@ export class WellKnownMetadataClient {
             "GET",
             "/.well-known/oauth-authorization-server",
         );
-    }
-
-    /**
-     *
-     *
-     * @param {WellKnownMetadataClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @example
-     *     await client.wellKnownMetadata.getSecurityTxt()
-     */
-    public getSecurityTxt(requestOptions?: WellKnownMetadataClient.RequestOptions): core.HttpResponsePromise<string> {
-        return core.HttpResponsePromise.fromPromise(this.__getSecurityTxt(requestOptions));
-    }
-
-    private async __getSecurityTxt(
-        requestOptions?: WellKnownMetadataClient.RequestOptions,
-    ): Promise<core.WithRawResponse<string>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                ".well-known/security.txt",
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            responseType: "text",
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as string, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            throw new errors.NetworkAsCodeApiError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/.well-known/security.txt");
     }
 }

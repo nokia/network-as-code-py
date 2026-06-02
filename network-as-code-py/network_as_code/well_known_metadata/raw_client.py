@@ -54,6 +54,33 @@ class RawWellKnownMetadataClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
+    def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[str]:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[str]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            ".well-known/security.txt",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                return HttpResponse(response=_response, data=_response.text)  # type: ignore 
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
         """
          
@@ -81,33 +108,6 @@ class RawWellKnownMetadataClient:
                     )
                 )
                 return HttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[str]:
-        """
-         
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[str]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            ".well-known/security.txt",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                return HttpResponse(response=_response, data=_response.text)  # type: ignore 
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -152,6 +152,33 @@ class AsyncRawWellKnownMetadataClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
+    async def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[str]:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[str]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            ".well-known/security.txt",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                return AsyncHttpResponse(response=_response, data=_response.text)  # type: ignore 
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     async def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetOauthAuthorizationServerWellKnownMetadataResponse]:
         """
          
@@ -179,33 +206,6 @@ class AsyncRawWellKnownMetadataClient:
                     )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[str]:
-        """
-         
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[str]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            ".well-known/security.txt",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                return AsyncHttpResponse(response=_response, data=_response.text)  # type: ignore 
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)

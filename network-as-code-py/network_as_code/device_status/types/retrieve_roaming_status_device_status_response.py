@@ -7,10 +7,18 @@ import pydantic
 import typing_extensions
 from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ...core.serialization import FieldMetadata
+from .retrieve_roaming_status_device_status_response_device import RetrieveRoamingStatusDeviceStatusResponseDevice
 
 
 class RetrieveRoamingStatusDeviceStatusResponse(UniversalBaseModel):
-    last_status_time: typing_extensions.Annotated[typing.Optional[dt.datetime], FieldMetadata(alias="lastStatusTime"), pydantic.Field(alias="lastStatusTime", description="Last time that the associated device roaming status was updated")] = None
+    device: typing.Optional[RetrieveRoamingStatusDeviceStatusResponseDevice] = pydantic.Field(default=None)
+    """
+    An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+    
+    If the API consumer provides more than one device identifier in their request, the API provider must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+    """
+    
+    last_status_time: typing_extensions.Annotated[dt.datetime, FieldMetadata(alias="lastStatusTime"), pydantic.Field(alias="lastStatusTime", description="Last time that the associated device reachability status was updated.\nIt must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.\nRecommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)")]
     roaming: bool = pydantic.Field()
     """
     Roaming status. True, if it is roaming

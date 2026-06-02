@@ -12,14 +12,14 @@
  *     }
  */
 export interface VerifyNumberVerificationRequest {
-    /** Application state */
-    state?: string;
     /** Authorization code received from the CSP */
     code?: string;
-    /** authorization header for token */
-    authorization?: string;
+    /** Application state */
+    state?: string;
     /** Correlation id for the different services */
     "x-correlator"?: string;
+    /** authorization header for token */
+    authorization?: string;
     /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'. */
     phoneNumber?: string;
     /** Hashed phone number. SHA-256 (in hexadecimal representation) of the mobile phone number in **E.164 format (starting with country code)**. Prefixed with '+'. */

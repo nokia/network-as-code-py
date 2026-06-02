@@ -11,9 +11,6 @@ export namespace BadRequestErrorBody {
     export const Code = {
         InvalidArgument: "INVALID_ARGUMENT",
         OutOfRange: "OUT_OF_RANGE",
-        InvalidProtocol: "INVALID_PROTOCOL",
-        InvalidCredential: "INVALID_CREDENTIAL",
-        InvalidToken: "INVALID_TOKEN",
     } as const;
     export type Code = (typeof Code)[keyof typeof Code];
 }

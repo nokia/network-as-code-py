@@ -9,6 +9,6 @@ class ConflictErrorBodyParams(typing_extensions.TypedDict):
     code: typing_extensions.NotRequired[ConflictErrorBodyCode]
     message: str
     """
-    Detailed error description
+    A human-readable description of what the event represents
     """
     

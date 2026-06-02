@@ -31,13 +31,13 @@ class LocationClient:
         """
         return self._raw_client
     
-    def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveLocationResponse:
+    def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyLocationResponse:
         """
-        Retrieve the area where a certain user device is localized.
+        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
         
         Parameters
         ----------
-        device : RetrieveLocationRequestDeviceParams
+        device : VerifyLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -49,15 +49,17 @@ class LocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
+        area : VerifyLocationRequestAreaParams
+        
         max_age : typing.Optional[int]
-            Maximum age of the location information which is accepted for the location retrieval (in seconds)
+            The maximum age (in seconds) of the available location, which is accepted for the verification.
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        RetrieveLocationResponse
+        VerifyLocationResponse
             
         
         Examples
@@ -68,12 +70,12 @@ class LocationClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.location.retrieve(
+        client.location.verify(
             device={"phone_number": "+99999991000"},
-            max_age=60,
+            area={"area_type": "CIRCLE"},
         )
         """
-        _response = self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
+        _response = self._raw_client.verify(device=device, area=area, max_age=max_age, request_options=request_options)
         return _response.data
     
     def verify_v1(self, *, area: VerifyV1LocationRequestAreaParams, correlator: typing.Optional[str] = None, device: typing.Optional[VerifyV1LocationRequestDeviceParams] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyV1LocationResponse:
@@ -128,7 +130,66 @@ class LocationClient:
         _response = self._raw_client.verify_v1(area=area, correlator=correlator, device=device, max_age=max_age, request_options=request_options)
         return _response.data
     
-    def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyLocationResponse:
+    def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveLocationResponse:
+        """
+        Retrieve the area where a certain user device is localized.
+        
+        Parameters
+        ----------
+        device : RetrieveLocationRequestDeviceParams
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        max_age : typing.Optional[int]
+            Maximum age of the location information which is accepted for the location retrieval (in seconds)
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveLocationResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.location.retrieve(
+            device={"phone_number": "+99999991000"},
+            max_age=60,
+        )
+        """
+        _response = self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
+        return _response.data
+class AsyncLocationClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawLocationClient(client_wrapper=client_wrapper)
+    
+    @property
+    def with_raw_response(self) -> AsyncRawLocationClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+        
+        Returns
+        -------
+        AsyncRawLocationClient
+        """
+        return self._raw_client
+    
+    async def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyLocationResponse:
         """
         Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
         
@@ -161,65 +222,6 @@ class LocationClient:
         
         Examples
         --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.location.verify(
-            device={"phone_number": "+99999991000"},
-            area={"area_type": "CIRCLE"},
-        )
-        """
-        _response = self._raw_client.verify(device=device, area=area, max_age=max_age, request_options=request_options)
-        return _response.data
-class AsyncLocationClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawLocationClient(client_wrapper=client_wrapper)
-    
-    @property
-    def with_raw_response(self) -> AsyncRawLocationClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
-        
-        Returns
-        -------
-        AsyncRawLocationClient
-        """
-        return self._raw_client
-    
-    async def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveLocationResponse:
-        """
-        Retrieve the area where a certain user device is localized.
-        
-        Parameters
-        ----------
-        device : RetrieveLocationRequestDeviceParams
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
-        max_age : typing.Optional[int]
-            Maximum age of the location information which is accepted for the location retrieval (in seconds)
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        RetrieveLocationResponse
-            
-        
-        Examples
-        --------
         import asyncio
         
         from networkAsCode import AsyncNetworkAsCodeApi
@@ -231,15 +233,15 @@ class AsyncLocationClient:
         
         
         async def main() -> None:
-            await client.location.retrieve(
+            await client.location.verify(
                 device={"phone_number": "+99999991000"},
-                max_age=60,
+                area={"area_type": "CIRCLE"},
             )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
+        _response = await self._raw_client.verify(device=device, area=area, max_age=max_age, request_options=request_options)
         return _response.data
     
     async def verify_v1(self, *, area: VerifyV1LocationRequestAreaParams, correlator: typing.Optional[str] = None, device: typing.Optional[VerifyV1LocationRequestDeviceParams] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyV1LocationResponse:
@@ -302,13 +304,13 @@ class AsyncLocationClient:
         _response = await self._raw_client.verify_v1(area=area, correlator=correlator, device=device, max_age=max_age, request_options=request_options)
         return _response.data
     
-    async def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyLocationResponse:
+    async def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveLocationResponse:
         """
-        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
+        Retrieve the area where a certain user device is localized.
         
         Parameters
         ----------
-        device : VerifyLocationRequestDeviceParams
+        device : RetrieveLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -320,17 +322,15 @@ class AsyncLocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
-        area : VerifyLocationRequestAreaParams
-        
         max_age : typing.Optional[int]
-            The maximum age (in seconds) of the available location, which is accepted for the verification.
+            Maximum age of the location information which is accepted for the location retrieval (in seconds)
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        VerifyLocationResponse
+        RetrieveLocationResponse
             
         
         Examples
@@ -346,13 +346,13 @@ class AsyncLocationClient:
         
         
         async def main() -> None:
-            await client.location.verify(
+            await client.location.retrieve(
                 device={"phone_number": "+99999991000"},
-                area={"area_type": "CIRCLE"},
+                max_age=60,
             )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.verify(device=device, area=area, max_age=max_age, request_options=request_options)
+        _response = await self._raw_client.retrieve(device=device, max_age=max_age, request_options=request_options)
         return _response.data

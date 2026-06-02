@@ -34,13 +34,13 @@ class RawLocationClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveLocationResponse]:
+    def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[VerifyLocationResponse]:
         """
-        Retrieve the area where a certain user device is localized.
+        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
         
         Parameters
         ----------
-        device : RetrieveLocationRequestDeviceParams
+        device : VerifyLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -52,21 +52,24 @@ class RawLocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
+        area : VerifyLocationRequestAreaParams
+        
         max_age : typing.Optional[int]
-            Maximum age of the location information which is accepted for the location retrieval (in seconds)
+            The maximum age (in seconds) of the available location, which is accepted for the verification.
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[RetrieveLocationResponse]
+        HttpResponse[VerifyLocationResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "location-retrieval/v0/retrieve",method="POST",
+            "location-verification/v0/verify",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveLocationRequestDeviceParams, direction="write"),
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=VerifyLocationRequestDeviceParams, direction="write"),
+                "area": convert_and_respect_annotation_metadata(object_=area, annotation=VerifyLocationRequestAreaParams, direction="write"),
                 "maxAge": max_age,
             }
             ,
@@ -77,9 +80,9 @@ class RawLocationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RetrieveLocationResponse,
+                    VerifyLocationResponse,
                     parse_obj_as(
-                        type_ =RetrieveLocationResponse,  # type: ignore
+                        type_ =VerifyLocationResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -268,13 +271,13 @@ class RawLocationClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[VerifyLocationResponse]:
+    def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveLocationResponse]:
         """
-        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
+        Retrieve the area where a certain user device is localized.
         
         Parameters
         ----------
-        device : VerifyLocationRequestDeviceParams
+        device : RetrieveLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -286,24 +289,21 @@ class RawLocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
-        area : VerifyLocationRequestAreaParams
-        
         max_age : typing.Optional[int]
-            The maximum age (in seconds) of the available location, which is accepted for the verification.
+            Maximum age of the location information which is accepted for the location retrieval (in seconds)
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[VerifyLocationResponse]
+        HttpResponse[RetrieveLocationResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "location-verification/v0/verify",method="POST",
+            "location-retrieval/v0/retrieve",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=VerifyLocationRequestDeviceParams, direction="write"),
-                "area": convert_and_respect_annotation_metadata(object_=area, annotation=VerifyLocationRequestAreaParams, direction="write"),
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveLocationRequestDeviceParams, direction="write"),
                 "maxAge": max_age,
             }
             ,
@@ -314,9 +314,9 @@ class RawLocationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    VerifyLocationResponse,
+                    RetrieveLocationResponse,
                     parse_obj_as(
-                        type_ =VerifyLocationResponse,  # type: ignore
+                        type_ =RetrieveLocationResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -379,13 +379,13 @@ class AsyncRawLocationClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    async def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveLocationResponse]:
+    async def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[VerifyLocationResponse]:
         """
-        Retrieve the area where a certain user device is localized.
+        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
         
         Parameters
         ----------
-        device : RetrieveLocationRequestDeviceParams
+        device : VerifyLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -397,21 +397,24 @@ class AsyncRawLocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
+        area : VerifyLocationRequestAreaParams
+        
         max_age : typing.Optional[int]
-            Maximum age of the location information which is accepted for the location retrieval (in seconds)
+            The maximum age (in seconds) of the available location, which is accepted for the verification.
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[RetrieveLocationResponse]
+        AsyncHttpResponse[VerifyLocationResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "location-retrieval/v0/retrieve",method="POST",
+            "location-verification/v0/verify",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveLocationRequestDeviceParams, direction="write"),
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=VerifyLocationRequestDeviceParams, direction="write"),
+                "area": convert_and_respect_annotation_metadata(object_=area, annotation=VerifyLocationRequestAreaParams, direction="write"),
                 "maxAge": max_age,
             }
             ,
@@ -422,9 +425,9 @@ class AsyncRawLocationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RetrieveLocationResponse,
+                    VerifyLocationResponse,
                     parse_obj_as(
-                        type_ =RetrieveLocationResponse,  # type: ignore
+                        type_ =VerifyLocationResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -613,13 +616,13 @@ class AsyncRawLocationClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def verify(self, *, device: VerifyLocationRequestDeviceParams, area: VerifyLocationRequestAreaParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[VerifyLocationResponse]:
+    async def retrieve(self, *, device: RetrieveLocationRequestDeviceParams, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveLocationResponse]:
         """
-        Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
+        Retrieve the area where a certain user device is localized.
         
         Parameters
         ----------
-        device : VerifyLocationRequestDeviceParams
+        device : RetrieveLocationRequestDeviceParams
             End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
             
             The developer can choose to provide the below specified device identifiers:
@@ -631,24 +634,21 @@ class AsyncRawLocationClient:
             
             NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
         
-        area : VerifyLocationRequestAreaParams
-        
         max_age : typing.Optional[int]
-            The maximum age (in seconds) of the available location, which is accepted for the verification.
+            Maximum age of the location information which is accepted for the location retrieval (in seconds)
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[VerifyLocationResponse]
+        AsyncHttpResponse[RetrieveLocationResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "location-verification/v0/verify",method="POST",
+            "location-retrieval/v0/retrieve",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=VerifyLocationRequestDeviceParams, direction="write"),
-                "area": convert_and_respect_annotation_metadata(object_=area, annotation=VerifyLocationRequestAreaParams, direction="write"),
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveLocationRequestDeviceParams, direction="write"),
                 "maxAge": max_age,
             }
             ,
@@ -659,9 +659,9 @@ class AsyncRawLocationClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    VerifyLocationResponse,
+                    RetrieveLocationResponse,
                     parse_obj_as(
-                        type_ =VerifyLocationResponse,  # type: ignore
+                        type_ =RetrieveLocationResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )

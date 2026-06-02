@@ -43,6 +43,12 @@ export class NumberRecyclingClient {
      *
      * @example
      *     await client.numberRecycling.check({
+     *         phoneNumber: "+99999991001",
+     *         specifiedDate: "2024-10-31"
+     *     })
+     *
+     * @example
+     *     await client.numberRecycling.check({
      *         specifiedDate: "2024-10-31"
      *     })
      */
@@ -57,15 +63,15 @@ export class NumberRecyclingClient {
         request: NetworkAsCodeApi.CheckNumberRecyclingRequest,
         requestOptions?: NumberRecyclingClient.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.CheckNumberRecyclingResponse>> {
-        const { authorization, "x-correlator": correlator, ..._body } = request;
+        const { "x-correlator": correlator, authorization, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                authorization: authorization,
                 "x-correlator":
                     correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                authorization: authorization,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,

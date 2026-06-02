@@ -184,68 +184,6 @@ class SliceClient:
         _response = self._raw_client.activate(id, request_options=request_options)
         return _response.data
     
-    def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetDeviceAttachmentSliceResponse:
-        """
-        Retrieve the given device attach resource.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetDeviceAttachmentSliceResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.slice.get_device_attachment(
-            resource_id="resource_id",
-        )
-        """
-        _response = self._raw_client.get_device_attachment(resource_id, request_options=request_options)
-        return _response.data
-    
-    def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteDeviceAttachmentSliceResponse:
-        """
-        Detach device from a specific slice.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        DeleteDeviceAttachmentSliceResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.slice.delete_device_attachment(
-            resource_id="resource_id",
-        )
-        """
-        _response = self._raw_client.delete_device_attachment(resource_id, request_options=request_options)
-        return _response.data
-    
     def deactivate(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeactivateSliceResponse:
         """
         Deactivate a network slice. The slice state must be active to be able to perform this operation.
@@ -457,6 +395,68 @@ class SliceClient:
         )
         """
         _response = self._raw_client.subscriber_operation(operation, device=device, slice_id=slice_id, customer=customer, mobile_services=mobile_services, traffic_categories=traffic_categories, webhook=webhook, request_options=request_options)
+        return _response.data
+    
+    def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetDeviceAttachmentSliceResponse:
+        """
+        Retrieve the given device attach resource.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetDeviceAttachmentSliceResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.slice.get_device_attachment(
+            resource_id="resource_id",
+        )
+        """
+        _response = self._raw_client.get_device_attachment(resource_id, request_options=request_options)
+        return _response.data
+    
+    def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteDeviceAttachmentSliceResponse:
+        """
+        Detach device from a specific slice.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        DeleteDeviceAttachmentSliceResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.slice.delete_device_attachment(
+            resource_id="resource_id",
+        )
+        """
+        _response = self._raw_client.delete_device_attachment(resource_id, request_options=request_options)
         return _response.data
     
     def get_slice(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSliceSliceResponse:
@@ -679,84 +679,6 @@ class AsyncSliceClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.activate(id, request_options=request_options)
-        return _response.data
-    
-    async def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetDeviceAttachmentSliceResponse:
-        """
-        Retrieve the given device attach resource.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetDeviceAttachmentSliceResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.slice.get_device_attachment(
-                resource_id="resource_id",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_device_attachment(resource_id, request_options=request_options)
-        return _response.data
-    
-    async def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteDeviceAttachmentSliceResponse:
-        """
-        Detach device from a specific slice.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        DeleteDeviceAttachmentSliceResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.slice.delete_device_attachment(
-                resource_id="resource_id",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_device_attachment(resource_id, request_options=request_options)
         return _response.data
     
     async def deactivate(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeactivateSliceResponse:
@@ -1002,6 +924,84 @@ class AsyncSliceClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.subscriber_operation(operation, device=device, slice_id=slice_id, customer=customer, mobile_services=mobile_services, traffic_categories=traffic_categories, webhook=webhook, request_options=request_options)
+        return _response.data
+    
+    async def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetDeviceAttachmentSliceResponse:
+        """
+        Retrieve the given device attach resource.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetDeviceAttachmentSliceResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.slice.get_device_attachment(
+                resource_id="resource_id",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_device_attachment(resource_id, request_options=request_options)
+        return _response.data
+    
+    async def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> DeleteDeviceAttachmentSliceResponse:
+        """
+        Detach device from a specific slice.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        DeleteDeviceAttachmentSliceResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.slice.delete_device_attachment(
+                resource_id="resource_id",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_device_attachment(resource_id, request_options=request_options)
         return _response.data
     
     async def get_slice(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSliceSliceResponse:

@@ -3,10 +3,9 @@
 import typing
 
 import typing_extensions
-from .unprocessable_entity_error_body_detail_item_loc_item import UnprocessableEntityErrorBodyDetailItemLocItemParams
 
 
 class UnprocessableEntityErrorBodyDetailItemParams(typing_extensions.TypedDict):
-    loc: typing.Sequence[UnprocessableEntityErrorBodyDetailItemLocItemParams]
+    loc: typing.Sequence[str]
     msg: str
     type: str

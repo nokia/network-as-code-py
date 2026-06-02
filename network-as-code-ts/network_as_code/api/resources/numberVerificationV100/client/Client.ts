@@ -51,10 +51,10 @@ export class NumberVerificationV100Client {
         request: NetworkAsCodeApi.PhoneNumberShareRequest = {},
         requestOptions?: NumberVerificationV100Client.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.PhoneNumberShareResponse>> {
-        const { code, state, "x-correlator": correlator, authorization } = request;
+        const { state, code, "x-correlator": correlator, authorization } = request;
         const _queryParams: Record<string, unknown> = {
-            code,
             state,
+            code,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(

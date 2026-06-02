@@ -2,4 +2,4 @@
 
 import typing
 
-ForbiddenErrorBodyCode = typing.Union[typing.Literal["PERMISSION_DENIED", "SUBSCRIPTION_MISMATCH"], typing.Any]
+ForbiddenErrorBodyCode = typing.Union[typing.Literal["PERMISSION_DENIED"], typing.Any]

@@ -23,9 +23,9 @@ export class LocationClient {
     }
 
     /**
-     * Retrieve the area where a certain user device is localized.
+     * Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
      *
-     * @param {NetworkAsCodeApi.RetrieveLocationRequest} request
+     * @param {NetworkAsCodeApi.VerifyLocationRequest} request
      * @param {LocationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -36,24 +36,36 @@ export class LocationClient {
      * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.location.retrieve({
+     *     await client.location.verify({
      *         device: {
      *             phoneNumber: "+99999991000"
      *         },
-     *         maxAge: 60
+     *         area: {
+     *             areaType: "CIRCLE"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.location.verify({
+     *         device: {
+     *             phoneNumber: "+99999991001"
+     *         },
+     *         area: {
+     *             areaType: "CIRCLE"
+     *         }
      *     })
      */
-    public retrieve(
-        request: NetworkAsCodeApi.RetrieveLocationRequest,
+    public verify(
+        request: NetworkAsCodeApi.VerifyLocationRequest,
         requestOptions?: LocationClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveLocationResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieve(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.VerifyLocationResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__verify(request, requestOptions));
     }
 
-    private async __retrieve(
-        request: NetworkAsCodeApi.RetrieveLocationRequest,
+    private async __verify(
+        request: NetworkAsCodeApi.VerifyLocationRequest,
         requestOptions?: LocationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveLocationResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyLocationResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -66,7 +78,7 @@ export class LocationClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "location-retrieval/v0/retrieve",
+                "location-verification/v0/verify",
             ),
             method: "POST",
             headers: _headers,
@@ -82,7 +94,7 @@ export class LocationClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.RetrieveLocationResponse,
+                data: _response.body as NetworkAsCodeApi.VerifyLocationResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -123,7 +135,7 @@ export class LocationClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/location-retrieval/v0/retrieve",
+            "/location-verification/v0/verify",
         );
     }
 
@@ -261,9 +273,9 @@ export class LocationClient {
     }
 
     /**
-     * Verify whether the location of a device is within a requested area. The operation returns a verification result and, optionally, a match rate estimation for the location verification in percent.
+     * Retrieve the area where a certain user device is localized.
      *
-     * @param {NetworkAsCodeApi.VerifyLocationRequest} request
+     * @param {NetworkAsCodeApi.RetrieveLocationRequest} request
      * @param {LocationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -274,36 +286,24 @@ export class LocationClient {
      * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.location.verify({
+     *     await client.location.retrieve({
      *         device: {
      *             phoneNumber: "+99999991000"
      *         },
-     *         area: {
-     *             areaType: "CIRCLE"
-     *         }
-     *     })
-     *
-     * @example
-     *     await client.location.verify({
-     *         device: {
-     *             phoneNumber: "+99999991001"
-     *         },
-     *         area: {
-     *             areaType: "CIRCLE"
-     *         }
+     *         maxAge: 60
      *     })
      */
-    public verify(
-        request: NetworkAsCodeApi.VerifyLocationRequest,
+    public retrieve(
+        request: NetworkAsCodeApi.RetrieveLocationRequest,
         requestOptions?: LocationClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.VerifyLocationResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__verify(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveLocationResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieve(request, requestOptions));
     }
 
-    private async __verify(
-        request: NetworkAsCodeApi.VerifyLocationRequest,
+    private async __retrieve(
+        request: NetworkAsCodeApi.RetrieveLocationRequest,
         requestOptions?: LocationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyLocationResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveLocationResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -316,7 +316,7 @@ export class LocationClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "location-verification/v0/verify",
+                "location-retrieval/v0/retrieve",
             ),
             method: "POST",
             headers: _headers,
@@ -332,7 +332,7 @@ export class LocationClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.VerifyLocationResponse,
+                data: _response.body as NetworkAsCodeApi.RetrieveLocationResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -373,7 +373,7 @@ export class LocationClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/location-verification/v0/verify",
+            "/location-retrieval/v0/retrieve",
         );
     }
 }

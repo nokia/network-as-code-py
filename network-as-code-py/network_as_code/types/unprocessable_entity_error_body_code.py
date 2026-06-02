@@ -2,4 +2,4 @@
 
 import typing
 
-UnprocessableEntityErrorBodyCode = typing.Union[typing.Literal["IDENTIFIER_MISMATCH", "SERVICE_NOT_APPLICABLE", "MISSING_IDENTIFIER", "UNSUPPORTED_IDENTIFIER", "UNNECESSARY_IDENTIFIER", "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"], typing.Any]
+UnprocessableEntityErrorBodyCode = typing.Union[typing.Literal["SERVICE_NOT_APPLICABLE"], typing.Any]

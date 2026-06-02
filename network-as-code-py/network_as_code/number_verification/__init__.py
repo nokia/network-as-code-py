@@ -5,9 +5,9 @@
 import typing
 from importlib import import_module
 if typing.TYPE_CHECKING:
-    from .types import VerifyNumberVerificationResponse
-    from .requests import VerifyNumberVerificationResponseParams
-_dynamic_imports: typing.Dict[str, str] = {"VerifyNumberVerificationResponse": ".types", "VerifyNumberVerificationResponseParams": ".requests"}
+    from .types import GetDevicePhoneNumberV2NumberVerificationResponse, VerifyNumberVerificationResponse, VerifyV2NumberVerificationRequestBody, VerifyV2NumberVerificationRequestBodyHashedPhoneNumber, VerifyV2NumberVerificationRequestBodyPhoneNumber, VerifyV2NumberVerificationResponse
+    from .requests import GetDevicePhoneNumberV2NumberVerificationResponseParams, VerifyNumberVerificationResponseParams, VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams, VerifyV2NumberVerificationRequestBodyParams, VerifyV2NumberVerificationRequestBodyPhoneNumberParams, VerifyV2NumberVerificationResponseParams
+_dynamic_imports: typing.Dict[str, str] = {"GetDevicePhoneNumberV2NumberVerificationResponse": ".types", "GetDevicePhoneNumberV2NumberVerificationResponseParams": ".requests", "VerifyNumberVerificationResponse": ".types", "VerifyNumberVerificationResponseParams": ".requests", "VerifyV2NumberVerificationRequestBody": ".types", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumber": ".types", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams": ".requests", "VerifyV2NumberVerificationRequestBodyParams": ".requests", "VerifyV2NumberVerificationRequestBodyPhoneNumber": ".types", "VerifyV2NumberVerificationRequestBodyPhoneNumberParams": ".requests", "VerifyV2NumberVerificationResponse": ".types", "VerifyV2NumberVerificationResponseParams": ".requests"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -25,4 +25,4 @@ def __getattr__(attr_name: str) -> typing.Any:
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-__all__ = ["VerifyNumberVerificationResponse", "VerifyNumberVerificationResponseParams"]
+__all__ = ["GetDevicePhoneNumberV2NumberVerificationResponse", "GetDevicePhoneNumberV2NumberVerificationResponseParams", "VerifyNumberVerificationResponse", "VerifyNumberVerificationResponseParams", "VerifyV2NumberVerificationRequestBody", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumber", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams", "VerifyV2NumberVerificationRequestBodyParams", "VerifyV2NumberVerificationRequestBodyPhoneNumber", "VerifyV2NumberVerificationRequestBodyPhoneNumberParams", "VerifyV2NumberVerificationResponse", "VerifyV2NumberVerificationResponseParams"]

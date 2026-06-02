@@ -30,6 +30,8 @@
  *     }
  */
 export interface RetrieveReachabilityStatusDeviceStatusRequest {
+    /** Correlation id for the different services */
+    "x-correlator"?: unknown;
     /**
      * End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
      *

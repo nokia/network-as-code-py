@@ -10,7 +10,6 @@ export interface UnauthorizedErrorBody {
 export namespace UnauthorizedErrorBody {
     export const Code = {
         Unauthenticated: "UNAUTHENTICATED",
-        AuthenticationRequired: "AUTHENTICATION_REQUIRED",
     } as const;
     export type Code = (typeof Code)[keyof typeof Code];
 }

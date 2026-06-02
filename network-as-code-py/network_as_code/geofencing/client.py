@@ -33,6 +33,76 @@ class GeofencingClient:
         """
         return self._raw_client
     
+    def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionGeofencingResponse:
+        """
+        retrieve Geofencing subscription information for a given subscription ID.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetSubscriptionGeofencingResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.geofencing.get_subscription(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.get_subscription(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionGeofencingResponse]:
+        """
+        delete a given Geofencing subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[str]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteSubscriptionGeofencingResponse]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.geofencing.delete_subscription(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.delete_subscription(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
     def list_subscriptions(self, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsGeofencingResponseItem]:
         """
         Retrieve a list of geofencing event subscription(s)
@@ -127,8 +197,22 @@ class GeofencingClient:
         """
         _response = self._raw_client.create_subscription(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
         return _response.data
+class AsyncGeofencingClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawGeofencingClient(client_wrapper=client_wrapper)
     
-    def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionGeofencingResponse:
+    @property
+    def with_raw_response(self) -> AsyncRawGeofencingClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+        
+        Returns
+        -------
+        AsyncRawGeofencingClient
+        """
+        return self._raw_client
+    
+    async def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionGeofencingResponse:
         """
         retrieve Geofencing subscription information for a given subscription ID.
         
@@ -150,20 +234,28 @@ class GeofencingClient:
         
         Examples
         --------
-        from networkAsCode import NetworkAsCodeApi
+        import asyncio
         
-        client = NetworkAsCodeApi(
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.geofencing.get_subscription(
-            subscription_id="subscriptionId",
-        )
+        
+        
+        async def main() -> None:
+            await client.geofencing.get_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
         """
-        _response = self._raw_client.get_subscription(subscription_id, correlator=correlator, request_options=request_options)
+        _response = await self._raw_client.get_subscription(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data
     
-    def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionGeofencingResponse]:
+    async def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionGeofencingResponse]:
         """
         delete a given Geofencing subscription.
         
@@ -185,32 +277,26 @@ class GeofencingClient:
         
         Examples
         --------
-        from networkAsCode import NetworkAsCodeApi
+        import asyncio
         
-        client = NetworkAsCodeApi(
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.geofencing.delete_subscription(
-            subscription_id="subscriptionId",
-        )
-        """
-        _response = self._raw_client.delete_subscription(subscription_id, correlator=correlator, request_options=request_options)
-        return _response.data
-class AsyncGeofencingClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawGeofencingClient(client_wrapper=client_wrapper)
-    
-    @property
-    def with_raw_response(self) -> AsyncRawGeofencingClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
         
-        Returns
-        -------
-        AsyncRawGeofencingClient
+        
+        async def main() -> None:
+            await client.geofencing.delete_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
         """
-        return self._raw_client
+        _response = await self._raw_client.delete_subscription(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
     
     async def list_subscriptions(self, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsGeofencingResponseItem]:
         """
@@ -320,90 +406,4 @@ class AsyncGeofencingClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.create_subscription(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
-        return _response.data
-    
-    async def get_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionGeofencingResponse:
-        """
-        retrieve Geofencing subscription information for a given subscription ID.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetSubscriptionGeofencingResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.geofencing.get_subscription(
-                subscription_id="subscriptionId",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_subscription(subscription_id, correlator=correlator, request_options=request_options)
-        return _response.data
-    
-    async def delete_subscription(self, subscription_id: str, *, correlator: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionGeofencingResponse]:
-        """
-        delete a given Geofencing subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        correlator : typing.Optional[str]
-            Correlation id for the different services
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        typing.Optional[DeleteSubscriptionGeofencingResponse]
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.geofencing.delete_subscription(
-                subscription_id="subscriptionId",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_subscription(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data

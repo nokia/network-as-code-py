@@ -23,6 +23,224 @@ export class GeofencingClient {
     }
 
     /**
+     * retrieve Geofencing subscription information for a given subscription ID.
+     *
+     * @param {NetworkAsCodeApi.GetSubscriptionGeofencingRequest} request
+     * @param {GeofencingClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.geofencing.getSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionGeofencingRequest,
+        requestOptions?: GeofencingClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionGeofencingResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
+    }
+
+    private async __getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionGeofencingRequest,
+        requestOptions?: GeofencingClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionGeofencingResponse>> {
+        const { subscriptionId, "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator": correlator,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `geofencing-subscriptions/v0.3/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetSubscriptionGeofencingResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/geofencing-subscriptions/v0.3/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * delete a given Geofencing subscription.
+     *
+     * @param {NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest} request
+     * @param {GeofencingClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.geofencing.deleteSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
+        requestOptions?: GeofencingClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
+    }
+
+    private async __deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
+        requestOptions?: GeofencingClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined>> {
+        const { subscriptionId, "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator": correlator,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `geofencing-subscriptions/v0.3/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/geofencing-subscriptions/v0.3/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
      * Retrieve a list of geofencing event subscription(s)
      *
      * @param {NetworkAsCodeApi.ListSubscriptionsGeofencingRequest} request
@@ -273,224 +491,6 @@ export class GeofencingClient {
             _response.rawResponse,
             "POST",
             "/geofencing-subscriptions/v0.3/subscriptions",
-        );
-    }
-
-    /**
-     * retrieve Geofencing subscription information for a given subscription ID.
-     *
-     * @param {NetworkAsCodeApi.GetSubscriptionGeofencingRequest} request
-     * @param {GeofencingClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
-     *
-     * @example
-     *     await client.geofencing.getSubscription({
-     *         subscriptionId: "subscriptionId"
-     *     })
-     */
-    public getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionGeofencingRequest,
-        requestOptions?: GeofencingClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionGeofencingResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
-    }
-
-    private async __getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionGeofencingRequest,
-        requestOptions?: GeofencingClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionGeofencingResponse>> {
-        const { subscriptionId, "x-correlator": correlator } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator": correlator,
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `geofencing-subscriptions/v0.3/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetSubscriptionGeofencingResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new NetworkAsCodeApi.TooManyRequestsError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/geofencing-subscriptions/v0.3/subscriptions/{subscriptionId}",
-        );
-    }
-
-    /**
-     * delete a given Geofencing subscription.
-     *
-     * @param {NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest} request
-     * @param {GeofencingClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
-     *
-     * @example
-     *     await client.geofencing.deleteSubscription({
-     *         subscriptionId: "subscriptionId"
-     *     })
-     */
-    public deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
-        requestOptions?: GeofencingClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined> {
-        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
-    }
-
-    private async __deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionGeofencingRequest,
-        requestOptions?: GeofencingClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined>> {
-        const { subscriptionId, "x-correlator": correlator } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator": correlator,
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `geofencing-subscriptions/v0.3/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
-            ),
-            method: "DELETE",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionGeofencingResponse | undefined,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new NetworkAsCodeApi.TooManyRequestsError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "DELETE",
-            "/geofencing-subscriptions/v0.3/subscriptions/{subscriptionId}",
         );
     }
 }

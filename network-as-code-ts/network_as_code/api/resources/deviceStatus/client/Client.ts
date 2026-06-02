@@ -4,6 +4,7 @@ import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClie
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { toJson } from "../../../../core/json.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -23,40 +24,42 @@ export class DeviceStatusClient {
     }
 
     /**
-     * retrieve event subscription information for a given subscription.
+     * retrieve device roaming status subscription information for a given subscription.
      *
-     * @param {NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest} request
+     * @param {NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
      * @throws {@link NetworkAsCodeApi.UnauthorizedError}
      * @throws {@link NetworkAsCodeApi.ForbiddenError}
      * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.deviceStatus.getSubscription({
+     *     await client.deviceStatus.getRoamingSubscriptionV08({
      *         subscriptionId: "subscriptionId"
      *     })
      */
-    public getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest,
+    public getRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getRoamingSubscriptionV08(request, requestOptions));
     }
 
-    private async __getSubscription(
-        request: NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest,
+    private async __getRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse>> {
-        const { subscriptionId } = request;
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusResponse>> {
+        const { subscriptionId, "x-correlator": correlator } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -64,7 +67,7 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                `device-status/v0/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+                `device-status/device-roaming-status-subscriptions/v0.8/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -77,7 +80,7 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse,
+                data: _response.body as NetworkAsCodeApi.GetRoamingSubscriptionV08DeviceStatusResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -95,16 +98,6 @@ export class DeviceStatusClient {
                     throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
                 default:
                     throw new errors.NetworkAsCodeApiError({
                         statusCode: _response.error.statusCode,
@@ -118,45 +111,47 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "GET",
-            "/device-status/v0/subscriptions/{subscriptionId}",
+            "/device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{subscriptionId}",
         );
     }
 
     /**
-     * delete a  given event subscription.
+     * Delete a given device-roaming-status subscription by ID
      *
-     * @param {NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest} request
+     * @param {NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
      * @throws {@link NetworkAsCodeApi.UnauthorizedError}
      * @throws {@link NetworkAsCodeApi.ForbiddenError}
      * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.deviceStatus.deleteSubscription({
+     *     await client.deviceStatus.deleteRoamingSubscriptionV08({
      *         subscriptionId: "subscriptionId"
      *     })
      */
-    public deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest,
+    public deleteRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined> {
-        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusResponse | undefined> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteRoamingSubscriptionV08(request, requestOptions));
     }
 
-    private async __deleteSubscription(
-        request: NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest,
+    private async __deleteRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined>> {
-        const { subscriptionId } = request;
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusResponse | undefined>> {
+        const { subscriptionId, "x-correlator": correlator } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -164,7 +159,7 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                `device-status/v0/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+                `device-status/device-roaming-status-subscriptions/v0.8/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -177,7 +172,7 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined,
+                data: _response.body as NetworkAsCodeApi.DeleteRoamingSubscriptionV08DeviceStatusResponse | undefined,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -195,16 +190,6 @@ export class DeviceStatusClient {
                     throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
                 default:
                     throw new errors.NetworkAsCodeApiError({
                         statusCode: _response.error.statusCode,
@@ -218,7 +203,7 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "DELETE",
-            "/device-status/v0/subscriptions/{subscriptionId}",
+            "/device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{subscriptionId}",
         );
     }
 
@@ -337,308 +322,6 @@ export class DeviceStatusClient {
             _response.rawResponse,
             "POST",
             "/device-status/v0/connectivity",
-        );
-    }
-
-    /**
-     * Get the current roaming status and the country information
-     *
-     * @param {NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest} request
-     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
-     *
-     * @example
-     *     await client.deviceStatus.retrieveRoamingStatus({
-     *         device: {
-     *             phoneNumber: "+99999991000"
-     *         }
-     *     })
-     *
-     * @example
-     *     await client.deviceStatus.retrieveRoamingStatus({
-     *         device: {
-     *             phoneNumber: "+99999991001"
-     *         }
-     *     })
-     */
-    public retrieveRoamingStatus(
-        request: NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest = {},
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieveRoamingStatus(request, requestOptions));
-    }
-
-    private async __retrieveRoamingStatus(
-        request: NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest = {},
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/device-roaming-status/v1/retrieve",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 429:
-                    throw new NetworkAsCodeApi.TooManyRequestsError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/device-status/device-roaming-status/v1/retrieve",
-        );
-    }
-
-    /**
-     * retrieve device roaming status subscription information for a given subscription.
-     *
-     * @param {NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest} request
-     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     *
-     * @example
-     *     await client.deviceStatus.getRoamingSubscription({
-     *         subscriptionId: "subscriptionId"
-     *     })
-     */
-    public getRoamingSubscription(
-        request: NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest,
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getRoamingSubscription(request, requestOptions));
-    }
-
-    private async __getRoamingSubscription(
-        request: NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest,
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse>> {
-        const { subscriptionId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `device-status/device-roaming-status-subscriptions/v0.7/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{subscriptionId}",
-        );
-    }
-
-    /**
-     * Delete a given device-roaming-status subscription by ID
-     *
-     * @param {NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest} request
-     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     *
-     * @example
-     *     await client.deviceStatus.deleteRoamingSubscription({
-     *         subscriptionId: "subscriptionId"
-     *     })
-     */
-    public deleteRoamingSubscription(
-        request: NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest,
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined> {
-        return core.HttpResponsePromise.fromPromise(this.__deleteRoamingSubscription(request, requestOptions));
-    }
-
-    private async __deleteRoamingSubscription(
-        request: NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest,
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined>> {
-        const { subscriptionId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `device-status/device-roaming-status-subscriptions/v0.7/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
-            ),
-            method: "DELETE",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "DELETE",
-            "/device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{subscriptionId}",
         );
     }
 
@@ -825,58 +508,26 @@ export class DeviceStatusClient {
     }
 
     /**
-     * Get the current reachability status information
+     * Retrieve a list of device reachability status event subscription(s)
      *
-     * @param {NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
      * @throws {@link NetworkAsCodeApi.UnauthorizedError}
      * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
      *
      * @example
-     *     await client.deviceStatus.retrieveReachabilityStatus({
-     *         device: {
-     *             phoneNumber: "+99999991000"
-     *         }
-     *     })
-     *
-     * @example
-     *     await client.deviceStatus.retrieveReachabilityStatus({
-     *         device: {
-     *             phoneNumber: "+99999991001"
-     *         }
-     *     })
-     *
-     * @example
-     *     await client.deviceStatus.retrieveReachabilityStatus({
-     *         device: {
-     *             phoneNumber: "+99999991002"
-     *         }
-     *     })
-     *
-     * @example
-     *     await client.deviceStatus.retrieveReachabilityStatus({
-     *         device: {
-     *             phoneNumber: "+99999991003"
-     *         }
-     *     })
+     *     await client.deviceStatus.listReachabilitySubscriptions()
      */
-    public retrieveReachabilityStatus(
-        request: NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest = {},
+    public listReachabilitySubscriptions(
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__retrieveReachabilityStatus(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listReachabilitySubscriptions(requestOptions));
     }
 
-    private async __retrieveReachabilityStatus(
-        request: NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest = {},
+    private async __listReachabilitySubscriptions(
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[]>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -892,108 +543,7 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/device-reachability-status/v1/retrieve",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 429:
-                    throw new NetworkAsCodeApi.TooManyRequestsError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/device-status/device-reachability-status/v1/retrieve",
-        );
-    }
-
-    /**
-     * Retrieve a list of device status event subscription(s)
-     *
-     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
-     *
-     * @example
-     *     await client.deviceStatus.listSubscriptions()
-     */
-    public listSubscriptions(
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__listSubscriptions(requestOptions));
-    }
-
-    private async __listSubscriptions(
-        requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[]>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/v0/subscriptions",
+                "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
             ),
             method: "GET",
             headers: _headers,
@@ -1006,7 +556,7 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[],
+                data: _response.body as NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[],
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1022,16 +572,6 @@ export class DeviceStatusClient {
                     );
                 case 403:
                     throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
                 default:
                     throw new errors.NetworkAsCodeApiError({
                         statusCode: _response.error.statusCode,
@@ -1045,54 +585,90 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "GET",
-            "/device-status/v0/subscriptions",
+            "/device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
         );
     }
 
     /**
-     * Create a device status event subscription for a device
+     * Create a device reachability status event subscription for a device
      *
-     * @param {NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest} request
+     * @param {NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
      * @throws {@link NetworkAsCodeApi.UnauthorizedError}
      * @throws {@link NetworkAsCodeApi.ForbiddenError}
      * @throws {@link NetworkAsCodeApi.ConflictError}
-     * @throws {@link NetworkAsCodeApi.InternalServerError}
-     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
      *
      * @example
-     *     await client.deviceStatus.createSubscription({
-     *         subscriptionDetail: {
-     *             device: {
-     *                 phoneNumber: "+36719991000"
+     *     await client.deviceStatus.createReachabilitySubscription({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
      *             },
-     *             type: "org.camaraproject.device-status.v0.roaming-status"
-     *         },
-     *         subscriptionExpireTime: "2026-01-17T13:18:23Z",
-     *         webhook: {
-     *             notificationUrl: "https://application-server.com",
-     *             notificationAuthToken: "c8974e592c2fa383d4a3960714"
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.createReachabilitySubscription({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.createReachabilitySubscription({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
      *         }
      *     })
      */
-    public createSubscription(
-        request: NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest,
+    public createReachabilitySubscription(
+        request: NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__createSubscription(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createReachabilitySubscription(request, requestOptions));
     }
 
-    private async __createSubscription(
-        request: NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest,
+    private async __createReachabilitySubscription(
+        request: NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            mergeOnlyDefinedHeaders({
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1100,7 +676,7 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/v0/subscriptions",
+                "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
             ),
             method: "POST",
             headers: _headers,
@@ -1116,7 +692,7 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse,
+                data: _response.body as NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1134,13 +710,13 @@ export class DeviceStatusClient {
                     throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 409:
                     throw new NetworkAsCodeApi.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new NetworkAsCodeApi.InternalServerError(
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
                         _response.error.body as unknown,
                         _response.rawResponse,
                     );
-                case 503:
-                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
                         _response.error.body as unknown,
                         _response.rawResponse,
                     );
@@ -1157,7 +733,7 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/device-status/v0/subscriptions",
+            "/device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
         );
     }
 
@@ -1408,6 +984,391 @@ export class DeviceStatusClient {
     }
 
     /**
+     * retrieve device roaming status subscription information for a given subscription.
+     *
+     * @param {NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     *
+     * @example
+     *     await client.deviceStatus.getRoamingSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public getRoamingSubscription(
+        request: NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getRoamingSubscription(request, requestOptions));
+    }
+
+    private async __getRoamingSubscription(
+        request: NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse>> {
+        const { subscriptionId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-status/device-roaming-status-subscriptions/v0.7/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetRoamingSubscriptionDeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * Delete a given device-roaming-status subscription by ID
+     *
+     * @param {NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     *
+     * @example
+     *     await client.deviceStatus.deleteRoamingSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public deleteRoamingSubscription(
+        request: NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteRoamingSubscription(request, requestOptions));
+    }
+
+    private async __deleteRoamingSubscription(
+        request: NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined>> {
+        const { subscriptionId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-status/device-roaming-status-subscriptions/v0.7/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.DeleteRoamingSubscriptionDeviceStatusResponse | undefined,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * Retrieve a list of device status event subscription(s)
+     *
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.listSubscriptions()
+     */
+    public listSubscriptions(
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listSubscriptions(requestOptions));
+    }
+
+    private async __listSubscriptions(
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[]>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/v0/subscriptions",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.ListSubscriptionsDeviceStatusResponseItem[],
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-status/v0/subscriptions",
+        );
+    }
+
+    /**
+     * Create a device status event subscription for a device
+     *
+     * @param {NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.ConflictError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.createSubscription({
+     *         subscriptionDetail: {
+     *             device: {
+     *                 phoneNumber: "+36719991000"
+     *             },
+     *             type: "org.camaraproject.device-status.v0.roaming-status"
+     *         },
+     *         subscriptionExpireTime: "2026-01-17T13:18:23Z",
+     *         webhook: {
+     *             notificationUrl: "https://application-server.com",
+     *             notificationAuthToken: "c8974e592c2fa383d4a3960714"
+     *         }
+     *     })
+     */
+    public createSubscription(
+        request: NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createSubscription(request, requestOptions));
+    }
+
+    private async __createSubscription(
+        request: NetworkAsCodeApi.CreateSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/v0/subscriptions",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.CreateSubscriptionDeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new NetworkAsCodeApi.ConflictError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/device-status/v0/subscriptions",
+        );
+    }
+
+    /**
      * Get the current roaming status and the country information
      *
      * @param {NetworkAsCodeApi.CheckRoamingDeviceStatusRequest} request
@@ -1514,32 +1475,40 @@ export class DeviceStatusClient {
     }
 
     /**
-     * Retrieve a list of device reachability status event subscription(s)
+     * Retrieve a given subscription by ID
      *
+     * @param {NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
      * @throws {@link NetworkAsCodeApi.UnauthorizedError}
      * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
      *
      * @example
-     *     await client.deviceStatus.listReachabilitySubscriptions()
+     *     await client.deviceStatus.getReachabilitySubscriptionV08({
+     *         subscriptionId: "subscriptionId"
+     *     })
      */
-    public listReachabilitySubscriptions(
+    public getReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[]> {
-        return core.HttpResponsePromise.fromPromise(this.__listReachabilitySubscriptions(requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getReachabilitySubscriptionV08(request, requestOptions));
     }
 
-    private async __listReachabilitySubscriptions(
+    private async __getReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[]>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusResponse>> {
+        const { subscriptionId, "x-correlator": correlator } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -1549,7 +1518,7 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
+                `device-status/device-reachability-status-subscriptions/v0.8/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -1562,7 +1531,192 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.ListReachabilitySubscriptionsDeviceStatusResponseItem[],
+                data: _response.body as NetworkAsCodeApi.GetReachabilitySubscriptionV08DeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * Delete a given subscription by ID
+     *
+     * @param {NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     *
+     * @example
+     *     await client.deviceStatus.deleteReachabilitySubscriptionV08({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public deleteReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusResponse | undefined> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteReachabilitySubscriptionV08(request, requestOptions));
+    }
+
+    private async __deleteReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<
+        core.WithRawResponse<NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusResponse | undefined>
+    > {
+        const { subscriptionId, "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-status/device-reachability-status-subscriptions/v0.8/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as
+                    | NetworkAsCodeApi.DeleteReachabilitySubscriptionV08DeviceStatusResponse
+                    | undefined,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * Retrieve a list of device reachability status event subscription(s)
+     *
+     * @param {NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     *
+     * @example
+     *     await client.deviceStatus.listReachabilitySubscriptionsV08()
+     */
+    public listReachabilitySubscriptionsV08(
+        request: NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listReachabilitySubscriptionsV08(request, requestOptions));
+    }
+
+    private async __listReachabilitySubscriptionsV08(
+        request: NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusResponseItem[]>> {
+        const { "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.ListReachabilitySubscriptionsV08DeviceStatusResponseItem[],
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1591,14 +1745,14 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "GET",
-            "/device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
+            "/device-status/device-reachability-status-subscriptions/v0.8/subscriptions",
         );
     }
 
     /**
      * Create a device reachability status event subscription for a device
      *
-     * @param {NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest} request
+     * @param {NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusRequest} request
      * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link NetworkAsCodeApi.BadRequestError}
@@ -1609,9 +1763,12 @@ export class DeviceStatusClient {
      * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
      *
      * @example
-     *     await client.deviceStatus.createReachabilitySubscription({
+     *     await client.deviceStatus.createReachabilitySubscriptionV08({
      *         protocol: "HTTP",
      *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
      *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"],
      *         config: {
      *             subscriptionDetail: {
@@ -1619,15 +1776,19 @@ export class DeviceStatusClient {
      *                     phoneNumber: "+99999991000"
      *                 }
      *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
      *             subscriptionMaxEvents: 5,
      *             initialEvent: true
      *         }
      *     })
      *
      * @example
-     *     await client.deviceStatus.createReachabilitySubscription({
+     *     await client.deviceStatus.createReachabilitySubscriptionV08({
      *         protocol: "HTTP",
      *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
      *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-sms"],
      *         config: {
      *             subscriptionDetail: {
@@ -1635,15 +1796,19 @@ export class DeviceStatusClient {
      *                     phoneNumber: "+99999991000"
      *                 }
      *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
      *             subscriptionMaxEvents: 5,
      *             initialEvent: true
      *         }
      *     })
      *
      * @example
-     *     await client.deviceStatus.createReachabilitySubscription({
+     *     await client.deviceStatus.createReachabilitySubscriptionV08({
      *         protocol: "HTTP",
      *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
      *         types: ["org.camaraproject.device-reachability-status-subscriptions.v0.reachability-disconnected"],
      *         config: {
      *             subscriptionDetail: {
@@ -1651,28 +1816,31 @@ export class DeviceStatusClient {
      *                     phoneNumber: "+99999991000"
      *                 }
      *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
      *             subscriptionMaxEvents: 5,
      *             initialEvent: true
      *         }
      *     })
      */
-    public createReachabilitySubscription(
-        request: NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest,
+    public createReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__createReachabilitySubscription(request, requestOptions));
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createReachabilitySubscriptionV08(request, requestOptions));
     }
 
-    private async __createReachabilitySubscription(
-        request: NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusRequest,
+    private async __createReachabilitySubscriptionV08(
+        request: NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusRequest,
         requestOptions?: DeviceStatusClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse>> {
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusResponse>> {
+        const { "x-correlator": correlator, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -1682,14 +1850,14 @@ export class DeviceStatusClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.NetworkAsCodeApiEnvironment.Default,
-                "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
+                "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",
             ),
             method: "POST",
             headers: _headers,
             contentType: "application/json",
             queryParameters: requestOptions?.queryParams,
             requestType: "json",
-            body: request,
+            body: _body,
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1698,7 +1866,7 @@ export class DeviceStatusClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as NetworkAsCodeApi.CreateReachabilitySubscriptionDeviceStatusResponse,
+                data: _response.body as NetworkAsCodeApi.CreateReachabilitySubscriptionV08DeviceStatusResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -1739,7 +1907,734 @@ export class DeviceStatusClient {
             _response.error,
             _response.rawResponse,
             "POST",
-            "/device-status/device-reachability-status-subscriptions/v0.7/subscriptions",
+            "/device-status/device-reachability-status-subscriptions/v0.8/subscriptions",
+        );
+    }
+
+    /**
+     * Get the current reachability status information
+     *
+     * @param {NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.retrieveReachabilityStatus({
+     *         device: {
+     *             phoneNumber: "+99999991000"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.retrieveReachabilityStatus({
+     *         device: {
+     *             phoneNumber: "+99999991001"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.retrieveReachabilityStatus({
+     *         device: {
+     *             phoneNumber: "+99999991002"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.retrieveReachabilityStatus({
+     *         device: {
+     *             phoneNumber: "+99999991003"
+     *         }
+     *     })
+     */
+    public retrieveReachabilityStatus(
+        request: NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieveReachabilityStatus(request, requestOptions));
+    }
+
+    private async __retrieveReachabilityStatus(
+        request: NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse>> {
+        const { "x-correlator": correlator, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/device-reachability-status/v1/retrieve",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.RetrieveReachabilityStatusDeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/device-status/device-reachability-status/v1/retrieve",
+        );
+    }
+
+    /**
+     * retrieve event subscription information for a given subscription.
+     *
+     * @param {NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.getSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getSubscription(request, requestOptions));
+    }
+
+    private async __getSubscription(
+        request: NetworkAsCodeApi.GetSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse>> {
+        const { subscriptionId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-status/v0/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetSubscriptionDeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-status/v0/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * delete a  given event subscription.
+     *
+     * @param {NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.InternalServerError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.deleteSubscription({
+     *         subscriptionId: "subscriptionId"
+     *     })
+     */
+    public deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteSubscription(request, requestOptions));
+    }
+
+    private async __deleteSubscription(
+        request: NetworkAsCodeApi.DeleteSubscriptionDeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined>> {
+        const { subscriptionId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-status/v0/subscriptions/${core.url.encodePathParam(subscriptionId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.DeleteSubscriptionDeviceStatusResponse | undefined,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new NetworkAsCodeApi.InternalServerError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/device-status/v0/subscriptions/{subscriptionId}",
+        );
+    }
+
+    /**
+     * Get the current roaming status and the country information
+     *
+     * @param {NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
+     * @throws {@link NetworkAsCodeApi.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.deviceStatus.retrieveRoamingStatus({
+     *         device: {
+     *             phoneNumber: "+99999991000"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.retrieveRoamingStatus({
+     *         device: {
+     *             phoneNumber: "+99999991001"
+     *         }
+     *     })
+     */
+    public retrieveRoamingStatus(
+        request: NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__retrieveRoamingStatus(request, requestOptions));
+    }
+
+    private async __retrieveRoamingStatus(
+        request: NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse>> {
+        const { "x-correlator": correlator, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/device-roaming-status/v1/retrieve",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.RetrieveRoamingStatusDeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new NetworkAsCodeApi.ServiceUnavailableError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/device-status/device-roaming-status/v1/retrieve",
+        );
+    }
+
+    /**
+     * Retrieve a list of device roaming status event subscription(s)
+     *
+     * @param {NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     *
+     * @example
+     *     await client.deviceStatus.listRoamingSubscriptionsV08()
+     */
+    public listRoamingSubscriptionsV08(
+        request: NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusResponseItem[]> {
+        return core.HttpResponsePromise.fromPromise(this.__listRoamingSubscriptionsV08(request, requestOptions));
+    }
+
+    private async __listRoamingSubscriptionsV08(
+        request: NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusRequest = {},
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusResponseItem[]>> {
+        const { "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.ListRoamingSubscriptionsV08DeviceStatusResponseItem[],
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-status/device-roaming-status-subscriptions/v0.8/subscriptions",
+        );
+    }
+
+    /**
+     * Create a device roaming status event subscription for a device
+     *
+     * @param {NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusRequest} request
+     * @param {DeviceStatusClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.ConflictError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     * @throws {@link NetworkAsCodeApi.TooManyRequestsError}
+     *
+     * @example
+     *     await client.deviceStatus.createRoamingSubscriptionV08({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
+     *         types: ["org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.createRoamingSubscriptionV08({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
+     *         types: ["org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.createRoamingSubscriptionV08({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
+     *         types: ["org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.deviceStatus.createRoamingSubscriptionV08({
+     *         protocol: "HTTP",
+     *         sink: "https://endpoint.example.com/sink",
+     *         sinkCredential: {
+     *             credentialType: "ACCESSTOKEN"
+     *         },
+     *         types: ["org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off"],
+     *         config: {
+     *             subscriptionDetail: {
+     *                 device: {
+     *                     phoneNumber: "+99999991000"
+     *                 }
+     *             },
+     *             subscriptionExpireTime: "2023-01-17T13:18:23Z",
+     *             subscriptionMaxEvents: 5,
+     *             initialEvent: true
+     *         }
+     *     })
+     */
+    public createRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__createRoamingSubscriptionV08(request, requestOptions));
+    }
+
+    private async __createRoamingSubscriptionV08(
+        request: NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusRequest,
+        requestOptions?: DeviceStatusClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusResponse>> {
+        const { "x-correlator": correlator, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.CreateRoamingSubscriptionV08DeviceStatusResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new NetworkAsCodeApi.ConflictError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new NetworkAsCodeApi.TooManyRequestsError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/device-status/device-roaming-status-subscriptions/v0.8/subscriptions",
         );
     }
 }

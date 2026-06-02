@@ -73,12 +73,12 @@ class CreateSessionQodResponseParams(typing_extensions.TypedDict):
     """
     
     duration: int
-    started_at: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="startedAt")]]
+    started_at: typing_extensions.Annotated[int, FieldMetadata(alias="startedAt")]
     """
     Timestamp of session start in seconds since Unix epoch
     """
     
-    expires_at: typing_extensions.NotRequired[typing_extensions.Annotated[str, FieldMetadata(alias="expiresAt")]]
+    expires_at: typing_extensions.Annotated[int, FieldMetadata(alias="expiresAt")]
     """
     Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
     """

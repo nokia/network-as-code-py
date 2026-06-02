@@ -4,24 +4,17 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .not_implemented_error_body_code import NotImplementedErrorBodyCode
 
 
 class NotImplementedErrorBody(UniversalBaseModel):
-    status: int = pydantic.Field()
-    """
-    HTTP status code returned along with this error response
-    """
-    
-    code: str = pydantic.Field()
-    """
-    Code given to this error
-    """
-    
     message: str = pydantic.Field()
     """
-    Detailed error description
+    A human readable description of what the event represent
     """
     
+    status: typing.Optional[str] = None
+    code: typing.Optional[NotImplementedErrorBodyCode] = None
     
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

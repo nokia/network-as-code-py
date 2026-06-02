@@ -4,11 +4,10 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .unprocessable_entity_error_body_detail_item_loc_item import UnprocessableEntityErrorBodyDetailItemLocItem
 
 
 class UnprocessableEntityErrorBodyDetailItem(UniversalBaseModel):
-    loc: typing.List[UnprocessableEntityErrorBodyDetailItemLocItem]
+    loc: typing.List[str]
     msg: str
     type: str
     

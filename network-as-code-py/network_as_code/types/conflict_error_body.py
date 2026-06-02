@@ -12,7 +12,7 @@ class ConflictErrorBody(UniversalBaseModel):
     code: typing.Optional[ConflictErrorBodyCode] = None
     message: str = pydantic.Field()
     """
-    Detailed error description
+    A human-readable description of what the event represents
     """
     
     

@@ -23,7 +23,7 @@ class RawNumberVerificationV100Client:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    def phone_number_share(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[PhoneNumberShareResponse]:
+    def phone_number_share(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[PhoneNumberShareResponse]:
         """
         Returns the phone number so the API clients can verify the number themselves:
         - It will be done for the user that has authenticated via mobile network
@@ -31,11 +31,11 @@ class RawNumberVerificationV100Client:
         
         Parameters
         ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-        
         state : typing.Optional[str]
             Application state
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
         
         correlator : typing.Optional[str]
             Correlation id for the different services
@@ -53,7 +53,7 @@ class RawNumberVerificationV100Client:
         """
         _response = self._client_wrapper.httpx_client.request(
             "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",method="GET",
-            params={"code": code, "state": state, }
+            params={"state": state, "code": code, }
             ,
             headers={"x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
             ,
@@ -126,7 +126,7 @@ class AsyncRawNumberVerificationV100Client:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    async def phone_number_share(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[PhoneNumberShareResponse]:
+    async def phone_number_share(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[PhoneNumberShareResponse]:
         """
         Returns the phone number so the API clients can verify the number themselves:
         - It will be done for the user that has authenticated via mobile network
@@ -134,11 +134,11 @@ class AsyncRawNumberVerificationV100Client:
         
         Parameters
         ----------
-        code : typing.Optional[str]
-            Authorization code received from the CSP
-        
         state : typing.Optional[str]
             Application state
+        
+        code : typing.Optional[str]
+            Authorization code received from the CSP
         
         correlator : typing.Optional[str]
             Correlation id for the different services
@@ -156,7 +156,7 @@ class AsyncRawNumberVerificationV100Client:
         """
         _response = await self._client_wrapper.httpx_client.request(
             "passthrough/camara/v1/number-verification/number-verification/v0/device-phone-number",method="GET",
-            params={"code": code, "state": state, }
+            params={"state": state, "code": code, }
             ,
             headers={"x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
             ,

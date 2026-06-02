@@ -29,11 +29,23 @@ from .requests.create_reachability_subscription_device_status_request_config imp
 from .requests.create_reachability_subscription_device_status_request_sink_credential import (
     CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams,
 )
+from .requests.create_reachability_subscription_v08device_status_request_config import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams,
+)
+from .requests.create_reachability_subscription_v08device_status_request_sink_credential import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams,
+)
 from .requests.create_roaming_subscription_device_status_request_config import (
     CreateRoamingSubscriptionDeviceStatusRequestConfigParams,
 )
 from .requests.create_roaming_subscription_device_status_request_sink_credential import (
     CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams,
+)
+from .requests.create_roaming_subscription_v08device_status_request_config import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams,
+)
+from .requests.create_roaming_subscription_v08device_status_request_sink_credential import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams,
 )
 from .requests.create_subscription_device_status_request_subscription_detail import (
     CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams,
@@ -58,6 +70,15 @@ from .types.create_reachability_subscription_device_status_request_types_item im
 from .types.create_reachability_subscription_device_status_response import (
     CreateReachabilitySubscriptionDeviceStatusResponse,
 )
+from .types.create_reachability_subscription_v08device_status_request_protocol import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol,
+)
+from .types.create_reachability_subscription_v08device_status_request_types_item import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem,
+)
+from .types.create_reachability_subscription_v08device_status_response import (
+    CreateReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.create_roaming_subscription_device_status_request_protocol import (
     CreateRoamingSubscriptionDeviceStatusRequestProtocol,
 )
@@ -65,20 +86,45 @@ from .types.create_roaming_subscription_device_status_request_types_item import 
     CreateRoamingSubscriptionDeviceStatusRequestTypesItem,
 )
 from .types.create_roaming_subscription_device_status_response import CreateRoamingSubscriptionDeviceStatusResponse
+from .types.create_roaming_subscription_v08device_status_request_protocol import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestProtocol,
+)
+from .types.create_roaming_subscription_v08device_status_request_types_item import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem,
+)
+from .types.create_roaming_subscription_v08device_status_response import (
+    CreateRoamingSubscriptionV08DeviceStatusResponse,
+)
 from .types.create_subscription_device_status_response import CreateSubscriptionDeviceStatusResponse
 from .types.delete_reachability_subscription_device_status_response import (
     DeleteReachabilitySubscriptionDeviceStatusResponse,
 )
+from .types.delete_reachability_subscription_v08device_status_response import (
+    DeleteReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.delete_roaming_subscription_device_status_response import DeleteRoamingSubscriptionDeviceStatusResponse
+from .types.delete_roaming_subscription_v08device_status_response import (
+    DeleteRoamingSubscriptionV08DeviceStatusResponse,
+)
 from .types.delete_subscription_device_status_response import DeleteSubscriptionDeviceStatusResponse
 from .types.get_reachability_subscription_device_status_response import GetReachabilitySubscriptionDeviceStatusResponse
+from .types.get_reachability_subscription_v08device_status_response import (
+    GetReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.get_roaming_subscription_device_status_response import GetRoamingSubscriptionDeviceStatusResponse
+from .types.get_roaming_subscription_v08device_status_response import GetRoamingSubscriptionV08DeviceStatusResponse
 from .types.get_subscription_device_status_response import GetSubscriptionDeviceStatusResponse
 from .types.list_reachability_subscriptions_device_status_response_item import (
     ListReachabilitySubscriptionsDeviceStatusResponseItem,
 )
+from .types.list_reachability_subscriptions_v08device_status_response_item import (
+    ListReachabilitySubscriptionsV08DeviceStatusResponseItem,
+)
 from .types.list_roaming_subscriptions_device_status_response_item import (
     ListRoamingSubscriptionsDeviceStatusResponseItem,
+)
+from .types.list_roaming_subscriptions_v08device_status_response_item import (
+    ListRoamingSubscriptionsV08DeviceStatusResponseItem,
 )
 from .types.list_subscriptions_device_status_response_item import ListSubscriptionsDeviceStatusResponseItem
 from .types.retrieve_reachability_status_device_status_response import RetrieveReachabilityStatusDeviceStatusResponse
@@ -91,32 +137,37 @@ class RawDeviceStatusClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSubscriptionDeviceStatusResponse]:
+    def get_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetRoamingSubscriptionV08DeviceStatusResponse]:
         """
-        retrieve event subscription information for a given subscription.
+        retrieve device roaming status subscription information for a given subscription.
         
         Parameters
         ----------
         subscription_id : str
-            Subscription identifier that was obtained from the create subscription operation
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[GetSubscriptionDeviceStatusResponse]
+        HttpResponse[GetRoamingSubscriptionV08DeviceStatusResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            f"device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
             request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetSubscriptionDeviceStatusResponse,
+                    GetRoamingSubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =GetSubscriptionDeviceStatusResponse,  # type: ignore
+                        type_ =GetRoamingSubscriptionV08DeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -147,22 +198,6 @@ class RawDeviceStatusClient:
                 ))
             if _response.status_code == 404:
                 raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -176,34 +211,39 @@ class RawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]:
+    def delete_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]]:
         """
-        delete a  given event subscription.
+        Delete a given device-roaming-status subscription by ID
         
         Parameters
         ----------
         subscription_id : str
             Subscription identifier that was obtained from the create event subscription operation
         
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]
+        HttpResponse[typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            f"device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
             request_options=request_options,)
         try:
             if _response is None or not _response.text.strip():
                 return HttpResponse(response=_response, data=None)
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.Optional[DeleteSubscriptionDeviceStatusResponse],
+                    typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse],
                     parse_obj_as(
-                        type_ =typing.Optional[DeleteSubscriptionDeviceStatusResponse],  # type: ignore
+                        type_ =typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse],  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -234,22 +274,6 @@ class RawDeviceStatusClient:
                 ))
             if _response.status_code == 404:
                 raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -351,259 +375,6 @@ class RawDeviceStatusClient:
                 ))
             if _response.status_code == 503:
                 raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def retrieve_roaming_status(self, *, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveRoamingStatusDeviceStatusResponse]:
-        """
-        Get the current roaming status and the country information
-        
-        Parameters
-        ----------
-        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[RetrieveRoamingStatusDeviceStatusResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status/v1/retrieve",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveRoamingStatusDeviceStatusRequestDeviceParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    RetrieveRoamingStatusDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =RetrieveRoamingStatusDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetRoamingSubscriptionDeviceStatusResponse]:
-        """
-        retrieve device roaming status subscription information for a given subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[GetRoamingSubscriptionDeviceStatusResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetRoamingSubscriptionDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =GetRoamingSubscriptionDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]:
-        """
-        Delete a given device-roaming-status subscription by ID
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if _response is None or not _response.text.strip():
-                return HttpResponse(response=_response, data=None)
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],
-                    parse_obj_as(
-                        type_ =typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -761,36 +532,107 @@ class RawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def retrieve_reachability_status(self, *, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]:
+    def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]:
         """
-        Get the current reachability status information
+        Retrieve a list of device reachability status event subscription(s)
         
         Parameters
         ----------
-        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]
             
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]:
+        """
+        Create a device reachability status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]
+        HttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status/v1/retrieve",method="POST",
+            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveReachabilityStatusDeviceStatusRequestDeviceParams, direction="write"),
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, direction="write"),
             }
             ,
             headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
@@ -800,9 +642,268 @@ class RawDeviceStatusClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RetrieveReachabilityStatusDeviceStatusResponse,
+                    CreateReachabilitySubscriptionDeviceStatusResponse,
                     parse_obj_as(
-                        type_ =RetrieveReachabilityStatusDeviceStatusResponse,  # type: ignore
+                        type_ =CreateReachabilitySubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def create_roaming_subscription(self, *, protocol: CreateRoamingSubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="POST",
+            json={
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionDeviceStatusRequestConfigParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateRoamingSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =CreateRoamingSubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetRoamingSubscriptionDeviceStatusResponse]:
+        """
+        retrieve device roaming status subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[GetRoamingSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetRoamingSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =GetRoamingSubscriptionDeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -839,24 +940,73 @@ class RawDeviceStatusClient:
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return HttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -1044,178 +1194,6 @@ class RawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]:
-        """
-        Retrieve a list of device roaming status event subscription(s)
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def create_roaming_subscription(self, *, protocol: CreateRoamingSubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]:
-        """
-        Create a device roaming status event subscription for a device
-        
-        Parameters
-        ----------
-        protocol : CreateRoamingSubscriptionDeviceStatusRequestProtocol
-            Identifier of a delivery protocol. Only HTTP is allowed for now
-        
-        sink : str
-            The address to which events shall be delivered using the selected protocol.
-        
-        types : typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem]
-            Camara Event types eligible to be delivered by this subscription.
-            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
-        
-        config : CreateRoamingSubscriptionDeviceStatusRequestConfigParams
-            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
-            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
-            Specific event type attributes must be defined in `subscriptionDetail`
-            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
-        
-        sink_credential : typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams]
-            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="POST",
-            json={
-                "protocol": protocol,
-                "sink": sink,
-                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
-                "types": types,
-                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionDeviceStatusRequestConfigParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CreateRoamingSubscriptionDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =CreateRoamingSubscriptionDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 409:
-                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
     def check_roaming(self, *, device: CheckRoamingDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckRoamingDeviceStatusResponse]:
         """
         Get the current roaming status and the country information
@@ -1317,31 +1295,184 @@ class RawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]:
+    def get_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetReachabilitySubscriptionV08DeviceStatusResponse]:
         """
-        Retrieve a list of device reachability status event subscription(s)
+        Retrieve a given subscription by ID
         
         Parameters
         ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        HttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]
+        HttpResponse[GetReachabilitySubscriptionV08DeviceStatusResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            f"device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],
+                    GetReachabilitySubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        type_ =GetReachabilitySubscriptionV08DeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def delete_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]]:
+        """
+        Delete a given subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return HttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def list_reachability_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device reachability status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem],  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -1377,29 +1508,32 @@ class RawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]:
+    def create_reachability_subscription_v08(self, *, protocol: CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateReachabilitySubscriptionV08DeviceStatusResponse]:
         """
         Create a device reachability status event subscription for a device
         
         Parameters
         ----------
-        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+        protocol : CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol
             Identifier of a delivery protocol. Only HTTP is allowed for now
         
         sink : str
             The address to which events shall be delivered using the selected protocol.
         
-        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+        types : typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem]
             Camara Event types eligible to be delivered by this subscription.
             Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
         
-        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+        config : CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams
             Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
             In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
             Specific event type attributes must be defined in `subscriptionDetail`
             Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
         
-        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
@@ -1407,29 +1541,603 @@ class RawDeviceStatusClient:
         
         Returns
         -------
-        HttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]
+        HttpResponse[CreateReachabilitySubscriptionV08DeviceStatusResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="POST",
+            "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",method="POST",
             json={
                 "protocol": protocol,
                 "sink": sink,
-                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams, direction="write"),
                 "types": types,
-                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, direction="write"),
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, direction="write"),
             }
             ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateReachabilitySubscriptionDeviceStatusResponse,
+                    CreateReachabilitySubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =CreateReachabilitySubscriptionDeviceStatusResponse,  # type: ignore
+                        type_ =CreateReachabilitySubscriptionV08DeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def retrieve_reachability_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]:
+        """
+        Get the current reachability status information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status/v1/retrieve",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveReachabilityStatusDeviceStatusRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RetrieveReachabilityStatusDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =RetrieveReachabilityStatusDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSubscriptionDeviceStatusResponse]:
+        """
+        retrieve event subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[GetSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =GetSubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]:
+        """
+        delete a  given event subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return HttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteSubscriptionDeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteSubscriptionDeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def retrieve_roaming_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[RetrieveRoamingStatusDeviceStatusResponse]:
+        """
+        Get the current roaming status and the country information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[RetrieveRoamingStatusDeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status/v1/retrieve",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveRoamingStatusDeviceStatusRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RetrieveRoamingStatusDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =RetrieveRoamingStatusDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def list_roaming_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def create_roaming_subscription_v08(self, *, protocol: CreateRoamingSubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateRoamingSubscriptionV08DeviceStatusResponse]:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionV08DeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[CreateRoamingSubscriptionV08DeviceStatusResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",method="POST",
+            json={
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateRoamingSubscriptionV08DeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =CreateRoamingSubscriptionV08DeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -1492,32 +2200,37 @@ class AsyncRawDeviceStatusClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
     
-    async def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSubscriptionDeviceStatusResponse]:
+    async def get_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetRoamingSubscriptionV08DeviceStatusResponse]:
         """
-        retrieve event subscription information for a given subscription.
+        retrieve device roaming status subscription information for a given subscription.
         
         Parameters
         ----------
         subscription_id : str
-            Subscription identifier that was obtained from the create subscription operation
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[GetSubscriptionDeviceStatusResponse]
+        AsyncHttpResponse[GetRoamingSubscriptionV08DeviceStatusResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            f"device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
             request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    GetSubscriptionDeviceStatusResponse,
+                    GetRoamingSubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =GetSubscriptionDeviceStatusResponse,  # type: ignore
+                        type_ =GetRoamingSubscriptionV08DeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -1548,22 +2261,6 @@ class AsyncRawDeviceStatusClient:
                 ))
             if _response.status_code == 404:
                 raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -1577,34 +2274,39 @@ class AsyncRawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]:
+    async def delete_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]]:
         """
-        delete a  given event subscription.
+        Delete a given device-roaming-status subscription by ID
         
         Parameters
         ----------
         subscription_id : str
             Subscription identifier that was obtained from the create event subscription operation
         
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]
+        AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            f"device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
             request_options=request_options,)
         try:
             if _response is None or not _response.text.strip():
                 return AsyncHttpResponse(response=_response, data=None)
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.Optional[DeleteSubscriptionDeviceStatusResponse],
+                    typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse],
                     parse_obj_as(
-                        type_ =typing.Optional[DeleteSubscriptionDeviceStatusResponse],  # type: ignore
+                        type_ =typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse],  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -1635,22 +2337,6 @@ class AsyncRawDeviceStatusClient:
                 ))
             if _response.status_code == 404:
                 raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -1752,259 +2438,6 @@ class AsyncRawDeviceStatusClient:
                 ))
             if _response.status_code == 503:
                 raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def retrieve_roaming_status(self, *, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveRoamingStatusDeviceStatusResponse]:
-        """
-        Get the current roaming status and the country information
-        
-        Parameters
-        ----------
-        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[RetrieveRoamingStatusDeviceStatusResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status/v1/retrieve",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveRoamingStatusDeviceStatusRequestDeviceParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    RetrieveRoamingStatusDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =RetrieveRoamingStatusDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetRoamingSubscriptionDeviceStatusResponse]:
-        """
-        retrieve device roaming status subscription information for a given subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[GetRoamingSubscriptionDeviceStatusResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetRoamingSubscriptionDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =GetRoamingSubscriptionDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]:
-        """
-        Delete a given device-roaming-status subscription by ID
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if _response is None or not _response.text.strip():
-                return AsyncHttpResponse(response=_response, data=None)
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],
-                    parse_obj_as(
-                        type_ =typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -2162,36 +2595,107 @@ class AsyncRawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def retrieve_reachability_status(self, *, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]:
+    async def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]:
         """
-        Get the current reachability status information
+        Retrieve a list of device reachability status event subscription(s)
         
         Parameters
         ----------
-        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]
             
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]:
+        """
+        Create a device reachability status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]
+        AsyncHttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status/v1/retrieve",method="POST",
+            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="POST",
             json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveReachabilityStatusDeviceStatusRequestDeviceParams, direction="write"),
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, direction="write"),
             }
             ,
             headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
@@ -2201,9 +2705,268 @@ class AsyncRawDeviceStatusClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RetrieveReachabilityStatusDeviceStatusResponse,
+                    CreateReachabilitySubscriptionDeviceStatusResponse,
                     parse_obj_as(
-                        type_ =RetrieveReachabilityStatusDeviceStatusResponse,  # type: ignore
+                        type_ =CreateReachabilitySubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def create_roaming_subscription(self, *, protocol: CreateRoamingSubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="POST",
+            json={
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionDeviceStatusRequestConfigParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateRoamingSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =CreateRoamingSubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetRoamingSubscriptionDeviceStatusResponse]:
+        """
+        retrieve device roaming status subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[GetRoamingSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetRoamingSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =GetRoamingSubscriptionDeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -2240,24 +3003,73 @@ class AsyncRawDeviceStatusClient:
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-status/device-roaming-status-subscriptions/v0.7/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return AsyncHttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
                         object_ =_response.json()
                     )
                 ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
                     parse_obj_as(
                         type_ =typing.Any,  # type: ignore
@@ -2445,178 +3257,6 @@ class AsyncRawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]:
-        """
-        Retrieve a list of device roaming status event subscription(s)
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def create_roaming_subscription(self, *, protocol: CreateRoamingSubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]:
-        """
-        Create a device roaming status event subscription for a device
-        
-        Parameters
-        ----------
-        protocol : CreateRoamingSubscriptionDeviceStatusRequestProtocol
-            Identifier of a delivery protocol. Only HTTP is allowed for now
-        
-        sink : str
-            The address to which events shall be delivered using the selected protocol.
-        
-        types : typing.Sequence[CreateRoamingSubscriptionDeviceStatusRequestTypesItem]
-            Camara Event types eligible to be delivered by this subscription.
-            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
-        
-        config : CreateRoamingSubscriptionDeviceStatusRequestConfigParams
-            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
-            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
-            Specific event type attributes must be defined in `subscriptionDetail`
-            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
-        
-        sink_credential : typing.Optional[CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams]
-            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[CreateRoamingSubscriptionDeviceStatusResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-roaming-status-subscriptions/v0.7/subscriptions",method="POST",
-            json={
-                "protocol": protocol,
-                "sink": sink,
-                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
-                "types": types,
-                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionDeviceStatusRequestConfigParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CreateRoamingSubscriptionDeviceStatusResponse,
-                    parse_obj_as(
-                        type_ =CreateRoamingSubscriptionDeviceStatusResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 409:
-                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 429:
-                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
     async def check_roaming(self, *, device: CheckRoamingDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckRoamingDeviceStatusResponse]:
         """
         Get the current roaming status and the country information
@@ -2718,31 +3358,184 @@ class AsyncRawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]:
+    async def get_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetReachabilitySubscriptionV08DeviceStatusResponse]:
         """
-        Retrieve a list of device reachability status event subscription(s)
+        Retrieve a given subscription by ID
         
         Parameters
         ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]]
+        AsyncHttpResponse[GetReachabilitySubscriptionV08DeviceStatusResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="GET",
-            headers={"x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            f"device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],
+                    GetReachabilitySubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem],  # type: ignore
+                        type_ =GetReachabilitySubscriptionV08DeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def delete_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]]:
+        """
+        Delete a given subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return AsyncHttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def list_reachability_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device reachability status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem],  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -2778,29 +3571,32 @@ class AsyncRawDeviceStatusClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]:
+    async def create_reachability_subscription_v08(self, *, protocol: CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateReachabilitySubscriptionV08DeviceStatusResponse]:
         """
         Create a device reachability status event subscription for a device
         
         Parameters
         ----------
-        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+        protocol : CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol
             Identifier of a delivery protocol. Only HTTP is allowed for now
         
         sink : str
             The address to which events shall be delivered using the selected protocol.
         
-        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+        types : typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem]
             Camara Event types eligible to be delivered by this subscription.
             Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
         
-        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+        config : CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams
             Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
             In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
             Specific event type attributes must be defined in `subscriptionDetail`
             Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
         
-        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
@@ -2808,29 +3604,603 @@ class AsyncRawDeviceStatusClient:
         
         Returns
         -------
-        AsyncHttpResponse[CreateReachabilitySubscriptionDeviceStatusResponse]
+        AsyncHttpResponse[CreateReachabilitySubscriptionV08DeviceStatusResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "device-status/device-reachability-status-subscriptions/v0.7/subscriptions",method="POST",
+            "device-status/device-reachability-status-subscriptions/v0.8/subscriptions",method="POST",
             json={
                 "protocol": protocol,
                 "sink": sink,
-                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams, direction="write"),
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams, direction="write"),
                 "types": types,
-                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, direction="write"),
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, direction="write"),
             }
             ,
-            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CreateReachabilitySubscriptionDeviceStatusResponse,
+                    CreateReachabilitySubscriptionV08DeviceStatusResponse,
                     parse_obj_as(
-                        type_ =CreateReachabilitySubscriptionDeviceStatusResponse,  # type: ignore
+                        type_ =CreateReachabilitySubscriptionV08DeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def retrieve_reachability_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]:
+        """
+        Get the current reachability status information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[RetrieveReachabilityStatusDeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-reachability-status/v1/retrieve",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveReachabilityStatusDeviceStatusRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RetrieveReachabilityStatusDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =RetrieveReachabilityStatusDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSubscriptionDeviceStatusResponse]:
+        """
+        retrieve event subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[GetSubscriptionDeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetSubscriptionDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =GetSubscriptionDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]:
+        """
+        delete a  given event subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.Optional[DeleteSubscriptionDeviceStatusResponse]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-status/v0/subscriptions/{encode_path_param(subscription_id)}",method="DELETE",
+            request_options=request_options,)
+        try:
+            if _response is None or not _response.text.strip():
+                return AsyncHttpResponse(response=_response, data=None)
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.Optional[DeleteSubscriptionDeviceStatusResponse],
+                    parse_obj_as(
+                        type_ =typing.Optional[DeleteSubscriptionDeviceStatusResponse],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def retrieve_roaming_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[RetrieveRoamingStatusDeviceStatusResponse]:
+        """
+        Get the current roaming status and the country information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[RetrieveRoamingStatusDeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status/v1/retrieve",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveRoamingStatusDeviceStatusRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RetrieveRoamingStatusDeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =RetrieveRoamingStatusDeviceStatusResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 429:
+                raise TooManyRequestsError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def list_roaming_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",method="GET",
+            headers={"x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def create_roaming_subscription_v08(self, *, protocol: CreateRoamingSubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateRoamingSubscriptionV08DeviceStatusResponse]:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionV08DeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[CreateRoamingSubscriptionV08DeviceStatusResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "device-status/device-roaming-status-subscriptions/v0.8/subscriptions",method="POST",
+            json={
+                "protocol": protocol,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams, direction="write"),
+                "types": types,
+                "config": convert_and_respect_annotation_metadata(object_=config, annotation=CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateRoamingSubscriptionV08DeviceStatusResponse,
+                    parse_obj_as(
+                        type_ =CreateRoamingSubscriptionV08DeviceStatusResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )

@@ -29,6 +29,49 @@ class KycClient:
         """
         return self._raw_client
     
+    def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckTenureKycResponse:
+        """
+        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+        
+        Parameters
+        ----------
+        tenure_date : dt.date
+            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
+        
+        authorization : typing.Optional[str]
+            authorization header for token
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CheckTenureKycResponse
+            
+        
+        Examples
+        --------
+        import datetime
+        
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.kyc.check_tenure(
+            phone_number="+99999991000",
+            tenure_date=datetime.date.fromisoformat(
+                "2023-07-03",
+            ),
+        )
+        """
+        _response = self._raw_client.check_tenure(tenure_date=tenure_date, authorization=authorization, phone_number=phone_number, request_options=request_options)
+        return _response.data
+    
     def verify_age(self, *, age_threshold: int, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, include_content_lock: typing.Optional[bool] = OMIT, include_parental_control: typing.Optional[bool] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyAgeKycResponse:
         """
         Verify that the age of the subscriber associated with a phone number is equal to or greater than the specified age threshold value.
@@ -116,17 +159,17 @@ class KycClient:
         _response = self._raw_client.verify_age(age_threshold=age_threshold, authorization=authorization, phone_number=phone_number, id_document=id_document, name=name, given_name=given_name, family_name=family_name, middle_names=middle_names, family_name_at_birth=family_name_at_birth, birthdate=birthdate, email=email, include_content_lock=include_content_lock, include_parental_control=include_parental_control, request_options=request_options)
         return _response.data
     
-    def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckTenureKycResponse:
+    def fill_in(self, *, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> FillInKycResponse:
         """
-        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+         
         
         Parameters
         ----------
-        tenure_date : dt.date
-            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
-        
         authorization : typing.Optional[str]
             authorization header for token
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -136,27 +179,22 @@ class KycClient:
         
         Returns
         -------
-        CheckTenureKycResponse
+        FillInKycResponse
             
         
         Examples
         --------
-        import datetime
-        
         from networkAsCode import NetworkAsCodeApi
         
         client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.kyc.check_tenure(
+        client.kyc.fill_in(
             phone_number="+99999991000",
-            tenure_date=datetime.date.fromisoformat(
-                "2023-07-03",
-            ),
         )
         """
-        _response = self._raw_client.check_tenure(tenure_date=tenure_date, authorization=authorization, phone_number=phone_number, request_options=request_options)
+        _response = self._raw_client.fill_in(authorization=authorization, correlator=correlator, phone_number=phone_number, request_options=request_options)
         return _response.data
     
     def match(self, *, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, name_kana_hankaku: typing.Optional[str] = OMIT, name_kana_zenkaku: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, address: typing.Optional[str] = OMIT, street_name: typing.Optional[str] = OMIT, street_number: typing.Optional[str] = OMIT, postal_code: typing.Optional[str] = OMIT, region: typing.Optional[str] = OMIT, locality: typing.Optional[str] = OMIT, country: typing.Optional[str] = OMIT, house_number_extension: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, gender: typing.Optional[MatchKycRequestGender] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> MatchKycResponse:
@@ -263,67 +301,24 @@ class KycClient:
         client.kyc.match(
             phone_number="+99999991000",
             id_document="66666666q",
-            name="Federica Sanchez Arjona",
-            given_name="Federica",
-            family_name="Sanchez Arjona",
-            name_kana_hankaku="federica",
-            name_kana_zenkaku="Ｆｅｄｅｒｉｃａ",
-            middle_names="Sanchez",
-            family_name_at_birth="YYYY",
-            address="Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
-            street_name="Nicolas Salmeron",
-            street_number="4",
-            postal_code="1028460",
-            region="Tokyo",
-            locality="ZZZZ",
-            country="JP",
-            house_number_extension="VVVV",
+            name="Anna Zoltan",
+            given_name="Zoltan",
+            family_name="Eszter",
+            family_name_at_birth="1994",
+            address="Budapest, Bókay János u. 36-42, 1083 Hungary",
+            street_name="Bókay János u",
+            street_number="36-42",
+            postal_code="1083",
+            region="Budapest",
+            locality="Budapest, Bókay János u. 36-42, 1080 Hungary",
+            country="HU",
             birthdate=datetime.date.fromisoformat(
-                "1978-08-22",
+                "1995-03-12",
             ),
-            email="abc@example.com",
-            gender="OTHER",
+            email="device@testcsp.com",
         )
         """
         _response = self._raw_client.match(authorization=authorization, phone_number=phone_number, id_document=id_document, name=name, given_name=given_name, family_name=family_name, name_kana_hankaku=name_kana_hankaku, name_kana_zenkaku=name_kana_zenkaku, middle_names=middle_names, family_name_at_birth=family_name_at_birth, address=address, street_name=street_name, street_number=street_number, postal_code=postal_code, region=region, locality=locality, country=country, house_number_extension=house_number_extension, birthdate=birthdate, email=email, gender=gender, request_options=request_options)
-        return _response.data
-    
-    def fill_in(self, *, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> FillInKycResponse:
-        """
-         
-        
-        Parameters
-        ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
-        
-        authorization : typing.Optional[str]
-            authorization header for token
-        
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        FillInKycResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.kyc.fill_in(
-            phone_number="+99999991000",
-        )
-        """
-        _response = self._raw_client.fill_in(correlator=correlator, authorization=authorization, phone_number=phone_number, request_options=request_options)
         return _response.data
 class AsyncKycClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -339,6 +334,56 @@ class AsyncKycClient:
         AsyncRawKycClient
         """
         return self._raw_client
+    
+    async def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckTenureKycResponse:
+        """
+        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+        
+        Parameters
+        ----------
+        tenure_date : dt.date
+            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
+        
+        authorization : typing.Optional[str]
+            authorization header for token
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CheckTenureKycResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        import datetime
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.kyc.check_tenure(
+                phone_number="+99999991000",
+                tenure_date=datetime.date.fromisoformat(
+                    "2023-07-03",
+                ),
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.check_tenure(tenure_date=tenure_date, authorization=authorization, phone_number=phone_number, request_options=request_options)
+        return _response.data
     
     async def verify_age(self, *, age_threshold: int, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, include_content_lock: typing.Optional[bool] = OMIT, include_parental_control: typing.Optional[bool] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyAgeKycResponse:
         """
@@ -434,17 +479,17 @@ class AsyncKycClient:
         _response = await self._raw_client.verify_age(age_threshold=age_threshold, authorization=authorization, phone_number=phone_number, id_document=id_document, name=name, given_name=given_name, family_name=family_name, middle_names=middle_names, family_name_at_birth=family_name_at_birth, birthdate=birthdate, email=email, include_content_lock=include_content_lock, include_parental_control=include_parental_control, request_options=request_options)
         return _response.data
     
-    async def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckTenureKycResponse:
+    async def fill_in(self, *, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> FillInKycResponse:
         """
-        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+         
         
         Parameters
         ----------
-        tenure_date : dt.date
-            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
-        
         authorization : typing.Optional[str]
             authorization header for token
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -454,13 +499,12 @@ class AsyncKycClient:
         
         Returns
         -------
-        CheckTenureKycResponse
+        FillInKycResponse
             
         
         Examples
         --------
         import asyncio
-        import datetime
         
         from networkAsCode import AsyncNetworkAsCodeApi
         
@@ -471,17 +515,14 @@ class AsyncKycClient:
         
         
         async def main() -> None:
-            await client.kyc.check_tenure(
+            await client.kyc.fill_in(
                 phone_number="+99999991000",
-                tenure_date=datetime.date.fromisoformat(
-                    "2023-07-03",
-                ),
             )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.check_tenure(tenure_date=tenure_date, authorization=authorization, phone_number=phone_number, request_options=request_options)
+        _response = await self._raw_client.fill_in(authorization=authorization, correlator=correlator, phone_number=phone_number, request_options=request_options)
         return _response.data
     
     async def match(self, *, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, name_kana_hankaku: typing.Optional[str] = OMIT, name_kana_zenkaku: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, address: typing.Optional[str] = OMIT, street_name: typing.Optional[str] = OMIT, street_number: typing.Optional[str] = OMIT, postal_code: typing.Optional[str] = OMIT, region: typing.Optional[str] = OMIT, locality: typing.Optional[str] = OMIT, country: typing.Optional[str] = OMIT, house_number_extension: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, gender: typing.Optional[MatchKycRequestGender] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> MatchKycResponse:
@@ -592,76 +633,25 @@ class AsyncKycClient:
             await client.kyc.match(
                 phone_number="+99999991000",
                 id_document="66666666q",
-                name="Federica Sanchez Arjona",
-                given_name="Federica",
-                family_name="Sanchez Arjona",
-                name_kana_hankaku="federica",
-                name_kana_zenkaku="Ｆｅｄｅｒｉｃａ",
-                middle_names="Sanchez",
-                family_name_at_birth="YYYY",
-                address="Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
-                street_name="Nicolas Salmeron",
-                street_number="4",
-                postal_code="1028460",
-                region="Tokyo",
-                locality="ZZZZ",
-                country="JP",
-                house_number_extension="VVVV",
+                name="Anna Zoltan",
+                given_name="Zoltan",
+                family_name="Eszter",
+                family_name_at_birth="1994",
+                address="Budapest, Bókay János u. 36-42, 1083 Hungary",
+                street_name="Bókay János u",
+                street_number="36-42",
+                postal_code="1083",
+                region="Budapest",
+                locality="Budapest, Bókay János u. 36-42, 1080 Hungary",
+                country="HU",
                 birthdate=datetime.date.fromisoformat(
-                    "1978-08-22",
+                    "1995-03-12",
                 ),
-                email="abc@example.com",
-                gender="OTHER",
+                email="device@testcsp.com",
             )
         
         
         asyncio.run(main())
         """
         _response = await self._raw_client.match(authorization=authorization, phone_number=phone_number, id_document=id_document, name=name, given_name=given_name, family_name=family_name, name_kana_hankaku=name_kana_hankaku, name_kana_zenkaku=name_kana_zenkaku, middle_names=middle_names, family_name_at_birth=family_name_at_birth, address=address, street_name=street_name, street_number=street_number, postal_code=postal_code, region=region, locality=locality, country=country, house_number_extension=house_number_extension, birthdate=birthdate, email=email, gender=gender, request_options=request_options)
-        return _response.data
-    
-    async def fill_in(self, *, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> FillInKycResponse:
-        """
-         
-        
-        Parameters
-        ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
-        
-        authorization : typing.Optional[str]
-            authorization header for token
-        
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        FillInKycResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.kyc.fill_in(
-                phone_number="+99999991000",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.fill_in(correlator=correlator, authorization=authorization, phone_number=phone_number, request_options=request_options)
         return _response.data

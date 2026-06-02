@@ -5,8 +5,13 @@
 import typing
 from importlib import import_module
 if typing.TYPE_CHECKING:
+    from .get_device_phone_number_v2number_verification_response import GetDevicePhoneNumberV2NumberVerificationResponseParams
     from .verify_number_verification_response import VerifyNumberVerificationResponseParams
-_dynamic_imports: typing.Dict[str, str] = {"VerifyNumberVerificationResponseParams": ".verify_number_verification_response"}
+    from .verify_v2number_verification_request_body import VerifyV2NumberVerificationRequestBodyParams
+    from .verify_v2number_verification_request_body_hashed_phone_number import VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams
+    from .verify_v2number_verification_request_body_phone_number import VerifyV2NumberVerificationRequestBodyPhoneNumberParams
+    from .verify_v2number_verification_response import VerifyV2NumberVerificationResponseParams
+_dynamic_imports: typing.Dict[str, str] = {"GetDevicePhoneNumberV2NumberVerificationResponseParams": ".get_device_phone_number_v2number_verification_response", "VerifyNumberVerificationResponseParams": ".verify_number_verification_response", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams": ".verify_v2number_verification_request_body_hashed_phone_number", "VerifyV2NumberVerificationRequestBodyParams": ".verify_v2number_verification_request_body", "VerifyV2NumberVerificationRequestBodyPhoneNumberParams": ".verify_v2number_verification_request_body_phone_number", "VerifyV2NumberVerificationResponseParams": ".verify_v2number_verification_response"}
 def __getattr__(attr_name: str) -> typing.Any:
     module_name = _dynamic_imports.get(attr_name)
     if module_name is None:
@@ -24,4 +29,4 @@ def __getattr__(attr_name: str) -> typing.Any:
 def __dir__():
     lazy_attrs = list(_dynamic_imports.keys())
     return sorted(lazy_attrs)
-__all__ = ["VerifyNumberVerificationResponseParams"]
+__all__ = ["GetDevicePhoneNumberV2NumberVerificationResponseParams", "VerifyNumberVerificationResponseParams", "VerifyV2NumberVerificationRequestBodyHashedPhoneNumberParams", "VerifyV2NumberVerificationRequestBodyParams", "VerifyV2NumberVerificationRequestBodyPhoneNumberParams", "VerifyV2NumberVerificationResponseParams"]

@@ -10,7 +10,6 @@ export interface ForbiddenErrorBody {
 export namespace ForbiddenErrorBody {
     export const Code = {
         PermissionDenied: "PERMISSION_DENIED",
-        SubscriptionMismatch: "SUBSCRIPTION_MISMATCH",
     } as const;
     export type Code = (typeof Code)[keyof typeof Code];
 }

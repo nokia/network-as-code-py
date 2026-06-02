@@ -51,9 +51,15 @@ export interface CreateSessionV1QodResponse {
     /** Session ID in UUID format */
     sessionId: string;
     duration: number;
-    /** Timestamp of session start in seconds since Unix epoch */
+    /** Date and time when the QoS status became "AVAILABLE". Not to be returned when `qosStatus` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local). */
     startedAt?: string | undefined;
-    /** Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch */
+    /**
+     * Date and time of the QoS session expiration. Format must follow RFC 3339 and must indicate time zone (UTC or local).
+     * - When `qosStatus` is "AVAILABLE", it is the limit time when the session is scheduled to finnish, if not terminated by other means.
+     * - When `qosStatus` is "UNAVAILABLE", it is the time when the session was terminated.
+     * - Not to be returned when `qosStatus` is "REQUESTED".
+     * When the session is extended, the value is the new expiration time of the session.
+     */
     expiresAt?: string | undefined;
     /**
      * The current status of the requested QoS session. The status can be one of the following:

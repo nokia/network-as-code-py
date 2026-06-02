@@ -36,40 +36,15 @@ Instantiate and use the client with the following:
 
 ```python
 from networkAsCode import NetworkAsCodeApi
-from networkAsCode.slice import AttachDeviceSliceRequestDevice, AttachDeviceSliceRequestCustomer, AttachDeviceSliceRequestTrafficCategories, AttachDeviceSliceRequestTrafficCategoriesApps, AttachDeviceSliceRequestWebhook
+from networkAsCode.qod import RetrieveSessionsV1QodRequestDevice
 
 client = NetworkAsCodeApi(
     api_key="<value>",
 )
 
-client.slice.attach_device(
-    device=AttachDeviceSliceRequestDevice(
-        phone_number="+99999991000",
-        imsi=99999991000,
-    ),
-    customer=AttachDeviceSliceRequestCustomer(
-        name="DefaultAttachOperationCustomer",
-        description="I Am Default Who Order The Device Attach Operation",
-        address="Dummy Customer Address",
-        contact="My Contact Should Be Here",
-    ),
-    slice_id="slice-773",
-    mobile_services=[
-        "Voice",
-        "Voicemail",
-        "5G-Data"
-    ],
-    traffic_categories=AttachDeviceSliceRequestTrafficCategories(
-        apps=AttachDeviceSliceRequestTrafficCategoriesApps(
-            os="09078034-07db-4b13-a970-ab80235f7369",
-            apps=[
-                "Daedalus"
-            ],
-        ),
-    ),
-    webhook=AttachDeviceSliceRequestWebhook(
-        notification_url="https://application-server.com",
-        notification_auth_token="c8974e592c2fa383d4a396071",
+client.qod.retrieve_sessions_v_1(
+    device=RetrieveSessionsV1QodRequestDevice(
+        phone_number="+99999991001",
     ),
 )
 ```
@@ -93,7 +68,7 @@ The SDK also exports an `async` client so that you can make non-blocking calls t
 
 ```python
 import asyncio
-from networkAsCode.slice import AttachDeviceSliceRequestDevice, AttachDeviceSliceRequestCustomer, AttachDeviceSliceRequestTrafficCategories, AttachDeviceSliceRequestTrafficCategoriesApps, AttachDeviceSliceRequestWebhook
+from networkAsCode.qod import RetrieveSessionsV1QodRequestDevice
 
 from networkAsCode import AsyncNetworkascodeApi
 
@@ -103,34 +78,9 @@ client = AsyncNetworkascodeApi(
 
 
 async def main() -> None:
-    await client.slice.attach_device(
-        device=AttachDeviceSliceRequestDevice(
-            phone_number="+99999991000",
-            imsi=99999991000,
-        ),
-        customer=AttachDeviceSliceRequestCustomer(
-            name="DefaultAttachOperationCustomer",
-            description="I Am Default Who Order The Device Attach Operation",
-            address="Dummy Customer Address",
-            contact="My Contact Should Be Here",
-        ),
-        slice_id="slice-773",
-        mobile_services=[
-            "Voice",
-            "Voicemail",
-            "5G-Data"
-        ],
-        traffic_categories=AttachDeviceSliceRequestTrafficCategories(
-            apps=AttachDeviceSliceRequestTrafficCategoriesApps(
-                os="09078034-07db-4b13-a970-ab80235f7369",
-                apps=[
-                    "Daedalus"
-                ],
-            ),
-        ),
-        webhook=AttachDeviceSliceRequestWebhook(
-            notification_url="https://application-server.com",
-            notification_auth_token="c8974e592c2fa383d4a396071",
+    await client.qod.retrieve_sessions_v_1(
+        device=RetrieveSessionsV1QodRequestDevice(
+            phone_number="+99999991001",
         ),
     )
 
@@ -147,7 +97,7 @@ will be thrown.
 from networkAsCode.core.api_error import ApiError
 
 try:
-    client.slice.attach_device(...)
+    client.qod.retrieve_sessions_v1(...)
 except ApiError as e:
     print(e.status_code)
     print(e.body)
@@ -164,7 +114,7 @@ The `.with_raw_response` property returns a "raw" client that can be used to acc
 from networkAsCode import NetworkascodeApi
 
 client = NetworkascodeApi(...)
-response = client.slice.with_raw_response.attach_device(...)
+response = client.qod.with_raw_response.retrieve_sessions_v1(...)
 print(response.headers)  # access the response headers
 print(response.status_code)  # access the response status code
 print(response.data)  # access the underlying object
@@ -185,7 +135,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `max_retries` request option to configure this behavior.
 
 ```python
-client.slice.attach_device(..., request_options={
+client.qod.retrieve_sessions_v1(..., request_options={
     "max_retries": 1
 })
 ```
@@ -200,7 +150,7 @@ from networkAsCode import NetworkascodeApi
 client = NetworkascodeApi(..., timeout=20.0)
 
 # Override timeout for a specific method
-client.slice.attach_device(..., request_options={
+client.qod.retrieve_sessions_v1(..., request_options={
     "timeout_in_seconds": 1
 })
 ```

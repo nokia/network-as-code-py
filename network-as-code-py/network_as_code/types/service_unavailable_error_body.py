@@ -7,9 +7,12 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class ServiceUnavailableErrorBody(UniversalBaseModel):
+    """
+    The error info object for possible error cases
+    """
     status: int = pydantic.Field()
     """
-    HTTP status code returned along with this error response
+    HTTP response status code
     """
     
     code: str = pydantic.Field()

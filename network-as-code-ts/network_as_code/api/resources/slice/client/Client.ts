@@ -262,164 +262,6 @@ export class SliceClient {
     }
 
     /**
-     * Retrieve the given device attach resource.
-     *
-     * @param {NetworkAsCodeApi.GetDeviceAttachmentSliceRequest} request
-     * @param {SliceClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.slice.getDeviceAttachment({
-     *         resource_id: "resource_id"
-     *     })
-     */
-    public getDeviceAttachment(
-        request: NetworkAsCodeApi.GetDeviceAttachmentSliceRequest,
-        requestOptions?: SliceClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.GetDeviceAttachmentSliceResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__getDeviceAttachment(request, requestOptions));
-    }
-
-    private async __getDeviceAttachment(
-        request: NetworkAsCodeApi.GetDeviceAttachmentSliceRequest,
-        requestOptions?: SliceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetDeviceAttachmentSliceResponse>> {
-        const { resource_id: resourceId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `device-attach/v0/attachments/${core.url.encodePathParam(resourceId)}`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.GetDeviceAttachmentSliceResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/device-attach/v0/attachments/{resource_id}",
-        );
-    }
-
-    /**
-     * Detach device from a specific slice.
-     *
-     * @param {NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest} request
-     * @param {SliceClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.slice.deleteDeviceAttachment({
-     *         resource_id: "resource_id"
-     *     })
-     */
-    public deleteDeviceAttachment(
-        request: NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest,
-        requestOptions?: SliceClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__deleteDeviceAttachment(request, requestOptions));
-    }
-
-    private async __deleteDeviceAttachment(
-        request: NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest,
-        requestOptions?: SliceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse>> {
-        const { resource_id: resourceId } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                `device-attach/v0/attachments/${core.url.encodePathParam(resourceId)}`,
-            ),
-            method: "DELETE",
-            headers: _headers,
-            queryParameters: requestOptions?.queryParams,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "DELETE",
-            "/device-attach/v0/attachments/{resource_id}",
-        );
-    }
-
-    /**
      * Deactivate a network slice. The slice state must be active to be able to perform this operation.
      *
      * @param {NetworkAsCodeApi.DeactivateSliceRequest} request
@@ -752,6 +594,164 @@ export class SliceClient {
             _response.rawResponse,
             "POST",
             "/device-attach/v0/attachments/subscribers/{operation}",
+        );
+    }
+
+    /**
+     * Retrieve the given device attach resource.
+     *
+     * @param {NetworkAsCodeApi.GetDeviceAttachmentSliceRequest} request
+     * @param {SliceClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.slice.getDeviceAttachment({
+     *         resource_id: "resource_id"
+     *     })
+     */
+    public getDeviceAttachment(
+        request: NetworkAsCodeApi.GetDeviceAttachmentSliceRequest,
+        requestOptions?: SliceClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetDeviceAttachmentSliceResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getDeviceAttachment(request, requestOptions));
+    }
+
+    private async __getDeviceAttachment(
+        request: NetworkAsCodeApi.GetDeviceAttachmentSliceRequest,
+        requestOptions?: SliceClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetDeviceAttachmentSliceResponse>> {
+        const { resource_id: resourceId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-attach/v0/attachments/${core.url.encodePathParam(resourceId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetDeviceAttachmentSliceResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/device-attach/v0/attachments/{resource_id}",
+        );
+    }
+
+    /**
+     * Detach device from a specific slice.
+     *
+     * @param {NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest} request
+     * @param {SliceClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.slice.deleteDeviceAttachment({
+     *         resource_id: "resource_id"
+     *     })
+     */
+    public deleteDeviceAttachment(
+        request: NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest,
+        requestOptions?: SliceClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteDeviceAttachment(request, requestOptions));
+    }
+
+    private async __deleteDeviceAttachment(
+        request: NetworkAsCodeApi.DeleteDeviceAttachmentSliceRequest,
+        requestOptions?: SliceClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse>> {
+        const { resource_id: resourceId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                `device-attach/v0/attachments/${core.url.encodePathParam(resourceId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.DeleteDeviceAttachmentSliceResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/device-attach/v0/attachments/{resource_id}",
         );
     }
 

@@ -53,33 +53,6 @@ class WellKnownMetadataClient:
         _response = self._raw_client.get_openid_configuration(request_options=request_options)
         return _response.data
     
-    def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetOauthAuthorizationServerWellKnownMetadataResponse:
-        """
-         
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetOauthAuthorizationServerWellKnownMetadataResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.well_known_metadata.get_oauth_authorization_server()
-        """
-        _response = self._raw_client.get_oauth_authorization_server(request_options=request_options)
-        return _response.data
-    
     def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> str:
         """
          
@@ -105,6 +78,33 @@ class WellKnownMetadataClient:
         client.well_known_metadata.get_security_txt()
         """
         _response = self._raw_client.get_security_txt(request_options=request_options)
+        return _response.data
+    
+    def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetOauthAuthorizationServerWellKnownMetadataResponse:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetOauthAuthorizationServerWellKnownMetadataResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.well_known_metadata.get_oauth_authorization_server()
+        """
+        _response = self._raw_client.get_oauth_authorization_server(request_options=request_options)
         return _response.data
 class AsyncWellKnownMetadataClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -156,41 +156,6 @@ class AsyncWellKnownMetadataClient:
         _response = await self._raw_client.get_openid_configuration(request_options=request_options)
         return _response.data
     
-    async def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetOauthAuthorizationServerWellKnownMetadataResponse:
-        """
-         
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetOauthAuthorizationServerWellKnownMetadataResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.well_known_metadata.get_oauth_authorization_server()
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_oauth_authorization_server(request_options=request_options)
-        return _response.data
-    
     async def get_security_txt(self, *, request_options: typing.Optional[RequestOptions] = None) -> str:
         """
          
@@ -224,4 +189,39 @@ class AsyncWellKnownMetadataClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.get_security_txt(request_options=request_options)
+        return _response.data
+    
+    async def get_oauth_authorization_server(self, *, request_options: typing.Optional[RequestOptions] = None) -> GetOauthAuthorizationServerWellKnownMetadataResponse:
+        """
+         
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetOauthAuthorizationServerWellKnownMetadataResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.well_known_metadata.get_oauth_authorization_server()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_oauth_authorization_server(request_options=request_options)
         return _response.data

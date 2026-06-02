@@ -4,9 +4,12 @@ import typing_extensions
 
 
 class ServiceUnavailableErrorBodyParams(typing_extensions.TypedDict):
+    """
+    The error info object for possible error cases
+    """
     status: int
     """
-    HTTP status code returned along with this error response
+    HTTP response status code
     """
     
     code: str

@@ -9,14 +9,20 @@
  *
  * @example
  *     {
+ *         phoneNumber: "+99999991001",
+ *         specifiedDate: "2024-10-31"
+ *     }
+ *
+ * @example
+ *     {
  *         specifiedDate: "2024-10-31"
  *     }
  */
 export interface CheckNumberRecyclingRequest {
-    /** authorization header for token */
-    authorization?: string;
     /** Correlation id for the different services */
     "x-correlator"?: unknown;
+    /** authorization header for token */
+    authorization?: string;
     /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'. */
     phoneNumber?: string;
     /** Specified date to check whether there has been a change in the subscriber associated with the specific phone number, in RFC 3339 calendar date format (YYYY-MM-DD). */

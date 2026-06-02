@@ -4,6 +4,7 @@ import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClie
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { toJson } from "../../../../core/json.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -58,18 +59,18 @@ export class NumberVerificationClient {
         request: NetworkAsCodeApi.VerifyNumberVerificationRequest = {},
         requestOptions?: NumberVerificationClient.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyNumberVerificationResponse>> {
-        const { state, code, authorization, "x-correlator": correlator, ..._body } = request;
+        const { code, state, "x-correlator": correlator, authorization, ..._body } = request;
         const _queryParams: Record<string, unknown> = {
-            state,
             code,
+            state,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                authorization: authorization,
                 "x-correlator": correlator,
+                authorization: authorization,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -145,6 +146,198 @@ export class NumberVerificationClient {
             _response.rawResponse,
             "POST",
             "/passthrough/camara/v1/number-verification/number-verification/v0/verify",
+        );
+    }
+
+    /**
+     * Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
+     * - The number verification will be done for the user that has authenticated via mobile network
+     * - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
+     *
+     * @param {NetworkAsCodeApi.VerifyV2NumberVerificationRequest} request
+     * @param {NumberVerificationClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     *
+     * @example
+     *     await client.numberVerification.verifyV2({
+     *         body: {
+     *             phoneNumber: "+99999991000"
+     *         }
+     *     })
+     *
+     * @example
+     *     await client.numberVerification.verifyV2({
+     *         body: {
+     *             phoneNumber: "+99999991001"
+     *         }
+     *     })
+     */
+    public verifyV2(
+        request: NetworkAsCodeApi.VerifyV2NumberVerificationRequest,
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.VerifyV2NumberVerificationResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__verifyV2(request, requestOptions));
+    }
+
+    private async __verifyV2(
+        request: NetworkAsCodeApi.VerifyV2NumberVerificationRequest,
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.VerifyV2NumberVerificationResponse>> {
+        const { "x-correlator": correlator, body: _body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/number-verification/number-verification/v2/verify",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.VerifyV2NumberVerificationResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/passthrough/camara/v1/number-verification/number-verification/v2/verify",
+        );
+    }
+
+    /**
+     * Returns the phone number so the API clients can verify the number themselves:
+     * - It will be done for the user that has authenticated via mobile network
+     * - It returns the authenticated user's `device phone number` associated to the access token
+     *
+     * @param {NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationRequest} request
+     * @param {NumberVerificationClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     *
+     * @example
+     *     await client.numberVerification.getDevicePhoneNumberV2()
+     */
+    public getDevicePhoneNumberV2(
+        request: NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationRequest = {},
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getDevicePhoneNumberV2(request, requestOptions));
+    }
+
+    private async __getDevicePhoneNumberV2(
+        request: NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationRequest = {},
+        requestOptions?: NumberVerificationClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationResponse>> {
+        const { "x-correlator": correlator } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator":
+                    correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/number-verification/number-verification/v2/device-phone-number",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.GetDevicePhoneNumberV2NumberVerificationResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/passthrough/camara/v1/number-verification/number-verification/v2/device-phone-number",
         );
     }
 

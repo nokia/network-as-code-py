@@ -3,7 +3,7 @@
 export interface ConflictErrorBody {
     status?: string | undefined;
     code?: ConflictErrorBody.Code | undefined;
-    /** Detailed error description */
+    /** A human-readable description of what the event represents */
     message: string;
 }
 

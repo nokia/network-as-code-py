@@ -10,10 +10,10 @@
  *     {}
  */
 export interface FillInKycRequest {
-    /** Correlation id for the different services */
-    "x-correlator"?: unknown;
     /** authorization header for token */
     authorization?: string;
+    /** Correlation id for the different services */
+    "x-correlator"?: unknown;
     /** A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'. */
     phoneNumber?: string;
 }

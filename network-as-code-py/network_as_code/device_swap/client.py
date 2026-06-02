@@ -25,6 +25,41 @@ class DeviceSwapClient:
         """
         return self._raw_client
     
+    def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveDateDeviceSwapResponse:
+        """
+        Get timestamp of last device swap for a mobile user account provided with phone number.
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveDateDeviceSwapResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_swap.retrieve_date(
+            phone_number="+99999991001",
+        )
+        """
+        _response = self._raw_client.retrieve_date(correlator=correlator, phone_number=phone_number, request_options=request_options)
+        return _response.data
+    
     def check(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckDeviceSwapResponse:
         """
         Check if device swap has been performed during a past period
@@ -63,8 +98,22 @@ class DeviceSwapClient:
         """
         _response = self._raw_client.check(correlator=correlator, phone_number=phone_number, max_age=max_age, request_options=request_options)
         return _response.data
+class AsyncDeviceSwapClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawDeviceSwapClient(client_wrapper=client_wrapper)
     
-    def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveDateDeviceSwapResponse:
+    @property
+    def with_raw_response(self) -> AsyncRawDeviceSwapClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+        
+        Returns
+        -------
+        AsyncRawDeviceSwapClient
+        """
+        return self._raw_client
+    
+    async def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveDateDeviceSwapResponse:
         """
         Get timestamp of last device swap for a mobile user account provided with phone number.
         
@@ -86,32 +135,26 @@ class DeviceSwapClient:
         
         Examples
         --------
-        from networkAsCode import NetworkAsCodeApi
+        import asyncio
         
-        client = NetworkAsCodeApi(
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_swap.retrieve_date(
-            phone_number="+99999991001",
-        )
-        """
-        _response = self._raw_client.retrieve_date(correlator=correlator, phone_number=phone_number, request_options=request_options)
-        return _response.data
-class AsyncDeviceSwapClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawDeviceSwapClient(client_wrapper=client_wrapper)
-    
-    @property
-    def with_raw_response(self) -> AsyncRawDeviceSwapClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
         
-        Returns
-        -------
-        AsyncRawDeviceSwapClient
+        
+        async def main() -> None:
+            await client.device_swap.retrieve_date(
+                phone_number="+99999991001",
+            )
+        
+        
+        asyncio.run(main())
         """
-        return self._raw_client
+        _response = await self._raw_client.retrieve_date(correlator=correlator, phone_number=phone_number, request_options=request_options)
+        return _response.data
     
     async def check(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, max_age: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CheckDeviceSwapResponse:
         """
@@ -158,47 +201,4 @@ class AsyncDeviceSwapClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.check(correlator=correlator, phone_number=phone_number, max_age=max_age, request_options=request_options)
-        return _response.data
-    
-    async def retrieve_date(self, *, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveDateDeviceSwapResponse:
-        """
-        Get timestamp of last device swap for a mobile user account provided with phone number.
-        
-        Parameters
-        ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
-        
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        RetrieveDateDeviceSwapResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.device_swap.retrieve_date(
-                phone_number="+99999991001",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.retrieve_date(correlator=correlator, phone_number=phone_number, request_options=request_options)
         return _response.data

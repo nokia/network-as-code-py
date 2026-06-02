@@ -208,94 +208,6 @@ class RawSliceClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetDeviceAttachmentSliceResponse]:
-        """
-        Retrieve the given device attach resource.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[GetDeviceAttachmentSliceResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetDeviceAttachmentSliceResponse,
-                    parse_obj_as(
-                        type_ =GetDeviceAttachmentSliceResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[DeleteDeviceAttachmentSliceResponse]:
-        """
-        Detach device from a specific slice.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[DeleteDeviceAttachmentSliceResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="DELETE",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    DeleteDeviceAttachmentSliceResponse,
-                    parse_obj_as(
-                        type_ =DeleteDeviceAttachmentSliceResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
     def deactivate(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[DeactivateSliceResponse]:
         """
         Deactivate a network slice. The slice state must be active to be able to perform this operation.
@@ -565,6 +477,94 @@ class RawSliceClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
+    def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetDeviceAttachmentSliceResponse]:
+        """
+        Retrieve the given device attach resource.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[GetDeviceAttachmentSliceResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetDeviceAttachmentSliceResponse,
+                    parse_obj_as(
+                        type_ =GetDeviceAttachmentSliceResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[DeleteDeviceAttachmentSliceResponse]:
+        """
+        Detach device from a specific slice.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[DeleteDeviceAttachmentSliceResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="DELETE",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    DeleteDeviceAttachmentSliceResponse,
+                    parse_obj_as(
+                        type_ =DeleteDeviceAttachmentSliceResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def get_slice(self, id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSliceSliceResponse]:
         """
         Get network slice data.
@@ -786,94 +786,6 @@ class AsyncRawSliceClient:
                     ActivateSliceResponse,
                     parse_obj_as(
                         type_ =ActivateSliceResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetDeviceAttachmentSliceResponse]:
-        """
-        Retrieve the given device attach resource.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[GetDeviceAttachmentSliceResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetDeviceAttachmentSliceResponse,
-                    parse_obj_as(
-                        type_ =GetDeviceAttachmentSliceResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[DeleteDeviceAttachmentSliceResponse]:
-        """
-        Detach device from a specific slice.
-        
-        Parameters
-        ----------
-        resource_id : str
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[DeleteDeviceAttachmentSliceResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="DELETE",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    DeleteDeviceAttachmentSliceResponse,
-                    parse_obj_as(
-                        type_ =DeleteDeviceAttachmentSliceResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -1143,6 +1055,94 @@ class AsyncRawSliceClient:
                     SubscriberOperationSliceResponse,
                     parse_obj_as(
                         type_ =SubscriberOperationSliceResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def get_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetDeviceAttachmentSliceResponse]:
+        """
+        Retrieve the given device attach resource.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[GetDeviceAttachmentSliceResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="GET",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    GetDeviceAttachmentSliceResponse,
+                    parse_obj_as(
+                        type_ =GetDeviceAttachmentSliceResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def delete_device_attachment(self, resource_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[DeleteDeviceAttachmentSliceResponse]:
+        """
+        Detach device from a specific slice.
+        
+        Parameters
+        ----------
+        resource_id : str
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[DeleteDeviceAttachmentSliceResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"device-attach/v0/attachments/{encode_path_param(resource_id)}",method="DELETE",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    DeleteDeviceAttachmentSliceResponse,
+                    parse_obj_as(
+                        type_ =DeleteDeviceAttachmentSliceResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )

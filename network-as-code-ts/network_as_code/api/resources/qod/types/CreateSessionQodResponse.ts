@@ -49,9 +49,9 @@ export interface CreateSessionQodResponse {
     sessionId: string;
     duration: number;
     /** Timestamp of session start in seconds since Unix epoch */
-    startedAt?: string | undefined;
+    startedAt: number;
     /** Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch */
-    expiresAt?: string | undefined;
+    expiresAt: number;
     /**
      * The current status of the requested QoS session. The status can be one of the following:
      * * `REQUESTED` - QoS has been requested by creating a session

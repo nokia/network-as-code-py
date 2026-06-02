@@ -24,6 +24,119 @@ export class KycClient {
     }
 
     /**
+     * Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+     *
+     * @param {NetworkAsCodeApi.CheckTenureKycRequest} request
+     * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.kyc.checkTenure({
+     *         phoneNumber: "+99999991000",
+     *         tenureDate: "2023-07-03"
+     *     })
+     *
+     * @example
+     *     await client.kyc.checkTenure({
+     *         phoneNumber: "+99999991001",
+     *         tenureDate: "2023-07-03"
+     *     })
+     *
+     * @example
+     *     await client.kyc.checkTenure({
+     *         tenureDate: "2023-07-03"
+     *     })
+     */
+    public checkTenure(
+        request: NetworkAsCodeApi.CheckTenureKycRequest,
+        requestOptions?: KycClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.CheckTenureKycResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__checkTenure(request, requestOptions));
+    }
+
+    private async __checkTenure(
+        request: NetworkAsCodeApi.CheckTenureKycRequest,
+        requestOptions?: KycClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CheckTenureKycResponse>> {
+        const { authorization, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                authorization: authorization,
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as NetworkAsCodeApi.CheckTenureKycResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",
+        );
+    }
+
+    /**
      * Verify that the age of the subscriber associated with a phone number is equal to or greater than the specified age threshold value.
      *
      * As it is possible that the person holding the contract and the end-user of the subscription may not be the same, the endpoint also admits a list of optional properties to be included in the request to improve the identification. The response may optionally include the `identityMatchScore` property with a value that indicates how certain it is that the information returned relates to the person that the API Client is requesting. To increase the reliability of the information returned, the API Provider may include in the response the `verifiedStatus` property, indicating whether the identity information in its possession has been verified against an identification document legally accepted as an age verification document.
@@ -155,267 +268,6 @@ export class KycClient {
     }
 
     /**
-     * Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
-     *
-     * @param {NetworkAsCodeApi.CheckTenureKycRequest} request
-     * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.kyc.checkTenure({
-     *         phoneNumber: "+99999991000",
-     *         tenureDate: "2023-07-03"
-     *     })
-     *
-     * @example
-     *     await client.kyc.checkTenure({
-     *         tenureDate: "2023-07-03"
-     *     })
-     */
-    public checkTenure(
-        request: NetworkAsCodeApi.CheckTenureKycRequest,
-        requestOptions?: KycClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.CheckTenureKycResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__checkTenure(request, requestOptions));
-    }
-
-    private async __checkTenure(
-        request: NetworkAsCodeApi.CheckTenureKycRequest,
-        requestOptions?: KycClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.CheckTenureKycResponse>> {
-        const { authorization, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                authorization: authorization,
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: _body,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as NetworkAsCodeApi.CheckTenureKycResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",
-        );
-    }
-
-    /**
-     * Verify matching of a number of attributes related to a customer identity against the verified data bound to their phone number in the Operator systems. Regardless of whether the `phoneNumber` is explicitly stated in the request body, at least one of the other fields must be provided, otherwise a `HTTP 400 - KNOW_YOUR_CUSTOMER.INVALID_PARAM_COMBINATION` error will be returned.
-     *
-     * In order to proceed with the match check, some Operators may have the requirement to perform an additional level of validation based on the `idDocument` property. This means that, in those cases, the `idDocument` is required and the provided value needs to match the one stored in the Operator system associated with the indicated `phoneNumber`. This validation will be done before proceeding with the match check of the rest of the properties. The following two rules apply only in the cases where the Operator have the requirement to validate the `idDocument`:
-     * - If no `idDocument` is provided, then a `HTTP 403 - KNOW_YOUR_CUSTOMER.ID_DOCUMENT_REQUIRED` error will be returned.
-     * - If the provided `idDocument` does not match the one stored in the Operator systems, then a `HTTP 403 - KNOW_YOUR_CUSTOMER.ID_DOCUMENT_MISMATCH` error will be returned.
-     *
-     * The API will return the result of the matching process for each requested attribute. This means that the response will **only** contain the attributes for which validation has been requested. Possible values are:
-     *
-     *
-     *
-     *
-     *
-     *   - **true**: the attribute provided matches with the one in the Operator systems.
-     *   - **false**: the attribute provided does not match with the one in the Operator systems.
-     *   - **not_available**: the attribute is not available to validate.
-     *
-     * @param {NetworkAsCodeApi.MatchKycRequest} request
-     * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link NetworkAsCodeApi.BadRequestError}
-     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
-     * @throws {@link NetworkAsCodeApi.ForbiddenError}
-     * @throws {@link NetworkAsCodeApi.NotFoundError}
-     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.kyc.match({
-     *         phoneNumber: "+99999991000",
-     *         idDocument: "66666666q",
-     *         name: "Federica Sanchez Arjona",
-     *         givenName: "Federica",
-     *         familyName: "Sanchez Arjona",
-     *         nameKanaHankaku: "federica",
-     *         nameKanaZenkaku: "\uFF26\uFF45\uFF44\uFF45\uFF52\uFF49\uFF43\uFF41",
-     *         middleNames: "Sanchez",
-     *         familyNameAtBirth: "YYYY",
-     *         address: "Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
-     *         streetName: "Nicolas Salmeron",
-     *         streetNumber: "4",
-     *         postalCode: "1028460",
-     *         region: "Tokyo",
-     *         locality: "ZZZZ",
-     *         country: "JP",
-     *         houseNumberExtension: "VVVV",
-     *         birthdate: "1978-08-22",
-     *         email: "abc@example.com",
-     *         gender: "OTHER"
-     *     })
-     *
-     * @example
-     *     await client.kyc.match({
-     *         idDocument: "66666666q",
-     *         name: "Federica Sanchez Arjona",
-     *         givenName: "Federica",
-     *         familyName: "Sanchez Arjona",
-     *         nameKanaHankaku: "federica",
-     *         nameKanaZenkaku: "\uFF26\uFF45\uFF44\uFF45\uFF52\uFF49\uFF43\uFF41",
-     *         middleNames: "Sanchez",
-     *         familyNameAtBirth: "YYYY",
-     *         address: "Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
-     *         streetName: "Nicolas Salmeron",
-     *         streetNumber: "4",
-     *         postalCode: "1028460",
-     *         region: "Tokyo",
-     *         locality: "ZZZZ",
-     *         country: "JP",
-     *         houseNumberExtension: "VVVV",
-     *         birthdate: "1978-08-22",
-     *         email: "abc@example.com",
-     *         gender: "OTHER"
-     *     })
-     */
-    public match(
-        request: NetworkAsCodeApi.MatchKycRequest = {},
-        requestOptions?: KycClient.RequestOptions,
-    ): core.HttpResponsePromise<NetworkAsCodeApi.MatchKycResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__match(request, requestOptions));
-    }
-
-    private async __match(
-        request: NetworkAsCodeApi.MatchKycRequest = {},
-        requestOptions?: KycClient.RequestOptions,
-    ): Promise<core.WithRawResponse<NetworkAsCodeApi.MatchKycResponse>> {
-        const { authorization, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                authorization: authorization,
-                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
-                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.NetworkAsCodeApiEnvironment.Default,
-                "passthrough/camara/v1/kyc-match/kyc-match/v0.3/match",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: _body,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as NetworkAsCodeApi.MatchKycResponse, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new NetworkAsCodeApi.UnauthorizedError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 422:
-                    throw new NetworkAsCodeApi.UnprocessableEntityError(
-                        _response.error.body as unknown,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.NetworkAsCodeApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match",
-        );
-    }
-
-    /**
      *
      *
      * @param {NetworkAsCodeApi.FillInKycRequest} request
@@ -446,15 +298,15 @@ export class KycClient {
         request: NetworkAsCodeApi.FillInKycRequest = {},
         requestOptions?: KycClient.RequestOptions,
     ): Promise<core.WithRawResponse<NetworkAsCodeApi.FillInKycResponse>> {
-        const { "x-correlator": correlator, authorization, ..._body } = request;
+        const { authorization, "x-correlator": correlator, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
+                authorization: authorization,
                 "x-correlator":
                     correlator != null ? (typeof correlator === "string" ? correlator : toJson(correlator)) : undefined,
-                authorization: authorization,
                 "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
             }),
             requestOptions?.headers,
@@ -514,6 +366,198 @@ export class KycClient {
             _response.rawResponse,
             "POST",
             "/passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",
+        );
+    }
+
+    /**
+     * Verify matching of a number of attributes related to a customer identity against the verified data bound to their phone number in the Operator systems. Regardless of whether the `phoneNumber` is explicitly stated in the request body, at least one of the other fields must be provided, otherwise a `HTTP 400 - KNOW_YOUR_CUSTOMER.INVALID_PARAM_COMBINATION` error will be returned.
+     *
+     * In order to proceed with the match check, some Operators may have the requirement to perform an additional level of validation based on the `idDocument` property. This means that, in those cases, the `idDocument` is required and the provided value needs to match the one stored in the Operator system associated with the indicated `phoneNumber`. This validation will be done before proceeding with the match check of the rest of the properties. The following two rules apply only in the cases where the Operator have the requirement to validate the `idDocument`:
+     * - If no `idDocument` is provided, then a `HTTP 403 - KNOW_YOUR_CUSTOMER.ID_DOCUMENT_REQUIRED` error will be returned.
+     * - If the provided `idDocument` does not match the one stored in the Operator systems, then a `HTTP 403 - KNOW_YOUR_CUSTOMER.ID_DOCUMENT_MISMATCH` error will be returned.
+     *
+     * The API will return the result of the matching process for each requested attribute. This means that the response will **only** contain the attributes for which validation has been requested. Possible values are:
+     *
+     *
+     *
+     *
+     *
+     *   - **true**: the attribute provided matches with the one in the Operator systems.
+     *   - **false**: the attribute provided does not match with the one in the Operator systems.
+     *   - **not_available**: the attribute is not available to validate.
+     *
+     * @param {NetworkAsCodeApi.MatchKycRequest} request
+     * @param {KycClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link NetworkAsCodeApi.BadRequestError}
+     * @throws {@link NetworkAsCodeApi.UnauthorizedError}
+     * @throws {@link NetworkAsCodeApi.ForbiddenError}
+     * @throws {@link NetworkAsCodeApi.NotFoundError}
+     * @throws {@link NetworkAsCodeApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.kyc.match({
+     *         phoneNumber: "+99999991000",
+     *         idDocument: "66666666q",
+     *         name: "Anna Zoltan",
+     *         givenName: "Zoltan",
+     *         familyName: "Eszter",
+     *         familyNameAtBirth: "1994",
+     *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1083 Hungary",
+     *         streetName: "B\u00F3kay J\u00E1nos u",
+     *         streetNumber: "36-42",
+     *         postalCode: "1083",
+     *         region: "Budapest",
+     *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1080 Hungary",
+     *         country: "HU",
+     *         birthdate: "1995-03-12",
+     *         email: "device@testcsp.com"
+     *     })
+     *
+     * @example
+     *     await client.kyc.match({
+     *         phoneNumber: "+99999991001",
+     *         idDocument: "666666666",
+     *         name: "Kevin",
+     *         givenName: "AnnaZoltan",
+     *         familyName: "Ester",
+     *         familyNameAtBirth: "1994",
+     *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+     *         streetName: "B\u00F3kay",
+     *         streetNumber: "36-44",
+     *         postalCode: "1080",
+     *         region: "Budapest",
+     *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+     *         country: "HU",
+     *         birthdate: "1995-04-11",
+     *         email: "devicebd@testcsp.com"
+     *     })
+     *
+     * @example
+     *     await client.kyc.match({
+     *         phoneNumber: "+99999991001",
+     *         idDocument: "666666666",
+     *         name: "Kevin",
+     *         givenName: "AnnaZoltan",
+     *         familyName: "Ester",
+     *         nameKanaHankaku: "federica",
+     *         nameKanaZenkaku: "Federica",
+     *         middleNames: "Sanchez",
+     *         familyNameAtBirth: "1994",
+     *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+     *         streetName: "B\u00F3kay",
+     *         streetNumber: "36-44",
+     *         postalCode: "1080",
+     *         region: "Budapest",
+     *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+     *         country: "HU",
+     *         houseNumberExtension: "VVVV",
+     *         birthdate: "1995-04-11",
+     *         email: "devicebd@testcsp.com",
+     *         gender: "OTHER"
+     *     })
+     *
+     * @example
+     *     await client.kyc.match({
+     *         idDocument: "66666666q",
+     *         name: "Anna Zoltan",
+     *         givenName: "Zoltan",
+     *         familyName: "Eszter",
+     *         nameKanaHankaku: "federica",
+     *         nameKanaZenkaku: "Federica",
+     *         middleNames: "Sanchez",
+     *         familyNameAtBirth: "1994",
+     *         address: "Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
+     *         streetName: "Nicolas Salmeron",
+     *         streetNumber: "4",
+     *         postalCode: "1080",
+     *         region: "Budapest",
+     *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1080 Hungary",
+     *         country: "HU",
+     *         houseNumberExtension: "VVVV",
+     *         birthdate: "1995-03-12",
+     *         email: "device@testcsp.com",
+     *         gender: "MALE"
+     *     })
+     */
+    public match(
+        request: NetworkAsCodeApi.MatchKycRequest = {},
+        requestOptions?: KycClient.RequestOptions,
+    ): core.HttpResponsePromise<NetworkAsCodeApi.MatchKycResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__match(request, requestOptions));
+    }
+
+    private async __match(
+        request: NetworkAsCodeApi.MatchKycRequest = {},
+        requestOptions?: KycClient.RequestOptions,
+    ): Promise<core.WithRawResponse<NetworkAsCodeApi.MatchKycResponse>> {
+        const { authorization, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46",
+                authorization: authorization,
+                "x-rapidapi-host": requestOptions?.rapidapiHost ?? this._options?.rapidapiHost,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.NetworkAsCodeApiEnvironment.Default,
+                "passthrough/camara/v1/kyc-match/kyc-match/v0.3/match",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as NetworkAsCodeApi.MatchKycResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new NetworkAsCodeApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new NetworkAsCodeApi.UnauthorizedError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new NetworkAsCodeApi.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new NetworkAsCodeApi.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new NetworkAsCodeApi.UnprocessableEntityError(
+                        _response.error.body as unknown,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.NetworkAsCodeApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/passthrough/camara/v1/kyc-match/kyc-match/v0.3/match",
         );
     }
 }

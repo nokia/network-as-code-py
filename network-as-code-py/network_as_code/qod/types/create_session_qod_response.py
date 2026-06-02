@@ -40,8 +40,8 @@ class CreateSessionQodResponse(UniversalBaseModel):
     webhook: typing.Optional[CreateSessionQodResponseWebhook] = None
     session_id: typing_extensions.Annotated[str, FieldMetadata(alias="sessionId"), pydantic.Field(alias="sessionId", description="Session ID in UUID format")]
     duration: int
-    started_at: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt", description="Timestamp of session start in seconds since Unix epoch")] = None
-    expires_at: typing_extensions.Annotated[typing.Optional[str], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch")] = None
+    started_at: typing_extensions.Annotated[int, FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt", description="Timestamp of session start in seconds since Unix epoch")]
+    expires_at: typing_extensions.Annotated[int, FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt", description="Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch")]
     qos_status: typing_extensions.Annotated[CreateSessionQodResponseQosStatus, FieldMetadata(alias="qosStatus"), pydantic.Field(alias="qosStatus", description="The current status of the requested QoS session. The status can be one of the following:\n* `REQUESTED` - QoS has been requested by creating a session\n* `AVAILABLE` - The requested QoS has been provided by the network\n* `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason")]
     messages: typing.Optional[typing.List[CreateSessionQodResponseMessagesItem]] = None
     

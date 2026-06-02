@@ -28,6 +28,97 @@ class RawKycClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
     
+    def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckTenureKycResponse]:
+        """
+        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+        
+        Parameters
+        ----------
+        tenure_date : dt.date
+            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
+        
+        authorization : typing.Optional[str]
+            authorization header for token
+        
+        phone_number : typing.Optional[str]
+            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[CheckTenureKycResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",method="POST",
+            json={
+                "phoneNumber": phone_number,
+                "tenureDate": tenure_date,
+            }
+            ,
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CheckTenureKycResponse,
+                    parse_obj_as(
+                        type_ =CheckTenureKycResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def verify_age(self, *, age_threshold: int, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, include_content_lock: typing.Optional[bool] = OMIT, include_parental_control: typing.Optional[bool] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[VerifyAgeKycResponse]:
         """
         Verify that the age of the subscriber associated with a phone number is equal to or greater than the specified age threshold value.
@@ -163,17 +254,17 @@ class RawKycClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CheckTenureKycResponse]:
+    def fill_in(self, *, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[FillInKycResponse]:
         """
-        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+         
         
         Parameters
         ----------
-        tenure_date : dt.date
-            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
-        
         authorization : typing.Optional[str]
             authorization header for token
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -183,26 +274,25 @@ class RawKycClient:
         
         Returns
         -------
-        HttpResponse[CheckTenureKycResponse]
+        HttpResponse[FillInKycResponse]
             
         """
         _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",method="POST",
+            "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",method="POST",
             json={
                 "phoneNumber": phone_number,
-                "tenureDate": tenure_date,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckTenureKycResponse,
+                    FillInKycResponse,
                     parse_obj_as(
-                        type_ =CheckTenureKycResponse,  # type: ignore
+                        type_ =FillInKycResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -370,7 +460,7 @@ class RawKycClient:
                 "gender": gender,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", "authorization": str(authorization) if authorization is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
@@ -430,15 +520,18 @@ class RawKycClient:
         except ValidationError as e:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+class AsyncRawKycClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
     
-    def fill_in(self, *, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[FillInKycResponse]:
+    async def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckTenureKycResponse]:
         """
-         
+        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
         
         Parameters
         ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
+        tenure_date : dt.date
+            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
         
         authorization : typing.Optional[str]
             authorization header for token
@@ -451,29 +544,30 @@ class RawKycClient:
         
         Returns
         -------
-        HttpResponse[FillInKycResponse]
+        AsyncHttpResponse[CheckTenureKycResponse]
             
         """
-        _response = self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",method="POST",
+        _response = await self._client_wrapper.httpx_client.request(
+            "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",method="POST",
             json={
                 "phoneNumber": phone_number,
+                "tenureDate": tenure_date,
             }
             ,
-            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
             ,
             request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    FillInKycResponse,
+                    CheckTenureKycResponse,
                     parse_obj_as(
-                        type_ =FillInKycResponse,  # type: ignore
+                        type_ =CheckTenureKycResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
-                return HttpResponse(response=_response, data=_data)
+                return AsyncHttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
@@ -520,9 +614,6 @@ class RawKycClient:
         except ValidationError as e:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-class AsyncRawKycClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
     
     async def verify_age(self, *, age_threshold: int, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, id_document: typing.Optional[str] = OMIT, name: typing.Optional[str] = OMIT, given_name: typing.Optional[str] = OMIT, family_name: typing.Optional[str] = OMIT, middle_names: typing.Optional[str] = OMIT, family_name_at_birth: typing.Optional[str] = OMIT, birthdate: typing.Optional[dt.date] = OMIT, email: typing.Optional[str] = OMIT, include_content_lock: typing.Optional[bool] = OMIT, include_parental_control: typing.Optional[bool] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[VerifyAgeKycResponse]:
         """
@@ -659,17 +750,17 @@ class AsyncRawKycClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def check_tenure(self, *, tenure_date: dt.date, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CheckTenureKycResponse]:
+    async def fill_in(self, *, authorization: typing.Optional[str] = None, correlator: typing.Optional[typing.Any] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[FillInKycResponse]:
         """
-        Verifies a specified length of tenure, based on a provided date, for a network subscriber to establish a level of trust for the network subscription identifier.
+         
         
         Parameters
         ----------
-        tenure_date : dt.date
-            The date, in RFC 3339 / ISO 8601 compliant format "YYYY-MM-DD", from which continuous tenure of the identified network subscriber is required to be confirmed
-        
         authorization : typing.Optional[str]
             authorization header for token
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -679,26 +770,25 @@ class AsyncRawKycClient:
         
         Returns
         -------
-        AsyncHttpResponse[CheckTenureKycResponse]
+        AsyncHttpResponse[FillInKycResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/kyc-tenure/kyc-tenure/v0.1/check-tenure",method="POST",
+            "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",method="POST",
             json={
                 "phoneNumber": phone_number,
-                "tenureDate": tenure_date,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": str(correlator) if correlator is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    CheckTenureKycResponse,
+                    FillInKycResponse,
                     parse_obj_as(
-                        type_ =CheckTenureKycResponse,  # type: ignore
+                        type_ =FillInKycResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
@@ -866,7 +956,7 @@ class AsyncRawKycClient:
                 "gender": gender,
             }
             ,
-            headers={"content-type": "application/json", "authorization": str(authorization) if authorization is not None else None, "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", }
+            headers={"content-type": "application/json", "x-correlator": "b4333c46-49c0-4f62-80d7-f0ef930f1c46", "authorization": str(authorization) if authorization is not None else None, }
             ,
             request_options=request_options,omit=OMIT,
         )
@@ -876,96 +966,6 @@ class AsyncRawKycClient:
                     MatchKycResponse,
                     parse_obj_as(
                         type_ =MatchKycResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def fill_in(self, *, correlator: typing.Optional[typing.Any] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[FillInKycResponse]:
-        """
-         
-        
-        Parameters
-        ----------
-        correlator : typing.Optional[typing.Any]
-            Correlation id for the different services
-        
-        authorization : typing.Optional[str]
-            authorization header for token
-        
-        phone_number : typing.Optional[str]
-            A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[FillInKycResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "passthrough/camara/v1/kyc-fill-in/kyc-fill-in/v0.4/fill-in",method="POST",
-            json={
-                "phoneNumber": phone_number,
-            }
-            ,
-            headers={"content-type": "application/json", "x-correlator": str(correlator) if correlator is not None else None, "authorization": str(authorization) if authorization is not None else None, }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    FillInKycResponse,
-                    parse_obj_as(
-                        type_ =FillInKycResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )

@@ -5,7 +5,12 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from .raw_client import AsyncRawNumberVerificationClient, RawNumberVerificationClient
+from .requests.verify_v2number_verification_request_body import VerifyV2NumberVerificationRequestBodyParams
+from .types.get_device_phone_number_v2number_verification_response import (
+    GetDevicePhoneNumberV2NumberVerificationResponse,
+)
 from .types.verify_number_verification_response import VerifyNumberVerificationResponse
+from .types.verify_v2number_verification_response import VerifyV2NumberVerificationResponse
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -24,7 +29,7 @@ class NumberVerificationClient:
         """
         return self._raw_client
     
-    def verify(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, authorization: typing.Optional[str] = None, correlator: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyNumberVerificationResponse:
+    def verify(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyNumberVerificationResponse:
         """
         Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
         - The number verification will be done for the user that has authenticated via mobile network
@@ -32,17 +37,17 @@ class NumberVerificationClient:
         
         Parameters
         ----------
-        state : typing.Optional[str]
-            Application state
-        
         code : typing.Optional[str]
             Authorization code received from the CSP
         
-        authorization : typing.Optional[str]
-            authorization header for token
+        state : typing.Optional[str]
+            Application state
         
         correlator : typing.Optional[str]
             Correlation id for the different services
+        
+        authorization : typing.Optional[str]
+            authorization header for token
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -70,7 +75,75 @@ class NumberVerificationClient:
             phone_number="+99999991000",
         )
         """
-        _response = self._raw_client.verify(state=state, code=code, authorization=authorization, correlator=correlator, phone_number=phone_number, hashed_phone_number=hashed_phone_number, request_options=request_options)
+        _response = self._raw_client.verify(code=code, state=state, correlator=correlator, authorization=authorization, phone_number=phone_number, hashed_phone_number=hashed_phone_number, request_options=request_options)
+        return _response.data
+    
+    def verify_v2(self, *, request: VerifyV2NumberVerificationRequestBodyParams, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> VerifyV2NumberVerificationResponse:
+        """
+        Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
+        - The number verification will be done for the user that has authenticated via mobile network
+        - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
+        
+        Parameters
+        ----------
+        request : VerifyV2NumberVerificationRequestBodyParams
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        VerifyV2NumberVerificationResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.number_verification.verify_v2(
+            request={"phone_number": "+99999991000"},
+        )
+        """
+        _response = self._raw_client.verify_v2(request=request, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def get_device_phone_number_v2(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetDevicePhoneNumberV2NumberVerificationResponse:
+        """
+        Returns the phone number so the API clients can verify the number themselves:
+        - It will be done for the user that has authenticated via mobile network
+        - It returns the authenticated user's `device phone number` associated to the access token
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetDevicePhoneNumberV2NumberVerificationResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.number_verification.get_device_phone_number_v2()
+        """
+        _response = self._raw_client.get_device_phone_number_v2(correlator=correlator, request_options=request_options)
         return _response.data
     
     def get_device_phone_number(self, *, request_options: typing.Optional[RequestOptions] = None) -> None:
@@ -111,7 +184,7 @@ class AsyncNumberVerificationClient:
         """
         return self._raw_client
     
-    async def verify(self, *, state: typing.Optional[str] = None, code: typing.Optional[str] = None, authorization: typing.Optional[str] = None, correlator: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyNumberVerificationResponse:
+    async def verify(self, *, code: typing.Optional[str] = None, state: typing.Optional[str] = None, correlator: typing.Optional[str] = None, authorization: typing.Optional[str] = None, phone_number: typing.Optional[str] = OMIT, hashed_phone_number: typing.Optional[str] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> VerifyNumberVerificationResponse:
         """
         Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
         - The number verification will be done for the user that has authenticated via mobile network
@@ -119,17 +192,17 @@ class AsyncNumberVerificationClient:
         
         Parameters
         ----------
-        state : typing.Optional[str]
-            Application state
-        
         code : typing.Optional[str]
             Authorization code received from the CSP
         
-        authorization : typing.Optional[str]
-            authorization header for token
+        state : typing.Optional[str]
+            Application state
         
         correlator : typing.Optional[str]
             Correlation id for the different services
+        
+        authorization : typing.Optional[str]
+            authorization header for token
         
         phone_number : typing.Optional[str]
             A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
@@ -165,7 +238,91 @@ class AsyncNumberVerificationClient:
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.verify(state=state, code=code, authorization=authorization, correlator=correlator, phone_number=phone_number, hashed_phone_number=hashed_phone_number, request_options=request_options)
+        _response = await self._raw_client.verify(code=code, state=state, correlator=correlator, authorization=authorization, phone_number=phone_number, hashed_phone_number=hashed_phone_number, request_options=request_options)
+        return _response.data
+    
+    async def verify_v2(self, *, request: VerifyV2NumberVerificationRequestBodyParams, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> VerifyV2NumberVerificationResponse:
+        """
+        Verifies if the specified phone number (either in plain text or hashed format) matches the one that the user is currently using. Only one of the plain or hashed formats must be provided.
+        - The number verification will be done for the user that has authenticated via mobile network
+        - It returns true/false depending on if the hashed phone number received as input matches the authenticated user's `device phone number` associated to the access token
+        
+        Parameters
+        ----------
+        request : VerifyV2NumberVerificationRequestBodyParams
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        VerifyV2NumberVerificationResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.number_verification.verify_v2(
+                request={"phone_number": "+99999991000"},
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.verify_v2(request=request, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    async def get_device_phone_number_v2(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetDevicePhoneNumberV2NumberVerificationResponse:
+        """
+        Returns the phone number so the API clients can verify the number themselves:
+        - It will be done for the user that has authenticated via mobile network
+        - It returns the authenticated user's `device phone number` associated to the access token
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetDevicePhoneNumberV2NumberVerificationResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.number_verification.get_device_phone_number_v2()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_device_phone_number_v2(correlator=correlator, request_options=request_options)
         return _response.data
     
     async def get_device_phone_number(self, *, request_options: typing.Optional[RequestOptions] = None) -> None:

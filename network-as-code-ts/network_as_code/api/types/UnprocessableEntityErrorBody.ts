@@ -9,12 +9,7 @@ export interface UnprocessableEntityErrorBody {
 
 export namespace UnprocessableEntityErrorBody {
     export const Code = {
-        IdentifierMismatch: "IDENTIFIER_MISMATCH",
         ServiceNotApplicable: "SERVICE_NOT_APPLICABLE",
-        MissingIdentifier: "MISSING_IDENTIFIER",
-        UnsupportedIdentifier: "UNSUPPORTED_IDENTIFIER",
-        UnnecessaryIdentifier: "UNNECESSARY_IDENTIFIER",
-        MultieventSubscriptionNotSupported: "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED",
     } as const;
     export type Code = (typeof Code)[keyof typeof Code];
 }

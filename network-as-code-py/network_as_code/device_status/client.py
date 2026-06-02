@@ -14,11 +14,23 @@ from .requests.create_reachability_subscription_device_status_request_config imp
 from .requests.create_reachability_subscription_device_status_request_sink_credential import (
     CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams,
 )
+from .requests.create_reachability_subscription_v08device_status_request_config import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams,
+)
+from .requests.create_reachability_subscription_v08device_status_request_sink_credential import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams,
+)
 from .requests.create_roaming_subscription_device_status_request_config import (
     CreateRoamingSubscriptionDeviceStatusRequestConfigParams,
 )
 from .requests.create_roaming_subscription_device_status_request_sink_credential import (
     CreateRoamingSubscriptionDeviceStatusRequestSinkCredentialParams,
+)
+from .requests.create_roaming_subscription_v08device_status_request_config import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams,
+)
+from .requests.create_roaming_subscription_v08device_status_request_sink_credential import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams,
 )
 from .requests.create_subscription_device_status_request_subscription_detail import (
     CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams,
@@ -43,6 +55,15 @@ from .types.create_reachability_subscription_device_status_request_types_item im
 from .types.create_reachability_subscription_device_status_response import (
     CreateReachabilitySubscriptionDeviceStatusResponse,
 )
+from .types.create_reachability_subscription_v08device_status_request_protocol import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol,
+)
+from .types.create_reachability_subscription_v08device_status_request_types_item import (
+    CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem,
+)
+from .types.create_reachability_subscription_v08device_status_response import (
+    CreateReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.create_roaming_subscription_device_status_request_protocol import (
     CreateRoamingSubscriptionDeviceStatusRequestProtocol,
 )
@@ -50,20 +71,45 @@ from .types.create_roaming_subscription_device_status_request_types_item import 
     CreateRoamingSubscriptionDeviceStatusRequestTypesItem,
 )
 from .types.create_roaming_subscription_device_status_response import CreateRoamingSubscriptionDeviceStatusResponse
+from .types.create_roaming_subscription_v08device_status_request_protocol import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestProtocol,
+)
+from .types.create_roaming_subscription_v08device_status_request_types_item import (
+    CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem,
+)
+from .types.create_roaming_subscription_v08device_status_response import (
+    CreateRoamingSubscriptionV08DeviceStatusResponse,
+)
 from .types.create_subscription_device_status_response import CreateSubscriptionDeviceStatusResponse
 from .types.delete_reachability_subscription_device_status_response import (
     DeleteReachabilitySubscriptionDeviceStatusResponse,
 )
+from .types.delete_reachability_subscription_v08device_status_response import (
+    DeleteReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.delete_roaming_subscription_device_status_response import DeleteRoamingSubscriptionDeviceStatusResponse
+from .types.delete_roaming_subscription_v08device_status_response import (
+    DeleteRoamingSubscriptionV08DeviceStatusResponse,
+)
 from .types.delete_subscription_device_status_response import DeleteSubscriptionDeviceStatusResponse
 from .types.get_reachability_subscription_device_status_response import GetReachabilitySubscriptionDeviceStatusResponse
+from .types.get_reachability_subscription_v08device_status_response import (
+    GetReachabilitySubscriptionV08DeviceStatusResponse,
+)
 from .types.get_roaming_subscription_device_status_response import GetRoamingSubscriptionDeviceStatusResponse
+from .types.get_roaming_subscription_v08device_status_response import GetRoamingSubscriptionV08DeviceStatusResponse
 from .types.get_subscription_device_status_response import GetSubscriptionDeviceStatusResponse
 from .types.list_reachability_subscriptions_device_status_response_item import (
     ListReachabilitySubscriptionsDeviceStatusResponseItem,
 )
+from .types.list_reachability_subscriptions_v08device_status_response_item import (
+    ListReachabilitySubscriptionsV08DeviceStatusResponseItem,
+)
 from .types.list_roaming_subscriptions_device_status_response_item import (
     ListRoamingSubscriptionsDeviceStatusResponseItem,
+)
+from .types.list_roaming_subscriptions_v08device_status_response_item import (
+    ListRoamingSubscriptionsV08DeviceStatusResponseItem,
 )
 from .types.list_subscriptions_device_status_response_item import ListSubscriptionsDeviceStatusResponseItem
 from .types.retrieve_reachability_status_device_status_response import RetrieveReachabilityStatusDeviceStatusResponse
@@ -86,53 +132,24 @@ class DeviceStatusClient:
         """
         return self._raw_client
     
-    def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionDeviceStatusResponse:
+    def get_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionV08DeviceStatusResponse:
         """
-        retrieve event subscription information for a given subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetSubscriptionDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.device_status.get_subscription(
-            subscription_id="subscriptionId",
-        )
-        """
-        _response = self._raw_client.get_subscription(subscription_id, request_options=request_options)
-        return _response.data
-    
-    def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionDeviceStatusResponse]:
-        """
-        delete a  given event subscription.
+        retrieve device roaming status subscription information for a given subscription.
         
         Parameters
         ----------
         subscription_id : str
             Subscription identifier that was obtained from the create event subscription operation
         
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        typing.Optional[DeleteSubscriptionDeviceStatusResponse]
+        GetRoamingSubscriptionV08DeviceStatusResponse
             
         
         Examples
@@ -143,11 +160,46 @@ class DeviceStatusClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_status.delete_subscription(
+        client.device_status.get_roaming_subscription_v08(
             subscription_id="subscriptionId",
         )
         """
-        _response = self._raw_client.delete_subscription(subscription_id, request_options=request_options)
+        _response = self._raw_client.get_roaming_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def delete_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.delete_roaming_subscription_v08(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.delete_roaming_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data
     
     def check_connectivity(self, *, device: CheckConnectivityDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> CheckConnectivityDeviceStatusResponse:
@@ -189,111 +241,6 @@ class DeviceStatusClient:
         )
         """
         _response = self._raw_client.check_connectivity(device=device, request_options=request_options)
-        return _response.data
-    
-    def retrieve_roaming_status(self, *, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveRoamingStatusDeviceStatusResponse:
-        """
-        Get the current roaming status and the country information
-        
-        Parameters
-        ----------
-        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        RetrieveRoamingStatusDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.device_status.retrieve_roaming_status(
-            device={"phone_number": "+99999991000"},
-        )
-        """
-        _response = self._raw_client.retrieve_roaming_status(device=device, request_options=request_options)
-        return _response.data
-    
-    def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionDeviceStatusResponse:
-        """
-        retrieve device roaming status subscription information for a given subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetRoamingSubscriptionDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.device_status.get_roaming_subscription(
-            subscription_id="subscriptionId",
-        )
-        """
-        _response = self._raw_client.get_roaming_subscription(subscription_id, request_options=request_options)
-        return _response.data
-    
-    def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]:
-        """
-        Delete a given device-roaming-status subscription by ID
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]
-            
-        
-        Examples
-        --------
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.device_status.delete_roaming_subscription(
-            subscription_id="subscriptionId",
-        )
-        """
-        _response = self._raw_client.delete_roaming_subscription(subscription_id, request_options=request_options)
         return _response.data
     
     def get_reachability_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetReachabilitySubscriptionDeviceStatusResponse:
@@ -360,30 +307,18 @@ class DeviceStatusClient:
         _response = self._raw_client.delete_reachability_subscription(subscription_id, request_options=request_options)
         return _response.data
     
-    def retrieve_reachability_status(self, *, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveReachabilityStatusDeviceStatusResponse:
+    def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]:
         """
-        Get the current reachability status information
+        Retrieve a list of device reachability status event subscription(s)
         
         Parameters
         ----------
-        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        RetrieveReachabilityStatusDeviceStatusResponse
+        typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]
             
         
         Examples
@@ -394,25 +329,42 @@ class DeviceStatusClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_status.retrieve_reachability_status(
-            device={"phone_number": "+99999991000"},
-        )
+        client.device_status.list_reachability_subscriptions()
         """
-        _response = self._raw_client.retrieve_reachability_status(device=device, request_options=request_options)
+        _response = self._raw_client.list_reachability_subscriptions(request_options=request_options)
         return _response.data
     
-    def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsDeviceStatusResponseItem]:
+    def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionDeviceStatusResponse:
         """
-        Retrieve a list of device status event subscription(s)
+        Create a device reachability status event subscription for a device
         
         Parameters
         ----------
+        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        typing.List[ListSubscriptionsDeviceStatusResponseItem]
+        CreateReachabilitySubscriptionDeviceStatusResponse
             
         
         Examples
@@ -423,59 +375,20 @@ class DeviceStatusClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_status.list_subscriptions()
-        """
-        _response = self._raw_client.list_subscriptions(request_options=request_options)
-        return _response.data
-    
-    def create_subscription(self, *, subscription_detail: CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams, webhook: CreateSubscriptionDeviceStatusRequestWebhookParams, subscription_expire_time: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionDeviceStatusResponse:
-        """
-        Create a device status event subscription for a device
-        
-        Parameters
-        ----------
-        subscription_detail : CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams
-            The detail of the requested event subscription
-        
-        webhook : CreateSubscriptionDeviceStatusRequestWebhookParams
-            Webhook information for event channel
-        
-        subscription_expire_time : typing.Optional[dt.datetime]
-            The subscription expiration time in date-time format.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        CreateSubscriptionDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        import datetime
-        
-        from networkAsCode import NetworkAsCodeApi
-        
-        client = NetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        client.device_status.create_subscription(
-            subscription_detail={
-                "device": {"phone_number": "+36719991000"},
-                "type": "org.camaraproject.device-status.v0.roaming-status",
-            },
-            subscription_expire_time=datetime.datetime.fromisoformat(
-                "2026-01-17 13:18:23+00:00",
-            ),
-            webhook={
-                "notification_url": "https://application-server.com",
-                "notification_auth_token": "c8974e592c2fa383d4a3960714",
+        client.device_status.create_reachability_subscription(
+            protocol="HTTP",
+            sink="https://endpoint.example.com/sink",
+            types=[
+                "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
+            ],
+            config={
+                "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                "subscription_max_events": 5,
+                "initial_event": True,
             },
         )
         """
-        _response = self._raw_client.create_subscription(subscription_detail=subscription_detail, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
+        _response = self._raw_client.create_reachability_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
         return _response.data
     
     def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]:
@@ -562,6 +475,147 @@ class DeviceStatusClient:
         _response = self._raw_client.create_roaming_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
         return _response.data
     
+    def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionDeviceStatusResponse:
+        """
+        retrieve device roaming status subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetRoamingSubscriptionDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.get_roaming_subscription(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.get_roaming_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.delete_roaming_subscription(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.delete_roaming_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsDeviceStatusResponseItem]:
+        """
+        Retrieve a list of device status event subscription(s)
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListSubscriptionsDeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.list_subscriptions()
+        """
+        _response = self._raw_client.list_subscriptions(request_options=request_options)
+        return _response.data
+    
+    def create_subscription(self, *, subscription_detail: CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams, webhook: CreateSubscriptionDeviceStatusRequestWebhookParams, subscription_expire_time: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionDeviceStatusResponse:
+        """
+        Create a device status event subscription for a device
+        
+        Parameters
+        ----------
+        subscription_detail : CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams
+            The detail of the requested event subscription
+        
+        webhook : CreateSubscriptionDeviceStatusRequestWebhookParams
+            Webhook information for event channel
+        
+        subscription_expire_time : typing.Optional[dt.datetime]
+            The subscription expiration time in date-time format.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CreateSubscriptionDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import datetime
+        
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.create_subscription(
+            subscription_detail={
+                "device": {"phone_number": "+36719991000"},
+                "type": "org.camaraproject.device-status.v0.roaming-status",
+            },
+            subscription_expire_time=datetime.datetime.fromisoformat(
+                "2026-01-17 13:18:23+00:00",
+            ),
+            webhook={
+                "notification_url": "https://application-server.com",
+                "notification_auth_token": "c8974e592c2fa383d4a3960714",
+            },
+        )
+        """
+        _response = self._raw_client.create_subscription(subscription_detail=subscription_detail, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
+        return _response.data
+    
     def check_roaming(self, *, device: CheckRoamingDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> CheckRoamingDeviceStatusResponse:
         """
         Get the current roaming status and the country information
@@ -603,18 +657,24 @@ class DeviceStatusClient:
         _response = self._raw_client.check_roaming(device=device, request_options=request_options)
         return _response.data
     
-    def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]:
+    def get_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetReachabilitySubscriptionV08DeviceStatusResponse:
         """
-        Retrieve a list of device reachability status event subscription(s)
+        Retrieve a given subscription by ID
         
         Parameters
         ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]
+        GetReachabilitySubscriptionV08DeviceStatusResponse
             
         
         Examples
@@ -625,34 +685,104 @@ class DeviceStatusClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_status.list_reachability_subscriptions()
+        client.device_status.get_reachability_subscription_v08(
+            subscription_id="subscriptionId",
+        )
         """
-        _response = self._raw_client.list_reachability_subscriptions(request_options=request_options)
+        _response = self._raw_client.get_reachability_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data
     
-    def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionDeviceStatusResponse:
+    def delete_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]:
+        """
+        Delete a given subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.delete_reachability_subscription_v08(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.delete_reachability_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def list_reachability_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]:
+        """
+        Retrieve a list of device reachability status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.list_reachability_subscriptions_v08()
+        """
+        _response = self._raw_client.list_reachability_subscriptions_v08(correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def create_reachability_subscription_v08(self, *, protocol: CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionV08DeviceStatusResponse:
         """
         Create a device reachability status event subscription for a device
         
         Parameters
         ----------
-        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+        protocol : CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol
             Identifier of a delivery protocol. Only HTTP is allowed for now
         
         sink : str
             The address to which events shall be delivered using the selected protocol.
         
-        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+        types : typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem]
             Camara Event types eligible to be delivered by this subscription.
             Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
         
-        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+        config : CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams
             Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
             In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
             Specific event type attributes must be defined in `subscriptionDetail`
             Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
         
-        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
@@ -660,7 +790,66 @@ class DeviceStatusClient:
         
         Returns
         -------
-        CreateReachabilitySubscriptionDeviceStatusResponse
+        CreateReachabilitySubscriptionV08DeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import datetime
+        
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.create_reachability_subscription_v08(
+            protocol="HTTP",
+            sink="https://endpoint.example.com/sink",
+            sink_credential={"credential_type": "ACCESSTOKEN"},
+            types=[
+                "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
+            ],
+            config={
+                "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                "subscription_expire_time": datetime.datetime.fromisoformat(
+                    "2023-01-17 13:18:23+00:00",
+                ),
+                "subscription_max_events": 5,
+                "initial_event": True,
+            },
+        )
+        """
+        _response = self._raw_client.create_reachability_subscription_v08(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
+        return _response.data
+    
+    def retrieve_reachability_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveReachabilityStatusDeviceStatusResponse:
+        """
+        Get the current reachability status information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveReachabilityStatusDeviceStatusResponse
             
         
         Examples
@@ -671,37 +860,14 @@ class DeviceStatusClient:
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        client.device_status.create_reachability_subscription(
-            protocol="HTTP",
-            sink="https://endpoint.example.com/sink",
-            types=[
-                "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
-            ],
-            config={
-                "subscription_detail": {"device": {"phone_number": "+99999991000"}},
-                "subscription_max_events": 5,
-                "initial_event": True,
-            },
+        client.device_status.retrieve_reachability_status(
+            device={"phone_number": "+99999991000"},
         )
         """
-        _response = self._raw_client.create_reachability_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
+        _response = self._raw_client.retrieve_reachability_status(correlator=correlator, device=device, request_options=request_options)
         return _response.data
-class AsyncDeviceStatusClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawDeviceStatusClient(client_wrapper=client_wrapper)
     
-    @property
-    def with_raw_response(self) -> AsyncRawDeviceStatusClient:
-        """
-        Retrieves a raw implementation of this client that returns raw responses.
-        
-        Returns
-        -------
-        AsyncRawDeviceStatusClient
-        """
-        return self._raw_client
-    
-    async def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionDeviceStatusResponse:
+    def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionDeviceStatusResponse:
         """
         retrieve event subscription information for a given subscription.
         
@@ -720,28 +886,20 @@ class AsyncDeviceStatusClient:
         
         Examples
         --------
-        import asyncio
+        from networkAsCode import NetworkAsCodeApi
         
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
+        client = NetworkAsCodeApi(
             rapidapi_host="YOUR_RAPIDAPI_HOST",
             api_key="YOUR_API_KEY",
         )
-        
-        
-        async def main() -> None:
-            await client.device_status.get_subscription(
-                subscription_id="subscriptionId",
-            )
-        
-        
-        asyncio.run(main())
+        client.device_status.get_subscription(
+            subscription_id="subscriptionId",
+        )
         """
-        _response = await self._raw_client.get_subscription(subscription_id, request_options=request_options)
+        _response = self._raw_client.get_subscription(subscription_id, request_options=request_options)
         return _response.data
     
-    async def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionDeviceStatusResponse]:
+    def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionDeviceStatusResponse]:
         """
         delete a  given event subscription.
         
@@ -760,6 +918,195 @@ class AsyncDeviceStatusClient:
         
         Examples
         --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.delete_subscription(
+            subscription_id="subscriptionId",
+        )
+        """
+        _response = self._raw_client.delete_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    def retrieve_roaming_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveRoamingStatusDeviceStatusResponse:
+        """
+        Get the current roaming status and the country information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveRoamingStatusDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.retrieve_roaming_status(
+            device={"phone_number": "+99999991000"},
+        )
+        """
+        _response = self._raw_client.retrieve_roaming_status(correlator=correlator, device=device, request_options=request_options)
+        return _response.data
+    
+    def list_roaming_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.list_roaming_subscriptions_v08()
+        """
+        _response = self._raw_client.list_roaming_subscriptions_v08(correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    def create_roaming_subscription_v08(self, *, protocol: CreateRoamingSubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateRoamingSubscriptionV08DeviceStatusResponse:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionV08DeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CreateRoamingSubscriptionV08DeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import datetime
+        
+        from networkAsCode import NetworkAsCodeApi
+        
+        client = NetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        client.device_status.create_roaming_subscription_v08(
+            protocol="HTTP",
+            sink="https://endpoint.example.com/sink",
+            sink_credential={"credential_type": "ACCESSTOKEN"},
+            types=[
+                "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status"
+            ],
+            config={
+                "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                "subscription_expire_time": datetime.datetime.fromisoformat(
+                    "2023-01-17 13:18:23+00:00",
+                ),
+                "subscription_max_events": 5,
+                "initial_event": True,
+            },
+        )
+        """
+        _response = self._raw_client.create_roaming_subscription_v08(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
+        return _response.data
+class AsyncDeviceStatusClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._raw_client = AsyncRawDeviceStatusClient(client_wrapper=client_wrapper)
+    
+    @property
+    def with_raw_response(self) -> AsyncRawDeviceStatusClient:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+        
+        Returns
+        -------
+        AsyncRawDeviceStatusClient
+        """
+        return self._raw_client
+    
+    async def get_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionV08DeviceStatusResponse:
+        """
+        retrieve device roaming status subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetRoamingSubscriptionV08DeviceStatusResponse
+            
+        
+        Examples
+        --------
         import asyncio
         
         from networkAsCode import AsyncNetworkAsCodeApi
@@ -771,14 +1118,57 @@ class AsyncDeviceStatusClient:
         
         
         async def main() -> None:
-            await client.device_status.delete_subscription(
+            await client.device_status.get_roaming_subscription_v08(
                 subscription_id="subscriptionId",
             )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.delete_subscription(subscription_id, request_options=request_options)
+        _response = await self._raw_client.get_roaming_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    async def delete_roaming_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteRoamingSubscriptionV08DeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.delete_roaming_subscription_v08(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_roaming_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data
     
     async def check_connectivity(self, *, device: CheckConnectivityDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> CheckConnectivityDeviceStatusResponse:
@@ -828,135 +1218,6 @@ class AsyncDeviceStatusClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.check_connectivity(device=device, request_options=request_options)
-        return _response.data
-    
-    async def retrieve_roaming_status(self, *, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveRoamingStatusDeviceStatusResponse:
-        """
-        Get the current roaming status and the country information
-        
-        Parameters
-        ----------
-        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        RetrieveRoamingStatusDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.device_status.retrieve_roaming_status(
-                device={"phone_number": "+99999991000"},
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.retrieve_roaming_status(device=device, request_options=request_options)
-        return _response.data
-    
-    async def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionDeviceStatusResponse:
-        """
-        retrieve device roaming status subscription information for a given subscription.
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        GetRoamingSubscriptionDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.device_status.get_roaming_subscription(
-                subscription_id="subscriptionId",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.get_roaming_subscription(subscription_id, request_options=request_options)
-        return _response.data
-    
-    async def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]:
-        """
-        Delete a given device-roaming-status subscription by ID
-        
-        Parameters
-        ----------
-        subscription_id : str
-            Subscription identifier that was obtained from the create event subscription operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]
-            
-        
-        Examples
-        --------
-        import asyncio
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.device_status.delete_roaming_subscription(
-                subscription_id="subscriptionId",
-            )
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.delete_roaming_subscription(subscription_id, request_options=request_options)
         return _response.data
     
     async def get_reachability_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetReachabilitySubscriptionDeviceStatusResponse:
@@ -1039,30 +1300,18 @@ class AsyncDeviceStatusClient:
         _response = await self._raw_client.delete_reachability_subscription(subscription_id, request_options=request_options)
         return _response.data
     
-    async def retrieve_reachability_status(self, *, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveReachabilityStatusDeviceStatusResponse:
+    async def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]:
         """
-        Get the current reachability status information
+        Retrieve a list of device reachability status event subscription(s)
         
         Parameters
         ----------
-        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
-        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        RetrieveReachabilityStatusDeviceStatusResponse
+        typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]
             
         
         Examples
@@ -1078,28 +1327,45 @@ class AsyncDeviceStatusClient:
         
         
         async def main() -> None:
-            await client.device_status.retrieve_reachability_status(
-                device={"phone_number": "+99999991000"},
-            )
+            await client.device_status.list_reachability_subscriptions()
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.retrieve_reachability_status(device=device, request_options=request_options)
+        _response = await self._raw_client.list_reachability_subscriptions(request_options=request_options)
         return _response.data
     
-    async def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsDeviceStatusResponseItem]:
+    async def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionDeviceStatusResponse:
         """
-        Retrieve a list of device status event subscription(s)
+        Create a device reachability status event subscription for a device
         
         Parameters
         ----------
+        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        typing.List[ListSubscriptionsDeviceStatusResponseItem]
+        CreateReachabilitySubscriptionDeviceStatusResponse
             
         
         Examples
@@ -1115,69 +1381,23 @@ class AsyncDeviceStatusClient:
         
         
         async def main() -> None:
-            await client.device_status.list_subscriptions()
-        
-        
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.list_subscriptions(request_options=request_options)
-        return _response.data
-    
-    async def create_subscription(self, *, subscription_detail: CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams, webhook: CreateSubscriptionDeviceStatusRequestWebhookParams, subscription_expire_time: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionDeviceStatusResponse:
-        """
-        Create a device status event subscription for a device
-        
-        Parameters
-        ----------
-        subscription_detail : CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams
-            The detail of the requested event subscription
-        
-        webhook : CreateSubscriptionDeviceStatusRequestWebhookParams
-            Webhook information for event channel
-        
-        subscription_expire_time : typing.Optional[dt.datetime]
-            The subscription expiration time in date-time format.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        CreateSubscriptionDeviceStatusResponse
-            
-        
-        Examples
-        --------
-        import asyncio
-        import datetime
-        
-        from networkAsCode import AsyncNetworkAsCodeApi
-        
-        client = AsyncNetworkAsCodeApi(
-            rapidapi_host="YOUR_RAPIDAPI_HOST",
-            api_key="YOUR_API_KEY",
-        )
-        
-        
-        async def main() -> None:
-            await client.device_status.create_subscription(
-                subscription_detail={
-                    "device": {"phone_number": "+36719991000"},
-                    "type": "org.camaraproject.device-status.v0.roaming-status",
-                },
-                subscription_expire_time=datetime.datetime.fromisoformat(
-                    "2026-01-17 13:18:23+00:00",
-                ),
-                webhook={
-                    "notification_url": "https://application-server.com",
-                    "notification_auth_token": "c8974e592c2fa383d4a3960714",
+            await client.device_status.create_reachability_subscription(
+                protocol="HTTP",
+                sink="https://endpoint.example.com/sink",
+                types=[
+                    "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
+                ],
+                config={
+                    "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                    "subscription_max_events": 5,
+                    "initial_event": True,
                 },
             )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.create_subscription(subscription_detail=subscription_detail, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
+        _response = await self._raw_client.create_reachability_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
         return _response.data
     
     async def list_roaming_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListRoamingSubscriptionsDeviceStatusResponseItem]:
@@ -1280,6 +1500,178 @@ class AsyncDeviceStatusClient:
         _response = await self._raw_client.create_roaming_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
         return _response.data
     
+    async def get_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetRoamingSubscriptionDeviceStatusResponse:
+        """
+        retrieve device roaming status subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetRoamingSubscriptionDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.get_roaming_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_roaming_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    async def delete_roaming_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]:
+        """
+        Delete a given device-roaming-status subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteRoamingSubscriptionDeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.delete_roaming_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_roaming_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    async def list_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListSubscriptionsDeviceStatusResponseItem]:
+        """
+        Retrieve a list of device status event subscription(s)
+        
+        Parameters
+        ----------
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListSubscriptionsDeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.list_subscriptions()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_subscriptions(request_options=request_options)
+        return _response.data
+    
+    async def create_subscription(self, *, subscription_detail: CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams, webhook: CreateSubscriptionDeviceStatusRequestWebhookParams, subscription_expire_time: typing.Optional[dt.datetime] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateSubscriptionDeviceStatusResponse:
+        """
+        Create a device status event subscription for a device
+        
+        Parameters
+        ----------
+        subscription_detail : CreateSubscriptionDeviceStatusRequestSubscriptionDetailParams
+            The detail of the requested event subscription
+        
+        webhook : CreateSubscriptionDeviceStatusRequestWebhookParams
+            Webhook information for event channel
+        
+        subscription_expire_time : typing.Optional[dt.datetime]
+            The subscription expiration time in date-time format.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CreateSubscriptionDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        import datetime
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.create_subscription(
+                subscription_detail={
+                    "device": {"phone_number": "+36719991000"},
+                    "type": "org.camaraproject.device-status.v0.roaming-status",
+                },
+                subscription_expire_time=datetime.datetime.fromisoformat(
+                    "2026-01-17 13:18:23+00:00",
+                ),
+                webhook={
+                    "notification_url": "https://application-server.com",
+                    "notification_auth_token": "c8974e592c2fa383d4a3960714",
+                },
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.create_subscription(subscription_detail=subscription_detail, webhook=webhook, subscription_expire_time=subscription_expire_time, request_options=request_options)
+        return _response.data
+    
     async def check_roaming(self, *, device: CheckRoamingDeviceStatusRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> CheckRoamingDeviceStatusResponse:
         """
         Get the current roaming status and the country information
@@ -1329,18 +1721,24 @@ class AsyncDeviceStatusClient:
         _response = await self._raw_client.check_roaming(device=device, request_options=request_options)
         return _response.data
     
-    async def list_reachability_subscriptions(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]:
+    async def get_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> GetReachabilitySubscriptionV08DeviceStatusResponse:
         """
-        Retrieve a list of device reachability status event subscription(s)
+        Retrieve a given subscription by ID
         
         Parameters
         ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        typing.List[ListReachabilitySubscriptionsDeviceStatusResponseItem]
+        GetReachabilitySubscriptionV08DeviceStatusResponse
             
         
         Examples
@@ -1356,37 +1754,123 @@ class AsyncDeviceStatusClient:
         
         
         async def main() -> None:
-            await client.device_status.list_reachability_subscriptions()
+            await client.device_status.get_reachability_subscription_v08(
+                subscription_id="subscriptionId",
+            )
         
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.list_reachability_subscriptions(request_options=request_options)
+        _response = await self._raw_client.get_reachability_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
         return _response.data
     
-    async def create_reachability_subscription(self, *, protocol: CreateReachabilitySubscriptionDeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionDeviceStatusRequestConfigParams, sink_credential: typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionDeviceStatusResponse:
+    async def delete_reachability_subscription_v08(self, subscription_id: str, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]:
+        """
+        Delete a given subscription by ID
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteReachabilitySubscriptionV08DeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.delete_reachability_subscription_v08(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_reachability_subscription_v08(subscription_id, correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    async def list_reachability_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]:
+        """
+        Retrieve a list of device reachability status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListReachabilitySubscriptionsV08DeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.list_reachability_subscriptions_v08()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_reachability_subscriptions_v08(correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    async def create_reachability_subscription_v08(self, *, protocol: CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem], config: CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateReachabilitySubscriptionV08DeviceStatusResponse:
         """
         Create a device reachability status event subscription for a device
         
         Parameters
         ----------
-        protocol : CreateReachabilitySubscriptionDeviceStatusRequestProtocol
+        protocol : CreateReachabilitySubscriptionV08DeviceStatusRequestProtocol
             Identifier of a delivery protocol. Only HTTP is allowed for now
         
         sink : str
             The address to which events shall be delivered using the selected protocol.
         
-        types : typing.Sequence[CreateReachabilitySubscriptionDeviceStatusRequestTypesItem]
+        types : typing.Sequence[CreateReachabilitySubscriptionV08DeviceStatusRequestTypesItem]
             Camara Event types eligible to be delivered by this subscription.
             Note: For the current Commonalities API design guidelines, only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
         
-        config : CreateReachabilitySubscriptionDeviceStatusRequestConfigParams
+        config : CreateReachabilitySubscriptionV08DeviceStatusRequestConfigParams
             Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
             In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
             Specific event type attributes must be defined in `subscriptionDetail`
             Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
         
-        sink_credential : typing.Optional[CreateReachabilitySubscriptionDeviceStatusRequestSinkCredentialParams]
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateReachabilitySubscriptionV08DeviceStatusRequestSinkCredentialParams]
             A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
         
         request_options : typing.Optional[RequestOptions]
@@ -1394,12 +1878,13 @@ class AsyncDeviceStatusClient:
         
         Returns
         -------
-        CreateReachabilitySubscriptionDeviceStatusResponse
+        CreateReachabilitySubscriptionV08DeviceStatusResponse
             
         
         Examples
         --------
         import asyncio
+        import datetime
         
         from networkAsCode import AsyncNetworkAsCodeApi
         
@@ -1410,14 +1895,18 @@ class AsyncDeviceStatusClient:
         
         
         async def main() -> None:
-            await client.device_status.create_reachability_subscription(
+            await client.device_status.create_reachability_subscription_v08(
                 protocol="HTTP",
                 sink="https://endpoint.example.com/sink",
+                sink_credential={"credential_type": "ACCESSTOKEN"},
                 types=[
                     "org.camaraproject.device-reachability-status-subscriptions.v0.reachability-data"
                 ],
                 config={
                     "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                    "subscription_expire_time": datetime.datetime.fromisoformat(
+                        "2023-01-17 13:18:23+00:00",
+                    ),
                     "subscription_max_events": 5,
                     "initial_event": True,
                 },
@@ -1426,5 +1915,300 @@ class AsyncDeviceStatusClient:
         
         asyncio.run(main())
         """
-        _response = await self._raw_client.create_reachability_subscription(protocol=protocol, sink=sink, types=types, config=config, sink_credential=sink_credential, request_options=request_options)
+        _response = await self._raw_client.create_reachability_subscription_v08(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
+        return _response.data
+    
+    async def retrieve_reachability_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveReachabilityStatusDeviceStatusResponse:
+        """
+        Get the current reachability status information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveReachabilityStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveReachabilityStatusDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.retrieve_reachability_status(
+                device={"phone_number": "+99999991000"},
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.retrieve_reachability_status(correlator=correlator, device=device, request_options=request_options)
+        return _response.data
+    
+    async def get_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> GetSubscriptionDeviceStatusResponse:
+        """
+        retrieve event subscription information for a given subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        GetSubscriptionDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.get_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    async def delete_subscription(self, subscription_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Optional[DeleteSubscriptionDeviceStatusResponse]:
+        """
+        delete a  given event subscription.
+        
+        Parameters
+        ----------
+        subscription_id : str
+            Subscription identifier that was obtained from the create event subscription operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.Optional[DeleteSubscriptionDeviceStatusResponse]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.delete_subscription(
+                subscription_id="subscriptionId",
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete_subscription(subscription_id, request_options=request_options)
+        return _response.data
+    
+    async def retrieve_roaming_status(self, *, correlator: typing.Optional[typing.Any] = None, device: typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> RetrieveRoamingStatusDeviceStatusResponse:
+        """
+        Get the current roaming status and the country information
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        device : typing.Optional[RetrieveRoamingStatusDeviceStatusRequestDeviceParams]
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        RetrieveRoamingStatusDeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.retrieve_roaming_status(
+                device={"phone_number": "+99999991000"},
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.retrieve_roaming_status(correlator=correlator, device=device, request_options=request_options)
+        return _response.data
+    
+    async def list_roaming_subscriptions_v08(self, *, correlator: typing.Optional[typing.Any] = None, request_options: typing.Optional[RequestOptions] = None) -> typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]:
+        """
+        Retrieve a list of device roaming status event subscription(s)
+        
+        Parameters
+        ----------
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        typing.List[ListRoamingSubscriptionsV08DeviceStatusResponseItem]
+            
+        
+        Examples
+        --------
+        import asyncio
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.list_roaming_subscriptions_v08()
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_roaming_subscriptions_v08(correlator=correlator, request_options=request_options)
+        return _response.data
+    
+    async def create_roaming_subscription_v08(self, *, protocol: CreateRoamingSubscriptionV08DeviceStatusRequestProtocol, sink: str, types: typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem], config: CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams, correlator: typing.Optional[typing.Any] = None, sink_credential: typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> CreateRoamingSubscriptionV08DeviceStatusResponse:
+        """
+        Create a device roaming status event subscription for a device
+        
+        Parameters
+        ----------
+        protocol : CreateRoamingSubscriptionV08DeviceStatusRequestProtocol
+            Identifier of a delivery protocol. Only HTTP is allowed for now
+        
+        sink : str
+            The address to which events shall be delivered using the selected protocol.
+        
+        types : typing.Sequence[CreateRoamingSubscriptionV08DeviceStatusRequestTypesItem]
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+        
+        config : CreateRoamingSubscriptionV08DeviceStatusRequestConfigParams
+            Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
+            In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
+            Specific event type attributes must be defined in `subscriptionDetail`
+            Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        
+        correlator : typing.Optional[typing.Any]
+            Correlation id for the different services
+        
+        sink_credential : typing.Optional[CreateRoamingSubscriptionV08DeviceStatusRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        CreateRoamingSubscriptionV08DeviceStatusResponse
+            
+        
+        Examples
+        --------
+        import asyncio
+        import datetime
+        
+        from networkAsCode import AsyncNetworkAsCodeApi
+        
+        client = AsyncNetworkAsCodeApi(
+            rapidapi_host="YOUR_RAPIDAPI_HOST",
+            api_key="YOUR_API_KEY",
+        )
+        
+        
+        async def main() -> None:
+            await client.device_status.create_roaming_subscription_v08(
+                protocol="HTTP",
+                sink="https://endpoint.example.com/sink",
+                sink_credential={"credential_type": "ACCESSTOKEN"},
+                types=[
+                    "org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status"
+                ],
+                config={
+                    "subscription_detail": {"device": {"phone_number": "+99999991000"}},
+                    "subscription_expire_time": datetime.datetime.fromisoformat(
+                        "2023-01-17 13:18:23+00:00",
+                    ),
+                    "subscription_max_events": 5,
+                    "initial_event": True,
+                },
+            )
+        
+        
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.create_roaming_subscription_v08(protocol=protocol, sink=sink, types=types, config=config, correlator=correlator, sink_credential=sink_credential, request_options=request_options)
         return _response.data

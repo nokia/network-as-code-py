@@ -42,8 +42,6 @@ from .types.extend_session_qod_response import ExtendSessionQodResponse
 from .types.extend_session_v1qod_response import ExtendSessionV1QodResponse
 from .types.get_session_qod_response import GetSessionQodResponse
 from .types.get_session_v1qod_response import GetSessionV1QodResponse
-from .types.list_sessions_qod_response_item import ListSessionsQodResponseItem
-from .types.list_sessions_v1qod_response_item import ListSessionsV1QodResponseItem
 from .types.retrieve_sessions_qod_response_item import RetrieveSessionsQodResponseItem
 from .types.retrieve_sessions_v1qod_response_item import RetrieveSessionsV1QodResponseItem
 from pydantic import ValidationError
@@ -53,6 +51,169 @@ OMIT = typing.cast(typing.Any, ...)
 class RawQodClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
+    
+    def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]:
+        """
+        Return all QoD sessions related to the specified device.
+        
+        Parameters
+        ----------
+        device : RetrieveSessionsV1QodRequestDeviceParams
+            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "quality-on-demand/v1/retrieve-sessions",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveSessionsV1QodRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[RetrieveSessionsV1QodResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[RetrieveSessionsV1QodResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[ExtendSessionQodResponse]:
+        """
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        requested_additional_duration : int
+            Additional duration in seconds to be extended.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[ExtendSessionQodResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"qod/v0/sessions/{encode_path_param(session_id)}/extend",method="POST",
+            json={
+                "requestedAdditionalDuration": requested_additional_duration,
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    ExtendSessionQodResponse,
+                    parse_obj_as(
+                        type_ =ExtendSessionQodResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
     def get_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[GetSessionV1QodResponse]:
         """
@@ -166,676 +327,6 @@ class RawQodClient:
         try:
             if 200 <= _response.status_code < 300:
                 return HttpResponse(response=_response, data=None)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def list_sessions_v1(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListSessionsV1QodResponseItem]]:
-        """
-        Return device communication Quality-on-Demand settings for your devices.
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[typing.List[ListSessionsV1QodResponseItem]]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "quality-on-demand/v1/sessions",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListSessionsV1QodResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[ListSessionsV1QodResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def create_session_v1(self, *, application_server: CreateSessionV1QodRequestApplicationServerParams, qos_profile: str, device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT, device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT, sink: typing.Optional[str] = OMIT, sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateSessionV1QodResponse]:
-        """
-        Create QoS Session to manage latency/throughput priorities
-        
-        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
-        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-        
-        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-        
-        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-        
-        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
-        This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
-        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        
-        Parameters
-        ----------
-        application_server : CreateSessionV1QodRequestApplicationServerParams
-            A server hosting backend applications to deliver some business logic to clients.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-        
-        qos_profile : str
-            A unique name for identifying a specific QoS profile.
-            This may follow different formats depending on the service providers implementation.
-            Some options addresses:
-            
-            
-            
-            
-            
-              - A UUID style string
-              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
-              - A searchable descriptive name
-        
-        device : typing.Optional[CreateSessionV1QodRequestDeviceParams]
-            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-        
-        device_ports : typing.Optional[CreateSessionV1QodRequestDevicePortsParams]
-            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-        
-        application_server_ports : typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams]
-            A list of single ports or port ranges on the application server
-        
-        sink : typing.Optional[str]
-            The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
-        
-        sink_credential : typing.Optional[CreateSessionV1QodRequestSinkCredentialParams]
-            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-        
-        duration : typing.Optional[int]
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-            - `qosStatus` as `UNAVAILABLE`, and,
-            - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[CreateSessionV1QodResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "quality-on-demand/v1/sessions",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=CreateSessionV1QodRequestDeviceParams, direction="write"),
-                "applicationServer": convert_and_respect_annotation_metadata(object_=application_server, annotation=CreateSessionV1QodRequestApplicationServerParams, direction="write"),
-                "devicePorts": convert_and_respect_annotation_metadata(object_=device_ports, annotation=CreateSessionV1QodRequestDevicePortsParams, direction="write"),
-                "applicationServerPorts": convert_and_respect_annotation_metadata(object_=application_server_ports, annotation=CreateSessionV1QodRequestApplicationServerPortsParams, direction="write"),
-                "qosProfile": qos_profile,
-                "sink": sink,
-                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateSessionV1QodRequestSinkCredentialParams, direction="write"),
-                "duration": duration,
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CreateSessionV1QodResponse,
-                    parse_obj_as(
-                        type_ =CreateSessionV1QodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 409:
-                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 501:
-                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def list_sessions(self, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[ListSessionsQodResponseItem]]:
-        """
-        Return device communication Quality-on-Demand settings for your devices.
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[typing.List[ListSessionsQodResponseItem]]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "qod/v0/sessions",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListSessionsQodResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[ListSessionsQodResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def create_session(self, *, device: CreateSessionQodRequestDeviceParams, application_server: CreateSessionQodRequestApplicationServerParams, qos_profile: str, device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT, webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateSessionQodResponse]:
-        """
-        Create QoS Session to manage latency/throughput priorities
-        
-        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
-        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
-        
-        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
-        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
-        
-        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
-        
-        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
-        This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
-        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        
-        Parameters
-        ----------
-        device : CreateSessionQodRequestDeviceParams
-            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-        
-        application_server : CreateSessionQodRequestApplicationServerParams
-            A server hosting backend applications to deliver some business logic to clients.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-        
-        qos_profile : str
-            A unique name for identifying a specific QoS profile.
-            This may follow different formats depending on the service providers implementation.
-            Some options addresses:
-            
-            
-            
-            
-            
-              - A UUID style string
-              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
-              - A searchable descriptive name
-        
-        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
-            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-        
-        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
-            A list of single ports or port ranges on the application server
-        
-        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
-        
-        duration : typing.Optional[int]
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-            - `qosStatus` as `UNAVAILABLE`, and,
-            - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[CreateSessionQodResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "qod/v0/sessions",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=CreateSessionQodRequestDeviceParams, direction="write"),
-                "applicationServer": convert_and_respect_annotation_metadata(object_=application_server, annotation=CreateSessionQodRequestApplicationServerParams, direction="write"),
-                "devicePorts": convert_and_respect_annotation_metadata(object_=device_ports, annotation=CreateSessionQodRequestDevicePortsParams, direction="write"),
-                "applicationServerPorts": convert_and_respect_annotation_metadata(object_=application_server_ports, annotation=CreateSessionQodRequestApplicationServerPortsParams, direction="write"),
-                "qosProfile": qos_profile,
-                "webhook": convert_and_respect_annotation_metadata(object_=webhook, annotation=CreateSessionQodRequestWebhookParams, direction="write"),
-                "duration": duration,
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    CreateSessionQodResponse,
-                    parse_obj_as(
-                        type_ =CreateSessionQodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 409:
-                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 501:
-                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]:
-        """
-        Return all QoD sessions related to the specified device.
-        
-        Parameters
-        ----------
-        device : RetrieveSessionsV1QodRequestDeviceParams
-            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            "quality-on-demand/v1/retrieve-sessions",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveSessionsV1QodRequestDeviceParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[RetrieveSessionsV1QodResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[RetrieveSessionsV1QodResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def extend_session_v1(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[ExtendSessionV1QodResponse]:
-        """
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
-        
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-        
-        requested_additional_duration : int
-            Additional duration in seconds to be extended.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[ExtendSessionV1QodResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"quality-on-demand/v1/sessions/{encode_path_param(session_id)}/extend",method="POST",
-            json={
-                "requestedAdditionalDuration": requested_additional_duration,
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    ExtendSessionV1QodResponse,
-                    parse_obj_as(
-                        type_ =ExtendSessionV1QodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[ExtendSessionQodResponse]:
-        """
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
-        
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-        
-        requested_additional_duration : int
-            Additional duration in seconds to be extended.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        HttpResponse[ExtendSessionQodResponse]
-            
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"qod/v0/sessions/{encode_path_param(session_id)}/extend",method="POST",
-            json={
-                "requestedAdditionalDuration": requested_additional_duration,
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    ExtendSessionQodResponse,
-                    parse_obj_as(
-                        type_ =ExtendSessionQodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return HttpResponse(response=_response, data=_data)
             if _response.status_code == 400:
                 raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,
@@ -1058,6 +549,445 @@ class RawQodClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
+    def create_session_v1(self, *, application_server: CreateSessionV1QodRequestApplicationServerParams, qos_profile: str, device: typing.Optional[CreateSessionV1QodRequestDeviceParams] = OMIT, device_ports: typing.Optional[CreateSessionV1QodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams] = OMIT, sink: typing.Optional[str] = OMIT, sink_credential: typing.Optional[CreateSessionV1QodRequestSinkCredentialParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateSessionV1QodResponse]:
+        """
+        Create QoS Session to manage latency/throughput priorities
+        
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
+        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
+        
+        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
+        
+        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
+        
+        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        
+        Parameters
+        ----------
+        application_server : CreateSessionV1QodRequestApplicationServerParams
+            A server hosting backend applications to deliver some business logic to clients.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+        
+        qos_profile : str
+            A unique name for identifying a specific QoS profile.
+            This may follow different formats depending on the service providers implementation.
+            Some options addresses:
+            
+            
+            
+            
+            
+              - A UUID style string
+              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+              - A searchable descriptive name
+        
+        device : typing.Optional[CreateSessionV1QodRequestDeviceParams]
+            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        device_ports : typing.Optional[CreateSessionV1QodRequestDevicePortsParams]
+            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+        
+        application_server_ports : typing.Optional[CreateSessionV1QodRequestApplicationServerPortsParams]
+            A list of single ports or port ranges on the application server
+        
+        sink : typing.Optional[str]
+            The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
+        
+        sink_credential : typing.Optional[CreateSessionV1QodRequestSinkCredentialParams]
+            A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+        
+        duration : typing.Optional[int]
+            Session duration in seconds. Maximal value of 24 hours is used if not set.
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+            - `qosStatus` as `UNAVAILABLE`, and,
+            - `statusInfo` as `DURATION_EXPIRED`.
+            See notification callback.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[CreateSessionV1QodResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "quality-on-demand/v1/sessions",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=CreateSessionV1QodRequestDeviceParams, direction="write"),
+                "applicationServer": convert_and_respect_annotation_metadata(object_=application_server, annotation=CreateSessionV1QodRequestApplicationServerParams, direction="write"),
+                "devicePorts": convert_and_respect_annotation_metadata(object_=device_ports, annotation=CreateSessionV1QodRequestDevicePortsParams, direction="write"),
+                "applicationServerPorts": convert_and_respect_annotation_metadata(object_=application_server_ports, annotation=CreateSessionV1QodRequestApplicationServerPortsParams, direction="write"),
+                "qosProfile": qos_profile,
+                "sink": sink,
+                "sinkCredential": convert_and_respect_annotation_metadata(object_=sink_credential, annotation=CreateSessionV1QodRequestSinkCredentialParams, direction="write"),
+                "duration": duration,
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateSessionV1QodResponse,
+                    parse_obj_as(
+                        type_ =CreateSessionV1QodResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 501:
+                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def create_session(self, *, device: CreateSessionQodRequestDeviceParams, application_server: CreateSessionQodRequestApplicationServerParams, qos_profile: str, device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT, webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[CreateSessionQodResponse]:
+        """
+        Create QoS Session to manage latency/throughput priorities
+        
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
+        
+        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
+        
+        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
+        
+        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        
+        Parameters
+        ----------
+        device : CreateSessionQodRequestDeviceParams
+            End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        application_server : CreateSessionQodRequestApplicationServerParams
+            A server hosting backend applications to deliver some business logic to clients.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+        
+        qos_profile : str
+            A unique name for identifying a specific QoS profile.
+            This may follow different formats depending on the service providers implementation.
+            Some options addresses:
+            
+            
+            
+            
+            
+              - A UUID style string
+              - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+              - A searchable descriptive name
+        
+        device_ports : typing.Optional[CreateSessionQodRequestDevicePortsParams]
+            The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+        
+        application_server_ports : typing.Optional[CreateSessionQodRequestApplicationServerPortsParams]
+            A list of single ports or port ranges on the application server
+        
+        webhook : typing.Optional[CreateSessionQodRequestWebhookParams]
+        
+        duration : typing.Optional[int]
+            Session duration in seconds. Maximal value of 24 hours is used if not set.
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+            - `qosStatus` as `UNAVAILABLE`, and,
+            - `statusInfo` as `DURATION_EXPIRED`.
+            See notification callback.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[CreateSessionQodResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "qod/v0/sessions",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=CreateSessionQodRequestDeviceParams, direction="write"),
+                "applicationServer": convert_and_respect_annotation_metadata(object_=application_server, annotation=CreateSessionQodRequestApplicationServerParams, direction="write"),
+                "devicePorts": convert_and_respect_annotation_metadata(object_=device_ports, annotation=CreateSessionQodRequestDevicePortsParams, direction="write"),
+                "applicationServerPorts": convert_and_respect_annotation_metadata(object_=application_server_ports, annotation=CreateSessionQodRequestApplicationServerPortsParams, direction="write"),
+                "qosProfile": qos_profile,
+                "webhook": convert_and_respect_annotation_metadata(object_=webhook, annotation=CreateSessionQodRequestWebhookParams, direction="write"),
+                "duration": duration,
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateSessionQodResponse,
+                    parse_obj_as(
+                        type_ =CreateSessionQodResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 409:
+                raise ConflictError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 501:
+                raise NotImplementedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    def extend_session_v1(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[ExtendSessionV1QodResponse]:
+        """
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        requested_additional_duration : int
+            Additional duration in seconds to be extended.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        HttpResponse[ExtendSessionV1QodResponse]
+            
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"quality-on-demand/v1/sessions/{encode_path_param(session_id)}/extend",method="POST",
+            json={
+                "requestedAdditionalDuration": requested_additional_duration,
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    ExtendSessionV1QodResponse,
+                    parse_obj_as(
+                        type_ =ExtendSessionV1QodResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
     def retrieve_sessions(self, *, device: RetrieveSessionsQodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[typing.List[RetrieveSessionsQodResponseItem]]:
         """
         Return all QoD sessions related to the specified device.
@@ -1121,6 +1051,169 @@ class RawQodClient:
 class AsyncRawQodClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
+    
+    async def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]:
+        """
+        Return all QoD sessions related to the specified device.
+        
+        Parameters
+        ----------
+        device : RetrieveSessionsV1QodRequestDeviceParams
+            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
+            
+            The developer can choose to provide the below specified device identifiers:
+            
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            
+            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "quality-on-demand/v1/retrieve-sessions",method="POST",
+            json={
+                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveSessionsV1QodRequestDeviceParams, direction="write"),
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[RetrieveSessionsV1QodResponseItem],
+                    parse_obj_as(
+                        type_ =typing.List[RetrieveSessionsV1QodResponseItem],  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[ExtendSessionQodResponse]:
+        """
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        requested_additional_duration : int
+            Additional duration in seconds to be extended.
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[ExtendSessionQodResponse]
+            
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"qod/v0/sessions/{encode_path_param(session_id)}/extend",method="POST",
+            json={
+                "requestedAdditionalDuration": requested_additional_duration,
+            }
+            ,
+            headers={"content-type": "application/json", }
+            ,
+            request_options=request_options,omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    ExtendSessionQodResponse,
+                    parse_obj_as(
+                        type_ =ExtendSessionQodResponse,  # type: ignore
+                        object_ =_response.json()
+                    )
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
     async def get_session_v1(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSessionV1QodResponse]:
         """
@@ -1289,33 +1382,166 @@ class AsyncRawQodClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def list_sessions_v1(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListSessionsV1QodResponseItem]]:
+    async def get_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSessionQodResponse]:
         """
-        Return device communication Quality-on-Demand settings for your devices.
+        Querying for QoS session resource information details
         
         Parameters
         ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
         
         Returns
         -------
-        AsyncHttpResponse[typing.List[ListSessionsV1QodResponseItem]]
+        AsyncHttpResponse[GetSessionQodResponse]
             
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "quality-on-demand/v1/sessions",method="GET",
+            f"qod/v0/sessions/{encode_path_param(session_id)}",method="GET",
             request_options=request_options,)
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[ListSessionsV1QodResponseItem],
+                    GetSessionQodResponse,
                     parse_obj_as(
-                        type_ =typing.List[ListSessionsV1QodResponseItem],  # type: ignore
+                        type_ =GetSessionQodResponse,  # type: ignore
                         object_ =_response.json()
                     )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+    
+    async def delete_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[None]:
+        """
+        Release resources related to QoS session
+        
+        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
+        - `qosStatus` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
+        
+        Parameters
+        ----------
+        session_id : str
+            Session ID that was obtained from the createSession operation
+        
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+        
+        Returns
+        -------
+        AsyncHttpResponse[None]
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"qod/v0/sessions/{encode_path_param(session_id)}",method="DELETE",
+            request_options=request_options,)
+        try:
+            if 200 <= _response.status_code < 300:
+                return AsyncHttpResponse(response=_response, data=None)
+            if _response.status_code == 400:
+                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 401:
+                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 403:
+                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 404:
+                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 500:
+                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
+            if _response.status_code == 503:
+                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
+                    typing.Any,
+                    parse_obj_as(
+                        type_ =typing.Any,  # type: ignore
+                        object_ =_response.json()
+                    )
+                ))
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -1494,40 +1720,6 @@ class AsyncRawQodClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def list_sessions(self, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[ListSessionsQodResponseItem]]:
-        """
-        Return device communication Quality-on-Demand settings for your devices.
-        
-        Parameters
-        ----------
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[typing.List[ListSessionsQodResponseItem]]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "qod/v0/sessions",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[ListSessionsQodResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[ListSessionsQodResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
     async def create_session(self, *, device: CreateSessionQodRequestDeviceParams, application_server: CreateSessionQodRequestApplicationServerParams, qos_profile: str, device_ports: typing.Optional[CreateSessionQodRequestDevicePortsParams] = OMIT, application_server_ports: typing.Optional[CreateSessionQodRequestApplicationServerPortsParams] = OMIT, webhook: typing.Optional[CreateSessionQodRequestWebhookParams] = OMIT, duration: typing.Optional[int] = OMIT, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[CreateSessionQodResponse]:
         """
         Create QoS Session to manage latency/throughput priorities
@@ -1694,67 +1886,6 @@ class AsyncRawQodClient:
             raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
     
-    async def retrieve_sessions_v1(self, *, device: RetrieveSessionsV1QodRequestDeviceParams, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]:
-        """
-        Return all QoD sessions related to the specified device.
-        
-        Parameters
-        ----------
-        device : RetrieveSessionsV1QodRequestDeviceParams
-            End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
-            
-            The developer can choose to provide the below specified device identifiers:
-            
-            * `ipv4Address`
-            * `ipv6Address`
-            * `phoneNumber`
-            * `networkAccessIdentifier`
-            
-            NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[typing.List[RetrieveSessionsV1QodResponseItem]]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            "quality-on-demand/v1/retrieve-sessions",method="POST",
-            json={
-                "device": convert_and_respect_annotation_metadata(object_=device, annotation=RetrieveSessionsV1QodRequestDeviceParams, direction="write"),
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    typing.List[RetrieveSessionsV1QodResponseItem],
-                    parse_obj_as(
-                        type_ =typing.List[RetrieveSessionsV1QodResponseItem],  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
     async def extend_session_v1(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[ExtendSessionV1QodResponse]:
         """
         Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
@@ -1802,275 +1933,6 @@ class AsyncRawQodClient:
                     )
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def extend_session(self, session_id: str, *, requested_additional_duration: int, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[ExtendSessionQodResponse]:
-        """
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
-        
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-        
-        requested_additional_duration : int
-            Additional duration in seconds to be extended.
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[ExtendSessionQodResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"qod/v0/sessions/{encode_path_param(session_id)}/extend",method="POST",
-            json={
-                "requestedAdditionalDuration": requested_additional_duration,
-            }
-            ,
-            headers={"content-type": "application/json", }
-            ,
-            request_options=request_options,omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    ExtendSessionQodResponse,
-                    parse_obj_as(
-                        type_ =ExtendSessionQodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def get_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[GetSessionQodResponse]:
-        """
-        Querying for QoS session resource information details
-        
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[GetSessionQodResponse]
-            
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"qod/v0/sessions/{encode_path_param(session_id)}",method="GET",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    GetSessionQodResponse,
-                    parse_obj_as(
-                        type_ =GetSessionQodResponse,  # type: ignore
-                        object_ =_response.json()
-                    )
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 401:
-                raise UnauthorizedError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 403:
-                raise ForbiddenError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 404:
-                raise NotFoundError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 500:
-                raise InternalServerError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(headers=dict(_response.headers), body=typing.cast(
-                    typing.Any,
-                    parse_obj_as(
-                        type_ =typing.Any,  # type: ignore
-                        object_ =_response.json()
-                    )
-                ))
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e)
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-    
-    async def delete_session(self, session_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> AsyncHttpResponse[None]:
-        """
-        Release resources related to QoS session
-        
-        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
-        - `qosStatus` as `UNAVAILABLE` and
-        - `statusInfo` as `DELETE_REQUESTED`
-        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
-        
-        Parameters
-        ----------
-        session_id : str
-            Session ID that was obtained from the createSession operation
-        
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-        
-        Returns
-        -------
-        AsyncHttpResponse[None]
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"qod/v0/sessions/{encode_path_param(session_id)}",method="DELETE",
-            request_options=request_options,)
-        try:
-            if 200 <= _response.status_code < 300:
-                return AsyncHttpResponse(response=_response, data=None)
             if _response.status_code == 400:
                 raise BadRequestError(headers=dict(_response.headers), body=typing.cast(
                     typing.Any,

@@ -5,47 +5,85 @@
  *     {
  *         phoneNumber: "+99999991000",
  *         idDocument: "66666666q",
- *         name: "Federica Sanchez Arjona",
- *         givenName: "Federica",
- *         familyName: "Sanchez Arjona",
+ *         name: "Anna Zoltan",
+ *         givenName: "Zoltan",
+ *         familyName: "Eszter",
+ *         familyNameAtBirth: "1994",
+ *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1083 Hungary",
+ *         streetName: "B\u00F3kay J\u00E1nos u",
+ *         streetNumber: "36-42",
+ *         postalCode: "1083",
+ *         region: "Budapest",
+ *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1080 Hungary",
+ *         country: "HU",
+ *         birthdate: "1995-03-12",
+ *         email: "device@testcsp.com"
+ *     }
+ *
+ * @example
+ *     {
+ *         phoneNumber: "+99999991001",
+ *         idDocument: "666666666",
+ *         name: "Kevin",
+ *         givenName: "AnnaZoltan",
+ *         familyName: "Ester",
+ *         familyNameAtBirth: "1994",
+ *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+ *         streetName: "B\u00F3kay",
+ *         streetNumber: "36-44",
+ *         postalCode: "1080",
+ *         region: "Budapest",
+ *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+ *         country: "HU",
+ *         birthdate: "1995-04-11",
+ *         email: "devicebd@testcsp.com"
+ *     }
+ *
+ * @example
+ *     {
+ *         phoneNumber: "+99999991001",
+ *         idDocument: "666666666",
+ *         name: "Kevin",
+ *         givenName: "AnnaZoltan",
+ *         familyName: "Ester",
  *         nameKanaHankaku: "federica",
- *         nameKanaZenkaku: "\uFF26\uFF45\uFF44\uFF45\uFF52\uFF49\uFF43\uFF41",
+ *         nameKanaZenkaku: "Federica",
  *         middleNames: "Sanchez",
- *         familyNameAtBirth: "YYYY",
- *         address: "Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
- *         streetName: "Nicolas Salmeron",
- *         streetNumber: "4",
- *         postalCode: "1028460",
- *         region: "Tokyo",
- *         locality: "ZZZZ",
- *         country: "JP",
+ *         familyNameAtBirth: "1994",
+ *         address: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+ *         streetName: "B\u00F3kay",
+ *         streetNumber: "36-44",
+ *         postalCode: "1080",
+ *         region: "Budapest",
+ *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-44, 1080 Hungary",
+ *         country: "HU",
  *         houseNumberExtension: "VVVV",
- *         birthdate: "1978-08-22",
- *         email: "abc@example.com",
+ *         birthdate: "1995-04-11",
+ *         email: "devicebd@testcsp.com",
  *         gender: "OTHER"
  *     }
  *
  * @example
  *     {
  *         idDocument: "66666666q",
- *         name: "Federica Sanchez Arjona",
- *         givenName: "Federica",
- *         familyName: "Sanchez Arjona",
+ *         name: "Anna Zoltan",
+ *         givenName: "Zoltan",
+ *         familyName: "Eszter",
  *         nameKanaHankaku: "federica",
- *         nameKanaZenkaku: "\uFF26\uFF45\uFF44\uFF45\uFF52\uFF49\uFF43\uFF41",
+ *         nameKanaZenkaku: "Federica",
  *         middleNames: "Sanchez",
- *         familyNameAtBirth: "YYYY",
+ *         familyNameAtBirth: "1994",
  *         address: "Tokyo-to Chiyoda-ku Iidabashi 3-10-10",
  *         streetName: "Nicolas Salmeron",
  *         streetNumber: "4",
- *         postalCode: "1028460",
- *         region: "Tokyo",
- *         locality: "ZZZZ",
- *         country: "JP",
+ *         postalCode: "1080",
+ *         region: "Budapest",
+ *         locality: "Budapest, B\u00F3kay J\u00E1nos u. 36-42, 1080 Hungary",
+ *         country: "HU",
  *         houseNumberExtension: "VVVV",
- *         birthdate: "1978-08-22",
- *         email: "abc@example.com",
- *         gender: "OTHER"
+ *         birthdate: "1995-03-12",
+ *         email: "device@testcsp.com",
+ *         gender: "MALE"
  *     }
  */
 export interface MatchKycRequest {
