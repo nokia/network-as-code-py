@@ -89,17 +89,6 @@ describe("QoD", () => {
         });
     });
 
-    it("should list all sessions (v0)", async () => {
-        const sessions = await client.qod.listSessions();
-        expect(sessions).toBeDefined();
-        expect(sessions instanceof Array).toBeTruthy();
-    });
-
-    it("should list all sessions (v1)", async () => {
-        const sessions = await client.qod.listSessionsV1();
-        expect(sessions).toBeDefined();
-        expect(sessions instanceof Array).toBeTruthy();
-    });
 
     it("should retrieve sessions for a device (v1)", async () => {
         const session = await client.qod.createSessionV1({

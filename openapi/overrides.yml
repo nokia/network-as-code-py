@@ -24,9 +24,6 @@ paths:
     post:
       x-fern-sdk-group-name: qod
       x-fern-sdk-method-name: create_session
-    get:
-      x-fern-sdk-group-name: qod
-      x-fern-sdk-method-name: list_sessions
   /qod/v0/sessions/{sessionId}:
     get:
       x-fern-sdk-group-name: qod
@@ -48,9 +45,6 @@ paths:
     post:
       x-fern-sdk-group-name: qod
       x-fern-sdk-method-name: create_session_v1
-    get:
-      x-fern-sdk-group-name: qod
-      x-fern-sdk-method-name: list_sessions_v1
   /quality-on-demand/v1/sessions/{sessionId}:
     get:
       x-fern-sdk-group-name: qod

@@ -41,11 +41,6 @@ class TestQoD:
 
         client.qod.delete_session_v1(session_id=session.session_id)
 
-    def test_list_sessions_v1(self, client: NetworkAsCodeApi):
-        sessions = client.qod.list_sessions_v1()
-        assert sessions is not None
-        assert isinstance(sessions, list)
-
     def test_retrieve_sessions_for_device_v1(self, client: NetworkAsCodeApi):
         session = client.qod.create_session_v1(
             device={
@@ -101,7 +96,7 @@ class TestQoD:
             duration=60,
         )
 
-        extended = client.qod.extend_session(
+        extended = client.qod.extend_session_v1(
             session_id=session.session_id,
             requested_additional_duration=60,
         )
