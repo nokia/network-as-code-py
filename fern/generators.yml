@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
 api:
   specs:
-    - openapi: ../openapi/rapid-spec-oas-no-schemas-no-content-issues-fixed.json
+    - openapi: ../openapi/rapid-spec-oas-no-schemas-no-content.json
       overrides: ../openapi/overrides.yml
 default-group: local
 groups:
