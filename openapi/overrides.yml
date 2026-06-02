@@ -131,6 +131,38 @@ paths:
       x-fern-sdk-group-name: device_status
       x-fern-sdk-method-name: retrieve_reachability_status
 
+  # Device Status - Roaming Subscriptions (v0.8)
+  /device-status/device-roaming-status-subscriptions/v0.8/subscriptions:
+    post:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: create_roaming_subscription_v08
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: list_roaming_subscriptions_v08
+  /device-status/device-roaming-status-subscriptions/v0.8/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: get_roaming_subscription_v08
+    delete:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: delete_roaming_subscription_v08
+
+  # Device Status - Reachability Subscriptions (v0.8)
+  /device-status/device-reachability-status-subscriptions/v0.8/subscriptions:
+    post:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: create_reachability_subscription_v08
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: list_reachability_subscriptions_v08
+  /device-status/device-reachability-status-subscriptions/v0.8/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: get_reachability_subscription_v08
+    delete:
+      x-fern-sdk-group-name: device_status
+      x-fern-sdk-method-name: delete_reachability_subscription_v08
+
   # Device Attach
   /device-attach/v0/attachments:
     post:
@@ -224,6 +256,16 @@ paths:
     post:
       x-fern-sdk-group-name: number_verification
       x-fern-sdk-method-name: get_device_phone_number
+
+  # Number Verification (v2.1)
+  /passthrough/camara/v1/number-verification/number-verification/v2/verify:
+    post:
+      x-fern-sdk-group-name: number_verification
+      x-fern-sdk-method-name: verify_v2
+  /passthrough/camara/v1/number-verification/number-verification/v2/device-phone-number:
+    get:
+      x-fern-sdk-group-name: number_verification
+      x-fern-sdk-method-name: get_device_phone_number_v2
 
   # KYC - Age Verification
   /passthrough/camara/v1/kyc-age-verification/kyc-age-verification/v0.1/verify:
